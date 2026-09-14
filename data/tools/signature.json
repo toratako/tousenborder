@@ -1,0 +1,10 @@
+{
+  "id": "signature",
+  "label": "電子署名の検証",
+  "description": "発行元と署名の有効性を確認します。",
+  "target_types": [
+    "file",
+    "process"
+  ],
+  "provider": "fixture"
+}

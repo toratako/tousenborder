@@ -1,0 +1,7 @@
+{
+  "id": "file",
+  "label": "形式判定（file）",
+  "description": "ファイルの内容やマジックバイトから形式を判定し、拡張子と照合します。",
+  "target_types": ["file", "process"],
+  "provider": "fixture"
+}

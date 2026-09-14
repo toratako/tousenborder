@@ -1,0 +1,24 @@
+{
+  "id": "PR-001",
+  "type": "process",
+  "title": "svchost.exe",
+  "request": "バックグラウンドサービスが実行を申請しています。",
+  "fields": {
+    "実行ファイル": "C:\\Users\\Public\\svchost.exe",
+    "PID / 親プロセス": "4812 / winword.exe",
+    "申請元": "workstation-07",
+    "要求権限": "実行・外部への通信",
+    "サイズ": "312 KB",
+    "更新日時": "2026-09-13 09:42",
+    "所有者": "workstation-07\\user"
+  },
+  "evidence": {
+    "strings": "抽出した文字列:\nUpdateService\nhttp://telemetry-sync.example/upload\nsession_token\nstartup_run",
+    "signature": "署名: なし\n発行元: 不明\n実行ファイルのハッシュ: 承認済み台帳に未登録",
+    "process": "explorer.exe\n  winword.exe  [ダウンロードした請求書]\n    svchost.exe  [Users\\Public]\n\n承認済みの導入記録はありません。",
+    "file": "svchost.exe: PE32+ executable (GUI) x86-64, for MS Windows\n形式: Windows実行ファイル（64ビット）\nマジック: MZ / PE\n拡張子: .exe（検出した形式と一致）",
+    "entropy": "対象: svchost.exe\n全体のシャノンエントロピー: 7.82 / 8.00 bit/byte\n.text: 7.91 / .rdata: 6.24 / .data: 5.18\n\n高い値です。圧縮・暗号化・パッキングなどが考えられます。\n値だけでは悪性と断定できません。署名や起動元も確認してください。"
+  },
+  "expected": "deny",
+  "explanation": "規則01: 実行には承認された発行元と導入記録などの確認が必要です。このプロセスは署名がなく、利用者が書き込める場所にあり、文書編集ソフトから起動されています。見慣れたファイル名でも正当なプログラムとは限りません。"
+}

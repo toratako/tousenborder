@@ -1,0 +1,23 @@
+{
+  "id": "FL-002",
+  "type": "file",
+  "title": "maintenance.msi",
+  "request": "情報システム部が保守パッケージの導入を申請しています。",
+  "fields": {
+    "ファイル": "maintenance.msi",
+    "サイズ": "2.4 MB",
+    "入手元": "社内ソフトウェア台帳",
+    "申請元": "情報システム運用 / CHG-204",
+    "保存先": "C:\\ProgramData\\Northstar\\Packages\\maintenance.msi",
+    "更新日時": "2026-09-10 14:30",
+    "所有者": "ノーススター情報システム部"
+  },
+  "evidence": {
+    "strings": "抽出した文字列:\nNorthstar Maintenance Agent\nProductVersion=2.1\nServiceName=NorthstarMaintenance",
+    "signature": "署名: 有効\n発行元: ノーススター情報システム部\nハッシュ: 承認済み台帳と一致\n導入記録: CHG-204 / 承認済み",
+    "file": "maintenance.msi: Composite Document File V2 Document\n形式: Windows Installerパッケージ\nマジック: D0 CF 11 E0 A1 B1 1A E1\n内容: インストーラーのデータベース・圧縮された導入用ファイル\n拡張子: .msi（検出した形式と一致）",
+    "entropy": "対象: maintenance.msi\n全体のシャノンエントロピー: 7.61 / 8.00 bit/byte\n\n圧縮された導入用ファイルを含むため、高い値を示しています。\n正規の圧縮ファイルでも高くなります。署名・台帳・導入記録と照合してください。"
+  },
+  "expected": "approve",
+  "explanation": "規則01: 承認された発行元の有効な署名、台帳と一致するハッシュ、承認済みの導入記録が確認できました。ファイル名ではなく、これらの確認結果を合わせて許可します。"
+}

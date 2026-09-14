@@ -1,0 +1,9 @@
+{
+  "id": "process",
+  "label": "プロセスツリー",
+  "description": "親プロセスと実行時の状況を調べます。",
+  "target_types": [
+    "process"
+  ],
+  "provider": "fixture"
+}

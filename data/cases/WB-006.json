@@ -1,0 +1,18 @@
+{
+  "id": "WB-006",
+  "type": "url",
+  "title": "payroll.northstar.example",
+  "request": "従業員がブックマークから給与ポータルを開こうとしています。",
+  "fields": {
+    "URL": "https://payroll.northstar.example/login",
+    "入手元": "会社管理のブックマーク",
+    "名乗っているサービス": "ノーススター給与ポータル",
+    "要求操作": "ブラウザーで認証情報を送信"
+  },
+  "evidence": {
+    "whois": "ドメイン: northstar.example\n登録者: ノーススター情報システム部\n台帳: payroll.northstar.example / 承認済み",
+    "headers": "HTTP/1.1 200 OK\n最終接続先: payroll.northstar.example\nTLS: payroll.northstar.example に対して有効\n転送: なし"
+  },
+  "expected": "approve",
+  "explanation": "規則02: ホスト名が承認済み台帳と完全に一致し、TLSも有効です。未承認の接続先への転送もありません。"
+}

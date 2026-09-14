@@ -1,0 +1,9 @@
+{
+  "id": "packet",
+  "label": "パケット解析",
+  "description": "取得したネットワークパケットの内容を解析します。",
+  "target_types": [
+    "packet"
+  ],
+  "provider": "fixture"
+}

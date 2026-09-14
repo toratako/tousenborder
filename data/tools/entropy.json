@@ -1,0 +1,7 @@
+{
+  "id": "entropy",
+  "label": "エントロピー解析",
+  "description": "ファイル内のバイトの分布を調べます。高い値は圧縮や暗号化でも生じます。",
+  "target_types": ["file", "process"],
+  "provider": "fixture"
+}

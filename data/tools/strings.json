@@ -1,0 +1,10 @@
+{
+  "id": "strings",
+  "label": "文字列抽出（strings）",
+  "description": "ファイルやプロセスに含まれる文字列を調べます。",
+  "target_types": [
+    "file",
+    "process"
+  ],
+  "provider": "fixture"
+}

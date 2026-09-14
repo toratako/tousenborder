@@ -1,0 +1,9 @@
+{
+  "id": "whois",
+  "label": "登録情報（whois）",
+  "description": "ドメインの登録情報と所有者を調べます。",
+  "target_types": [
+    "url"
+  ],
+  "provider": "fixture"
+}

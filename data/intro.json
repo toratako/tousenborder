@@ -1,0 +1,28 @@
+{
+  "title": "基礎研修勤務",
+  "time_limit_seconds": 300,
+  "rules": [
+    "01 / 実行許可\nファイルとプロセスの実行は、ノーススター情報システム部の有効な署名、台帳と一致するハッシュ、承認済みの導入記録がすべて揃う場合のみ許可する。",
+    "02 / Webアクセス\n給与情報の認証情報は、有効なTLS接続で payroll.northstar.example にのみ送信可能。転送後の最終接続先も確認すること。",
+    "03 / ネットワーク\n社内DNSサーバー 10.20.0.53:53 への通常のDNS問い合わせを許可する。パケットの内容を確認すること。",
+    "04 / 証拠\n名前、HTTPS、ポート番号だけでは安全の証明にならない。判定前に対応するツールで調査すること。"
+  ],
+  "tools": [
+    "res://data/tools/strings.json",
+    "res://data/tools/whois.json",
+    "res://data/tools/signature.json",
+    "res://data/tools/headers.json",
+    "res://data/tools/packet.json",
+    "res://data/tools/process.json",
+    "res://data/tools/entropy.json",
+    "res://data/tools/file.json"
+  ],
+  "cases": [
+    "res://data/cases/PR-001.json",
+    "res://data/cases/FL-002.json",
+    "res://data/cases/WB-003.json",
+    "res://data/cases/PK-004.json",
+    "res://data/cases/FL-005.json",
+    "res://data/cases/WB-006.json"
+  ]
+}

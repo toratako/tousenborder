@@ -1,0 +1,9 @@
+{
+  "id": "headers",
+  "label": "HTTPヘッダー",
+  "description": "HTTPの接続先と応答ヘッダーを調べます。",
+  "target_types": [
+    "url"
+  ],
+  "provider": "fixture"
+}
