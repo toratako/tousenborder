@@ -50,6 +50,12 @@ var playing := false
 var audit_overlay: Panel
 var audit_heading: Label
 var audit_body: RichTextLabel
+var menu_button: Button
+var pause_menu: Panel
+var menu_resume: Button
+var menu_restart: Button
+var menu_home: Button
+var menu_previous_focus: Control
 
 func _ready() -> void:
 	var japanese_theme := Theme.new()
@@ -68,14 +74,68 @@ func _ready() -> void:
 	rules.text = rule_text
 	_build_audit()
 	_build_start_screen()
+	_build_pause_menu()
 	shift.changed.connect(_refresh)
 	_show_start_screen()
 
 func _process(delta: float) -> void:
-	if not playing:
+	if not playing or pause_menu.visible:
 		return
 	shift.tick(delta)
 	_refresh_countdown()
+
+func _input(event: InputEvent) -> void:
+	if playing and event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		if not event.is_echo():
+			_toggle_menu()
+
+func _build_pause_menu() -> void:
+	pause_menu = _panel(self, Rect2(0, 0, 1280, 800), Color(0.06, 0.08, 0.07, 0.78))
+	pause_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	pause_menu.mouse_filter = Control.MOUSE_FILTER_STOP
+	var sheet := _panel(pause_menu, Rect2(330, 155, 620, 490), PAPER, Color("93876b"))
+	_label(sheet, Rect2(36, 28, 548, 45), "[ / ] パケットを拝見", INK, 30)
+	menu_resume = _button(sheet, Rect2(36, 151, 548, 52), "ゲームに戻る  [ESC]", PAPER)
+	menu_resume.pressed.connect(_close_menu)
+	menu_restart = _button(sheet, Rect2(36, 225, 548, 52), "勤務を最初からやり直す", PAPER)
+	menu_restart.pressed.connect(_start_shift)
+	menu_home = _button(sheet, Rect2(36, 299, 548, 52), "タイトル画面に戻る", MUTED)
+	menu_home.pressed.connect(_show_start_screen)
+	# 背面を表示したまま、キーボードのフォーカスをメニュー内に留める。
+	var menu_actions: Array[Button] = [menu_resume, menu_restart, menu_home]
+	for i in range(menu_actions.size()):
+		var button := menu_actions[i]
+		var previous_path := button.get_path_to(menu_actions[(i + 2) % 3])
+		var next_path := button.get_path_to(menu_actions[(i + 1) % 3])
+		button.focus_previous = previous_path
+		button.focus_next = next_path
+		button.focus_neighbor_top = previous_path
+		button.focus_neighbor_bottom = next_path
+		button.focus_neighbor_left = previous_path
+		button.focus_neighbor_right = next_path
+	pause_menu.hide()
+
+func _toggle_menu() -> void:
+	if not playing:
+		return
+	if pause_menu.visible:
+		_close_menu()
+		return
+	menu_previous_focus = get_viewport().gui_get_focus_owner()
+	move_child(pause_menu, -1)
+	pause_menu.show()
+	menu_resume.grab_focus()
+
+func _close_menu() -> void:
+	if not is_instance_valid(pause_menu) or not pause_menu.visible:
+		return
+	pause_menu.hide()
+	if is_instance_valid(menu_previous_focus) and menu_previous_focus.is_visible_in_tree():
+		menu_previous_focus.grab_focus()
+	else:
+		menu_button.grab_focus()
+	menu_previous_focus = null
 
 func _refresh_countdown() -> void:
 	if shift.cases.is_empty():
@@ -224,6 +284,7 @@ func _close_summary() -> void:
 		summary_overlay = null
 
 func _show_start_screen() -> void:
+	_close_menu()
 	playing = false
 	_close_summary()
 	audit_overlay.hide()
@@ -236,6 +297,7 @@ func _start_shift() -> void:
 		return
 	if is_instance_valid(license_overlay) and license_overlay.visible:
 		return
+	_close_menu()
 	_close_summary()
 	start_screen.hide()
 	workspace.show()
@@ -257,6 +319,11 @@ func _build() -> void:
 	workspace.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(workspace)
 	_label(workspace, Rect2(24, 15, 420, 38), "[ / ]  パケットを拝見", PAPER, 26)
+	menu_button = _button(workspace, Rect2(24, 15, 420, 38), "", PAPER)
+	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+		menu_button.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	menu_button.tooltip_text = "メニューを開く [ESC]"
+	menu_button.pressed.connect(_toggle_menu)
 	_panel(workspace, Rect2(500, 7, 330, 56), Color("131f1b"), Color("a89b6c"))
 	_label(workspace, Rect2(518, 24, 85, 23), "残り時間", Color("c6b77f"), 14)
 	countdown = _label(workspace, Rect2(606, 8, 130, 50), "--:--", Color("eee2ad"), 32)

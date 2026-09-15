@@ -4,12 +4,22 @@ extends SceneTree
 func _initialize() -> void:
 	call_deferred("_run")
 
+func _escape(echo: bool = false) -> void:
+	var event := InputEventKey.new()
+	event.keycode = KEY_ESCAPE
+	event.pressed = true
+	event.echo = echo
+	Input.parse_input_event(event)
+	await process_frame
+
 func _run() -> void:
 	var desk = load("res://scenes/main.tscn").instantiate()
 	root.add_child(desk)
 	await process_frame
 	assert(desk.start_screen.visible and not desk.workspace.visible)
 	assert(desk.start_button.has_focus())
+	await _escape()
+	assert(not desk.pause_menu.visible and desk.start_screen.visible)
 	desk.tool_guide_button.pressed.emit()
 	assert(desk.tool_guide.visible and not desk.start_screen.visible)
 	assert(desk.tool_guide_close.has_focus())
@@ -71,6 +81,45 @@ func _run() -> void:
 		assert(desk.tool_buttons[i].tooltip_text.contains(desk.catalog.tools[i].description))
 		assert(not desk.tool_buttons[i].tooltip_text.contains(desk.catalog.tools[i].detailed_description))
 	assert(not desk.audit_overlay.visible)
+	desk.set_process(false)
+	desk.tool_buttons[0].pressed.emit()
+	desk._process(12)
+	var paused_time: float = desk.shift.remaining_seconds
+	var paused_log: String = desk.terminal.text
+	await _escape()
+	assert(desk.pause_menu.visible and desk.menu_resume.has_focus())
+	assert(desk.workspace.visible)
+	# Tabを繰り返しても、背面の判定・調査ボタンへ移動しない。
+	for i in range(6):
+		var tab := InputEventKey.new()
+		tab.keycode = KEY_TAB
+		tab.pressed = true
+		Input.parse_input_event(tab)
+		await process_frame
+		assert(root.gui_get_focus_owner() in [desk.menu_resume, desk.menu_restart, desk.menu_home])
+	desk._process(600)
+	assert(desk.shift.remaining_seconds == paused_time and not desk.shift.timed_out)
+	await _escape(true)
+	assert(desk.pause_menu.visible)
+	await _escape()
+	assert(not desk.pause_menu.visible and desk.workspace.visible)
+	assert(desk.approve.has_focus() and desk.terminal.text == paused_log)
+	desk._process(1)
+	assert(desk.shift.remaining_seconds == paused_time - 1)
+	desk.menu_button.pressed.emit()
+	assert(desk.pause_menu.visible)
+	desk.menu_resume.pressed.emit()
+	assert(not desk.pause_menu.visible and desk.terminal.text == paused_log)
+	desk.menu_button.pressed.emit()
+	desk.menu_restart.pressed.emit()
+	assert(not desk.pause_menu.visible and desk.workspace.visible)
+	assert(desk.shift.index == 0 and desk.shift.observations.is_empty())
+	assert(desk.countdown.text == "05:00")
+	desk.menu_button.pressed.emit()
+	desk.menu_home.pressed.emit()
+	assert(not desk.pause_menu.visible and desk.start_screen.visible and not desk.playing)
+	assert(not desk.workspace.visible and desk.start_button.has_focus())
+	desk.start_button.pressed.emit()
 	var expected_icons := ["executable", "package", "web", "packet", "executable", "web"]
 	for i in range(6):
 		assert(desk.dossier_title.text == desk.shift.current().title)
@@ -101,6 +150,13 @@ func _run() -> void:
 		assert(desk.audit_overlay.visible)
 		assert(desk.audit_overlay.mouse_filter == Control.MOUSE_FILTER_STOP)
 		assert(desk.next.has_focus())
+		if i == 0:
+			var audit_text: String = desk.audit_body.text
+			await _escape()
+			assert(desk.pause_menu.visible and desk.audit_overlay.visible)
+			await _escape()
+			assert(desk.audit_overlay.visible and desk.next.has_focus())
+			assert(desk.audit_body.text == audit_text and desk.shift.records.size() == 1)
 		assert(desk.audit_body.text.contains(explanation))
 		assert(desk.terminal.text == evidence_text)
 		assert(desk.audit_heading.text.contains("規則に適合" if desk.shift.records.back().correct else "誤判定"))
@@ -113,6 +169,10 @@ func _run() -> void:
 	assert(desk.summary_overlay.visible and desk.summary_overlay.mouse_filter == Control.MOUSE_FILTER_STOP)
 	assert(desk.summary_overlay.get_parent() == desk)
 	assert(desk.summary_restart.has_focus())
+	await _escape()
+	assert(desk.pause_menu.visible and desk.summary_overlay.visible)
+	await _escape()
+	assert(desk.summary_overlay.visible and desk.summary_restart.has_focus())
 	assert(desk.summary_review.get_parsed_text().contains("quarterly-report.pdf.exe"))
 	var previous_overlay = desk.summary_overlay
 	desk._refresh()
@@ -148,7 +208,7 @@ func _run() -> void:
 	assert(desk.shift.remaining_seconds == remaining)
 	desk.start_button.pressed.emit()
 	assert(desk.shift.records.is_empty() and desk.countdown.text == "05:00")
-	print("画面テスト: 許可・拒否の監査票、調査ログの保持、全案件の進行と再開始に成功")
+	print("画面テスト: メニューの開閉・時間停止・画面復帰、監査票、調査ログの保持、全案件の進行と再開始に成功")
 	desk.queue_free()
 	await process_frame
 	quit()
