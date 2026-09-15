@@ -10,9 +10,40 @@ func _run() -> void:
 	await process_frame
 	assert(desk.start_screen.visible and not desk.workspace.visible)
 	assert(desk.start_button.has_focus())
+	desk.tool_guide_button.pressed.emit()
+	assert(desk.tool_guide.visible and not desk.start_screen.visible)
+	assert(desk.tool_guide_close.has_focus())
+	var legacy_tool: Dictionary = desk.catalog.tools[0].duplicate(true)
+	legacy_tool.erase("detailed_description")
+	assert(desk._tool_description(legacy_tool).contains(legacy_tool.description))
+	assert(desk.tool_guide_tabs.size() == desk.catalog.tools.size())
+	assert(desk.tool_guide_tabs[0].button_pressed)
+	for i in range(desk.catalog.tools.size()):
+		var tool: Dictionary = desk.catalog.tools[i]
+		desk.tool_guide_tabs[i].pressed.emit()
+		assert(desk.tool_guide_body.get_parsed_text().contains(tool.label))
+		assert(desk.tool_guide_body.get_parsed_text().contains(tool.detailed_description))
+		for j in range(desk.tool_guide_tabs.size()):
+			assert(desk.tool_guide_tabs[j].button_pressed == (i == j))
+			if i != j:
+				assert(not desk.tool_guide_body.get_parsed_text().contains(desk.catalog.tools[j].detailed_description))
+	desk.start_button.pressed.emit()
+	desk.license_button.pressed.emit()
+	desk._process(600)
+	assert(not desk.playing and desk.shift.cases.is_empty())
+	desk.tool_guide_close.pressed.emit()
+	assert(not desk.tool_guide.visible and desk.start_screen.visible)
+	assert(desk.tool_guide_button.has_focus())
+	desk.tool_guide_button.pressed.emit()
+	assert(desk.tool_guide.visible)
+	assert(desk.tool_guide_tabs.back().button_pressed)
+	desk.tool_guide_close.pressed.emit()
 	desk.license_button.pressed.emit()
 	assert(desk.license_overlay.visible and desk.license_close.has_focus())
 	assert(desk.start_button.disabled)
+	assert(desk.tool_guide_button.disabled)
+	desk.tool_guide_button.pressed.emit()
+	assert(not desk.tool_guide.visible)
 	assert(desk.license_body.text.contains(Engine.get_license_text()))
 	desk.start_button.pressed.emit()
 	assert(not desk.playing)
@@ -36,6 +67,9 @@ func _run() -> void:
 	assert(desk.playing and desk.countdown.text == "05:00")
 	assert(desk.countdown_state.text.is_empty())
 	assert(desk.tool_buttons.size() == 8)
+	for i in range(desk.tool_buttons.size()):
+		assert(desk.tool_buttons[i].tooltip_text.contains(desk.catalog.tools[i].description))
+		assert(not desk.tool_buttons[i].tooltip_text.contains(desk.catalog.tools[i].detailed_description))
 	assert(not desk.audit_overlay.visible)
 	var expected_icons := ["executable", "package", "web", "packet", "executable", "web"]
 	for i in range(6):

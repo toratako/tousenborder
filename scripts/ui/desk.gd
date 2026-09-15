@@ -12,6 +12,11 @@ var catalog := ContentCatalog.new()
 var shift := InspectionShift.new()
 var workspace: Control
 var tool_buttons: Array[Button] = []
+var tool_guide: Panel
+var tool_guide_button: Button
+var tool_guide_close: Button
+var tool_guide_body: RichTextLabel
+var tool_guide_tabs: Array[Button] = []
 var status: Label
 var countdown: Label
 var countdown_state: Label
@@ -105,8 +110,74 @@ func _build_start_screen() -> void:
 	start_button = _button(start_screen, Rect2(98, 602, 514, 60), "勤務を開始  >", PAPER)
 	start_button.add_theme_font_size_override("font_size", 22)
 	start_button.pressed.connect(_start_shift)
-	license_button = _button(start_screen, Rect2(711, 610, 439, 44), "ライセンス・著作権表記", MUTED)
+	tool_guide_button = _button(start_screen, Rect2(711, 588, 439, 44), "ツール一覧  >", PAPER)
+	tool_guide_button.pressed.connect(_show_tool_guide)
+	license_button = _button(start_screen, Rect2(711, 648, 439, 44), "ライセンス・著作権表記", MUTED)
 	license_button.pressed.connect(_show_licenses)
+
+func _tool_description(tool: Dictionary) -> String:
+	return "対応対象: " + "、".join(tool.target_types.map(_type_label)) + "\n\n" + tool.get("detailed_description", tool.description)
+
+func _show_tool_guide() -> void:
+	if playing or not start_screen.visible or start_button.disabled:
+		return
+	if not is_instance_valid(tool_guide):
+		tool_guide = _panel(self, Rect2(0, 0, 1280, 800), Color("202c27"))
+		tool_guide.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		tool_guide.mouse_filter = Control.MOUSE_FILTER_STOP
+		var sheet := _panel(tool_guide, Rect2(80, 55, 1120, 690), PAPER, Color("93876b"))
+		_label(sheet, Rect2(30, 22, 1060, 45), "調査ツール詳細", INK, 30)
+		var scroll := ScrollContainer.new()
+		scroll.position = Vector2(30, 125)
+		scroll.size = Vector2(310, 465)
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		sheet.add_child(scroll)
+		var list := VBoxContainer.new()
+		list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		list.add_theme_constant_override("separation", 9)
+		scroll.add_child(list)
+		var group := ButtonGroup.new()
+		for i in range(catalog.tools.size()):
+			var tab := _button(list, Rect2(0, 0, 310, 48), catalog.tools[i].label, PAPER)
+			tab.custom_minimum_size.y = 48
+			tab.clip_text = true
+			tab.tooltip_text = catalog.tools[i].label
+			tab.toggle_mode = true
+			tab.button_group = group
+			var selected := tab.get_theme_stylebox("pressed").duplicate() as StyleBoxFlat
+			selected.bg_color = Color("536548")
+			selected.border_color = INK
+			tab.add_theme_stylebox_override("pressed", selected)
+			tab.pressed.connect(_select_tool_guide.bind(i))
+			tool_guide_tabs.append(tab)
+		_panel(sheet, Rect2(358, 125, 2, 465), Color("a99c7a"))
+		tool_guide_body = _rich(sheet, Rect2(382, 125, 708, 465), INK, 21)
+		tool_guide_close = _button(sheet, Rect2(30, 620, 1060, 42), "タイトル画面に戻る", PAPER)
+		tool_guide_close.pressed.connect(_close_tool_guide)
+		if not catalog.tools.is_empty():
+			_select_tool_guide(0)
+		else:
+			tool_guide_body.text = "登録されているツールはありません。"
+	start_screen.hide()
+	tool_guide_body.scroll_to_line(0)
+	tool_guide.show()
+	tool_guide_close.grab_focus()
+
+func _select_tool_guide(index: int) -> void:
+	var tool := catalog.tools[index]
+	tool_guide_body.clear()
+	tool_guide_body.push_font_size(30)
+	tool_guide_body.add_text(tool.label + "\n\n")
+	tool_guide_body.pop()
+	tool_guide_body.add_text(_tool_description(tool))
+	tool_guide_body.scroll_to_line(0)
+	for i in range(tool_guide_tabs.size()):
+		tool_guide_tabs[i].set_pressed_no_signal(i == index)
+
+func _close_tool_guide() -> void:
+	tool_guide.hide()
+	start_screen.show()
+	tool_guide_button.grab_focus()
 
 func _show_licenses() -> void:
 	if playing or not start_screen.visible:
@@ -127,6 +198,7 @@ func _show_licenses() -> void:
 		license_close = _button(sheet, Rect2(30, 620, 860, 42), "タイトル画面に戻る", PAPER)
 		license_close.pressed.connect(_close_licenses)
 	start_button.disabled = true
+	tool_guide_button.disabled = true
 	license_button.disabled = true
 	_select_license(0)
 	license_overlay.show()
@@ -141,6 +213,7 @@ func _select_license(index: int) -> void:
 func _close_licenses() -> void:
 	license_overlay.hide()
 	start_button.disabled = false
+	tool_guide_button.disabled = false
 	license_button.disabled = false
 	license_button.grab_focus()
 
@@ -159,6 +232,8 @@ func _show_start_screen() -> void:
 	start_button.grab_focus()
 
 func _start_shift() -> void:
+	if is_instance_valid(tool_guide) and tool_guide.visible:
+		return
 	if is_instance_valid(license_overlay) and license_overlay.visible:
 		return
 	_close_summary()
@@ -188,7 +263,7 @@ func _build() -> void:
 	countdown.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	countdown_state = _label(workspace, Rect2(752, 26, 70, 21), "", MUTED, 12)
 	status = _label(workspace, Rect2(951, 24, 300, 26), "準備中", PAPER, 17)
-	_label(workspace, Rect2(26, 97, 285, 25), "01   調査ツール", PAPER, 16)
+	_label(workspace, Rect2(26, 97, 285, 25), "01   調査ツール (ホバーで詳細)", PAPER, 16)
 	_panel(workspace, Rect2(24, 593, 294, 135), Color("2b322d"), Color("555e4e"))
 	_label(workspace, Rect2(40, 605, 263, 24), "審査官への手引き", GREEN, 14)
 	_label(workspace, Rect2(40, 636, 261, 79), "申請を読み、証拠を集める。\n審査規則と照合する。\n最後に判定する。", PAPER, 14)
@@ -240,7 +315,7 @@ func _build_tools() -> void:
 		var button := _button(rack, Rect2(0, 0, 276, 38), ">  " + tool.label, PAPER)
 		button.custom_minimum_size.y = 38
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		button.tooltip_text = tool.description + "\n対応対象: " + ", ".join(tool.target_types.map(_type_label))
+		button.tooltip_text = tool.description + "\n対応対象: " + "、".join(tool.target_types.map(_type_label))
 		button.pressed.connect(func(): shift.inspect(tool))
 		tool_buttons.append(button)
 

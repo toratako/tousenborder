@@ -2,6 +2,10 @@
   "id": "file",
   "label": "形式判定（file）",
   "description": "ファイルの内容やマジックバイトから形式を判定し、拡張子と照合します。",
-  "target_types": ["file", "process"],
-  "provider": "fixture"
+  "target_types": [
+    "file",
+    "process"
+  ],
+  "provider": "fixture",
+  "detailed_description": "内容やマジックバイト（形式の目印となるバイト列）を調べ、\n実行ファイル、文書、インストーラーなどの形式を判定します。\n\n見方：検出した形式を、末尾の拡張子や申請内容と照合します。\n注意：名前に「.pdf」があっても、実体は実行ファイルかもしれません。\n形式が一致していても安全とは限らず、署名などの確認が必要です。"
 }

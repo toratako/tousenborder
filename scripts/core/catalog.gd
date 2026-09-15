@@ -38,6 +38,9 @@ func load_pack(path: String = "res://data/intro.json") -> bool:
 		if not _strings(tool, ["id", "label", "description", "provider"]):
 			errors.append("ツールの定義が不正です: %s" % tool_path)
 			continue
+		if tool.has("detailed_description") and not _strings(tool, ["detailed_description"]):
+			errors.append("detailed_description は空でない文字列で指定してください: %s" % tool_path)
+			continue
 		if not tool.get("target_types") is Array or tool.target_types.is_empty():
 			errors.append("ツールに target_types が必要です: %s" % tool_path)
 			continue
