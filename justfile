@@ -3,7 +3,7 @@ godot := env("GODOT", "godot")
 default:
     @just --list
 
-build: build-linux build-windows
+build: clean build-linux build-windows
 
 install-templates:
     python3 scripts/install_templates.py --godot "{{ godot }}"
