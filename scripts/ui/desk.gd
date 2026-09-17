@@ -1,13 +1,16 @@
 extends Control
-## 表示のみを担当。教材・ツール・判定状態は core/ に分離。
+## 画面遷移と操作を調整する。教材・判定はcore、部品の配置はdesk_layoutが担当。
 
-@export_file("*.json") var content_pack := "res://data/intro.json"
+const Layout = preload("res://scripts/ui/desk_layout.gd")
+const Chrome = preload("res://scripts/ui/cyber_theme.gd")
 
-const PAPER := Color("d6c9a3")
-const INK := Color("30352f")
-const MUTED := Color("969c86")
-const GREEN := Color("8ba879")
-const RED := Color("bc6452")
+@export_file("*.json") var content_pack := "res://data/packs/learning.json"
+
+const PAPER = Layout.PAPER
+const INK = Layout.INK
+const MUTED = Layout.MUTED
+const GREEN = Layout.GREEN
+const RED = Layout.RED
 var catalog := ContentCatalog.new()
 var shift := InspectionShift.new()
 var workspace: Control
@@ -17,19 +20,30 @@ var tool_guide_button: Button
 var tool_guide_close: Button
 var tool_guide_body: RichTextLabel
 var tool_guide_tabs: Array[Button] = []
+var guide_tools: Array[Dictionary] = []
 var status: Label
 var countdown: Label
 var countdown_state: Label
-var dossier: RichTextLabel
-var dossier_title: Label
-var dossier_meta: Label
-var dossier_caption: Label
-var dossier_icon: TextureRect
-var stamp: Label
-var feedback: Label
-var terminal: RichTextLabel
-var approve: Button
-var deny: Button
+var card_layer: Control
+var cards: Array[DraggableCard] = []
+var target_card: DraggableCard
+var rule_card: DraggableCard
+var selected_information: Dictionary = {}
+var displayed_case := ""
+var displayed_observations := 0
+var stamp_pending := false
+var desk_generation := 0
+var action_stamps: Array[StampTool] = []
+var tool_drawer: Panel
+var tools_toggle: Button
+var rules_button: Button
+var tool_message: Label
+var tool_scroll: ScrollContainer
+var tool_rack: VBoxContainer
+var active_tools: Array[Dictionary] = []
+var tools_fit_pending := false
+var stamp_rack: HBoxContainer
+var active_card: DraggableCard
 var next: Button
 var summary: Panel
 var summary_overlay: Panel
@@ -40,6 +54,11 @@ var summary_restart: Button
 var summary_home: Button
 var start_screen: Panel
 var start_button: Button
+var difficulty_select: OptionButton
+var category_select: OptionButton
+var platform_select: OptionButton
+var common_environment_select: OptionButton
+var selection_summary: Label
 var license_button: Button
 var license_overlay: Panel
 var license_body: RichTextLabel
@@ -50,71 +69,64 @@ var playing := false
 var audit_overlay: Panel
 var audit_heading: Label
 var audit_body: RichTextLabel
-var menu_button: Button
 var pause_menu: Panel
 var menu_resume: Button
 var menu_restart: Button
 var menu_home: Button
 var menu_previous_focus: Control
+var external_preview: Panel
+var external_preview_body: RichTextLabel
+var external_send: Button
+var external_skip: Button
+var pending_external: Dictionary = {}
+
+func _selected_cases() -> Array[Dictionary]:
+	return catalog.select_cases(difficulty_select.get_item_metadata(difficulty_select.selected), category_select.get_item_metadata(category_select.selected), platform_select.get_item_metadata(platform_select.selected), common_environment_select.get_item_metadata(common_environment_select.selected))
+
+func _refresh_selection(_index: int = 0) -> void:
+	var count := _selected_cases().size()
+	var limit_text := "時間制限なし" if catalog.time_limit_seconds == 0 else "制限時間 %02d:%02d" % [catalog.time_limit_seconds / 60, catalog.time_limit_seconds % 60]
+	selection_summary.text = "全%d案件 / %s" % [count, limit_text] if count > 0 else "該当する問題がありません。条件を変更してください。"
+	start_button.disabled = count == 0
+	common_environment_select.disabled = platform_select.get_item_metadata(platform_select.selected) in ["windows", "linux"]
+	if common_environment_select.disabled:
+		common_environment_select.select(0 if platform_select.get_item_metadata(platform_select.selected) == "windows" else 1)
 
 func _ready() -> void:
-	var japanese_theme := Theme.new()
-	japanese_theme.default_font = preload("res://assets/fonts/NotoSansCJK-Regular.ttc")
-	theme = japanese_theme
+	theme = Chrome.create(preload("res://assets/fonts/NotoSansCJK-Regular.ttc"))
 	_build()
 	if not catalog.load_pack(content_pack):
 		status.text = "教材の読み込みエラー"
-		terminal.text = "\n".join(catalog.errors)
-		approve.disabled = true
-		deny.disabled = true
+		var error_label := Chrome.rich(workspace, Rect2(290, 150, 900, 530), PAPER, 20)
+		error_label.text = "\n".join(catalog.errors)
 		return
 	_build_tools()
-	var rule_text := "\n\n".join(catalog.rules)
-	var rules := _rich(workspace, Rect2(968, 144, 254, 470), INK, 15)
-	rules.text = rule_text
+	_build_actions()
 	_build_audit()
 	_build_start_screen()
 	_build_pause_menu()
+	Layout.build_external_preview(self)
 	shift.changed.connect(_refresh)
 	_show_start_screen()
 
 func _process(delta: float) -> void:
-	if not playing or pause_menu.visible:
+	if not playing or pause_menu.visible or external_preview.visible:
 		return
 	shift.tick(delta)
 	_refresh_countdown()
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(external_preview) and external_preview.visible and event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		_finish_external(false)
+		return
 	if playing and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if not event.is_echo():
 			_toggle_menu()
 
 func _build_pause_menu() -> void:
-	pause_menu = _panel(self, Rect2(0, 0, 1280, 800), Color(0.06, 0.08, 0.07, 0.78))
-	pause_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	pause_menu.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sheet := _panel(pause_menu, Rect2(330, 155, 620, 490), PAPER, Color("93876b"))
-	_label(sheet, Rect2(36, 28, 548, 45), "[ / ] パケットを拝見", INK, 30)
-	menu_resume = _button(sheet, Rect2(36, 151, 548, 52), "ゲームに戻る  [ESC]", PAPER)
-	menu_resume.pressed.connect(_close_menu)
-	menu_restart = _button(sheet, Rect2(36, 225, 548, 52), "勤務を最初からやり直す", PAPER)
-	menu_restart.pressed.connect(_start_shift)
-	menu_home = _button(sheet, Rect2(36, 299, 548, 52), "タイトル画面に戻る", MUTED)
-	menu_home.pressed.connect(_show_start_screen)
-	# 背面を表示したまま、キーボードのフォーカスをメニュー内に留める。
-	var menu_actions: Array[Button] = [menu_resume, menu_restart, menu_home]
-	for i in range(menu_actions.size()):
-		var button := menu_actions[i]
-		var previous_path := button.get_path_to(menu_actions[(i + 2) % 3])
-		var next_path := button.get_path_to(menu_actions[(i + 1) % 3])
-		button.focus_previous = previous_path
-		button.focus_next = next_path
-		button.focus_neighbor_top = previous_path
-		button.focus_neighbor_bottom = next_path
-		button.focus_neighbor_left = previous_path
-		button.focus_neighbor_right = next_path
-	pause_menu.hide()
+	Layout.build_pause_menu(self)
 
 func _toggle_menu() -> void:
 	if not playing:
@@ -122,6 +134,8 @@ func _toggle_menu() -> void:
 	if pause_menu.visible:
 		_close_menu()
 		return
+	for card in cards:
+		card.dragging = false
 	menu_previous_focus = get_viewport().gui_get_focus_owner()
 	move_child(pause_menu, -1)
 	pause_menu.show()
@@ -134,7 +148,7 @@ func _close_menu() -> void:
 	if is_instance_valid(menu_previous_focus) and menu_previous_focus.is_visible_in_tree():
 		menu_previous_focus.grab_focus()
 	else:
-		menu_button.grab_focus()
+		tools_toggle.grab_focus()
 	menu_previous_focus = null
 
 func _refresh_countdown() -> void:
@@ -149,72 +163,24 @@ func _refresh_countdown() -> void:
 	var seconds := ceili(shift.remaining_seconds)
 	countdown.text = "%02d:%02d" % [seconds / 60, seconds % 60]
 	countdown_state.text = "終了" if shift.finished() else ("監査中" if shift.judged else "")
-	countdown.add_theme_color_override("font_color", RED if seconds <= 30 else Color("eee2ad"))
+	countdown.add_theme_color_override("font_color", RED if seconds <= 30 else Color("57e4f2"))
 
 func _build_start_screen() -> void:
-	start_screen = _panel(self, Rect2(0, 0, 1280, 800), Color("202c27"))
-	start_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	start_screen.mouse_filter = Control.MOUSE_FILTER_STOP
-	_panel(start_screen, Rect2(56, 60, 1168, 680), Color("28352d"), Color("56624b"))
-	_label(start_screen, Rect2(94, 92, 1092, 25), "電子入境管理  /  審査官研修", MUTED, 16)
-	_panel(start_screen, Rect2(94, 135, 1092, 2), Color("56624b"))
-	_label(start_screen, Rect2(94, 189, 550, 70), "[ / ] パケットを拝見", PAPER, 44)
-	_label(start_screen, Rect2(98, 283, 530, 50), "そのアクセスを、許可しますか。", GREEN, 24)
-	_label(start_screen, Rect2(98, 356, 514, 124), "ファイル、プロセス、Webサイト、パケット。\n持ち込まれる対象を調べ、証拠を規則と照合。\n最後に判定してください。", PAPER, 17)
-	var briefing := _panel(start_screen, Rect2(711, 189, 439, 328), PAPER, Color("a99c7a"))
-	_label(briefing, Rect2(26, 20, 387, 23), "勤務前の手引き", Color("817e64"), 13)
-	_label(briefing, Rect2(26, 64, 387, 40), "調査 → 判定 → 監査", INK, 24)
-	_label(briefing, Rect2(26, 120, 387, 180), "01  左のツールで証拠を集める\n\n02  審査規則に従って許可・拒否\n\n03  監査票で判断の根拠を確認する", INK, 17)
-	var limit_text := "時間制限なし" if catalog.time_limit_seconds == 0 else "制限時間 %02d:%02d" % [catalog.time_limit_seconds / 60, catalog.time_limit_seconds % 60]
-	_label(start_screen, Rect2(98, 535, 1040, 28), "全%d案件  /  %s  /  監査票の確認中は時計が止まります" % [catalog.cases.size(), limit_text], MUTED, 16)
-	start_button = _button(start_screen, Rect2(98, 602, 514, 60), "勤務を開始  >", PAPER)
-	start_button.add_theme_font_size_override("font_size", 22)
-	start_button.pressed.connect(_start_shift)
-	tool_guide_button = _button(start_screen, Rect2(711, 588, 439, 44), "ツール一覧  >", PAPER)
-	tool_guide_button.pressed.connect(_show_tool_guide)
-	license_button = _button(start_screen, Rect2(711, 648, 439, 44), "ライセンス・著作権表記", MUTED)
-	license_button.pressed.connect(_show_licenses)
+	Layout.build_start_screen(self)
+	_refresh_selection()
 
 func _tool_description(tool: Dictionary) -> String:
-	return "対応対象: " + "、".join(tool.target_types.map(_type_label)) + "\n\n" + tool.get("detailed_description", tool.description)
+	var input_text := "\n必要な入力: " + Information.input_hint(tool) if not tool.get("accepted_information_types", []).is_empty() else ""
+	var platform_text: String = "\nToolの主な利用環境: " + tool.platform_note if tool.has("platform_note") else ""
+	return "対応対象: " + "、".join(tool.categories.map(_type_label)) + platform_text + input_text + "\n\n" + tool.description + "\n\nゲーム内では模擬資料を表示します。実際のコマンド実行は行いません。"
 
 func _show_tool_guide() -> void:
-	if playing or not start_screen.visible or start_button.disabled:
+	if playing or not start_screen.visible or (is_instance_valid(license_overlay) and license_overlay.visible):
 		return
 	if not is_instance_valid(tool_guide):
-		tool_guide = _panel(self, Rect2(0, 0, 1280, 800), Color("202c27"))
-		tool_guide.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		tool_guide.mouse_filter = Control.MOUSE_FILTER_STOP
-		var sheet := _panel(tool_guide, Rect2(80, 55, 1120, 690), PAPER, Color("93876b"))
-		_label(sheet, Rect2(30, 22, 1060, 45), "調査ツール詳細", INK, 30)
-		var scroll := ScrollContainer.new()
-		scroll.position = Vector2(30, 125)
-		scroll.size = Vector2(310, 465)
-		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		sheet.add_child(scroll)
-		var list := VBoxContainer.new()
-		list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		list.add_theme_constant_override("separation", 9)
-		scroll.add_child(list)
-		var group := ButtonGroup.new()
-		for i in range(catalog.tools.size()):
-			var tab := _button(list, Rect2(0, 0, 310, 48), catalog.tools[i].label, PAPER)
-			tab.custom_minimum_size.y = 48
-			tab.clip_text = true
-			tab.tooltip_text = catalog.tools[i].label
-			tab.toggle_mode = true
-			tab.button_group = group
-			var selected := tab.get_theme_stylebox("pressed").duplicate() as StyleBoxFlat
-			selected.bg_color = Color("536548")
-			selected.border_color = INK
-			tab.add_theme_stylebox_override("pressed", selected)
-			tab.pressed.connect(_select_tool_guide.bind(i))
-			tool_guide_tabs.append(tab)
-		_panel(sheet, Rect2(358, 125, 2, 465), Color("a99c7a"))
-		tool_guide_body = _rich(sheet, Rect2(382, 125, 708, 465), INK, 21)
-		tool_guide_close = _button(sheet, Rect2(30, 620, 1060, 42), "タイトル画面に戻る", PAPER)
-		tool_guide_close.pressed.connect(_close_tool_guide)
-		if not catalog.tools.is_empty():
+		guide_tools = catalog.guide_tools()
+		Layout.build_tool_guide(self)
+		if not guide_tools.is_empty():
 			_select_tool_guide(0)
 		else:
 			tool_guide_body.text = "登録されているツールはありません。"
@@ -224,7 +190,7 @@ func _show_tool_guide() -> void:
 	tool_guide_close.grab_focus()
 
 func _select_tool_guide(index: int) -> void:
-	var tool := catalog.tools[index]
+	var tool := guide_tools[index]
 	tool_guide_body.clear()
 	tool_guide_body.push_font_size(30)
 	tool_guide_body.add_text(tool.label + "\n\n")
@@ -244,19 +210,7 @@ func _show_licenses() -> void:
 		return
 	if not is_instance_valid(license_overlay):
 		license_sections = preload("res://scripts/core/license_notices.gd").sections()
-		license_overlay = _panel(self, Rect2(0, 0, 1280, 800), Color(0.06, 0.08, 0.07, 0.85))
-		license_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		license_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-		var sheet := _panel(license_overlay, Rect2(180, 55, 920, 690), PAPER, Color("93876b"))
-		_label(sheet, Rect2(30, 22, 860, 45), "ライセンス・著作権表記", INK, 30)
-		for i in range(license_sections.size()):
-			var tab := _button(sheet, Rect2(30 + i * 217, 120, 209, 40), license_sections[i].title, PAPER)
-			tab.toggle_mode = true
-			tab.pressed.connect(_select_license.bind(i))
-			license_tabs.append(tab)
-		license_body = _rich(sheet, Rect2(30, 183, 860, 409), INK, 15)
-		license_close = _button(sheet, Rect2(30, 620, 860, 42), "タイトル画面に戻る", PAPER)
-		license_close.pressed.connect(_close_licenses)
+		Layout.build_licenses(self)
 	start_button.disabled = true
 	tool_guide_button.disabled = true
 	license_button.disabled = true
@@ -272,7 +226,7 @@ func _select_license(index: int) -> void:
 
 func _close_licenses() -> void:
 	license_overlay.hide()
-	start_button.disabled = false
+	_refresh_selection()
 	tool_guide_button.disabled = false
 	license_button.disabled = false
 	license_button.grab_focus()
@@ -284,8 +238,11 @@ func _close_summary() -> void:
 		summary_overlay = null
 
 func _show_start_screen() -> void:
+	_clear_external()
 	_close_menu()
 	playing = false
+	stamp_pending = false
+	desk_generation += 1
 	_close_summary()
 	audit_overlay.hide()
 	workspace.hide()
@@ -297,193 +254,282 @@ func _start_shift() -> void:
 		return
 	if is_instance_valid(license_overlay) and license_overlay.visible:
 		return
+	var selected := _selected_cases()
+	if selected.is_empty():
+		return
 	_close_menu()
 	_close_summary()
 	start_screen.hide()
 	workspace.show()
 	playing = true
-	shift.start(catalog.cases, catalog.time_limit_seconds)
-	approve.grab_focus()
+	_clear_desk()
+	shift.start(selected, catalog.time_limit_seconds)
+	tools_toggle.grab_focus()
 
 func _draw() -> void:
-	draw_rect(Rect2(0, 0, 1280, 800), Color("373831"))
-	for y in range(82, 745, 29):
-		draw_line(Vector2(0, y), Vector2(1280, y), Color("3c3c33"), 1)
-	draw_rect(Rect2(0, 0, 1280, 70), Color("222d2d"))
-	draw_rect(Rect2(0, 70, 1280, 4), Color("171f1f"))
-	draw_rect(Rect2(333, 74, 8, 671), Color("252b27"))
-	draw_rect(Rect2(933, 74, 8, 671), Color("252b27"))
+	Layout.draw_background(self)
 
 func _build() -> void:
-	workspace = Control.new()
-	workspace.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(workspace)
-	_label(workspace, Rect2(24, 15, 420, 38), "[ / ]  パケットを拝見", PAPER, 26)
-	menu_button = _button(workspace, Rect2(24, 15, 420, 38), "", PAPER)
-	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
-		menu_button.add_theme_stylebox_override(state, StyleBoxEmpty.new())
-	menu_button.tooltip_text = "メニューを開く [ESC]"
-	menu_button.pressed.connect(_toggle_menu)
-	_panel(workspace, Rect2(500, 7, 330, 56), Color("131f1b"), Color("a89b6c"))
-	_label(workspace, Rect2(518, 24, 85, 23), "残り時間", Color("c6b77f"), 14)
-	countdown = _label(workspace, Rect2(606, 8, 130, 50), "--:--", Color("eee2ad"), 32)
-	countdown.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	countdown_state = _label(workspace, Rect2(752, 26, 70, 21), "", MUTED, 12)
-	status = _label(workspace, Rect2(951, 24, 300, 26), "準備中", PAPER, 17)
-	_label(workspace, Rect2(26, 97, 285, 25), "01   調査ツール (ホバーで詳細)", PAPER, 16)
-	_panel(workspace, Rect2(24, 593, 294, 135), Color("2b322d"), Color("555e4e"))
-	_label(workspace, Rect2(40, 605, 263, 24), "審査官への手引き", GREEN, 14)
-	_label(workspace, Rect2(40, 636, 261, 79), "申請を読み、証拠を集める。\n審査規則と照合する。\n最後に判定する。", PAPER, 14)
-	_label(workspace, Rect2(359, 97, 550, 26), "02   審査机", PAPER, 16)
-	_panel(workspace, Rect2(367, 139, 548, 316), Color("222821"))
-	_panel(workspace, Rect2(358, 130, 548, 316), PAPER, Color("a99c7a"))
-	dossier_caption = _label(workspace, Rect2(380, 142, 502, 20), "電子入境申請書", Color("8c876f"), 11)
-	dossier_icon = TextureRect.new()
-	dossier_icon.position = Vector2(380, 175)
-	dossier_icon.size = Vector2(60, 60)
-	dossier_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	dossier_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	workspace.add_child(dossier_icon)
-	dossier_title = _label(workspace, Rect2(455, 172, 427, 38), "", INK, 26)
-	dossier_title.autowrap_mode = TextServer.AUTOWRAP_OFF
-	dossier_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	dossier_meta = _label(workspace, Rect2(455, 215, 427, 24), "", Color("6f715c"), 14)
-	_panel(workspace, Rect2(380, 249, 502, 2), Color("b2a785"))
-	dossier = _rich(workspace, Rect2(380, 262, 502, 136), INK, 15)
-	stamp = _label(workspace, Rect2(674, 408, 208, 30), "審査待ち", Color("76725e"), 16)
-	stamp.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_label(workspace, Rect2(358, 468, 560, 21), "調査端末", GREEN, 13)
-	_panel(workspace, Rect2(358, 497, 548, 231), Color("172622"), Color("63745b"))
-	terminal = _rich(workspace, Rect2(372, 509, 521, 205), GREEN, 14)
-	_panel(workspace, Rect2(962, 109, 282, 623), Color("202720"))
-	_panel(workspace, Rect2(951, 100, 282, 623), Color("b8b28f"), Color("87856c"))
-	_label(workspace, Rect2(968, 113, 252, 23), "03   審査規則", INK, 17)
-	_label(workspace, Rect2(968, 638, 254, 60), "通達01 / 基礎研修\nこの勤務の規則に従って判定すること。", Color("555d4d"), 13)
-	_panel(workspace, Rect2(0, 745, 1280, 55), Color("202825"))
-	_label(workspace, Rect2(24, 759, 303, 25), "電子入境管理", MUTED, 13)
-	feedback = _label(workspace, Rect2(359, 752, 568, 43), "対象を調査してから判定してください。", PAPER, 13)
-	deny = _button(workspace, Rect2(952, 752, 136, 40), "拒否", RED)
-	deny.pressed.connect(func(): shift.decide("deny"))
-	approve = _button(workspace, Rect2(1100, 752, 136, 40), "許可", GREEN)
-	approve.pressed.connect(func(): shift.decide("approve"))
+	Layout.build_workspace(self)
+
+func _toggle_tools() -> void:
+	if not playing or shift.finished() or shift.judged:
+		tools_toggle.set_pressed_no_signal(false)
+		return
+	tool_drawer.visible = not tool_drawer.visible
+	tools_toggle.set_pressed_no_signal(tool_drawer.visible)
+	if tool_drawer.visible:
+		workspace.move_child(tool_drawer, -1)
+		tool_message.text = ""
+		_update_case_controls(shift.current())
+
+func _hide_tools() -> void:
+	tool_drawer.hide()
+	tools_toggle.set_pressed_no_signal(false)
 
 func _build_tools() -> void:
-	var scroll := ScrollContainer.new()
-	scroll.position = Vector2(24, 130)
-	scroll.size = Vector2(294, 451)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	workspace.add_child(scroll)
-	var rack := VBoxContainer.new()
-	rack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	rack.add_theme_constant_override("separation", 9)
-	scroll.add_child(rack)
-	for i in range(catalog.tools.size()):
-		var tool := catalog.tools[i]
-		var button := _button(rack, Rect2(0, 0, 276, 38), ">  " + tool.label, PAPER)
-		button.custom_minimum_size.y = 38
-		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		button.tooltip_text = tool.description + "\n対応対象: " + "、".join(tool.target_types.map(_type_label))
-		button.pressed.connect(func(): shift.inspect(tool))
-		tool_buttons.append(button)
+	Layout.build_tools(self)
+	_queue_tools_fit()
+	_hide_tools()
+
+func _set_case_tools(item: Dictionary) -> void:
+	var available := catalog.tools_for(item)
+	if active_tools == available:
+		return
+	active_tools = available
+	tool_buttons.clear()
+	for child in tool_rack.get_children():
+		tool_rack.remove_child(child)
+		child.queue_free()
+	Layout.build_case_tools(self, available)
+	_queue_tools_fit()
+
+func _queue_tools_fit() -> void:
+	if tools_fit_pending:
+		return
+	tools_fit_pending = true
+	_fit_tools.call_deferred()
+
+func _fit_tools() -> void:
+	tools_fit_pending = false
+	Layout.fit_tools(self)
+
+func _build_actions() -> void:
+	Layout.build_actions(self)
+
+func get_stamp(action_id: String) -> StampTool:
+	for stamp in action_stamps:
+		if stamp.action.id == action_id:
+			return stamp
+	return null
+
+func _clear_desk() -> void:
+	_clear_external()
+	desk_generation += 1
+	for card in cards:
+		card_layer.remove_child(card)
+		card.queue_free()
+	cards.clear()
+	target_card = null
+	rule_card = null
+	displayed_case = ""
+	displayed_observations = 0
+	selected_information.clear()
+	stamp_pending = false
+	active_card = null
+	_hide_tools()
+
+func add_information_card(data: Dictionary, origin := Vector2(524, 116)) -> DraggableCard:
+	var card := DraggableCard.new()
+	card_layer.add_child(card)
+	var dimensions := Vector2(380, 478)
+	if data.get("category") == "target":
+		dimensions = Vector2(480, 672)
+	elif data.get("category") == "rule":
+		dimensions = Vector2(326, 620)
+	card.setup(data, origin, dimensions)
+	card.clamp_to_desk()
+	card.information_selected.connect(_select_information)
+	card.stamp_dropped.connect(_receive_stamp)
+	card.stamp_validator = _can_stamp
+	card.activated.connect(_activate_card)
+	cards.append(card)
+	_activate_card(card)
+	return card
+
+func _activate_card(card: DraggableCard) -> void:
+	active_card = card
+	for entry in cards:
+		entry.set_active(entry == card)
+
+func _open_rules() -> void:
+	if not playing or shift.finished():
+		return
+	if not is_instance_valid(rule_card):
+		rule_card = add_information_card({"id": "rules", "title": "セキュリティ運用規則", "category": "rule",
+			"icon": "res://assets/icons/ui/book.svg", "source": catalog.title, "information": catalog.rules}, Vector2(940, 10))
+	rule_card.show()
+	rule_card.bring_to_front()
+
+func _select_information(token: Dictionary) -> void:
+	selected_information = token.duplicate(true)
+	for card in cards:
+		for row in card.tokens:
+			row.set_selected(not token.is_empty() and row.payload() == token)
+	for button in tool_buttons:
+		button.update_input(token)
+
+func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
+	if not playing or shift.finished() or shift.judged or pause_menu.visible or not pending_external.is_empty():
+		return
+	if not ToolRunner.supports_target(tool, shift.current()):
+		tool_message.text = "この調査環境では利用できません。"
+		return
+	var actual_input := input
+	if not input.is_empty() and not Information.accepts(tool, input) and tool.accepted_information_types.is_empty():
+		actual_input = {}
+	if not tool.accepted_information_types.is_empty() and (input.is_empty() or not Information.accepts(tool, input)):
+		tool_message.text = "「" + tool.label + "」の入力：" + Information.input_hint(tool) + "。対応する対象の情報を選択するか、ボタンへドラッグしてください。"
+		return
+	if tool.resource_kind == "external_references":
+		pending_external = {"tool": tool, "input": actual_input.duplicate(true), "generation": desk_generation}
+		external_preview_body.text = tool.label + "\n\n送信する情報の種類：" + tool.get("submission_type", "未指定") + "\n送信内容：" + tool.get("submission_value", "教材に具体値の指定なし") + "\n\n" + tool.get("confidentiality_warning", "送信内容と組織の調査方針を確認してください。") + "\n\nこのゲームでは模擬結果を表示します。実際の外部送信は行いません。"
+		if not actual_input.is_empty():
+			external_preview_body.text += "\n\n選んだ入力：" + actual_input.label + "\n" + Information.display(actual_input.value)
+		external_preview_body.scroll_to_line(0)
+		external_preview.show()
+		external_skip.grab_focus()
+		return
+	var result := shift.inspect(tool, actual_input)
+	if not result.ok:
+		tool_message.text = result.output
+	else:
+		_hide_tools()
+
+func _clear_external() -> void:
+	pending_external.clear()
+	if is_instance_valid(external_preview):
+		external_preview.hide()
+
+func _finish_external(submit: bool) -> void:
+	if pending_external.is_empty():
+		return
+	var pending := pending_external.duplicate(true)
+	_clear_external()
+	if pending.generation != desk_generation or not playing or shift.finished() or shift.judged:
+		return
+	if submit:
+		shift.inspect(pending.tool, pending.input)
+	else:
+		shift.decline_external(pending.tool, pending.input)
+	_hide_tools()
+	tools_toggle.grab_focus()
 
 func _refresh() -> void:
 	_refresh_countdown()
-	status.text = "第01勤務   /   %02d件目・全%02d件" % [mini(shift.index + 1, shift.cases.size()), shift.cases.size()]
-	audit_overlay.visible = false
+	audit_overlay.hide()
 	if shift.finished():
+		status.text = "勤務終了 / 全%02d件" % shift.cases.size()
 		_show_summary()
 		return
 	var item := shift.current()
-	_update_dossier_header(item)
-	var lines: PackedStringArray = [item.request, ""]
-	for key in item.fields:
-		if key in ["サイズ", "SIZE"] or (key in ["ファイル", "FILE"] and item.fields[key] == item.title):
-			continue
-		lines.append("%s:  %s" % [key, item.fields[key]])
-	dossier.text = "\n".join(lines)
-	dossier.scroll_to_line(0)
-	terminal.text = "> 調査待ち。\n左の一覧から対応するツールを選んでください。\n\nこの案件の調査結果はここに記録されます。"
-	if not shift.observations.is_empty():
-		var logs: PackedStringArray = []
-		for observation in shift.observations:
-			logs.append("> %s%s\n%s" % [observation.tool, "" if observation.ok else " [取得不可]", observation.output])
-		terminal.text = "\n\n".join(logs)
-		terminal.scroll_to_line(terminal.get_line_count())
-	for i in range(tool_buttons.size()):
-		tool_buttons[i].visible = item.type in catalog.tools[i].target_types
-		tool_buttons[i].disabled = shift.judged or not item.type in catalog.tools[i].target_types
-	approve.visible = not shift.judged
-	deny.visible = not shift.judged
-	next.visible = shift.judged
+	status.text = "調査 %s / %02d・%02d件" % [catalog.platform_label(ToolRunner.investigation_environment(item)), mini(shift.index + 1, shift.cases.size()), shift.cases.size()]
+	if displayed_case != item.id:
+		_display_case(item)
+	_display_observations(item)
+	_update_case_controls(item)
+	next.visible = shift.judged and not stamp_pending
 	if shift.judged:
-		var record: Dictionary = shift.records.back()
-		stamp.text = "許可" if record.verdict == "approve" else "拒否"
-		stamp.add_theme_color_override("font_color", Color("426544") if record.verdict == "approve" else Color("a34235"))
-		feedback.text = "判定を記録しました。前面の監査票を確認してください。"
-		_show_audit(record)
-	else:
-		stamp.text = "審査待ち"
-		stamp.add_theme_color_override("font_color", Color("76725e"))
-		feedback.text = "対象を調査してから判定してください。"
+		_hide_tools()
+		if not stamp_pending:
+			_show_audit(shift.records.back())
 
-func _update_dossier_header(item: Dictionary) -> void:
-	dossier_caption.text = "電子入境申請書  /  " + item.id
-	dossier_title.text = item.title
-	dossier_title.tooltip_text = item.title
-	var title_font := dossier_title.get_theme_font("font")
-	var font_size := 26
-	while font_size > 17 and title_font.get_string_size(item.title, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > 427:
-		font_size -= 1
-	dossier_title.add_theme_font_size_override("font_size", font_size)
-	var extension: String = item.title.get_extension().to_lower() if item.type in ["file", "process"] else ""
-	var kind := _type_label(item.type)
-	if not extension.is_empty():
-		kind += "（." + extension + "）"
-	var size_text: String = item.fields.get("サイズ", item.fields.get("SIZE", ""))
-	if size_text.is_empty() and item.type in ["file", "process"]:
-		size_text = "サイズ未記載"
-	dossier_meta.text = kind + ("  /  " + size_text if not size_text.is_empty() else "")
-	dossier_icon.texture = load("res://assets/icons/" + _icon_name(item.type, extension) + ".svg")
-	dossier_icon.tooltip_text = kind
+func _display_case(item: Dictionary) -> void:
+	_clear_desk()
+	displayed_case = item.id
+	_set_case_tools(item)
+	var information: Array = [{"id": "_request", "label": "申請内容", "value": item.request,
+		"category": "request", "tool_input": false, "draggable": false}]
+	information.append_array(item.information)
+	target_card = add_information_card({"id": item.id, "case_id": item.id, "title": item.title,
+		"category": "target", "source": _type_label(item.category) + " / " + item.id,
+		"metadata": _type_label(item.category) + " / " + catalog.platform_label(item.platform) + " / 調査: " + catalog.platform_label(ToolRunner.investigation_environment(item)) + " / " + catalog.difficulties[item.level].label,
+		"icon": "res://assets/icons/document.svg",
+		"information": information}, Vector2(20, 20))
+	_select_information({})
+	_open_rules()
 
-func _icon_name(target_type: String, extension: String) -> String:
-	if target_type == "url":
-		return "web"
-	if target_type == "packet":
-		return "packet"
-	match extension:
-		"exe", "com", "bat", "cmd", "sh", "ps1", "dll":
-			return "executable"
-		"msi", "pkg", "deb", "rpm":
-			return "package"
-		"zip", "7z", "rar", "gz", "tar":
-			return "archive"
-		"png", "jpg", "jpeg", "gif", "webp", "svg":
-			return "image"
-	return "document"
+func _display_observations(item: Dictionary) -> void:
+	while displayed_observations < shift.observations.size():
+		var entry := shift.observations[displayed_observations]
+		var info: Array = entry.get("information", [])
+		if info.is_empty():
+			info = [{"id": "status", "label": "調査の選択" if entry.get("skipped", false) else "取得不可", "value": entry.output, "tool_input": false}]
+		add_information_card({"id": "result_%d" % displayed_observations, "case_id": item.id,
+			"title": entry.tool + ("" if entry.ok else " · 取得不可"), "category": "analysis",
+			"source": entry.tool, "information": info}, Vector2(524 + (displayed_observations % 3) * 18, 116 + (displayed_observations % 3) * 24))
+		displayed_observations += 1
+
+func _update_case_controls(item: Dictionary) -> void:
+	for i in range(tool_buttons.size()):
+		var button = tool_buttons[i]
+		var tool: Dictionary = button.tool
+		button.target_environment = ToolRunner.investigation_environment(item)
+		button.case_id = item.id
+		button.visible = ToolRunner.supports_target(tool, item)
+		button.disabled = shift.judged
+		button.update_input(selected_information)
+	for stamp in action_stamps:
+		stamp.visible = not shift.judged
+		stamp.disabled = shift.judged or not shift.missing_evidence().is_empty()
+		stamp.modulate.a = 0.4 if stamp.disabled else 1.0
+		stamp.tooltip_text = "必要な調査とReferenceの確認を終えてください。" if stamp.disabled and not shift.judged else ""
+		stamp.case_id = item.id
+		stamp.generation = desk_generation
+	if not shift.missing_evidence().is_empty():
+		var labels: Array[String] = []
+		for id in shift.missing_evidence():
+			var matching := catalog.tools_for(item).filter(func(t): return t.id == id)
+			labels.append(item.get("evidence_alternatives", {}).get(id, {}).get("label", matching[0].label if not matching.is_empty() else id))
+		tool_message.text = "未確認: " + "、".join(labels)
+	elif tool_message.text.begins_with("未確認:"):
+		tool_message.text = "必要な資料を確認しました。内容を照合して判定してください。"
+
+func _can_stamp(data: Dictionary) -> bool:
+	return playing and not shift.finished() and not shift.judged and shift.missing_evidence().is_empty() and not pause_menu.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
+
+func _receive_stamp(card: DraggableCard, data: Dictionary) -> void:
+	if card != target_card or not _can_stamp(data):
+		return
+	stamp_pending = true
+	var generation := desk_generation
+	if not shift.decide(data.action_id):
+		stamp_pending = false
+		return
+	card.show_imprint(_verdict_label(data.action_id), get_stamp(data.action_id).stamp_color)
+	await get_tree().create_timer(0.45).timeout
+	if generation != desk_generation or not playing:
+		return
+	stamp_pending = false
+	_show_audit(shift.records.back())
+	if pause_menu.visible:
+		menu_resume.grab_focus()
 
 func _build_audit() -> void:
-	# 画面全体で入力を受け止め、監査中の背面操作を防ぐ。
-	audit_overlay = _panel(self, Rect2(0, 0, 1280, 800), Color(0.06, 0.08, 0.07, 0.78))
-	audit_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	audit_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	_panel(audit_overlay, Rect2(312, 131, 680, 540), Color("151d18"))
-	var sheet := _panel(audit_overlay, Rect2(300, 119, 680, 540), PAPER, Color("93876b"))
-	_label(sheet, Rect2(28, 21, 624, 24), "電子入境管理局  /  内部監査課", INK, 14)
-	_label(sheet, Rect2(28, 53, 624, 43), "審査結果  監査票", INK, 30)
-	_panel(sheet, Rect2(28, 109, 624, 2), Color("9b9174"))
-	audit_heading = _label(sheet, Rect2(28, 126, 624, 34), "", INK, 22)
-	audit_body = _rich(sheet, Rect2(28, 177, 624, 275), INK, 17)
-	next = _button(sheet, Rect2(28, 475, 624, 42), "確認して次の案件へ  >", PAPER)
-	next.pressed.connect(func(): shift.advance())
-	audit_overlay.visible = false
+	Layout.build_audit(self)
 
 func _show_audit(record: Dictionary) -> void:
-	audit_heading.text = "監査結果：規則に適合" if record.correct else "監査結果：誤判定を指摘"
-	audit_heading.add_theme_color_override("font_color", Color("426544") if record.correct else Color("a34235"))
-	audit_body.text = "案件番号：%s　/　%s\nあなたの判定：%s　　正しい判定：%s\n調査記録：%d件\n\n監査所見\n%s" % [
-		record.id, record.title, _verdict_label(record.verdict),
-		_verdict_label(record.expected), record.observations.size(), record.explanation]
+	audit_heading.text = catalog.feedback.get("correct_heading", "監査結果：規則に適合") if record.correct else catalog.feedback.get("incorrect_heading", "SECURITY VIOLATION · 誤判定")
+	audit_heading.add_theme_color_override("font_color", Color("57edc2") if record.correct else Color("ff718b"))
+	audit_body.text = "案件番号：%s / %s\nあなたの判定：%s\n調査記録：%d件" % [record.id, record.title, _verdict_label(record.verdict), record.observations.size()]
+	if catalog.feedback.get("show_expected", true):
+		audit_body.text += "\n正しい判定：" + _verdict_label(record.ground_truth)
+	if catalog.feedback.get("show_reason", true):
+		audit_body.text += "\n\n監査所見\n" + record.explanation
+		var investigation := InspectionShift.investigation_feedback(record)
+		if not investigation.is_empty():
+			audit_body.text += "\n\n調査手段の振り返り\n" + investigation
+	next.show()
 	audit_body.scroll_to_line(0)
 	next.text = "確認して勤務を終了  >" if shift.index == shift.cases.size() - 1 else "確認して次の案件へ  >"
 	audit_overlay.show()
@@ -492,32 +538,30 @@ func _show_audit(record: Dictionary) -> void:
 func _show_summary() -> void:
 	if is_instance_valid(summary_overlay):
 		return
+	_clear_external()
 	for button in tool_buttons:
 		button.disabled = true
-	summary_overlay = _panel(self, Rect2(0, 0, 1280, 800), Color(0.06, 0.08, 0.07, 0.82))
-	summary_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	summary_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	_panel(summary_overlay, Rect2(252, 97, 800, 630), Color("151d18"))
-	summary = _panel(summary_overlay, Rect2(240, 85, 800, 630), PAPER, Color("93876b"))
-	summary_title = _label(summary, Rect2(30, 22, 740, 45), "時間切れ / 勤務結果" if shift.timed_out else "勤務結果", INK, 30)
-	summary_stats = _label(summary, Rect2(30, 77, 740, 30), "正解 %d件  /  誤判定 %d件  /  未審査 %d件" % [shift.score(), shift.records.size() - shift.score(), shift.cases.size() - shift.records.size()], INK, 18)
-	_panel(summary, Rect2(30, 119, 740, 2), Color("a99c7a"))
-	summary_review = _rich(summary, Rect2(30, 137, 740, 396), INK, 15)
+	Layout.build_summary(self)
 	for record in shift.records:
 		_summary_item(record.title, record.id, "正解" if record.correct else "誤判定",
-			"あなたの判定：%s　/　正しい判定：%s\n%s" % [
-			_verdict_label(record.verdict), _verdict_label(record.expected), record.explanation],
-			Color("426544") if record.correct else Color("a34235"))
+			"あなたの判定：" + _verdict_label(record.verdict)
+			+ (" / 正しい判定：" + _verdict_label(record.ground_truth) if catalog.feedback.get("show_expected", true) else "")
+			+ ("\n" + record.explanation + "\n" + InspectionShift.investigation_feedback(record) if catalog.feedback.get("show_reason", true) else ""),
+			Color("57edc2") if record.correct else Color("ff718b"))
 	for i in range(shift.records.size(), shift.cases.size()):
-		_summary_item(shift.cases[i].title, shift.cases[i].id, "未審査", "時間切れのため、判定は記録されていません。", Color("77715a"))
-	summary_home = _button(summary, Rect2(30, 557, 280, 45), "スタート画面へ", MUTED)
-	summary_home.pressed.connect(_show_start_screen)
-	summary_restart = _button(summary, Rect2(326, 557, 444, 45), "新しい勤務を開始", PAPER)
-	summary_restart.pressed.connect(_start_shift)
+		var body := "時間切れのため、判定は記録されていません。"
+		if shift.timed_out and i == shift.index and not shift.judged and catalog.feedback.get("show_reason", true):
+			var investigation := InspectionShift.investigation_feedback({"observations": shift.observations})
+			if not investigation.is_empty():
+				body += "\n\n調査手段の振り返り\n" + investigation
+		_summary_item(shift.cases[i].title, shift.cases[i].id, "未審査", body, Color("b0c8da"))
+	Layout.build_summary_actions(self)
 	next.visible = false
-	approve.visible = false
-	deny.visible = false
-	feedback.text = "勤務終了。案件を振り返るか、新しい勤務を開始してください。"
+	for stamp in action_stamps:
+		stamp.hide()
+		stamp.disabled = true
+	_hide_tools()
+	tool_message.text = "勤務終了。案件を振り返るか、新しい勤務を開始してください。"
 	summary_restart.grab_focus()
 
 func _summary_item(title: String, id: String, result: String, body: String, color: Color) -> void:
@@ -530,63 +574,14 @@ func _summary_item(title: String, id: String, result: String, body: String, colo
 	summary_review.pop()
 	summary_review.add_text(body + "\n\n")
 
-func _panel(parent: Node, rect: Rect2, color: Color, border: Color = Color.TRANSPARENT) -> Panel:
-	var panel := Panel.new()
-	panel.position = rect.position
-	panel.size = rect.size
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.border_color = border
-	style.set_border_width_all(2 if border.a > 0 else 0)
-	panel.add_theme_stylebox_override("panel", style)
-	parent.add_child(panel)
-	return panel
-
-func _label(parent: Node, rect: Rect2, value: String, color: Color, font_size: int) -> Label:
-	var label := Label.new()
-	label.position = rect.position
-	label.size = rect.size
-	label.text = value
-	label.add_theme_color_override("font_color", color)
-	label.add_theme_font_size_override("font_size", font_size)
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-	parent.add_child(label)
-	return label
-
-func _rich(parent: Node, rect: Rect2, color: Color, font_size: int) -> RichTextLabel:
-	var label := RichTextLabel.new()
-	label.position = rect.position
-	label.size = rect.size
-	label.add_theme_color_override("default_color", color)
-	label.add_theme_font_size_override("normal_font_size", font_size)
-	label.selection_enabled = true
-	parent.add_child(label)
-	return label
-
-func _button(parent: Node, rect: Rect2, value: String, color: Color) -> Button:
-	var button := Button.new()
-	button.position = rect.position
-	button.size = rect.size
-	button.text = value
-	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	button.add_theme_font_size_override("font_size", 17)
-	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
-		var style := StyleBoxFlat.new()
-		style.bg_color = Color("465044") if state in ["hover", "focus"] else Color("29332d")
-		style.border_color = color.darkened(0.65) if state == "disabled" else color
-		style.set_border_width_all(2)
-		style.content_margin_left = 12
-		button.add_theme_stylebox_override(state, style)
-	button.add_theme_color_override("font_color", color)
-	button.add_theme_color_override("font_hover_color", Color("e8dfc7"))
-	button.add_theme_color_override("font_disabled_color", Color("606859"))
-	parent.add_child(button)
-	return button
-
 func _type_label(id: String) -> String:
-	return {"process": "プロセス", "file": "ファイル", "url": "Webサイト（URL）", "packet": "パケット"}.get(id, id)
+	for category in catalog.categories:
+		if category.id == id:
+			return category.label
+	return id
 
 func _verdict_label(id: String) -> String:
-	return {"approve": "許可", "deny": "拒否"}.get(id, id)
+	for action in catalog.actions:
+		if action.id == id:
+			return action.label
+	return id
