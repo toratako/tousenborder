@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "id": "PROC-LINUX-INTERMEDIATE-001",
+  "category": "process",
+  "platform": "linux",
+  "level": "intermediate",
+  "title": "sh / PID 4200",
+  "request": "Web Server上で実行中のProcessです。継続（ALLOW）か停止（BLOCK）を判断してください。",
+  "initial_information": {
+    "Process名": "sh",
+    "PID": 4200,
+    "User": "www-data",
+    "CPU": "0.4%",
+    "Memory": "4 MiB"
+  },
+  "tools": [
+    {
+      "id": "pstree",
+      "name": "pstree",
+      "description": "選択したPIDの祖先を-sで、子孫を通常のTree表示で確認します。Webアプリの通常動作と比較してください。",
+      "output": "$ pstree -A -s -p 4200\nsystemd(1)---php-fpm(3100)---sh(4200)\n$ pstree -A -p 4200\nsh(4200)---training-client(4210)",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "output_information": [
+        {
+          "id": "child_pid",
+          "label": "通信ProcessのPID",
+          "value": 4210,
+          "data_type": "pid"
+        }
+      ],
+      "platform_note": "Linux（PSmisc）",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "Processの引数と実行Pathを確認します。攻撃部分は実行不能な教材用表記です。",
+      "output": "$ ps -p 4210 -o pid,ppid,user,args\n PID  PPID USER      COMMAND\n4210  4200 www-data  /tmp/.cache/training-client <NONEXECUTABLE-DEMO-ARGS>",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "pstree",
+          "id": "child_pid"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / macOS。Linuxのpsを模した出力例です。",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "lsof",
+      "name": "lsof -i",
+      "description": "Processが保持するSocketと接続先を確認します。",
+      "output": "$ lsof -nP -a -p 4210 -iTCP\nCOMMAND          PID USER     FD TYPE DEVICE SIZE/OFF NODE NAME\ntraining-client 4210 www-data  5u IPv4  40001      0t0  TCP 192.0.2.40:53000->203.0.113.66:443 (ESTABLISHED)",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "pstree",
+          "id": "child_pid"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / macOS",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "crontab",
+      "name": "crontab",
+      "description": "Userごとの定期実行設定を読み取ります。登録内容を運用台帳と照合します。",
+      "output": "$ crontab -u www-data -l\n*/5 * * * * /tmp/.cache/training-job.sh",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "User",
+      "platform_note": "Linux / macOS。教材はLinuxの例です。",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "web_service_design",
+      "name": "Service構成台帳",
+      "content": "このWebアプリは固定ページ配信のみでshellを起動しません。www-dataのcrontabは空、外向き通信は社内DB 192.0.2.50:5432のみが承認されています。"
+    }
+  ],
+  "external_references": [],
+  "ground_truth": "block",
+  "explanation": "固定ページ配信Serviceから一時領域のshellと通信Processが起動し、無承認の定期実行もあるため停止します。shellやcrontab自体ではなく、Serviceの設計と複数の挙動の不一致が根拠です。",
+  "topic": "Process Tree・Socket・永続化設定を照合する",
+  "summary": "Web Serviceに紛れたshellと定期実行を調べる。",
+  "learning_objectives": [
+    "Process Tree・Socket・永続化設定を照合する"
+  ],
+  "required_evidence": [
+    "pstree",
+    "ps",
+    "lsof",
+    "crontab",
+    "web_service_design"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://man7.org/linux/man-pages/man1/ps.1.html",
+    "https://man7.org/linux/man-pages/man1/pstree.1.html"
+  ],
+  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username",
+    "Process名": "process_name"
+  }
+}

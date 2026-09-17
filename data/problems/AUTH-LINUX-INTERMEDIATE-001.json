@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-LINUX-INTERMEDIATE-001",
+  "category": "account",
+  "platform": "linux",
+  "level": "intermediate",
+  "title": "いつもと異なる経路からのSSH Login",
+  "request": "Password照合後、Session成立前の最終審査です。過去Logは08:59までの記録です。",
+  "initial_information": {
+    "Username": "ops_mei",
+    "Source IP": "203.0.113.81",
+    "Time": "2026-09-15T09:00:00+09:00",
+    "Authentication Result": "Password照合成功・Sessionは未成立",
+    "MFA Result": "Gateway MFAを経由していない",
+    "Device情報": "未登録端末"
+  },
+  "tools": [
+    {
+      "id": "journalctl",
+      "name": "journalctl",
+      "description": "systemd Journalから過去のSSH認証Logを読みます。Service名はディストリビューションによりssh/sshd等で異なります。",
+      "output": "$ journalctl -u ssh.service --until '2026-09-15 08:59:00' --grep '203\\.0\\.113\\.81' --no-pager\nSep 15 08:54:00 server sshd[801]: Failed password for ops_mei from 203.0.113.81 port 42000 ssh2",
+      "accepted_information_types": [
+        "ip"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Source IP"
+        }
+      ],
+      "input_hint": "送信元IP",
+      "platform_note": "Linux",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "last",
+      "name": "last",
+      "description": "過去に成立したLoginの接続元を確認します。",
+      "output": "$ last -i ops_mei\nops_mei pts/1        192.0.2.110     Mon Sep 14 10:00 - 10:15  (00:15)",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Username"
+        }
+      ],
+      "input_hint": "Username",
+      "platform_note": "Linux。教材はwtmpのLogin記録を確認します。",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "login_history",
+      "name": "保守予定 / 認証方針",
+      "content": "ops_meiのアクセスは登録端末からGateway 192.0.2.110とMFAを経由する。新経路の例外申請なし。今朝の接続要求を本人は事前連絡窓口で否認。"
+    }
+  ],
+  "external_references": [],
+  "ground_truth": "block",
+  "explanation": "本人が要求を否認しており、必須のGateway・MFAも経由していないため遮断します。失敗Logは過去の試行を示しますが、Passwordの使い回しや攻撃種別までは断定できません。",
+  "topic": "認証成功とSessionを許可してよい条件を区別する",
+  "summary": "過去の失敗と必須認証経路・本人確認を組み合わせる。",
+  "learning_objectives": [
+    "認証成功とSessionを許可してよい条件を区別する"
+  ],
+  "required_evidence": [
+    "journalctl",
+    "last",
+    "login_history"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [],
+  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "initial_information_types": {
+    "Username": "username",
+    "Source IP": "ip"
+  }
+}

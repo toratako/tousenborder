@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "id": "learning",
+  "title": "セキュリティ判断の基礎 / 代表24問",
+  "time_limit_seconds": 0,
+  "categories": [
+    {
+      "id": "file",
+      "label": "File"
+    },
+    {
+      "id": "process",
+      "label": "Process"
+    },
+    {
+      "id": "web",
+      "label": "Web"
+    },
+    {
+      "id": "network",
+      "label": "Network"
+    },
+    {
+      "id": "email",
+      "label": "Email"
+    },
+    {
+      "id": "account",
+      "label": "Account / Authentication"
+    },
+    {
+      "id": "package",
+      "label": "Package"
+    }
+  ],
+  "resource_groups": [
+    {
+      "id": "tools",
+      "label": "Tool",
+      "kind": "tools"
+    },
+    {
+      "id": "references",
+      "label": "Reference",
+      "kind": "references"
+    },
+    {
+      "id": "external_references",
+      "label": "External Reference",
+      "kind": "external_references"
+    },
+    {
+      "id": "attachment_tools",
+      "label": "添付Fileの調査",
+      "kind": "tools"
+    },
+    {
+      "id": "url_tools",
+      "label": "URLの調査",
+      "kind": "tools"
+    }
+  ],
+  "rules": [
+    {
+      "id": "workflow",
+      "label": "調査の進め方",
+      "value": "初期情報を選択・ドラッグ → Tool → 結果をReferenceと照合 → 必要なら結果を次のToolへ渡す → 判断。Toolには対応する対象の情報が必要です。"
+    },
+    {
+      "id": "context",
+      "label": "判断する時点",
+      "value": "Processは実行中の対象の継続／停止。他の対象は実行・アクセス・接続・受入れ・Session成立・Installより前に判断します。"
+    },
+    {
+      "id": "evidence",
+      "label": "情報の解釈",
+      "value": "Toolは事実を取得し、Referenceは比較対象を示します。名前、署名、Port、周期、認証Pass、検出0件のどれか1つだけで安全性を決めません。"
+    },
+    {
+      "id": "external",
+      "label": "外部への送信",
+      "value": "送信内容と組織の方針を確認します。Hash検索とFile Uploadを区別し、Token付きURLや社外秘Fileの外部送信を避けます。"
+    },
+    {
+      "id": "web",
+      "label": "Web・Emailの調査",
+      "value": "不審なURLは通常Browserで直接開かず、保存資料や隔離解析を利用します。EmailはHeader・添付・URLをそれぞれ確認します。"
+    }
+  ],
+  "feedback": {
+    "correct_heading": "対象の判定：正解",
+    "incorrect_heading": "対象の判定：誤判定",
+    "show_reason": true
+  },
+  "problems": [
+    "res://data/problems/FILE-WIN-VERY-BEGINNER-001.json",
+    "res://data/problems/WEB-VERY-BEGINNER-001.json",
+    "res://data/problems/FILE-LINUX-BEGINNER-001.json",
+    "res://data/problems/FILE-LINUX-BEGINNER-002.json",
+    "res://data/problems/PROC-LINUX-BEGINNER-001.json",
+    "res://data/problems/WEB-BEGINNER-001.json",
+    "res://data/problems/EMAIL-BEGINNER-001.json",
+    "res://data/problems/AUTH-LINUX-BEGINNER-001.json",
+    "res://data/problems/PKG-PYPI-BEGINNER-001.json",
+    "res://data/problems/PROC-WIN-INTERMEDIATE-001.json",
+    "res://data/problems/PROC-LINUX-INTERMEDIATE-001.json",
+    "res://data/problems/WEB-INTERMEDIATE-001.json",
+    "res://data/problems/NET-LINUX-INTERMEDIATE-001.json",
+    "res://data/problems/EMAIL-INTERMEDIATE-001.json",
+    "res://data/problems/AUTH-WIN-INTERMEDIATE-001.json",
+    "res://data/problems/AUTH-LINUX-INTERMEDIATE-001.json",
+    "res://data/problems/PKG-NPM-INTERMEDIATE-001.json",
+    "res://data/problems/FILE-WIN-ADVANCED-001.json",
+    "res://data/problems/PROC-WIN-ADVANCED-001.json",
+    "res://data/problems/WEB-ADVANCED-001.json",
+    "res://data/problems/NET-WIN-ADVANCED-001.json",
+    "res://data/problems/EMAIL-ADVANCED-001.json",
+    "res://data/problems/AUTH-WIN-ADVANCED-001.json",
+    "res://data/problems/PKG-NPM-ADVANCED-001.json"
+  ]
+}

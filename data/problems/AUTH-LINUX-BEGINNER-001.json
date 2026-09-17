@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-LINUX-BEGINNER-001",
+  "category": "account",
+  "platform": "linux",
+  "level": "beginner",
+  "title": "定例保守のSSH Login",
+  "request": "SSH Sessionの成立前です。Password照合後にGatewayの追加認証も完了しており、過去履歴と比較して最終判断します。",
+  "initial_information": {
+    "Username": "ops_aki",
+    "Source IP": "192.0.2.110",
+    "Time": "2026-09-15T09:00:00+09:00",
+    "Authentication Result": "Password照合成功・Sessionは未成立",
+    "MFA Result": "社内Gatewayで成功",
+    "Device情報": "登録済み保守端末OPS-7"
+  },
+  "tools": [
+    {
+      "id": "last",
+      "name": "last",
+      "description": "過去のLoginとLogoutをwtmpから確認します。今回の未成立Sessionは含めません。",
+      "output": "$ last -i ops_aki\nops_aki pts/0        192.0.2.110     Mon Sep 14 09:00 - 09:20  (00:20)\nops_aki pts/0        192.0.2.110     Fri Sep 11 09:00 - 09:18  (00:18)",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Username"
+        }
+      ],
+      "input_hint": "Username",
+      "platform_note": "Linux。教材はwtmpのLogin記録を確認します。",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "lastlog",
+      "name": "lastlog",
+      "description": "Userごとの最終Loginを確認します。未記録や空欄が直ちに不正を意味するわけではありません。",
+      "output": "$ lastlog -u ops_aki\nUsername         Port     From             Latest\nops_aki          pts/0    192.0.2.110      Mon Sep 14 09:00:00 +0900 2026",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Username"
+        }
+      ],
+      "input_hint": "Username",
+      "platform_note": "Linux",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "maintenance",
+      "name": "保守予定 / Company Directory",
+      "content": "ops_akiはLinux保守担当。9月15日09:00の保守申請CHG-510を承認。端末OPS-7、Gateway出口192.0.2.110、Gateway MFAを使用。"
+    }
+  ],
+  "external_references": [],
+  "ground_truth": "allow",
+  "explanation": "過去の接続元と今回の端末・時刻が承認済み保守予定に一致し、必要な認証も完了しているため許可します。lastとlastlogは成立前の要求を過去履歴と比較するために使えます。",
+  "topic": "last・lastlogで過去Loginと比較する",
+  "summary": "通常の保守Loginを過去履歴と保守予定で確認する。",
+  "learning_objectives": [
+    "last・lastlogで過去Loginと比較する"
+  ],
+  "required_evidence": [
+    "last",
+    "lastlog",
+    "maintenance"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [],
+  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "initial_information_types": {
+    "Username": "username",
+    "Source IP": "ip"
+  }
+}

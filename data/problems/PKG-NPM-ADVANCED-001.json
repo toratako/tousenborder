@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "id": "PKG-NPM-ADVANCED-001",
+  "category": "package",
+  "platform": "common",
+  "level": "advanced",
+  "title": "@northstar-training/native-render 3.2.0",
+  "request": "承認済みNative ModuleのUpdateです。Install Scriptがあるため、内容とReviewを確認してください。",
+  "initial_information": {
+    "Package名": "@northstar-training/native-render",
+    "Version": "3.2.0",
+    "Registry": "npm Registry（教材用Metadata）",
+    "Install要求元": "承認済み変更申請DEP-720"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "registry_metadata",
+      "name": "npm Registry / Package Metadata",
+      "content": {
+        "name": "@northstar-training/native-render",
+        "version": "3.2.0",
+        "scripts": {
+          "install": "node-gyp rebuild"
+        },
+        "repository": "https://code.northstar.example/native-render",
+        "dist": {
+          "integrity": "sha512-KIGPgfNiTEBGPo3419nC4nOmvn5v+3Yade3rzypbRke3uNRuRkVB0goaXyZuHfTrRZpggtA2U32UcCM1d3dOWA=="
+        }
+      }
+    },
+    {
+      "id": "repository_review",
+      "name": "Repository / Build Review",
+      "content": "Release v3.2.0のSourceと配布物をReview済み。installは同梱のNative ModuleをローカルBuildし、認証情報の読取りや外部送信は行いません。Build環境と必要権限をDEP-720で承認。"
+    },
+    {
+      "id": "lock_file",
+      "name": "Lock file",
+      "content": {
+        "packages": {
+          "node_modules/@northstar-training/native-render": {
+            "version": "3.2.0",
+            "resolved": "https://registry.npmjs.org/@northstar-training/native-render/-/native-render-3.2.0.tgz",
+            "integrity": "sha512-KIGPgfNiTEBGPo3419nC4nOmvn5v+3Yade3rzypbRke3uNRuRkVB0goaXyZuHfTrRZpggtA2U32UcCM1d3dOWA==",
+            "hasInstallScript": true
+          }
+        }
+      }
+    },
+    {
+      "id": "osv",
+      "name": "OSV",
+      "content": {
+        "照会": {
+          "package": {
+            "name": "@northstar-training/native-render",
+            "ecosystem": "npm"
+          },
+          "version": "3.2.0"
+        },
+        "結果": {
+          "vulns": []
+        },
+        "注記": "照会時点の登録情報。未知の問題がないという保証ではありません。"
+      }
+    }
+  ],
+  "external_references": [],
+  "ground_truth": "allow",
+  "explanation": "Install Scriptはレビュー済みのローカルBuildで、Version・配布物のintegrity・導入承認も一致するため許可します。Scriptの存在やOSV該当なしだけではなく、処理内容と承認を確認します。",
+  "topic": "正常なInstall Scriptを悪性更新と区別する",
+  "summary": "正当なNative Module更新をSource ReviewとLock fileで確認する。",
+  "learning_objectives": [
+    "正常なInstall Scriptを悪性更新と区別する"
+  ],
+  "required_evidence": [
+    "registry_metadata",
+    "repository_review",
+    "lock_file",
+    "osv"
+  ],
+  "decision_context": "before_install",
+  "scenario_type": "standard",
+  "sources": [
+    "https://docs.npmjs.com/cli/v11/using-npm/scripts/",
+    "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/",
+    "https://google.github.io/osv.dev/api/"
+  ],
+  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "ecosystem": "npm",
+  "initial_information_types": {
+    "Package名": "package_name",
+    "Version": "version"
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "id": "FILE-WIN-ADVANCED-001",
+  "category": "file",
+  "platform": "windows",
+  "level": "advanced",
+  "title": "report-tool.exe",
+  "request": "社内開発の集計Toolを実行する申請です。署名がないという通知が出ています。",
+  "initial_information": {
+    "File名": "report-tool.exe",
+    "拡張子": ".exe",
+    "Size": "92,160 bytes",
+    "保存場所": "C:\\Company\\Tools",
+    "入手元": "\\\\files.northstar.example\\approved",
+    "情報区分": "社外秘",
+    "配布Archive": "report-tool.tar.gz"
+  },
+  "tools": [
+    {
+      "id": "sigcheck",
+      "name": "Sigcheck",
+      "description": "デジタル署名とFile情報を表示します。署名の有無だけで安全性を決めず、Publisherや配布元と照合します。",
+      "output": "sigcheck -nobanner report-tool.exe\nC:\\Company\\Tools\\report-tool.exe:\n        Verified:       Unsigned\n        Description:    Internal reporting utility",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File名"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows（Microsoft Sysinternals）。別途導入するToolです。",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "get_filehash",
+      "name": "Get-FileHash",
+      "description": "FileのHashを計算します。信頼できる配布台帳の値と比較してください。",
+      "output": "PS> Get-FileHash .\\report-tool.exe -Algorithm SHA256 | Format-List\nAlgorithm : SHA256\nHash      : 1E68E0EA1D3B87CA5B1BE8313E0FB559E3CE136FFA8E58739BDB9505F4F38338\nPath      : C:\\Company\\Tools\\report-tool.exe",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File名"
+        }
+      ],
+      "input_hint": "File",
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "SHA-256（次の調査に使用可能）",
+          "value": "1E68E0EA1D3B87CA5B1BE8313E0FB559E3CE136FFA8E58739BDB9505F4F38338",
+          "data_type": "sha256"
+        }
+      ],
+      "platform_note": "Windows（PowerShell）",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "strings",
+      "name": "Strings（Sysinternals）",
+      "description": "Fileに含まれる可読文字列を抽出します。文字列の存在だけで実行時の挙動は断定できません。",
+      "output": "strings -n 8 report-tool.exe\nInternal Reporting Utility\nInput: monthly.csv\nOutput: summary.csv",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File名"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows（Sysinternals Strings）。GNU stringsとは別のToolです。",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "tar",
+      "name": "tar",
+      "description": "Archiveを実行せずに内容一覧を表示します。展開先や含まれるFileを確認します。",
+      "output": "C:\\> tar -tf report-tool.tar.gz\nreport-tool/\nreport-tool/report-tool.exe\nreport-tool/README.txt",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "配布Archive"
+        }
+      ],
+      "input_hint": "配布Archive",
+      "platform_note": "Linux / macOS / Windows。LinuxはGNU tar、Windowsはbsdtarを模した出力例です。",
+      "environments": [
+        "windows",
+        "linux"
+      ],
+      "output_by_environment": {
+        "windows": "C:\\> tar -tf report-tool.tar.gz\nreport-tool/\nreport-tool/report-tool.exe\nreport-tool/README.txt",
+        "linux": "$ tar -tf report-tool.tar.gz\nreport-tool/\nreport-tool/report-tool.exe\nreport-tool/README.txt"
+      }
+    }
+  ],
+  "references": [
+    {
+      "id": "approved_software",
+      "name": "Approved Software",
+      "content": {
+        "申請": "CHG-217",
+        "署名": "社内限定の未署名版をレビュー済み、実行承認",
+        "File": "report-tool.exe",
+        "SHA256": "1e68e0ea1d3b87ca5b1be8313e0fb559e3ce136ffa8e58739bdb9505f4f38338",
+        "情報区分": "社外秘・本体の外部Upload禁止",
+        "外部照会": "Hash検索のみ許可。File本体の外部Uploadは禁止。"
+      }
+    }
+  ],
+  "external_references": [
+    {
+      "id": "vt_upload",
+      "name": "VirusTotal / File Upload",
+      "description": "送信する情報と公開範囲を確認して、外部照会を行うか選びます。結果は模擬です。",
+      "submission_type": "file",
+      "submission_value": "C:\\Company\\Tools\\report-tool.exe (92,160 bytes / 社外秘)",
+      "output": "File analysis (fixture)\nmalicious: 0\nundetected: 69",
+      "correct_usage": false,
+      "confidentiality_warning": "File本体を外部へ送ります。通常のUploadでは検体が第三者と共有され得ます。",
+      "reason": "社外秘Fileの本体送信は禁止されています。検出0件でも送信による漏洩は取り消せません。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File名"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "OS共通の外部サービス（VirusTotal）。Web / APIから利用します。ゲーム内は模擬照会です。",
+      "environments": [
+        "windows",
+        "linux"
+      ]
+    },
+    {
+      "id": "vt_hash",
+      "name": "VirusTotal / Hash検索",
+      "description": "送信する情報と公開範囲を確認して、外部照会を行うか選びます。結果は模擬です。",
+      "submission_type": "hash",
+      "submission_value": "1E68E0EA1D3B87CA5B1BE8313E0FB559E3CE136FFA8E58739BDB9505F4F38338",
+      "output": "SHA-256 report lookup (fixture)\nReport not found",
+      "correct_usage": true,
+      "confidentiality_warning": "Hashを送信します。組織の方針ではHash照会のみ許可されています。社外秘File本体は送信できません。",
+      "reason": "組織の方針ではこのFileのHash照会のみ許可されています。本体のUploadは禁止です。未登録は安全の証明ではありません。",
+      "accepted_information_types": [
+        "sha256"
+      ],
+      "input_bindings": [
+        {
+          "source": "get_filehash",
+          "id": "sha256"
+        }
+      ],
+      "input_hint": "SHA-256",
+      "platform_note": "OS共通の外部サービス（VirusTotal）。Web / APIから利用します。ゲーム内は模擬照会です。",
+      "environments": [
+        "windows",
+        "linux"
+      ]
+    }
+  ],
+  "ground_truth": "allow",
+  "explanation": "未署名でもレビュー済みの承認記録とHashが一致するため許可します。File本体は社外秘なので、VirusTotalへのUploadは行いません。",
+  "topic": "未署名ソフトの正当性を承認記録で判断する",
+  "summary": "正常な未署名Toolと、機密Fileの外部Uploadを区別する。",
+  "learning_objectives": [
+    "未署名ソフトの正当性を承認記録で判断する"
+  ],
+  "required_evidence": [
+    "sigcheck",
+    "get_filehash",
+    "approved_software"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck",
+    "https://docs.virustotal.com/docs/how-it-works"
+  ],
+  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "initial_information_types": {
+    "File名": "file",
+    "Size": "file_size",
+    "保存場所": "directory",
+    "配布Archive": "file"
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "id": "EMAIL-INTERMEDIATE-001",
+  "category": "email",
+  "platform": "common",
+  "level": "intermediate",
+  "title": "研修日程とPDFの案内",
+  "request": "受信保留中のEmailです。Headerに加え、添付FileとURLも調べて受け入れ可否を判断してください。",
+  "initial_information": {
+    "Display Name": "社内研修担当",
+    "From": "training@northstar.example",
+    "Subject": "9月研修日程",
+    "本文": "申込み済み研修の日程PDFをお送りします。社内ポータルの同じ日程も参照できます。",
+    "添付File名": "september-schedule.pdf",
+    "URL": "https://training.northstar.example/course/intro",
+    "Email": "held-email-intermediate-001.eml"
+  },
+  "tools": [
+    {
+      "id": "raw_header",
+      "name": "Raw Header",
+      "description": "受信Gatewayが検証した認証結果、返信先、送信経路を確認します。添付やURLは別途調べます。 入力は受信保留中のEmail全体です。FromのAddress単独からHeaderは取得できません。",
+      "output": "From: 社内研修担当 <training@northstar.example>\nReply-To: training@northstar.example\nReturn-Path: <training@northstar.example>\nReceived: from mail.northstar.example (192.0.2.10)\n by mx.northstar.example with ESMTPS; 15 Sep 2026 08:30:00 +0900\nAuthentication-Results: mx.northstar.example;\n spf=pass smtp.mailfrom=northstar.example;\n dkim=pass header.d=northstar.example;\n dmarc=pass header.from=northstar.example",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Email"
+        }
+      ],
+      "input_hint": "Email全体",
+      "platform_note": "OS共通の調査方法。単独の製品名ではありません。EmailクライアントやGatewayで元のHeaderを表示する操作は製品によって異なります。",
+      "environments": [
+        "windows",
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "company_directory",
+      "name": "Company Directory",
+      "content": "training@northstar.exampleは研修担当。受信者は9月研修に申込み済み。"
+    },
+    {
+      "id": "approved_document",
+      "name": "公開済み資料台帳",
+      "content": {
+        "File": "september-schedule.pdf",
+        "SHA256": "ab79e9bd82cc9d6bba0157e1887ec0420938f62d4c981ac2467bd9d910ee68eb",
+        "Version": "研修担当がレビュー済みの配布版"
+      }
+    },
+    {
+      "id": "official_domain",
+      "name": "Official Domain",
+      "content": "正規Host: training.northstar.example。/course/intro は申込み済み研修の紹介ページ。解決先192.0.2.90。",
+      "output_information": [
+        {
+          "id": "registered_domain",
+          "label": "台帳の登録Domain",
+          "value": "northstar.example",
+          "data_type": "domain"
+        }
+      ]
+    }
+  ],
+  "external_references": [],
+  "ground_truth": "allow",
+  "explanation": "送信元の整合に加え、添付のHashがレビュー済みPDFに一致し、URLも正規の研修ページなので許可します。Emailの認証Passだけでなく、添付とリンクをそれぞれ調査します。",
+  "topic": "Emailの添付をFile、URLをWebとして調査する",
+  "summary": "正規研修メールをHeader・添付PDF・URLの3方向で確認する。",
+  "learning_objectives": [
+    "Emailの添付をFile、URLをWebとして調査する"
+  ],
+  "required_evidence": [
+    "raw_header",
+    "company_directory",
+    "attachment_hash",
+    "approved_document",
+    "official_domain"
+  ],
+  "decision_context": "before_delivery",
+  "scenario_type": "standard",
+  "sources": [],
+  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "resources": {
+    "attachment_tools": [
+      {
+        "id": "attachment_exiftool",
+        "name": "ExifTool / 添付",
+        "description": "添付Fileの形式やMetadataを読み取ります。Metadataだけでは安全性を保証できません。",
+        "output": "exiftool september-schedule.pdf\nFile Name                       : september-schedule.pdf\nFile Type                       : PDF\nMIME Type                       : application/pdf\nPDF Version                     : 1.7\nPage Count                      : 2",
+        "accepted_information_types": [
+          "file"
+        ],
+        "input_bindings": [
+          {
+            "source": "initial_information",
+            "id": "添付File名"
+          }
+        ],
+        "input_hint": "添付File",
+        "platform_note": "Windows / Linux / macOS",
+        "environments": [
+          "windows",
+          "linux"
+        ]
+      },
+      {
+        "id": "attachment_hash",
+        "name": "7-Zip / 添付Hash",
+        "description": "7-ZipのHash機能で添付のSHA-256を取得します。レビュー済み資料の値と比較します。",
+        "output": "7z h -scrcSHA256 september-schedule.pdf\nSHA256 for data:              ab79e9bd82cc9d6bba0157e1887ec0420938f62d4c981ac2467bd9d910ee68eb\nEverything is Ok",
+        "accepted_information_types": [
+          "file"
+        ],
+        "input_bindings": [
+          {
+            "source": "initial_information",
+            "id": "添付File名"
+          }
+        ],
+        "input_hint": "添付File",
+        "output_information": [
+          {
+            "id": "sha256",
+            "label": "添付のSHA-256",
+            "value": "ab79e9bd82cc9d6bba0157e1887ec0420938f62d4c981ac2467bd9d910ee68eb",
+            "data_type": "sha256"
+          }
+        ],
+        "platform_note": "Windows / Linux / macOS。7-Zipのコマンドライン版を模した出力例です。",
+        "environments": [
+          "windows",
+          "linux"
+        ],
+        "output_by_environment": {
+          "windows": "C:\\> 7z h -scrcSHA256 september-schedule.pdf\nSHA256 for data:              ab79e9bd82cc9d6bba0157e1887ec0420938f62d4c981ac2467bd9d910ee68eb\nEverything is Ok",
+          "linux": "$ 7zz h -scrcSHA256 september-schedule.pdf\nSHA256 for data:              ab79e9bd82cc9d6bba0157e1887ec0420938f62d4c981ac2467bd9d910ee68eb\nEverything is Ok"
+        }
+      }
+    ],
+    "url_tools": [
+      {
+        "id": "url_parse",
+        "name": "Python / URL分解",
+        "input_hint": "URL",
+        "description": "Pythonのurllib.parseでURLからHostを取り出します。ローカルの文字列処理で、URLにアクセスしたり外部送信したりしません。",
+        "output": "python -c \"from urllib.parse import urlsplit; print(urlsplit('https://training.northstar.example/course/intro').hostname)\"\ntraining.northstar.example",
+        "accepted_information_types": [
+          "url"
+        ],
+        "input_bindings": [
+          {
+            "source": "initial_information",
+            "id": "URL"
+          }
+        ],
+        "output_information": [
+          {
+            "id": "host",
+            "label": "Host（次の調査に使用可能）",
+            "value": "training.northstar.example",
+            "data_type": "domain"
+          }
+        ],
+        "platform_note": "Windows / Linux / macOS（Python 3）",
+        "environments": [
+          "windows",
+          "linux"
+        ]
+      },
+      {
+        "id": "link_rdap",
+        "name": "RDAP / URL",
+        "description": "リンク先Domainの登録情報を調べます。URLを通常Browserで開く必要はありません。",
+        "output": "RDAP response (fixture excerpt)\n{\"ldhName\":\"northstar.example\",\"events\":[{\"eventAction\":\"registration\",\"eventDate\":\"2026-09-01T00:00:00Z\"}]}",
+        "accepted_information_types": [
+          "domain"
+        ],
+        "input_bindings": [
+          {
+            "source": "official_domain",
+            "id": "registered_domain"
+          }
+        ],
+        "input_hint": "登録Domain",
+        "platform_note": "OS共通の照会方式（RDAP）。登録Domainを対応クライアントやWebサービスで照会します。",
+        "environments": [
+          "windows",
+          "linux"
+        ]
+      }
+    ]
+  },
+  "initial_information_types": {
+    "Email": "email",
+    "From": "email_address",
+    "添付File名": "file",
+    "URL": "url"
+  }
+}

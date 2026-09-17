@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "WEB-VERY-BEGINNER-001",
+  "category": "web",
+  "platform": "common",
+  "level": "very_beginner",
+  "title": "Microsoftアカウント確認というリンク",
+  "request": "リンクはまだ開いていません。表示文字列とURLを比較してアクセス可否を判断してください。",
+  "initial_information": {
+    "完全なURL": "https://microsoft.com.attacker.example/signin",
+    "Link表示文字列": "https://microsoft.com/signin",
+    "アクセス要求元": "アカウント確認メール"
+  },
+  "tools": [],
+  "references": [],
+  "external_references": [],
+  "ground_truth": "block",
+  "explanation": "表示された接続先と実際のHostが異なり、URLのHostはmicrosoft.comではなくattacker.example配下なので遮断します。URLに有名なDomain名が含まれるだけでは正規サイトとはいえません。",
+  "topic": "URLのHostと表示文字列を区別する",
+  "summary": "正規Domain名を先頭に含む偽Hostを初期情報から識別する。",
+  "learning_objectives": [
+    "URLのHostと表示文字列を区別する"
+  ],
+  "required_evidence": [
+    "initial_information"
+  ],
+  "decision_context": "before_access",
+  "scenario_type": "standard",
+  "sources": [],
+  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "initial_information_types": {
+    "完全なURL": "url"
+  }
+}

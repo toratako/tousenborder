@@ -1,0 +1,509 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Canonical security learning problem",
+  "description": "Version 1 problem authoring contract. Pack registration, input reachability and evidence references are checked semantically.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/text"
+    },
+    "category": {
+      "$ref": "#/$defs/text"
+    },
+    "title": {
+      "$ref": "#/$defs/text"
+    },
+    "request": {
+      "$ref": "#/$defs/text"
+    },
+    "explanation": {
+      "$ref": "#/$defs/text"
+    },
+    "topic": {
+      "$ref": "#/$defs/text"
+    },
+    "summary": {
+      "$ref": "#/$defs/text"
+    },
+    "decision_context": {
+      "$ref": "#/$defs/text"
+    },
+    "scenario_type": {
+      "$ref": "#/$defs/text"
+    },
+    "inspired_by": {
+      "$ref": "#/$defs/text"
+    },
+    "ecosystem": {
+      "$ref": "#/$defs/text"
+    },
+    "fixture_note": {
+      "$ref": "#/$defs/text"
+    },
+    "schema_version": {
+      "const": 1,
+      "type": "integer"
+    },
+    "platform": {
+      "enum": [
+        "windows",
+        "linux",
+        "common"
+      ]
+    },
+    "level": {
+      "enum": [
+        "very_beginner",
+        "beginner",
+        "intermediate",
+        "advanced"
+      ]
+    },
+    "ground_truth": {
+      "enum": [
+        "allow",
+        "block"
+      ]
+    },
+    "initial_information": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/value"
+      }
+    },
+    "initial_information_types": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/text"
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/tool"
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/reference"
+      }
+    },
+    "external_references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/external"
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/resource"
+        }
+      }
+    },
+    "learning_objectives": {
+      "$ref": "#/$defs/texts"
+    },
+    "required_evidence": {
+      "$ref": "#/$defs/texts"
+    },
+    "evidence_alternatives": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/evidence_alternative"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^https://[^/\\s]+(?:/\\S*)?$"
+      },
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "id",
+    "category",
+    "title",
+    "request",
+    "explanation",
+    "topic",
+    "summary",
+    "decision_context",
+    "scenario_type",
+    "fixture_note",
+    "schema_version",
+    "platform",
+    "level",
+    "ground_truth",
+    "initial_information",
+    "initial_information_types",
+    "tools",
+    "references",
+    "external_references",
+    "learning_objectives",
+    "required_evidence",
+    "sources"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scenario_type": {
+            "const": "real_world_inspired"
+          }
+        },
+        "required": [
+          "scenario_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "inspired_by"
+        ],
+        "properties": {
+          "sources": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "texts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "value": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/text"
+        },
+        {
+          "type": [
+            "number",
+            "boolean",
+            "null"
+          ]
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/value"
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/value"
+          }
+        }
+      ]
+    },
+    "input_binding": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/text"
+        },
+        "id": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "source",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "output_information": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/text"
+        },
+        "label": {
+          "$ref": "#/$defs/text"
+        },
+        "value": {
+          "$ref": "#/$defs/value"
+        },
+        "data_type": {
+          "$ref": "#/$defs/text"
+        },
+        "tool_input": {
+          "type": "boolean"
+        },
+        "draggable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value",
+        "data_type"
+      ],
+      "additionalProperties": false
+    },
+    "tool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/text"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "output_information": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/output_information"
+          }
+        },
+        "platform_note": {
+          "$ref": "#/$defs/text"
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "windows",
+              "linux"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "output_by_environment": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "windows": {
+              "$ref": "#/$defs/text"
+            },
+            "linux": {
+              "$ref": "#/$defs/text"
+            }
+          },
+          "additionalProperties": false
+        },
+        "accepted_information_types": {
+          "$ref": "#/$defs/texts"
+        },
+        "input_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/input_binding"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "input_hint": {
+          "$ref": "#/$defs/text"
+        },
+        "output": {
+          "$ref": "#/$defs/text"
+        },
+        "correct_usage": {
+          "type": "boolean"
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "output",
+        "accepted_information_types",
+        "input_bindings",
+        "input_hint"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "correct_usage"
+            ]
+          },
+          "then": {
+            "required": [
+              "reason"
+            ]
+          }
+        }
+      ]
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/text"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "output_information": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/output_information"
+          }
+        },
+        "content": {
+          "$ref": "#/$defs/value"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "content"
+      ],
+      "additionalProperties": false
+    },
+    "external": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/text"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "output_information": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/output_information"
+          }
+        },
+        "platform_note": {
+          "$ref": "#/$defs/text"
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "windows",
+              "linux"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "output_by_environment": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "windows": {
+              "$ref": "#/$defs/text"
+            },
+            "linux": {
+              "$ref": "#/$defs/text"
+            }
+          },
+          "additionalProperties": false
+        },
+        "accepted_information_types": {
+          "$ref": "#/$defs/texts"
+        },
+        "input_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/input_binding"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "input_hint": {
+          "$ref": "#/$defs/text"
+        },
+        "output": {
+          "$ref": "#/$defs/text"
+        },
+        "correct_usage": {
+          "type": "boolean"
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        },
+        "submission_type": {
+          "$ref": "#/$defs/text"
+        },
+        "submission_value": {
+          "$ref": "#/$defs/text"
+        },
+        "confidentiality_warning": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "output",
+        "accepted_information_types",
+        "input_bindings",
+        "input_hint",
+        "submission_type",
+        "submission_value",
+        "confidentiality_warning",
+        "correct_usage",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "resource": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/tool"
+        },
+        {
+          "$ref": "#/$defs/reference"
+        },
+        {
+          "$ref": "#/$defs/external"
+        }
+      ]
+    },
+    "evidence_alternative": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "$ref": "#/$defs/text"
+        },
+        "any_of": {
+          "$ref": "#/$defs/texts"
+        }
+      },
+      "required": [
+        "label",
+        "any_of"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

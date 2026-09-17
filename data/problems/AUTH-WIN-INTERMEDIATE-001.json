@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-WIN-INTERMEDIATE-001",
+  "category": "account",
+  "platform": "windows",
+  "level": "intermediate",
+  "title": "複数Accountへの失敗の後のLogin要求",
+  "request": "今回のSession成立前の審査です。過去の認証記録と今回の要求だけを使って許可・遮断を判断してください。",
+  "initial_information": {
+    "Username": "aki",
+    "Source IP": "203.0.113.80",
+    "Time": "2026-09-15T09:00:00+09:00",
+    "Authentication Result": "Password照合成功・Sessionは未成立",
+    "MFA Result": "追加認証未完了",
+    "Device情報": "未登録端末 device-new-77"
+  },
+  "tools": [
+    {
+      "id": "event_viewer",
+      "name": "Event Viewer",
+      "description": "Windows Security Logの過去の認証失敗を確認します。4625は失敗を示しますが、同じPasswordを試したかはこのLogだけでは分かりません。",
+      "output": "View filter: Source IP = 203.0.113.80\nWindows Security Log / past events only (fixture)\nTimeCreated          Id    TargetUserName IpAddress\n2026-09-15 08:51:00  4625  aki            203.0.113.80\n2026-09-15 08:51:10  4625  mei            203.0.113.80\n2026-09-15 08:51:20  4625  ren            203.0.113.80\nStatus: 0xC000006D / SubStatus: 0xC000006A\nLogonType: 3\n監査集計: 08:50–08:59、同じIPから20Accountへ各1回の失敗。",
+      "accepted_information_types": [
+        "ip"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Source IP"
+        }
+      ],
+      "input_hint": "送信元IP",
+      "platform_note": "Windows標準のEvent Viewer。WindowsイベントLogを読みます。",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "login_history",
+      "name": "過去Login / Device台帳",
+      "content": "akiは登録端末WIN-21、会社VPN 192.0.2.100を利用。device-new-77の登録・交換申請なし。"
+    },
+    {
+      "id": "authentication_policy",
+      "name": "認証方針",
+      "content": "未登録端末は本人確認とMFA完了までSessionを成立させない。Password照合成功だけでは許可しない。"
+    }
+  ],
+  "external_references": [],
+  "ground_truth": "block",
+  "explanation": "多数のAccountへの少数回の失敗はPassword sprayingを疑うパターンであり、今回も未登録端末で追加認証が未完了なのでSessionを遮断します。失敗履歴だけで攻撃を断定せず、現在の認証条件と合わせます。",
+  "topic": "過去の認証パターンと今回の認証条件を組み合わせる",
+  "summary": "Password sprayingを疑う履歴と未完了MFAを照合する。",
+  "learning_objectives": [
+    "過去の認証パターンと今回の認証条件を組み合わせる"
+  ],
+  "required_evidence": [
+    "event_viewer",
+    "login_history",
+    "authentication_policy"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
+  ],
+  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "initial_information_types": {
+    "Username": "username",
+    "Source IP": "ip"
+  }
+}

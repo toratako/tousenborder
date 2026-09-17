@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "id": "PKG-NPM-INTERMEDIATE-001",
+  "category": "package",
+  "platform": "common",
+  "level": "intermediate",
+  "title": "@northstar-training/calendar 2.4.1",
+  "request": "既存PackageのUpdate申請です。まだInstallせず、公開物のMetadataとRepositoryを比較してください。",
+  "initial_information": {
+    "Package名": "@northstar-training/calendar",
+    "Version": "2.4.1",
+    "Registry": "npm Registry（教材用Metadata）",
+    "Install要求元": "依存更新Bot"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "registry_metadata",
+      "name": "npm Registry / Package Metadata",
+      "content": {
+        "name": "@northstar-training/calendar",
+        "version": "2.4.1",
+        "scripts": {
+          "postinstall": "node install-helper.js"
+        },
+        "maintainers": [
+          "northstar-maintainer"
+        ],
+        "dist": {
+          "tarball": "https://registry.npmjs.org/@northstar-training/calendar/-/calendar-2.4.1.tgz"
+        }
+      }
+    },
+    {
+      "id": "repository_diff",
+      "name": "Repository / 配布物のReview",
+      "content": "Release Tag v2.4.1にはinstall-helper.jsもpostinstallも存在しません。組織内の静的Reviewで、Registry配布物にだけ認証情報Fileを読み外部送信する処理が追加されていると確認。具体的なCommand・コードは教材用に省略。"
+    },
+    {
+      "id": "maintainer_notice",
+      "name": "Maintainer告知",
+      "content": "独立した既存連絡先から取得: 公開Tokenを失効、2.4.1は意図しない公開物のため利用停止を要請。"
+    },
+    {
+      "id": "osv",
+      "name": "OSV",
+      "content": {
+        "照会": {
+          "package": {
+            "name": "@northstar-training/calendar",
+            "ecosystem": "npm"
+          },
+          "version": "2.4.1"
+        },
+        "結果": {
+          "vulns": []
+        },
+        "注記": "照会時点の保存コピー。未登録は安全の証明ではありません。"
+      }
+    }
+  ],
+  "external_references": [],
+  "ground_truth": "block",
+  "explanation": "Registry配布物だけに認証情報の外部送信処理が含まれ、Maintainerも公開を否認しているため遮断します。既存PackageやOSV該当なしという理由だけでUpdateを信用してはいけません。",
+  "topic": "正規Packageの更新でも公開物とSourceを比較する",
+  "summary": "Maintainerの公開Token悪用を想定したSupply-chain問題。",
+  "learning_objectives": [
+    "正規Packageの更新でも公開物とSourceを比較する"
+  ],
+  "required_evidence": [
+    "registry_metadata",
+    "repository_diff",
+    "maintainer_notice",
+    "osv"
+  ],
+  "decision_context": "before_install",
+  "scenario_type": "real_world_inspired",
+  "sources": [
+    "https://github.blog/security/supply-chain-security/our-plan-for-a-more-secure-npm-supply-chain/",
+    "https://docs.npmjs.com/cli/v11/using-npm/scripts/",
+    "https://google.github.io/osv.dev/api/"
+  ],
+  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "inspired_by": "npm Supply-chain / 公開Token・Maintainerの侵害（手法を架空Packageへ置換）",
+  "ecosystem": "npm",
+  "initial_information_types": {
+    "Package名": "package_name",
+    "Version": "version"
+  }
+}
