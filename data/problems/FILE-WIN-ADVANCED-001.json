@@ -19,7 +19,7 @@
     {
       "id": "sigcheck",
       "name": "Sigcheck",
-      "description": "デジタル署名とFile情報を表示します。署名の有無だけで安全性を決めず、Publisherや配布元と照合します。",
+      "description": "デジタル署名とFile情報を表示し、Publisherや配布元と照合します。",
       "output": "sigcheck -nobanner report-tool.exe\nC:\\Company\\Tools\\report-tool.exe:\n        Verified:       Unsigned\n        Description:    Internal reporting utility",
       "accepted_information_types": [
         "file"
@@ -31,7 +31,7 @@
         }
       ],
       "input_hint": "File",
-      "platform_note": "Windows（Microsoft Sysinternals）。別途導入するToolです。",
+      "platform_note": "Windows（Microsoft Sysinternals・要インストール）",
       "environments": [
         "windows"
       ]
@@ -67,7 +67,7 @@
     {
       "id": "strings",
       "name": "Strings（Sysinternals）",
-      "description": "Fileに含まれる可読文字列を抽出します。文字列の存在だけで実行時の挙動は断定できません。",
+      "description": "Fileに含まれる可読文字列を抽出します。",
       "output": "strings -n 8 report-tool.exe\nInternal Reporting Utility\nInput: monthly.csv\nOutput: summary.csv",
       "accepted_information_types": [
         "file"
@@ -99,7 +99,7 @@
         }
       ],
       "input_hint": "配布Archive",
-      "platform_note": "Linux / macOS / Windows。LinuxはGNU tar、Windowsはbsdtarを模した出力例です。",
+      "platform_note": "Linux（GNU tar）/ Windows（bsdtar）/ macOS",
       "environments": [
         "windows",
         "linux"
@@ -128,10 +128,10 @@
     {
       "id": "vt_upload",
       "name": "VirusTotal / File Upload",
-      "description": "送信する情報と公開範囲を確認して、外部照会を行うか選びます。結果は模擬です。",
+      "description": "送信内容と公開範囲を確認して外部照会します。",
       "submission_type": "file",
       "submission_value": "C:\\Company\\Tools\\report-tool.exe (92,160 bytes / 社外秘)",
-      "output": "File analysis (fixture)\nmalicious: 0\nundetected: 69",
+      "output": "File analysis\nmalicious: 0\nundetected: 69",
       "correct_usage": false,
       "confidentiality_warning": "File本体を外部へ送ります。通常のUploadでは検体が第三者と共有され得ます。",
       "reason": "社外秘Fileの本体送信は禁止されています。検出0件でも送信による漏洩は取り消せません。",
@@ -145,7 +145,7 @@
         }
       ],
       "input_hint": "File",
-      "platform_note": "OS共通の外部サービス（VirusTotal）。Web / APIから利用します。ゲーム内は模擬照会です。",
+      "platform_note": "OS共通（VirusTotalのWeb / API）",
       "environments": [
         "windows",
         "linux"
@@ -154,13 +154,13 @@
     {
       "id": "vt_hash",
       "name": "VirusTotal / Hash検索",
-      "description": "送信する情報と公開範囲を確認して、外部照会を行うか選びます。結果は模擬です。",
+      "description": "送信内容と公開範囲を確認して外部照会します。",
       "submission_type": "hash",
       "submission_value": "1E68E0EA1D3B87CA5B1BE8313E0FB559E3CE136FFA8E58739BDB9505F4F38338",
-      "output": "SHA-256 report lookup (fixture)\nReport not found",
+      "output": "SHA-256 report lookup\nReport not found",
       "correct_usage": true,
       "confidentiality_warning": "Hashを送信します。組織の方針ではHash照会のみ許可されています。社外秘File本体は送信できません。",
-      "reason": "組織の方針ではこのFileのHash照会のみ許可されています。本体のUploadは禁止です。未登録は安全の証明ではありません。",
+      "reason": "このFileはHash照会のみ許可されています。本体のUploadは禁止です。",
       "accepted_information_types": [
         "sha256"
       ],
@@ -171,7 +171,7 @@
         }
       ],
       "input_hint": "SHA-256",
-      "platform_note": "OS共通の外部サービス（VirusTotal）。Web / APIから利用します。ゲーム内は模擬照会です。",
+      "platform_note": "OS共通（VirusTotalのWeb / API）",
       "environments": [
         "windows",
         "linux"
@@ -196,7 +196,7 @@
     "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck",
     "https://docs.virustotal.com/docs/how-it-works"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "File名": "file",
     "Size": "file_size",

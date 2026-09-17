@@ -19,7 +19,7 @@
       "id": "event_viewer",
       "name": "Event Viewer",
       "description": "今回より前のWindows Login履歴を確認します。新しい要求の成立後のLogは判断に使いません。",
-      "output": "View filter: TargetUserName = mei\nWindows Security Log / past events only (fixture)\nTimeCreated          Id    TargetUserName WorkstationName IpAddress\n2026-09-14 08:58:00  4624  mei            WIN-OLD-12      192.0.2.101\nLogonType: 3\n今回09:00のSession成功Logはまだ存在しません。",
+      "output": "View filter: TargetUserName = mei\nWindows Security Log / past events only\nTimeCreated          Id    TargetUserName WorkstationName IpAddress\n2026-09-14 08:58:00  4624  mei            WIN-OLD-12      192.0.2.101\nLogonType: 3\n今回09:00のSession成功Logはまだ存在しません。",
       "accepted_information_types": [
         "username"
       ],
@@ -30,7 +30,7 @@
         }
       ],
       "input_hint": "Username",
-      "platform_note": "Windows標準のEvent Viewer。WindowsイベントLogを読みます。",
+      "platform_note": "Windows標準（Event Viewer）",
       "environments": [
         "windows"
       ]
@@ -55,7 +55,7 @@
   ],
   "external_references": [],
   "ground_truth": "allow",
-  "explanation": "新端末でも交換申請とMDM登録が確認でき、会社VPNと登録済みFIDO2認証の条件を満たすため許可します。初めて見るDeviceという理由だけではAccount侵害と判断できません。",
+  "explanation": "新端末でも交換申請とMDM登録が確認でき、会社VPNと登録済みFIDO2認証の条件を満たすため許可します。",
   "topic": "正常な新端末Loginを事前記録から確認する",
   "summary": "端末交換による初回Loginを登録・MFA・接続元で検証する。",
   "learning_objectives": [
@@ -72,7 +72,7 @@
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "Username": "username",
     "Source IP": "ip"

@@ -64,17 +64,17 @@
     {
       "id": "workflow",
       "label": "調査の進め方",
-      "value": "初期情報を選択・ドラッグ → Tool → 結果をReferenceと照合 → 必要なら結果を次のToolへ渡す → 判断。Toolには対応する対象の情報が必要です。"
+      "value": "情報を選択・ドラッグしてToolへ渡し、結果をReferenceと照合します。取得した情報は次のToolにも使えます。"
     },
     {
       "id": "context",
       "label": "判断する時点",
-      "value": "Processは実行中の対象の継続／停止。他の対象は実行・アクセス・接続・受入れ・Session成立・Installより前に判断します。"
+      "value": "Processは実行の継続／停止を判断します。他の対象は実行・アクセス・接続・受入れ・Session成立・Installの前に判断します。"
     },
     {
       "id": "evidence",
       "label": "情報の解釈",
-      "value": "Toolは事実を取得し、Referenceは比較対象を示します。名前、署名、Port、周期、認証Pass、検出0件のどれか1つだけで安全性を決めません。"
+      "value": "Toolで得た情報を、Referenceの承認記録や仕様と照合して判断します。"
     },
     {
       "id": "external",

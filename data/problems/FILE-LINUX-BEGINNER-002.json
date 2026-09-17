@@ -57,7 +57,7 @@
         }
       ],
       "input_hint": "File",
-      "platform_note": "Linux / macOS / Windows。LinuxはGNU tar、Windowsはbsdtarを模した出力例です。",
+      "platform_note": "Linux（GNU tar）/ Windows（bsdtar）/ macOS",
       "environments": [
         "windows",
         "linux"
@@ -88,13 +88,13 @@
     {
       "id": "vt_hash",
       "name": "VirusTotal / Hash検索",
-      "description": "送信する情報と公開範囲を確認して、外部照会を行うか選びます。結果は模擬です。",
+      "description": "送信内容と公開範囲を確認して外部照会します。",
       "submission_type": "hash",
       "submission_value": "fee00dc397959a0e83a9e3107d780640d50da76c79cb27ad7f7601846320a686",
-      "output": "SHA-256 report lookup (fixture)\nReport not found",
+      "output": "SHA-256 report lookup\nReport not found",
       "correct_usage": true,
       "confidentiality_warning": "File本体は送信しません。Hashも組織の外部照会方針に従って扱います。",
-      "reason": "この公開配布物のHash照会は許可されています。未登録という結果は安全の証明ではありません。",
+      "reason": "公開配布物のHash照会は許可されています。",
       "accepted_information_types": [
         "sha256"
       ],
@@ -105,7 +105,7 @@
         }
       ],
       "input_hint": "SHA-256",
-      "platform_note": "OS共通の外部サービス（VirusTotal）。Web / APIから利用します。ゲーム内は模擬照会です。",
+      "platform_note": "OS共通（VirusTotalのWeb / API）",
       "environments": [
         "windows",
         "linux"
@@ -114,13 +114,13 @@
     {
       "id": "vt_upload",
       "name": "VirusTotal / File Upload",
-      "description": "送信する情報と公開範囲を確認して、外部照会を行うか選びます。結果は模擬です。",
+      "description": "送信内容と公開範囲を確認して外部照会します。",
       "submission_type": "file",
       "submission_value": "/home/aki/Downloads/northstar-cli-2.4.tar.gz (245,760 bytes / 公開配布物)",
-      "output": "File analysis (fixture)\nmalicious: 0\nundetected: 69\nNo detection does not prove safety.",
+      "output": "File analysis\nmalicious: 0\nundetected: 69",
       "correct_usage": true,
-      "confidentiality_warning": "File本体を外部へ送ります。通常のUploadでは第三者と共有され得ます。この教材の公開配布物は送信が許可されています。",
-      "reason": "この公開配布物の本体送信は組織の方針で許可されています。既にHashと承認記録で判断できるため、送信を見送っても構いません。",
+      "confidentiality_warning": "File本体を送信し、第三者と共有される場合があります。この公開配布物の送信は承認済みです。",
+      "reason": "公開配布物の本体送信は許可されています。判定に必要なHashと承認記録は社内で確認できます。",
       "accepted_information_types": [
         "file"
       ],
@@ -131,7 +131,7 @@
         }
       ],
       "input_hint": "File",
-      "platform_note": "OS共通の外部サービス（VirusTotal）。Web / APIから利用します。ゲーム内は模擬照会です。",
+      "platform_note": "OS共通（VirusTotalのWeb / API）",
       "environments": [
         "windows",
         "linux"
@@ -139,7 +139,7 @@
     }
   ],
   "ground_truth": "allow",
-  "explanation": "SHA-256が独立したVendor公開Hashと一致し、Versionと導入も承認されているため許可します。Hashは悪性判定だけでなく、正しい配布物かを確認するためにも使えます。",
+  "explanation": "SHA-256が独立したVendor公開Hashと一致し、Versionと導入も承認されているため許可します。",
   "topic": "HashをVendor公開値と照合する",
   "summary": "配布Archiveの同一性と導入承認を確認する。",
   "learning_objectives": [
@@ -155,7 +155,7 @@
   "sources": [
     "https://docs.virustotal.com/docs/searching"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "File名": "file",
     "Size": "file_size",

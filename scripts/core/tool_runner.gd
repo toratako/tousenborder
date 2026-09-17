@@ -19,7 +19,7 @@ func run(tool: Dictionary, target: Dictionary, input: Dictionary = {}) -> Dictio
 		return {"ok": false, "output": "対応する対象の情報を指定してください。"}
 	var items: Array = []
 	if tool.resource_kind == "external_references":
-		items.append({"id": "submission_type", "label": "外部へ送る情報（模擬）", "value": tool.submission_type, "tool_input": false})
+		items.append({"id": "submission_type", "label": "送信する情報", "value": tool.submission_type, "tool_input": false})
 		items.append({"id": "submission_value", "label": "送信内容", "value": tool.submission_value, "tool_input": false})
 		items.append({"id": "warning", "label": "注意", "value": tool.confidentiality_warning, "tool_input": false})
 	if tool.resource_kind == "references":

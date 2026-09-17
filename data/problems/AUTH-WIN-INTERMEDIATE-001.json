@@ -19,7 +19,7 @@
       "id": "event_viewer",
       "name": "Event Viewer",
       "description": "Windows Security Logの過去の認証失敗を確認します。4625は失敗を示しますが、同じPasswordを試したかはこのLogだけでは分かりません。",
-      "output": "View filter: Source IP = 203.0.113.80\nWindows Security Log / past events only (fixture)\nTimeCreated          Id    TargetUserName IpAddress\n2026-09-15 08:51:00  4625  aki            203.0.113.80\n2026-09-15 08:51:10  4625  mei            203.0.113.80\n2026-09-15 08:51:20  4625  ren            203.0.113.80\nStatus: 0xC000006D / SubStatus: 0xC000006A\nLogonType: 3\n監査集計: 08:50–08:59、同じIPから20Accountへ各1回の失敗。",
+      "output": "View filter: Source IP = 203.0.113.80\nWindows Security Log / past events only\nTimeCreated          Id    TargetUserName IpAddress\n2026-09-15 08:51:00  4625  aki            203.0.113.80\n2026-09-15 08:51:10  4625  mei            203.0.113.80\n2026-09-15 08:51:20  4625  ren            203.0.113.80\nStatus: 0xC000006D / SubStatus: 0xC000006A\nLogonType: 3\n監査集計: 08:50–08:59、同じIPから20Accountへ各1回の失敗。",
       "accepted_information_types": [
         "ip"
       ],
@@ -30,7 +30,7 @@
         }
       ],
       "input_hint": "送信元IP",
-      "platform_note": "Windows標準のEvent Viewer。WindowsイベントLogを読みます。",
+      "platform_note": "Windows標準（Event Viewer）",
       "environments": [
         "windows"
       ]
@@ -50,7 +50,7 @@
   ],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "多数のAccountへの少数回の失敗はPassword sprayingを疑うパターンであり、今回も未登録端末で追加認証が未完了なのでSessionを遮断します。失敗履歴だけで攻撃を断定せず、現在の認証条件と合わせます。",
+  "explanation": "多数のAccountへの少数回の失敗はPassword sprayingを疑うパターンであり、今回も未登録端末で追加認証が未完了なのでSessionを遮断します。",
   "topic": "過去の認証パターンと今回の認証条件を組み合わせる",
   "summary": "Password sprayingを疑う履歴と未完了MFAを照合する。",
   "learning_objectives": [
@@ -66,7 +66,7 @@
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "Username": "username",
     "Source IP": "ip"

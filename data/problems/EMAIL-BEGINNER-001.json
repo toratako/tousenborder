@@ -19,7 +19,7 @@
     {
       "id": "raw_header",
       "name": "Raw Header",
-      "description": "信頼する受信Gatewayが付加したHeaderを確認します。SPF・DKIMの認証DomainとFromの整合、返信先を調べます。 入力は受信保留中のEmail全体です。FromのAddress単独からHeaderは取得できません。",
+      "description": "受信GatewayのHeaderから、SPF・DKIMとFromの整合、返信先を確認します。入力は受信保留中のEmail全体です。",
       "output": "From: 経理部長 <finance@northstar.example>\nReply-To: payment@billing-change.example\nReturn-Path: <mailer@billing-change.example>\nReceived: from outbound.billing-change.example (203.0.113.45)\n by mx.northstar.example with ESMTPS; 15 Sep 2026 08:45:00 +0900\nAuthentication-Results: mx.northstar.example;\n spf=pass smtp.mailfrom=billing-change.example;\n dkim=pass header.d=billing-change.example;\n dmarc=fail header.from=northstar.example",
       "accepted_information_types": [
         "email"
@@ -31,7 +31,7 @@
         }
       ],
       "input_hint": "Email全体",
-      "platform_note": "OS共通の調査方法。単独の製品名ではありません。EmailクライアントやGatewayで元のHeaderを表示する操作は製品によって異なります。",
+      "platform_note": "OS共通（Emailクライアント / Gateway）",
       "environments": [
         "windows",
         "linux"
@@ -47,7 +47,7 @@
   ],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "SPF/DKIMは別DomainについてPassしており、Fromとの整合が取れず返信先も正規Directoryと異なるため遮断します。認証のPassを本文の安全性や依頼の正当性と取り違えないでください。",
+  "explanation": "SPF/DKIMは別DomainについてPassしており、Fromとの整合が取れず返信先も正規Directoryと異なるため遮断します。",
   "topic": "Headerの認証Domain・From・Reply-Toを照合する",
   "summary": "SPF/DKIM Passでも差出人の偽装を見分ける。",
   "learning_objectives": [
@@ -60,7 +60,7 @@
   "decision_context": "before_delivery",
   "scenario_type": "standard",
   "sources": [],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "Email": "email",
     "From": "email_address"

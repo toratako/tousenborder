@@ -30,7 +30,7 @@
         }
       ],
       "input_hint": "PID",
-      "platform_note": "Linux / macOS。Linuxのpsを模した出力例です。",
+      "platform_note": "Linux / macOS（出力はLinuxのps）",
       "environments": [
         "linux"
       ]
@@ -38,7 +38,7 @@
     {
       "id": "systemctl",
       "name": "systemctl",
-      "description": "systemd Unitの起動状態と実行Processを調べます。enabledだけで安全とは判断しません。",
+      "description": "systemd Unitの起動状態と実行Processを調べます。",
       "output": "$ systemctl status backup-agent.service\n● backup-agent.service - Company backup agent\n     Loaded: loaded (/etc/systemd/system/backup-agent.service; enabled)\n     Active: active (running)\n   Main PID: 810 (backup-agent)\n      Tasks: 2\n     Memory: 24.0M\n     CGroup: /system.slice/backup-agent.service\n             └─810 /usr/local/bin/backup-agent --config /etc/backup-agent.conf",
       "accepted_information_types": [
         "service"
@@ -65,7 +65,7 @@
   ],
   "external_references": [],
   "ground_truth": "allow",
-  "explanation": "psとsystemctlから、承認されたServiceが指定User・Path・設定で起動していると確認できるため継続を許可します。Process名だけでなく起動元と設定を確認します。",
+  "explanation": "psとsystemctlから、承認されたServiceが指定User・Path・設定で起動していると確認できるため継続を許可します。",
   "topic": "psとsystemctlでServiceの起動元を確認する",
   "summary": "systemdから起動された承認済みBackup Serviceを調べる。",
   "learning_objectives": [
@@ -81,7 +81,7 @@
   "sources": [
     "https://man7.org/linux/man-pages/man1/ps.1.html"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "PID": "pid",
     "User": "username",

@@ -45,7 +45,7 @@
     {
       "id": "ps",
       "name": "ps",
-      "description": "Processの引数と実行Pathを確認します。攻撃部分は実行不能な教材用表記です。",
+      "description": "Processの引数と実行Pathを確認します。",
       "output": "$ ps -p 4210 -o pid,ppid,user,args\n PID  PPID USER      COMMAND\n4210  4200 www-data  /tmp/.cache/training-client <NONEXECUTABLE-DEMO-ARGS>",
       "accepted_information_types": [
         "pid"
@@ -57,7 +57,7 @@
         }
       ],
       "input_hint": "PID",
-      "platform_note": "Linux / macOS。Linuxのpsを模した出力例です。",
+      "platform_note": "Linux / macOS（出力はLinuxのps）",
       "environments": [
         "linux"
       ]
@@ -97,7 +97,7 @@
         }
       ],
       "input_hint": "User",
-      "platform_note": "Linux / macOS。教材はLinuxの例です。",
+      "platform_note": "Linux / macOS（出力はLinux）",
       "environments": [
         "linux"
       ]
@@ -112,7 +112,7 @@
   ],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "固定ページ配信Serviceから一時領域のshellと通信Processが起動し、無承認の定期実行もあるため停止します。shellやcrontab自体ではなく、Serviceの設計と複数の挙動の不一致が根拠です。",
+  "explanation": "固定ページ配信Serviceから一時領域のshellと通信Processが起動し、無承認の定期実行もあるため停止します。",
   "topic": "Process Tree・Socket・永続化設定を照合する",
   "summary": "Web Serviceに紛れたshellと定期実行を調べる。",
   "learning_objectives": [
@@ -131,7 +131,7 @@
     "https://man7.org/linux/man-pages/man1/ps.1.html",
     "https://man7.org/linux/man-pages/man1/pstree.1.html"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "PID": "pid",
     "User": "username",

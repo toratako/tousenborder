@@ -18,7 +18,7 @@
       "id": "process_explorer",
       "name": "Process Explorer",
       "description": "Processの親子関係、Image Path、Command Lineを確認します。表示はPropertiesの抜粋です。",
-      "output": "Process tree / Properties (fixture excerpt)\nWINWORD.EXE (3210)\n  powershell.exe (4820)\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -EncodedCommand <TRAINING-PLACEHOLDER>\nParent: WINWORD.EXE (3210)",
+      "output": "Process tree / Properties\nWINWORD.EXE (3210)\n  powershell.exe (4820)\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -EncodedCommand <TRAINING-PLACEHOLDER>\nParent: WINWORD.EXE (3210)",
       "accepted_information_types": [
         "pid"
       ],
@@ -29,7 +29,7 @@
         }
       ],
       "input_hint": "PID",
-      "platform_note": "Windows（Microsoft Sysinternals）。別途導入するToolです。",
+      "platform_note": "Windows（Microsoft Sysinternals・要インストール）",
       "environments": [
         "windows"
       ]
@@ -37,7 +37,7 @@
     {
       "id": "tcpview",
       "name": "TCPView",
-      "description": "ProcessとTCP/UDP Endpointを対応付けます。Port番号だけで通信の正当性は判定できません。",
+      "description": "ProcessとTCP/UDP Endpointを対応付けます。",
       "output": "Process         PID   Protocol  Local Address  Local Port  Remote Address  Remote Port  State\npowershell.exe  4820  TCP       192.0.2.25     52100       203.0.113.66    443          ESTABLISHED",
       "accepted_information_types": [
         "pid"
@@ -49,7 +49,7 @@
         }
       ],
       "input_hint": "PID",
-      "platform_note": "Windows（Microsoft Sysinternals）。別途導入するToolです。",
+      "platform_note": "Windows（Microsoft Sysinternals・要インストール）",
       "environments": [
         "windows"
       ]
@@ -69,7 +69,7 @@
   ],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "Wordを親とするEncodedCommand実行に、承認外の接続先と既知の不審Endpointへの通信が重なるため停止します。PowerShellやエンコード自体ではなく、親子関係と通信の文脈を合わせて判断します。",
+  "explanation": "WordからEncodedCommand付きのPowerShellが起動し、承認外の既知の不審Endpointへ接続しているため停止します。",
   "topic": "親子関係・Command Line・通信を組み合わせる",
   "summary": "Word配下のPowerShellと接続先を照合する。",
   "learning_objectives": [
@@ -87,7 +87,7 @@
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
     "https://attack.mitre.org/techniques/T1059/001/"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "inspired_by": "Living-off-the-Land / PowerShell悪用（攻撃Commandは実行不能なダミー）",
   "initial_information_types": {
     "PID": "pid",

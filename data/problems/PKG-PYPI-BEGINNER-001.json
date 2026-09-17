@@ -9,7 +9,7 @@
   "initial_information": {
     "Package名": "northstar-reqests",
     "Version": "1.0.0",
-    "Registry": "PyPI（教材用Metadata）",
+    "Registry": "PyPI",
     "Install要求元": "開発者の依存追加申請"
   },
   "tools": [],
@@ -45,7 +45,7 @@
   ],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "申請されたnorthstar-reqestsは承認されたnorthstar-requestsと名前が異なり、Repositoryも一致しないため遮断します。公開日や作者名だけではなく、必要な依存の識別情報と照合します。",
+  "explanation": "申請されたnorthstar-reqestsは承認されたnorthstar-requestsと名前が異なり、Repositoryも一致しないため遮断します。",
   "topic": "Package名とRepositoryを照合してTyposquattingを見分ける",
   "summary": "似た名前の別PackageをInstall前のMetadataから識別する。",
   "learning_objectives": [
@@ -59,7 +59,7 @@
   "decision_context": "before_install",
   "scenario_type": "standard",
   "sources": [],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "ecosystem": "pypi",
   "initial_information_types": {
     "Package名": "package_name",

@@ -17,8 +17,8 @@
     {
       "id": "task_manager",
       "name": "Task Manager",
-      "description": "Process、PID、User、Resource使用量を確認します。CPUやMemoryの大小だけで悪性とは判断しません。",
-      "output": "Details (fixture excerpt)\nName            PID   User name                 CPU  Memory\npowershell.exe  5900  NORTHSTAR\\svc_inventory    3%   47,104 K",
+      "description": "Process、PID、User、Resource使用量を確認します。",
+      "output": "Details\nName            PID   User name                 CPU  Memory\npowershell.exe  5900  NORTHSTAR\\svc_inventory    3%   47,104 K",
       "accepted_information_types": [
         "pid"
       ],
@@ -29,7 +29,7 @@
         }
       ],
       "input_hint": "PID",
-      "platform_note": "Windows標準のTask Manager。",
+      "platform_note": "Windows標準（Task Manager）",
       "environments": [
         "windows"
       ]
@@ -38,7 +38,7 @@
       "id": "process_explorer",
       "name": "Process Explorer",
       "description": "親Process、Path、Command Lineから実行の文脈を確認します。",
-      "output": "Process tree / Properties (fixture excerpt)\nInventoryAgent.exe (1800)\n  powershell.exe (5900)\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -File C:\\Company\\Inventory.ps1",
+      "output": "Process tree / Properties\nInventoryAgent.exe (1800)\n  powershell.exe (5900)\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -File C:\\Company\\Inventory.ps1",
       "accepted_information_types": [
         "pid"
       ],
@@ -63,7 +63,7 @@
           "data_type": "file"
         }
       ],
-      "platform_note": "Windows（Microsoft Sysinternals）。別途導入するToolです。",
+      "platform_note": "Windows（Microsoft Sysinternals・要インストール）",
       "environments": [
         "windows"
       ]
@@ -111,7 +111,7 @@
         }
       ],
       "input_hint": "PID",
-      "platform_note": "Windows（Microsoft Sysinternals）。別途導入するToolです。",
+      "platform_note": "Windows（Microsoft Sysinternals・要インストール）",
       "environments": [
         "windows"
       ]
@@ -134,7 +134,7 @@
   ],
   "external_references": [],
   "ground_truth": "allow",
-  "explanation": "起動元、User、ScriptのHash、接続先が承認済みの棚卸し処理と一致するため継続を許可します。PowerShellや定期通信という特徴だけで停止してはいけません。",
+  "explanation": "起動元、User、ScriptのHash、接続先が承認済みの棚卸し処理と一致するため継続を許可します。",
   "topic": "正常なPowerShellと悪用を文脈で区別する",
   "summary": "管理Agentが起動した承認済み棚卸しScriptを許可する。",
   "learning_objectives": [
@@ -151,7 +151,7 @@
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "PID": "pid",
     "User": "username",

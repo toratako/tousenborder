@@ -17,7 +17,7 @@
   "references": [],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "PDFという説明に対し、実際の末尾の拡張子は.exeで矛盾しているため遮断します。二重拡張子一般ではなく、提示された用途との食い違いが根拠です。",
+  "explanation": "PDFの請求書として届いていますが、末尾の拡張子が.exeで実行ファイルのため遮断します。",
   "topic": "説明と拡張子の明確な矛盾に気付く",
   "summary": "PDFとして送られた実行ファイルを初期情報だけで見分ける。",
   "learning_objectives": [
@@ -29,7 +29,7 @@
   "decision_context": "before_execution",
   "scenario_type": "standard",
   "sources": [],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "File名": "file",
     "Size": "file_size",

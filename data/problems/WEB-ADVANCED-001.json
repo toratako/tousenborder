@@ -16,7 +16,7 @@
       "id": "url_parse",
       "name": "Python / URL分解",
       "input_hint": "URL",
-      "description": "Pythonのurllib.parseでURLからHostを取り出します。ローカルの文字列処理で、URLにアクセスしたり外部送信したりしません。",
+      "description": "Pythonのurllib.parseでURL文字列からHostを取り出します。",
       "output": "python -c \"from urllib.parse import urlsplit; print(urlsplit('https://accounts.northstar.example/reset?token=TRAINING-SECRET-ONLY').hostname)\"\naccounts.northstar.example",
       "accepted_information_types": [
         "url"
@@ -58,13 +58,13 @@
     {
       "id": "vt_domain",
       "name": "VirusTotal / Domain検索",
-      "description": "送信する情報と公開範囲を確認して、外部照会を行うか選びます。結果は模擬です。",
+      "description": "送信内容と公開範囲を確認して外部照会します。",
       "submission_type": "domain",
       "submission_value": "accounts.northstar.example",
-      "output": "Domain report (fixture)\nmalicious: 0\nsuspicious: 0",
+      "output": "Domain report\nmalicious: 0\nsuspicious: 0",
       "correct_usage": true,
       "confidentiality_warning": "送信するのは公開Domainだけです。PathとQueryは送信しません。",
-      "reason": "方針で許可された公開Domainのみの検索です。結果だけでURLの安全性が保証されるわけではありません。",
+      "reason": "公開Domainの照会は許可されています。",
       "accepted_information_types": [
         "domain"
       ],
@@ -75,7 +75,7 @@
         }
       ],
       "input_hint": "Domain",
-      "platform_note": "OS共通の外部サービス（VirusTotal）。Web / APIから利用します。ゲーム内は模擬照会です。",
+      "platform_note": "OS共通（VirusTotalのWeb / API）",
       "environments": [
         "windows",
         "linux"
@@ -84,10 +84,10 @@
     {
       "id": "urlscan_private",
       "name": "urlscan.io / 完全URL",
-      "description": "送信する情報と公開範囲を確認して、外部照会を行うか選びます。結果は模擬です。",
+      "description": "送信内容と公開範囲を確認して外部照会します。",
       "submission_type": "full_url",
       "submission_value": "https://accounts.northstar.example/reset?token=TRAINING-SECRET-ONLY",
-      "output": "{\"visibility\":\"private\",\"page\":{\"domain\":\"accounts.northstar.example\"}}\nFixture only: the complete URL would be disclosed to the service.",
+      "output": "{\"visibility\":\"private\",\"page\":{\"domain\":\"accounts.northstar.example\"}}\nThe complete URL is disclosed to the service.",
       "correct_usage": false,
       "confidentiality_warning": "完全URLにはPassword再設定Tokenが含まれます。PrivateスキャンでもサービスへURLが渡ります。",
       "reason": "認証Tokenを含むURL全体は外部送信禁止です。公開範囲の設定だけでは情報漏洩を防げません。",
@@ -101,7 +101,7 @@
         }
       ],
       "input_hint": "URL",
-      "platform_note": "OS共通の外部サービス（urlscan.io）。Web / APIから利用します。ゲーム内は模擬照会です。",
+      "platform_note": "OS共通（urlscan.ioのWeb / API）",
       "environments": [
         "windows",
         "linux"
@@ -110,10 +110,10 @@
   ],
   "ground_truth": "allow",
   "explanation": "本人の申請と正規Host・Pathが一致するためアクセスを許可します。Tokenを含む完全なURLは外部送信せず、必要なら許可されたDomain単位の照会に留めます。",
-  "topic": "対象の安全性と外部調査の適否を別々に判断する",
+  "topic": "アクセス許可と外部送信の可否を判断する",
   "summary": "正規の再設定URLを許可しつつTokenの外部送信を避ける。",
   "learning_objectives": [
-    "対象の安全性と外部調査の適否を別々に判断する"
+    "アクセス許可と外部送信の可否を判断する"
   ],
   "required_evidence": [
     "official_domain",
@@ -125,7 +125,7 @@
     "https://docs.virustotal.com/docs/searching",
     "https://urlscan.io/docs/api/"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "完全なURL": "url"
   }

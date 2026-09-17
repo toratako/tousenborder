@@ -16,7 +16,7 @@
       "id": "url_parse",
       "name": "Python / URL分解",
       "input_hint": "URL",
-      "description": "Pythonのurllib.parseでURLからHostを取り出します。ローカルの文字列処理で、URLにアクセスしたり外部送信したりしません。",
+      "description": "Pythonのurllib.parseでURL文字列からHostを取り出します。",
       "output": "python -c \"from urllib.parse import urlsplit; print(urlsplit('https://training.northstar.example/course/intro').hostname)\"\ntraining.northstar.example",
       "accepted_information_types": [
         "url"
@@ -44,8 +44,8 @@
     {
       "id": "rdap",
       "name": "RDAP",
-      "description": "登録Domainの情報を確認します。登録が新しいことだけでは悪性とはいえず、Subdomainの開設日も分かりません。",
-      "output": "RDAP response (fixture excerpt)\n{\n  \"ldhName\": \"northstar.example\",\n  \"events\": [{\"eventAction\": \"registration\", \"eventDate\": \"2026-09-01T00:00:00Z\"}],\n  \"status\": [\"active\"]\n}",
+      "description": "登録Domainの所有者や登録日を確認します。Subdomainの開設日は対象外です。",
+      "output": "RDAP response\n{\n  \"ldhName\": \"northstar.example\",\n  \"events\": [{\"eventAction\": \"registration\", \"eventDate\": \"2026-09-01T00:00:00Z\"}],\n  \"status\": [\"active\"]\n}",
       "accepted_information_types": [
         "domain"
       ],
@@ -56,7 +56,7 @@
         }
       ],
       "input_hint": "登録Domain",
-      "platform_note": "OS共通の照会方式（RDAP）。単独のコマンド名ではありません。対応クライアントやWebサービスを使って登録情報を照会します。",
+      "platform_note": "OS共通（RDAP対応クライアント / Webサービス）",
       "environments": [
         "windows",
         "linux"
@@ -66,7 +66,7 @@
       "id": "resolve_dnsname",
       "name": "Resolve-DnsName [Windows]",
       "platform_note": "Windows（DnsClientモジュールのPowerShellコマンド）",
-      "description": "Windows PowerShellのDNS照会です。Addressが解決できてもサイトの安全性は保証されません。",
+      "description": "PowerShellでDNSを照会し、名前解決の結果を確認します。",
       "output": "PS> Resolve-DnsName training.northstar.example -Type A\nName                       Type TTL Section IPAddress\ntraining.northstar.example  A    300 Answer  192.0.2.90",
       "accepted_information_types": [
         "domain"
@@ -85,8 +85,8 @@
     {
       "id": "nslookup",
       "name": "nslookup",
-      "platform_note": "Windows / Linux。調査OSに合わせた出力例です。",
-      "description": "DNS Serverへ名前解決を問い合わせます。登録者の正当性やWeb本文を検証するToolではありません。",
+      "platform_note": "Windows / Linux",
+      "description": "DNS Serverへ名前解決を問い合わせます。",
       "output": "C:\\> nslookup training.northstar.example\nServer:  dns.northstar.example\nAddress: 192.0.2.53\n\nName:    training.northstar.example\nAddress: 192.0.2.90",
       "accepted_information_types": [
         "domain"
@@ -110,7 +110,7 @@
     {
       "id": "dig",
       "name": "dig [Linux]",
-      "platform_note": "Linux / macOS。教材の出力例はLinux版です。",
+      "platform_note": "Linux / macOS（出力はLinux）",
       "description": "Linux等で使うDNS照会です。Answerを承認済みDNS台帳と比較します。",
       "output": "$ dig training.northstar.example A +noall +answer\ntraining.northstar.example. 300 IN A 192.0.2.90",
       "accepted_information_types": [
@@ -156,7 +156,7 @@
   ],
   "external_references": [],
   "ground_truth": "allow",
-  "explanation": "DNSの解決先とHost・用途が独立した社内台帳および導入通知に一致するため許可します。登録日が新しいことやDNSが解決できたことだけでは安全性を判断できません。",
+  "explanation": "DNSの解決先とHost・用途が独立した社内台帳および導入通知に一致するため許可します。",
   "topic": "Domainの新しさと正規性を区別する",
   "summary": "新しい正規研修Domainを承認記録と照合する。",
   "learning_objectives": [
@@ -171,7 +171,7 @@
   "decision_context": "before_access",
   "scenario_type": "standard",
   "sources": [],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "完全なURL": "url"
   },

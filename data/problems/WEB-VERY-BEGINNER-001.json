@@ -15,7 +15,7 @@
   "references": [],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "表示された接続先と実際のHostが異なり、URLのHostはmicrosoft.comではなくattacker.example配下なので遮断します。URLに有名なDomain名が含まれるだけでは正規サイトとはいえません。",
+  "explanation": "表示された接続先と実際のHostが異なり、URLのHostはmicrosoft.comではなくattacker.example配下なので遮断します。",
   "topic": "URLのHostと表示文字列を区別する",
   "summary": "正規Domain名を先頭に含む偽Hostを初期情報から識別する。",
   "learning_objectives": [
@@ -27,7 +27,7 @@
   "decision_context": "before_access",
   "scenario_type": "standard",
   "sources": [],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "完全なURL": "url"
   }

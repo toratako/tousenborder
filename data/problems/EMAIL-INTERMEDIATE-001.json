@@ -19,7 +19,7 @@
     {
       "id": "raw_header",
       "name": "Raw Header",
-      "description": "受信Gatewayが検証した認証結果、返信先、送信経路を確認します。添付やURLは別途調べます。 入力は受信保留中のEmail全体です。FromのAddress単独からHeaderは取得できません。",
+      "description": "受信Gatewayの認証結果、返信先、送信経路を確認します。入力は受信保留中のEmail全体です。添付やURLは別途調べます。",
       "output": "From: 社内研修担当 <training@northstar.example>\nReply-To: training@northstar.example\nReturn-Path: <training@northstar.example>\nReceived: from mail.northstar.example (192.0.2.10)\n by mx.northstar.example with ESMTPS; 15 Sep 2026 08:30:00 +0900\nAuthentication-Results: mx.northstar.example;\n spf=pass smtp.mailfrom=northstar.example;\n dkim=pass header.d=northstar.example;\n dmarc=pass header.from=northstar.example",
       "accepted_information_types": [
         "email"
@@ -31,7 +31,7 @@
         }
       ],
       "input_hint": "Email全体",
-      "platform_note": "OS共通の調査方法。単独の製品名ではありません。EmailクライアントやGatewayで元のHeaderを表示する操作は製品によって異なります。",
+      "platform_note": "OS共通（Emailクライアント / Gateway）",
       "environments": [
         "windows",
         "linux"
@@ -69,7 +69,7 @@
   ],
   "external_references": [],
   "ground_truth": "allow",
-  "explanation": "送信元の整合に加え、添付のHashがレビュー済みPDFに一致し、URLも正規の研修ページなので許可します。Emailの認証Passだけでなく、添付とリンクをそれぞれ調査します。",
+  "explanation": "送信元の整合に加え、添付のHashがレビュー済みPDFに一致し、URLも正規の研修ページなので許可します。",
   "topic": "Emailの添付をFile、URLをWebとして調査する",
   "summary": "正規研修メールをHeader・添付PDF・URLの3方向で確認する。",
   "learning_objectives": [
@@ -85,13 +85,13 @@
   "decision_context": "before_delivery",
   "scenario_type": "standard",
   "sources": [],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "resources": {
     "attachment_tools": [
       {
         "id": "attachment_exiftool",
         "name": "ExifTool / 添付",
-        "description": "添付Fileの形式やMetadataを読み取ります。Metadataだけでは安全性を保証できません。",
+        "description": "添付Fileの形式やMetadataを読み取ります。",
         "output": "exiftool september-schedule.pdf\nFile Name                       : september-schedule.pdf\nFile Type                       : PDF\nMIME Type                       : application/pdf\nPDF Version                     : 1.7\nPage Count                      : 2",
         "accepted_information_types": [
           "file"
@@ -132,7 +132,7 @@
             "data_type": "sha256"
           }
         ],
-        "platform_note": "Windows / Linux / macOS。7-Zipのコマンドライン版を模した出力例です。",
+        "platform_note": "Windows / Linux / macOS（7-Zip CLI）",
         "environments": [
           "windows",
           "linux"
@@ -148,7 +148,7 @@
         "id": "url_parse",
         "name": "Python / URL分解",
         "input_hint": "URL",
-        "description": "Pythonのurllib.parseでURLからHostを取り出します。ローカルの文字列処理で、URLにアクセスしたり外部送信したりしません。",
+        "description": "Pythonのurllib.parseでURL文字列からHostを取り出します。",
         "output": "python -c \"from urllib.parse import urlsplit; print(urlsplit('https://training.northstar.example/course/intro').hostname)\"\ntraining.northstar.example",
         "accepted_information_types": [
           "url"
@@ -176,8 +176,8 @@
       {
         "id": "link_rdap",
         "name": "RDAP / URL",
-        "description": "リンク先Domainの登録情報を調べます。URLを通常Browserで開く必要はありません。",
-        "output": "RDAP response (fixture excerpt)\n{\"ldhName\":\"northstar.example\",\"events\":[{\"eventAction\":\"registration\",\"eventDate\":\"2026-09-01T00:00:00Z\"}]}",
+        "description": "リンク先Domainの登録情報を調べます。",
+        "output": "RDAP response\n{\"ldhName\":\"northstar.example\",\"events\":[{\"eventAction\":\"registration\",\"eventDate\":\"2026-09-01T00:00:00Z\"}]}",
         "accepted_information_types": [
           "domain"
         ],
@@ -188,7 +188,7 @@
           }
         ],
         "input_hint": "登録Domain",
-        "platform_note": "OS共通の照会方式（RDAP）。登録Domainを対応クライアントやWebサービスで照会します。",
+        "platform_note": "OS共通（RDAP対応クライアント / Webサービス）",
         "environments": [
           "windows",
           "linux"

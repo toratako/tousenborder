@@ -9,7 +9,7 @@
   "initial_information": {
     "Package名": "@northstar-training/native-render",
     "Version": "3.2.0",
-    "Registry": "npm Registry（教材用Metadata）",
+    "Registry": "npm Registry",
     "Install要求元": "承認済み変更申請DEP-720"
   },
   "tools": [],
@@ -62,13 +62,13 @@
         "結果": {
           "vulns": []
         },
-        "注記": "照会時点の登録情報。未知の問題がないという保証ではありません。"
+        "注記": "照会時点の登録情報。"
       }
     }
   ],
   "external_references": [],
   "ground_truth": "allow",
-  "explanation": "Install Scriptはレビュー済みのローカルBuildで、Version・配布物のintegrity・導入承認も一致するため許可します。Scriptの存在やOSV該当なしだけではなく、処理内容と承認を確認します。",
+  "explanation": "Install Scriptはレビュー済みのローカルBuildで、Version・配布物のintegrity・導入承認も一致するため許可します。",
   "topic": "正常なInstall Scriptを悪性更新と区別する",
   "summary": "正当なNative Module更新をSource ReviewとLock fileで確認する。",
   "learning_objectives": [
@@ -87,7 +87,7 @@
     "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/",
     "https://google.github.io/osv.dev/api/"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "ecosystem": "npm",
   "initial_information_types": {
     "Package名": "package_name",

@@ -16,7 +16,7 @@
       "id": "url_parse",
       "name": "Python / URL分解",
       "input_hint": "URL",
-      "description": "Pythonのurllib.parseでURLからHostを取り出します。ローカルの文字列処理で、URLにアクセスしたり外部送信したりしません。",
+      "description": "Pythonのurllib.parseでURL文字列からHostを取り出します。",
       "output": "python -c \"from urllib.parse import urlsplit; print(urlsplit('https://verify-help.example/check').hostname)\"\nverify-help.example",
       "accepted_information_types": [
         "url"
@@ -44,8 +44,8 @@
     {
       "id": "rdap",
       "name": "RDAP",
-      "description": "登録情報を調べます。新規登録だけでは判定せず、サイトの要求内容と合わせます。",
-      "output": "RDAP response (fixture excerpt)\n{\"ldhName\":\"verify-help.example\",\"events\":[{\"eventAction\":\"registration\",\"eventDate\":\"2026-09-13T00:00:00Z\"}]}",
+      "description": "Domainの登録情報を調べます。",
+      "output": "RDAP response\n{\"ldhName\":\"verify-help.example\",\"events\":[{\"eventAction\":\"registration\",\"eventDate\":\"2026-09-13T00:00:00Z\"}]}",
       "accepted_information_types": [
         "domain"
       ],
@@ -56,7 +56,7 @@
         }
       ],
       "input_hint": "Host / Domain",
-      "platform_note": "OS共通の照会方式（RDAP）。単独のコマンド名ではありません。対応クライアントやWebサービスを使って登録情報を照会します。",
+      "platform_note": "OS共通（RDAP対応クライアント / Webサービス）",
       "environments": [
         "windows",
         "linux"
@@ -79,13 +79,13 @@
     {
       "id": "urlscan",
       "name": "urlscan.io / 公開URL",
-      "description": "送信する情報と公開範囲を確認して、外部照会を行うか選びます。結果は模擬です。",
+      "description": "送信内容と公開範囲を確認して外部照会します。",
       "submission_type": "full_url",
       "submission_value": "https://verify-help.example/check",
-      "output": "{\"page\":{\"domain\":\"verify-help.example\"},\"verdicts\":{\"overall\":{\"malicious\":false}}}\nFixture excerpt: CAPTCHA asks user to run a command.",
+      "output": "{\"page\":{\"domain\":\"verify-help.example\"},\"verdicts\":{\"overall\":{\"malicious\":false}}}\nCAPTCHA asks user to run a command.",
       "correct_usage": true,
       "confidentiality_warning": "URL全体をサービスに送信します。このURLは公開済みで機密値を含まず、組織方針上の照会対象です。",
-      "reason": "公開URLの照会は許可されています。検出なしという結果よりも、正規手順とページの要求内容を比較してください。",
+      "reason": "公開URLの照会は許可されています。判定ではページの要求内容を正規手順と照合します。",
       "accepted_information_types": [
         "url"
       ],
@@ -96,7 +96,7 @@
         }
       ],
       "input_hint": "URL",
-      "platform_note": "OS共通の外部サービス（urlscan.io）。Web / APIから利用します。ゲーム内は模擬照会です。",
+      "platform_note": "OS共通（urlscan.ioのWeb / API）",
       "environments": [
         "windows",
         "linux"
@@ -104,7 +104,7 @@
     }
   ],
   "ground_truth": "block",
-  "explanation": "会議参加の確認にOSでのCommand実行を要求し、正規サービスの手順にも一致しないため遮断します。攻撃名を知らなくても、要求される操作と目的の不一致から判断できます。",
+  "explanation": "会議参加の確認にOSでのCommand実行を要求し、正規サービスの手順にも一致しないため遮断します。",
   "topic": "Webページの要求操作を正規手順と比較する",
   "summary": "Fake CAPTCHAによるCommand実行誘導を隔離調査結果から判断する。",
   "learning_objectives": [
@@ -120,7 +120,7 @@
     "https://www.microsoft.com/en-us/security/blog/2025/08/21/think-before-you-clickfix-analyzing-the-clickfix-social-engineering-technique/",
     "https://urlscan.io/docs/api/"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "inspired_by": "ClickFix / Fake CAPTCHA",
   "initial_information_types": {
     "完全なURL": "url"

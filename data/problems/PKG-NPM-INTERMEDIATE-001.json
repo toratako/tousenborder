@@ -9,7 +9,7 @@
   "initial_information": {
     "Package名": "@northstar-training/calendar",
     "Version": "2.4.1",
-    "Registry": "npm Registry（教材用Metadata）",
+    "Registry": "npm Registry",
     "Install要求元": "依存更新Bot"
   },
   "tools": [],
@@ -34,7 +34,7 @@
     {
       "id": "repository_diff",
       "name": "Repository / 配布物のReview",
-      "content": "Release Tag v2.4.1にはinstall-helper.jsもpostinstallも存在しません。組織内の静的Reviewで、Registry配布物にだけ認証情報Fileを読み外部送信する処理が追加されていると確認。具体的なCommand・コードは教材用に省略。"
+      "content": "Release Tag v2.4.1にはinstall-helper.jsもpostinstallも存在しません。組織内の静的Reviewで、Registry配布物にだけ認証情報Fileを読み外部送信する処理が追加されていると確認。"
     },
     {
       "id": "maintainer_notice",
@@ -55,13 +55,13 @@
         "結果": {
           "vulns": []
         },
-        "注記": "照会時点の保存コピー。未登録は安全の証明ではありません。"
+        "注記": "照会時点の登録情報。"
       }
     }
   ],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "Registry配布物だけに認証情報の外部送信処理が含まれ、Maintainerも公開を否認しているため遮断します。既存PackageやOSV該当なしという理由だけでUpdateを信用してはいけません。",
+  "explanation": "Registry配布物だけに認証情報の外部送信処理が含まれ、Maintainerも公開を否認しているため遮断します。",
   "topic": "正規Packageの更新でも公開物とSourceを比較する",
   "summary": "Maintainerの公開Token悪用を想定したSupply-chain問題。",
   "learning_objectives": [
@@ -80,7 +80,7 @@
     "https://docs.npmjs.com/cli/v11/using-npm/scripts/",
     "https://google.github.io/osv.dev/api/"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "inspired_by": "npm Supply-chain / 公開Token・Maintainerの侵害（手法を架空Packageへ置換）",
   "ecosystem": "npm",
   "initial_information_types": {

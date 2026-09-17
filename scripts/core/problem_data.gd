@@ -28,7 +28,7 @@ static func normalize(item: Dictionary, catalog: ContentCatalog, schema: Diction
 			if not errors.is_empty(): return group + ": " + "; ".join(errors)
 			if ids.has(resource.id): return "資料IDが重複しています: " + resource.id
 			ids[resource.id] = true
-			resource.merge({"label": resource.name, "description": "JSONに定義された模擬資料を表示します。",
+			resource.merge({"label": resource.name, "description": "資料を表示します。",
 				"accepted_information_types": [], "environments": [], "case_id": item.id,
 				"group": group, "resource_kind": kind}, false)
 			if resource.has("output_by_environment"):

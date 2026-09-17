@@ -37,7 +37,7 @@
     {
       "id": "readelf",
       "name": "readelf",
-      "description": "ELFのHeaderを表示します。Machineや形式が分かりますが、悪性判定そのものではありません。",
+      "description": "ELFのHeaderからMachineや形式を確認します。",
       "output": "$ readelf -h shipping.pdf\nELF Header:\n  Class:                             ELF64\n  Type:                              DYN (Position-Independent Executable file)\n  Machine:                           Advanced Micro Devices X86-64",
       "accepted_information_types": [
         "file"
@@ -57,7 +57,7 @@
     {
       "id": "gnu_strings",
       "name": "strings（GNU）",
-      "description": "File全体から可読文字列を抽出します。文字列の存在だけでは実行された機能や安全性を断定できません。",
+      "description": "File全体から可読文字列を抽出します。",
       "environments": [
         "linux"
       ],
@@ -84,7 +84,7 @@
   ],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "fileとreadelfの結果はPDFではなくELF実行ファイルを示し、配送書類の仕様と矛盾するため遮断します。拡張子だけではFileの実体は分かりません。",
+  "explanation": "fileとreadelfの結果はPDFではなくELF実行ファイルを示し、配送書類の仕様と矛盾するため遮断します。",
   "topic": "fileでFileの実体を調べる",
   "summary": "PDFを装ったELFを形式と仕様の照合で見分ける。",
   "learning_objectives": [
@@ -99,7 +99,7 @@
   "sources": [
     "https://sourceware.org/binutils/docs/binutils/strings.html"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "File名": "file",
     "Size": "file_size",

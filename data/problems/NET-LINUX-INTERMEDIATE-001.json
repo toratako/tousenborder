@@ -79,7 +79,7 @@
         }
       ],
       "input_hint": "PID",
-      "platform_note": "Linux / macOS。Linuxのpsを模した出力例です。",
+      "platform_note": "Linux / macOS（出力はLinuxのps）",
       "environments": [
         "linux"
       ]
@@ -89,7 +89,7 @@
       "name": "Wireshark",
       "platform_note": "Windows / Linux",
       "description": "Packetの時刻、量、接続先を調べます。暗号化された本文や所有ProcessはPacketだけからは分かりません。",
-      "output": "Display filter: ip.dst == 203.0.113.66\nPacket list / previous flows (fixture excerpt)\nNo. Time      Source      Destination    Protocol Length Info\n1   0.000000  192.0.2.40  203.0.113.66   TCP      60     55000 → 8443 [SYN]\n2   60.000000 192.0.2.40  203.0.113.66   TCP      60     55001 → 8443 [SYN]",
+      "output": "Display filter: ip.dst == 203.0.113.66\nPacket list / previous flows\nNo. Time      Source      Destination    Protocol Length Info\n1   0.000000  192.0.2.40  203.0.113.66   TCP      60     55000 → 8443 [SYN]\n2   60.000000 192.0.2.40  203.0.113.66   TCP      60     55001 → 8443 [SYN]",
       "accepted_information_types": [
         "ip"
       ],
@@ -120,7 +120,7 @@
   ],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "無承認の実行Pathから既知の不審Endpointへの周期通信があり、Serviceの通信設計とも一致しないため遮断します。8443番Portや周期だけを悪性の根拠にしてはいけません。",
+  "explanation": "無承認の実行Pathから既知の不審Endpointへの周期通信があり、Serviceの通信設計とも一致しないため遮断します。",
   "topic": "Packet・Socket・Processの情報を結び付ける",
   "summary": "非標準Portの定期通信をProcessと承認記録で検証する。",
   "learning_objectives": [
@@ -138,7 +138,7 @@
   "sources": [
     "https://man7.org/linux/man-pages/man1/ps.1.html"
   ],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "Source IP": "ip",
     "Destination IP": "ip",

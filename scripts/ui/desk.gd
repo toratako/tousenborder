@@ -96,7 +96,7 @@ func _ready() -> void:
 	theme = Chrome.create(preload("res://assets/fonts/NotoSansCJK-Regular.ttc"))
 	_build()
 	if not catalog.load_pack(content_pack):
-		status.text = "教材の読み込みエラー"
+		status.text = "問題データの読み込みエラー"
 		var error_label := Chrome.rich(workspace, Rect2(290, 150, 900, 530), PAPER, 20)
 		error_label.text = "\n".join(catalog.errors)
 		return
@@ -172,7 +172,7 @@ func _build_start_screen() -> void:
 func _tool_description(tool: Dictionary) -> String:
 	var input_text := "\n必要な入力: " + Information.input_hint(tool) if not tool.get("accepted_information_types", []).is_empty() else ""
 	var platform_text: String = "\nToolの主な利用環境: " + tool.platform_note if tool.has("platform_note") else ""
-	return "対応対象: " + "、".join(tool.categories.map(_type_label)) + platform_text + input_text + "\n\n" + tool.description + "\n\nゲーム内では模擬資料を表示します。実際のコマンド実行は行いません。"
+	return "対応対象: " + "、".join(tool.categories.map(_type_label)) + platform_text + input_text + "\n\n" + tool.description
 
 func _show_tool_guide() -> void:
 	if playing or not start_screen.visible or (is_instance_valid(license_overlay) and license_overlay.visible):
@@ -389,11 +389,11 @@ func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
 	if not input.is_empty() and not Information.accepts(tool, input) and tool.accepted_information_types.is_empty():
 		actual_input = {}
 	if not tool.accepted_information_types.is_empty() and (input.is_empty() or not Information.accepts(tool, input)):
-		tool_message.text = "「" + tool.label + "」の入力：" + Information.input_hint(tool) + "。対応する対象の情報を選択するか、ボタンへドラッグしてください。"
+		tool_message.text = "「" + tool.label + "」の入力：" + Information.input_hint(tool) + "。情報を選択するか、ボタンへドラッグ。"
 		return
 	if tool.resource_kind == "external_references":
 		pending_external = {"tool": tool, "input": actual_input.duplicate(true), "generation": desk_generation}
-		external_preview_body.text = tool.label + "\n\n送信する情報の種類：" + tool.get("submission_type", "未指定") + "\n送信内容：" + tool.get("submission_value", "教材に具体値の指定なし") + "\n\n" + tool.get("confidentiality_warning", "送信内容と組織の調査方針を確認してください。") + "\n\nこのゲームでは模擬結果を表示します。実際の外部送信は行いません。"
+		external_preview_body.text = tool.label + "\n\n送信する情報：" + tool.get("submission_type", "未指定") + "\n送信内容：" + tool.get("submission_value", "未指定") + "\n\n" + tool.get("confidentiality_warning", "送信内容と組織の調査方針を確認してください。")
 		if not actual_input.is_empty():
 			external_preview_body.text += "\n\n選んだ入力：" + actual_input.label + "\n" + Information.display(actual_input.value)
 		external_preview_body.scroll_to_line(0)
@@ -493,7 +493,7 @@ func _update_case_controls(item: Dictionary) -> void:
 			labels.append(item.get("evidence_alternatives", {}).get(id, {}).get("label", matching[0].label if not matching.is_empty() else id))
 		tool_message.text = "未確認: " + "、".join(labels)
 	elif tool_message.text.begins_with("未確認:"):
-		tool_message.text = "必要な資料を確認しました。内容を照合して判定してください。"
+		tool_message.text = "調査完了。資料を照合して判定してください。"
 
 func _can_stamp(data: Dictionary) -> bool:
 	return playing and not shift.finished() and not shift.judged and shift.missing_evidence().is_empty() and not pause_menu.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))

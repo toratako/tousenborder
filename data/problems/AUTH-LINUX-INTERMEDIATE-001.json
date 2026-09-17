@@ -50,7 +50,7 @@
         }
       ],
       "input_hint": "Username",
-      "platform_note": "Linux。教材はwtmpのLogin記録を確認します。",
+      "platform_note": "Linux（wtmp）",
       "environments": [
         "linux"
       ]
@@ -65,7 +65,7 @@
   ],
   "external_references": [],
   "ground_truth": "block",
-  "explanation": "本人が要求を否認しており、必須のGateway・MFAも経由していないため遮断します。失敗Logは過去の試行を示しますが、Passwordの使い回しや攻撃種別までは断定できません。",
+  "explanation": "本人が要求を否認しており、必須のGateway・MFAも経由していないため遮断します。",
   "topic": "認証成功とSessionを許可してよい条件を区別する",
   "summary": "過去の失敗と必須認証経路・本人確認を組み合わせる。",
   "learning_objectives": [
@@ -79,7 +79,7 @@
   "decision_context": "before_session",
   "scenario_type": "standard",
   "sources": [],
-  "fixture_note": "架空の組織・対象・値による教材用の抜粋。実機の実行結果ではありません。",
+  "fixture_note": "組織・対象・値は架空。",
   "initial_information_types": {
     "Username": "username",
     "Source IP": "ip"

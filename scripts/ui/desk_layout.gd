@@ -11,7 +11,7 @@ static func build_workspace(desk) -> void:
 	desk.workspace = Control.new()
 	desk.workspace.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.add_child(desk.workspace)
-	Chrome.label(desk.workspace, Rect2(24, 21, 160, 32), "（仮）", PAPER, 23)
+	Chrome.label(desk.workspace, Rect2(24, 21, 160, 32), "電子入境管理", PAPER, 23)
 	desk.tools_toggle = icon_button(desk, Rect2(1128, 12, 136, 46), "file", "ツール", "解析ツールを開く / 閉じる")
 	desk.tools_toggle.toggle_mode = true
 	desk.tools_toggle.pressed.connect(desk._toggle_tools)
@@ -32,7 +32,7 @@ static func build_pause_menu(desk) -> void:
 	desk.pause_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.pause_menu.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sheet := Chrome.panel(desk.pause_menu, Rect2(330, 155, 620, 490), Color("101e32"), Color("34556f"))
-	Chrome.label(sheet, Rect2(36, 28, 548, 45), "（仮）", INK, 30)
+	Chrome.label(sheet, Rect2(36, 28, 548, 45), "電子入境管理", INK, 30)
 	desk.menu_resume = Chrome.button(sheet, Rect2(36, 151, 548, 52), "ゲームに戻る  [ESC]", PAPER)
 	desk.menu_resume.pressed.connect(desk._close_menu)
 	desk.menu_restart = Chrome.button(sheet, Rect2(36, 225, 548, 52), "勤務を最初からやり直す", PAPER)
@@ -61,11 +61,11 @@ static func build_start_screen(desk) -> void:
 	for origin in [Vector2(56, 60), Vector2(1152, 60), Vector2(56, 738), Vector2(1152, 738)]:
 		Chrome.panel(desk.start_screen, Rect2(origin, Vector2(72, 2)), GREEN)
 	Chrome.label(desk.start_screen, Rect2(870, 99, 312, 24), "SECURITY OPERATIONS / ONLINE", GREEN, 13)
-	Chrome.label(desk.start_screen, Rect2(94, 92, 1092, 25), "電子入境管理  /  審査デスク試作・仮教材", MUTED, 16)
+	Chrome.label(desk.start_screen, Rect2(94, 92, 1092, 25), "電子入境管理  /  審査デスク", MUTED, 16)
 	Chrome.panel(desk.start_screen, Rect2(94, 135, 1092, 2), Color("29495f"))
-	Chrome.label(desk.start_screen, Rect2(94, 189, 550, 70), "（仮）", PAPER, 44)
+	Chrome.label(desk.start_screen, Rect2(94, 189, 550, 70), "電子入境管理", PAPER, 44)
 	Chrome.label(desk.start_screen, Rect2(98, 283, 530, 50), "そのアクセスを、許可しますか。", GREEN, 24)
-	Chrome.label(desk.start_screen, Rect2(98, 346, 514, 90), "File・Process・Web・Network・Email・Account・Package\nToolで調べ、Referenceと照合して判断します。\n外部へ送ってよい情報の範囲も確認してください。", PAPER, 16)
+	Chrome.label(desk.start_screen, Rect2(98, 346, 514, 90), "File・Process・Web・Network・Email・Account・Package\nToolで調べ、Referenceと照合して判定。", PAPER, 16)
 	Chrome.label(desk.start_screen, Rect2(98, 445, 165, 28), "難易度", PAPER, 16)
 	Chrome.label(desk.start_screen, Rect2(274, 445, 165, 28), "問題カテゴリ", PAPER, 16)
 	Chrome.label(desk.start_screen, Rect2(450, 445, 165, 28), "調査環境", PAPER, 16)
@@ -253,7 +253,7 @@ static func build_external_preview(desk) -> void:
 	Chrome.label(sheet, Rect2(28, 24, 664, 44), "External Reference · 送信前の確認", INK, 25)
 	desk.external_preview_body = Chrome.rich(sheet, Rect2(28, 90, 664, 350), INK, 18)
 	desk.external_skip = Chrome.button(sheet, Rect2(28, 480, 320, 48), "送信を見送る  [ESC]", PAPER)
-	desk.external_send = Chrome.button(sheet, Rect2(364, 480, 328, 48), "送信して調査する（模擬）", PAPER)
+	desk.external_send = Chrome.button(sheet, Rect2(364, 480, 328, 48), "送信して調査", PAPER)
 	desk.external_skip.pressed.connect(desk._finish_external.bind(false))
 	desk.external_send.pressed.connect(desk._finish_external.bind(true))
 	for button in [desk.external_skip, desk.external_send]:
@@ -289,7 +289,7 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			button.tooltip_text = tool.description
 			if desk.catalog.resource_groups[group].kind == "external_references":
-				button.tooltip_text += "\n外部へ送る情報（模擬）: " + tool.get("submission_type", "未指定") + "\n" + tool.get("confidentiality_warning", "")
+				button.tooltip_text += "\n送信する情報: " + tool.get("submission_type", "未指定") + "\n" + tool.get("confidentiality_warning", "")
 			button.pressed.connect(func(): desk._inspect(tool, desk.selected_information))
 			button.information_dropped.connect(desk._inspect)
 			button.setup_presentation()
