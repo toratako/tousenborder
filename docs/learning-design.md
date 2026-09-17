@@ -47,7 +47,7 @@ urlscan.ioのPublic・Unlisted・Privateは結果の公開範囲の違いであ�
 
 ## 問題の追加と検証
 
-[問題JSONの追加手順](problem-data.md#追加変更の手順) に沿い、既存IDを再利用せず、表示される事実と独立した照合資料から解説の結論を導ける構成にします。例：`FILE-WIN-BEGINNER-001`、`PROC-LINUX-INTERMEDIATE-001`、`WEB-ADVANCED-001`、`AUTH-WIN-ADVANCED-001`、`PKG-NPM-ADVANCED-001`。
+[問題JSONの追加手順](problem-data.md#追加変更の手順) に沿い、既存IDを再利用せず、表示される事実と独立した照合資料から解説の結論を導ける構成にします。例：`FILE-LINUX-BEGINNER-002`、`PROC-LINUX-INTERMEDIATE-001`、`WEB-ADVANCED-001`、`AUTH-WIN-ADVANCED-001`、`PKG-NPM-ADVANCED-001`。
 
 共通の手引きに書いた方針だけでは検証できない、資料の意味・出力抜粋の整合・判定時点は作問時に確認します。入力と証拠の到達性はSchema・意味検証、全24問とOS別経路は `tests/test_learning.gd` で確認します。
 
