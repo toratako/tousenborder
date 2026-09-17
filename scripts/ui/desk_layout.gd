@@ -100,7 +100,7 @@ static func build_start_screen(desk) -> void:
 	desk.license_button.pressed.connect(desk._show_licenses)
 
 static func build_tools(desk) -> void:
-	desk.tool_drawer = Chrome.panel(desk.workspace, Rect2(1016, 74, 248, 536), Color("101e32"), Color("57e4f2"))
+	desk.tool_drawer = Chrome.panel(desk.workspace, Rect2(1016, 74, 248, 536), Color("101e32"), Color("34556f"))
 	desk.tool_drawer.mouse_filter = Control.MOUSE_FILTER_STOP
 	Chrome.label(desk.tool_drawer, Rect2(16, 12, 180, 28), "解析キット", PAPER, 18)
 	var close := Chrome.button(desk.tool_drawer, Rect2(204, 8, 32, 32), "×", MUTED)
@@ -309,7 +309,5 @@ static func draw_background(desk) -> void:
 		desk.draw_line(Vector2(0, y), Vector2(1280, y), Color("112336"), 1)
 	for x in range(0, 1280, 32):
 		desk.draw_line(Vector2(x, 80), Vector2(x, 800), Color("112336"), 1)
-	for x in range(16, 1280, 128):
-		desk.draw_line(Vector2(x, 784), Vector2(x + 32, 784), Color("34556f"), 2)
 	desk.draw_rect(Rect2(0, 0, 1280, 72), Color("0c1829"))
-	desk.draw_line(Vector2(0, 72), Vector2(1280, 72), Color("57e4f2"), 2)
+	desk.draw_line(Vector2(0, 72), Vector2(1280, 72), Color("29495f"), 1)

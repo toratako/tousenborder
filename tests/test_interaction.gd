@@ -60,8 +60,8 @@ func _run() -> void:
 	var card: DraggableCard = desk.target_card
 	assert(not card.movable and not card.source_label.visible)
 	assert(card.scroll.position.y == 58)
-	assert(card.request_section.get_child(0).text == "申請内容")
-	assert(card.basic_section.get_child(0).text == "基本情報")
+	assert(card.request_section.get_child(0).get_child(0).text == "申請内容")
+	assert(card.basic_section.get_child(0).get_child(0).text == "基本情報")
 	assert(card.tokens[0].get_parent() == card.request_section)
 	for i in range(1, card.tokens.size()):
 		assert(card.tokens[i].get_parent() == card.basic_section)
@@ -70,14 +70,34 @@ func _run() -> void:
 	await drag(grab, grab + Vector2(100, 15))
 	assert(card.position == original, "target stays fixed")
 	assert(card.position == original)
-	var rule_grab: Vector2 = desk.rule_card.header.global_position + Vector2(110, 20)
-	await drag(rule_grab, rule_grab + Vector2(-80, 24))
+	# グリップ上からも移動でき、離した後は持ち上げ表現が残らない。
+	var rule_grab: Vector2 = desk.rule_card.header.global_position + Vector2(15, 23)
+	var resting_shadow: int = desk.rule_card.get_theme_stylebox("panel").shadow_size
+	await motion(rule_grab)
+	await button(rule_grab, true)
+	await motion(rule_grab + Vector2(-80, 24), true)
+	assert(desk.rule_card.dragging)
+	assert(desk.rule_card.get_theme_stylebox("panel").shadow_size > resting_shadow)
+	await button(rule_grab + Vector2(-80, 24), false)
+	await process_frame
+	assert(not desk.rule_card.dragging)
+	assert(desk.rule_card.get_theme_stylebox("panel").shadow_size == resting_shadow)
 	assert(desk.rule_card.position.x < 900)
 	desk.rule_card.position = desk.rule_card.home_position
 	await click(desk.tools_toggle.get_global_rect().get_center())
 	assert(desk.tool_drawer.visible)
 	var row: InformationToken = card.tokens[1]
 	await process_frame
+	# グリップからも本文からも同じ情報を持ち出せる。
+	var grip_point := row.global_position + Vector2(15, row.size.y / 2)
+	await motion(grip_point)
+	await button(grip_point, true)
+	await motion(grip_point + Vector2(30, 0), true)
+	assert(root.gui_is_dragging())
+	assert(root.gui_get_drag_data().information == row.payload())
+	await motion(Vector2(850, 760), true)
+	await button(Vector2(850, 760), false)
+	assert(desk.shift.observations.is_empty())
 	await drag(row.get_global_rect().get_center(), desk.tool_buttons[0].get_global_rect().get_center())
 	assert(desk.shift.observations.size() == 1 and desk.shift.observations[0].ok)
 	assert(not desk.tool_drawer.visible)

@@ -15,11 +15,20 @@ var source_label: Label
 var scroll_hint: Label
 var accent := Color("57e4f2")
 var active := false
-var dragging := false
+var dragging := false:
+	set(value):
+		dragging = value
+		if is_instance_valid(header):
+			var paper := get_theme_stylebox("panel") as StyleBoxFlat
+			paper.shadow_size = 14 if dragging else 8
+			paper.shadow_offset = Vector2(6, 10) if dragging else Vector2(4, 6)
+			_header_style(header_hovered)
 var movable := true
 var drag_offset := Vector2.ZERO
 var header: Panel
+var header_hovered := false
 var title_label: Label
+var title_icon: TextureRect
 var rows: VBoxContainer
 var request_section: VBoxContainer
 var basic_section: VBoxContainer
@@ -45,7 +54,7 @@ func setup(data: Dictionary, origin: Vector2, dimensions := Vector2(380, 450)) -
 	var paper := StyleBoxFlat.new()
 	paper.bg_color = Color("0d2332") if data.get("category") == "target" else Color("101e32")
 	paper.border_color = Color("34556f")
-	paper.set_border_width_all(2)
+	paper.set_border_width_all(1)
 	paper.shadow_color = Color(0, 0, 0, 0.3)
 	paper.shadow_size = 8
 	paper.shadow_offset = Vector2(4, 6)
@@ -73,18 +82,20 @@ func _build_header(data: Dictionary) -> void:
 	header.position = Vector2(0, 0)
 	header.size = Vector2(size.x, 46)
 	header.mouse_default_cursor_shape = Control.CURSOR_DRAG if movable else Control.CURSOR_ARROW
+	header.tooltip_text = data.get("title", "資料") + ("\nドラッグして移動" if movable else "")
+	header.draw.connect(_draw_grip)
 	header.gui_input.connect(_header_input)
 	header.mouse_entered.connect(func(): _header_style(true))
 	header.mouse_exited.connect(func(): _header_style(false))
 	add_child(header)
 	_header_style(false)
-	Chrome.icon(header, Rect2(10, 10, 26, 26), data.get("icon", "res://assets/icons/document.svg"))
+	title_icon = Chrome.icon(header, Rect2(28 if movable else 10, 10, 26, 26), data.get("icon", "res://assets/icons/document.svg"))
 	title_label = Label.new()
-	title_label.position = Vector2(44, 10)
+	title_label.position = Vector2(62 if movable else 44, 10)
 	title_label.size = Vector2(size.x - 134, 28)
 	title_label.text = data.get("title", "資料")
 	title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	title_label.add_theme_font_size_override("font_size", 18)
+	title_label.add_theme_font_size_override("font_size", 20 if data.get("category") == "target" else 18)
 	title_label.tooltip_text = title_label.text
 	title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	header.add_child(title_label)
@@ -117,14 +128,14 @@ func _build_scroll(data: Dictionary) -> void:
 	rows = VBoxContainer.new()
 	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rows.mouse_filter = Control.MOUSE_FILTER_PASS
-	rows.add_theme_constant_override("separation", 3)
+	rows.add_theme_constant_override("separation", 10)
 	scroll.add_child(rows)
 
 func _build_information(data: Dictionary) -> void:
 	if data.get("category") == "target":
 		rows.add_theme_constant_override("separation", 16)
 		request_section = _section("申請内容")
-		basic_section = _section("基本情報")
+		basic_section = _section("基本情報", "項目をツールへドラッグ")
 		if data.has("metadata"):
 			var metadata := Label.new()
 			metadata.text = data.metadata
@@ -180,33 +191,30 @@ func _fit_content() -> void:
 	_layout()
 	clamp_to_desk()
 
-func _section(caption: String) -> VBoxContainer:
-	var panel := PanelContainer.new()
-	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	panel.mouse_filter = Control.MOUSE_FILTER_PASS
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("102a3b")
-	style.border_color = Color("34556f")
-	style.set_border_width_all(1)
-	style.content_margin_left = 8
-	style.content_margin_right = 8
-	style.content_margin_top = 9
-	style.content_margin_bottom = 9
-	panel.add_theme_stylebox_override("panel", style)
-	rows.add_child(panel)
+func _section(caption: String, hint: String = "") -> VBoxContainer:
 	var column := VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.mouse_filter = Control.MOUSE_FILTER_PASS
 	column.add_theme_constant_override("separation", 5)
-	panel.add_child(column)
+	rows.add_child(column)
+	var heading_row := HBoxContainer.new()
+	heading_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	heading_row.add_theme_constant_override("separation", 12)
+	column.add_child(heading_row)
 	var heading := Label.new()
 	heading.text = caption
 	heading.add_theme_font_size_override("font_size", 19)
 	heading.add_theme_color_override("font_color", Color("57e4f2"))
 	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(heading)
-	for surface in [panel, column]:
-		surface.set_drag_forwarding(Callable(), _can_drop_data, _drop_data)
+	heading_row.add_child(heading)
+	if not hint.is_empty():
+		var instruction := Label.new()
+		instruction.text = hint
+		instruction.add_theme_font_size_override("font_size", 12)
+		instruction.add_theme_color_override("font_color", Color("8297ac"))
+		instruction.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		heading_row.add_child(instruction)
+	column.set_drag_forwarding(Callable(), _can_drop_data, _drop_data)
 	return column
 
 func set_geometry(origin: Vector2, dimensions: Vector2) -> void:
@@ -218,10 +226,19 @@ func set_geometry(origin: Vector2, dimensions: Vector2) -> void:
 
 func _layout() -> void:
 	header.size.x = size.x
-	title_label.size.x = size.x - (92 if close_button.visible else 58)
+	title_label.size.x = size.x - title_label.position.x - (48 if close_button.visible else 14)
 	close_button.position.x = size.x - 40
 	source_label.size.x = size.x - 28
 	var target: bool = card_data.get("category") == "target"
+	if target:
+		var text_width := title_label.get_theme_font("font").get_string_size(title_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x
+		var title_width := minf(ceilf(text_width), size.x - 84)
+		var left := (size.x - title_width - 36) / 2
+		title_icon.position = Vector2(left, 9)
+		title_icon.size = Vector2(28, 28)
+		title_label.position = Vector2(left + 36, 7)
+		title_label.size = Vector2(title_width, 32)
+		title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	scroll.position = Vector2(12, 58 if target else 82)
 	scroll.size = Vector2(size.x - 24, size.y - (156 if target else 116))
 	if card_data.get("category") == "analysis" and not analysis_overflow:
@@ -243,25 +260,35 @@ func _update_scroll_hint() -> void:
 func set_active(value: bool) -> void:
 	active = value
 	var paper := get_theme_stylebox("panel") as StyleBoxFlat
-	paper.border_color = accent.lightened(0.25) if active else Color("34556f")
-	paper.set_border_width_all(3 if active else 1)
-	_header_style(false)
+	paper.border_color = accent.darkened(0.45) if active else Color("34556f")
+	_header_style(header_hovered)
 
 func _small_button(text: String, origin: Vector2) -> Button:
 	var button := Button.new()
 	button.position = origin
 	button.size = Vector2(32, 32)
 	button.text = text
+	button.flat = true
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	header.add_child(button)
 	return button
 
 func _header_style(hovered: bool) -> void:
+	header_hovered = hovered
 	var style := StyleBoxFlat.new()
-	style.bg_color = accent.darkened(0.78 if hovered or active else 0.87)
-	style.border_color = accent.lightened(0.3) if hovered or active else accent
-	style.set_border_width_all(1)
+	style.bg_color = Color(1, 1, 1, 0.08 if hovered or dragging else 0.035) if movable else Color.TRANSPARENT
 	header.add_theme_stylebox_override("panel", style)
+	if is_instance_valid(title_label):
+		title_label.add_theme_color_override("font_color", accent if active else Chrome.TEXT)
+	header.queue_redraw()
+
+func _draw_grip() -> void:
+	if not movable:
+		return
+	var color := Chrome.TEXT if header_hovered or dragging else Color("8297ac")
+	for x in [12, 18]:
+		for y in [17, 23, 29]:
+			header.draw_circle(Vector2(x, y), 1.5, color, true, -1, true)
 
 func bring_to_front() -> void:
 	get_parent().move_child(self, -1)
@@ -310,11 +337,6 @@ func _notification(what: int) -> void:
 		queue_redraw()
 
 func _draw() -> void:
-	if card_data.get("category") == "target":
-		for x in range(22, int(size.x) - 20, 24):
-			draw_line(Vector2(x, size.y - 8), Vector2(x + 10, size.y - 8), Color("34556f"), 2)
-	elif card_data.get("category") == "rule":
-		draw_rect(Rect2(2, 46, 5, size.y - 48), Color("c5a1ff"))
 	if drop_available:
 		draw_rect(Rect2(Vector2(3, 3), size - Vector2(6, 6)), Color("57edc2"), false, 4)
 

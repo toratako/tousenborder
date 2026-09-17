@@ -8,13 +8,15 @@ var information: Dictionary
 var context: Dictionary
 var highlighted := false
 var hovered := false
+var show_drag_grip := false
 
 func setup(item: Dictionary, card_context: Dictionary, show_label: bool = true) -> void:
 	information = item.duplicate(true)
 	context = card_context.duplicate(true)
+	show_drag_grip = context.get("card_category") == "target" and item.get("category") != "request" and item.draggable and item.tool_input
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	mouse_default_cursor_shape = Control.CURSOR_DRAG if show_drag_grip else Control.CURSOR_POINTING_HAND
 	tooltip_text = "クリックで選択" + (" / 値をツールへドラッグ" if item.draggable and item.tool_input else "")
 	var column := VBoxContainer.new()
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -59,15 +61,24 @@ func set_selected(value: bool) -> void:
 func _style(hovered: bool) -> void:
 	var style := StyleBoxFlat.new()
 	var target: bool = context.get("card_category") == "target"
-	style.bg_color = (Color("1a3b50") if target else Color("1b3450")) if hovered or highlighted else (Color("0c2132") if target else Color("101e32"))
-	style.border_color = Color("57e4f2") if highlighted else Color("29495f")
-	style.set_border_width_all(1)
-	style.border_width_left = 4 if highlighted else 1
-	style.content_margin_left = 10
+	style.bg_color = (Color("1a3b50") if target else Color("1b3450")) if hovered or highlighted else Color.TRANSPARENT
+	style.border_color = Color("57e4f2")
+	style.border_width_left = 3 if highlighted else 0
+	style.content_margin_left = 28 if show_drag_grip else 10
 	style.content_margin_right = 8
 	style.content_margin_top = 7
 	style.content_margin_bottom = 9
 	add_theme_stylebox_override("panel", style)
+	queue_redraw()
+
+func _draw() -> void:
+	if show_drag_grip:
+		var color := Color("e4f5ff") if hovered or highlighted else Color("8297ac")
+		for x in [12, 18]:
+			for offset in [-6, 0, 6]:
+				draw_circle(Vector2(x, size.y / 2 + offset), 1.5, color, true, -1, true)
+	if context.get("card_category") == "rule":
+		draw_line(Vector2(10, size.y - 1), Vector2(size.x - 8, size.y - 1), Color(0.69, 0.78, 0.85, 0.18), 1)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
