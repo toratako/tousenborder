@@ -23,20 +23,15 @@ func _run() -> void:
 	desk.tool_guide_button.pressed.emit()
 	assert(desk.tool_guide.visible and not desk.start_screen.visible)
 	assert(desk.tool_guide_close.has_focus())
-	var legacy_tool: Dictionary = desk.catalog.tools[0].duplicate(true)
-	legacy_tool.erase("detailed_description")
-	assert(desk._tool_description(legacy_tool).contains(legacy_tool.description))
-	assert(desk.tool_guide_tabs.size() == desk.catalog.tools.size())
+	assert(desk.tool_guide_tabs.size() == desk.guide_tools.size())
 	assert(desk.tool_guide_tabs[0].button_pressed)
-	for i in range(desk.catalog.tools.size()):
-		var tool: Dictionary = desk.catalog.tools[i]
+	for i in range(desk.guide_tools.size()):
+		var tool: Dictionary = desk.guide_tools[i]
 		desk.tool_guide_tabs[i].pressed.emit()
 		assert(desk.tool_guide_body.get_parsed_text().contains(tool.label))
-		assert(desk.tool_guide_body.get_parsed_text().contains(tool.detailed_description))
+		assert(desk.tool_guide_body.get_parsed_text().contains(tool.description))
 		for j in range(desk.tool_guide_tabs.size()):
 			assert(desk.tool_guide_tabs[j].button_pressed == (i == j))
-			if i != j:
-				assert(not desk.tool_guide_body.get_parsed_text().contains(desk.catalog.tools[j].detailed_description))
 	desk.start_button.pressed.emit()
 	desk.license_button.pressed.emit()
 	desk._process(600)
@@ -72,20 +67,18 @@ func _run() -> void:
 	assert(not desk.start_button.disabled)
 	desk._process(600)
 	assert(desk.shift.cases.is_empty() and not desk.playing)
+	desk.catalog.time_limit_seconds = 300
+	desk.difficulty_select.select(1)
 	desk.start_button.pressed.emit()
 	assert(not desk.start_screen.visible and desk.workspace.visible)
 	assert(desk.playing and desk.countdown.text == "05:00")
 	assert(desk.countdown_state.text.is_empty())
-	assert(desk.tool_buttons.size() == 8)
-	for i in range(desk.tool_buttons.size()):
-		assert(desk.tool_buttons[i].tooltip_text.contains(desk.catalog.tools[i].description))
-		assert(not desk.tool_buttons[i].tooltip_text.contains(desk.catalog.tools[i].detailed_description))
+	assert(desk.tool_buttons.is_empty())
 	assert(not desk.audit_overlay.visible)
 	desk.set_process(false)
-	desk.tool_buttons[0].pressed.emit()
 	desk._process(12)
 	var paused_time: float = desk.shift.remaining_seconds
-	var paused_log: String = desk.terminal.text
+	var paused_log: Array = desk.shift.observations.duplicate(true)
 	await _escape()
 	assert(desk.pause_menu.visible and desk.menu_resume.has_focus())
 	assert(desk.workspace.visible)
@@ -103,50 +96,35 @@ func _run() -> void:
 	assert(desk.pause_menu.visible)
 	await _escape()
 	assert(not desk.pause_menu.visible and desk.workspace.visible)
-	assert(desk.approve.has_focus() and desk.terminal.text == paused_log)
+	assert(desk.tools_toggle.has_focus() and desk.shift.observations == paused_log)
 	desk._process(1)
 	assert(desk.shift.remaining_seconds == paused_time - 1)
-	desk.menu_button.pressed.emit()
+	desk._toggle_menu()
 	assert(desk.pause_menu.visible)
 	desk.menu_resume.pressed.emit()
-	assert(not desk.pause_menu.visible and desk.terminal.text == paused_log)
-	desk.menu_button.pressed.emit()
+	assert(not desk.pause_menu.visible and desk.shift.observations == paused_log)
+	desk._toggle_menu()
 	desk.menu_restart.pressed.emit()
 	assert(not desk.pause_menu.visible and desk.workspace.visible)
 	assert(desk.shift.index == 0 and desk.shift.observations.is_empty())
 	assert(desk.countdown.text == "05:00")
-	desk.menu_button.pressed.emit()
+	desk._toggle_menu()
 	desk.menu_home.pressed.emit()
 	assert(not desk.pause_menu.visible and desk.start_screen.visible and not desk.playing)
 	assert(not desk.workspace.visible and desk.start_button.has_focus())
 	desk.start_button.pressed.emit()
-	var expected_icons := ["executable", "package", "web", "packet", "executable", "web"]
-	for i in range(6):
-		assert(desk.dossier_title.text == desk.shift.current().title)
-		assert(desk.dossier_icon.texture.resource_path.ends_with(expected_icons[i] + ".svg"))
-		if desk.shift.current().fields.has("サイズ"):
-			assert(desk.dossier_meta.text.contains(desk.shift.current().fields["サイズ"]))
-		if i == 4:
-			assert(desk.dossier_meta.text.contains(".exe"))
-			assert(not desk.dossier_meta.text.contains(".pdf"))
-		for tool_index in range(desk.tool_buttons.size()):
-			var compatible: bool = desk.shift.current().type in desk.catalog.tools[tool_index].target_types
-			assert(desk.tool_buttons[tool_index].visible == compatible)
-		for button in desk.tool_buttons:
-			if button.visible and not button.disabled:
-				button.pressed.emit()
-		if desk.shift.current().type in ["file", "process"]:
-			assert(not desk.dossier_meta.text.contains("サイズ未記載"))
-			assert(desk.terminal.text.contains(desk.shift.current().evidence.entropy))
-			assert(desk.terminal.text.contains(desk.shift.current().evidence.file))
-		assert(not desk.shift.observations.is_empty())
-		var evidence_text: String = desk.terminal.text
+	for i in range(2):
+		assert(desk.target_card.card_data.title == desk.shift.current().title)
+		assert(desk.target_card.tokens.size() == desk.shift.current().information.size() + 1)
+		assert(not desk.target_card.card_data.has("ground_truth"))
+		var evidence: Array = desk.shift.observations.duplicate(true)
 		var explanation: String = desk.shift.current().explanation
-		if i == 0:
-			desk.deny.pressed.emit()
-		else:
-			desk.approve.pressed.emit()
-		assert(desk.next.visible and not desk.approve.visible)
+		var stamp: StampTool = desk.get_stamp(desk.shift.current().ground_truth)
+		assert(not desk.shift.judged)
+		desk.target_card._drop_data(Vector2.ZERO, stamp.payload())
+		assert(desk.shift.judged and desk.stamp_pending)
+		await create_timer(0.5).timeout
+		assert(desk.next.visible and not desk.get_stamp("allow").visible)
 		assert(desk.audit_overlay.visible)
 		assert(desk.audit_overlay.mouse_filter == Control.MOUSE_FILTER_STOP)
 		assert(desk.next.has_focus())
@@ -158,10 +136,7 @@ func _run() -> void:
 			assert(desk.audit_overlay.visible and desk.next.has_focus())
 			assert(desk.audit_body.text == audit_text and desk.shift.records.size() == 1)
 		assert(desk.audit_body.text.contains(explanation))
-		assert(desk.terminal.text == evidence_text)
-		assert(desk.audit_heading.text.contains("規則に適合" if desk.shift.records.back().correct else "誤判定"))
-		if i == 5:
-			assert(desk.next.text.contains("勤務を終了"))
+		assert(desk.shift.observations == evidence)
 		desk.next.pressed.emit()
 		await process_frame
 		assert(not desk.audit_overlay.visible)
@@ -173,7 +148,7 @@ func _run() -> void:
 	assert(desk.pause_menu.visible and desk.summary_overlay.visible)
 	await _escape()
 	assert(desk.summary_overlay.visible and desk.summary_restart.has_focus())
-	assert(desk.summary_review.get_parsed_text().contains("quarterly-report.pdf.exe"))
+	assert(desk.summary_review.get_parsed_text().contains(desk.shift.cases[0].title))
 	var previous_overlay = desk.summary_overlay
 	desk._refresh()
 	assert(desk.summary_overlay == previous_overlay)
@@ -181,7 +156,7 @@ func _run() -> void:
 	restart.pressed.emit()
 	await process_frame
 	assert(desk.shift.index == 0 and desk.shift.records.is_empty())
-	assert(desk.approve.visible and not desk.next.visible)
+	assert(desk.get_stamp("allow").visible and not desk.next.visible)
 	assert(not is_instance_valid(desk.summary_overlay))
 	desk.set_process(false)
 	assert(desk.countdown.text.contains("05:00"))
@@ -190,9 +165,9 @@ func _run() -> void:
 	desk._process(29)
 	assert(desk.shift.timed_out and is_instance_valid(desk.summary))
 	assert(desk.countdown.text.contains("00:00"))
-	assert(not desk.approve.visible and not desk.audit_overlay.visible)
+	assert(not desk.get_stamp("allow").visible and not desk.audit_overlay.visible)
 	assert(desk.summary_title.text.contains("時間切れ"))
-	assert(desk.summary_stats.text.contains("未審査 6件"))
+	assert(desk.summary_stats.text.contains("未審査 2件"))
 	assert(desk.summary_overlay.visible and desk.summary_restart.has_focus())
 	var timeout_restart: Button = desk.summary_restart
 	timeout_restart.pressed.emit()
