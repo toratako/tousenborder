@@ -1,0 +1,34 @@
+# Problem Catalog
+
+対象: res://data/packs/learning.json。実装済み24問。許可11問・遮断13問。Real-world inspired 4問（16.7%）。
+
+この一覧には正解が含まれます。問題JSONを編集し、python scripts/build_problem_catalog.py で再生成してください。検証のみの場合は --check を指定します。
+
+| ID | 種別 | OS / Ecosystem | Level | 正解 | 主題 | 使用Tool（必要な入力） | Reference / External Reference | 実例 | 短い内容説明 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [FILE-WIN-VERY-BEGINNER-001](../data/problems/FILE-WIN-VERY-BEGINNER-001.json) | file | windows | 超初級 | block | 説明と拡張子の明確な矛盾に気付く | 初期情報／Reference | — | — | PDFとして送られた実行ファイルを初期情報だけで見分ける。 |
+| [WEB-VERY-BEGINNER-001](../data/problems/WEB-VERY-BEGINNER-001.json) | web | common | 超初級 | block | URLのHostと表示文字列を区別する | 初期情報／Reference | — | — | 正規Domain名を先頭に含む偽Hostを初期情報から識別する。 |
+| [FILE-LINUX-BEGINNER-001](../data/problems/FILE-LINUX-BEGINNER-001.json) | file | linux | 初級 | block | fileでFileの実体を調べる | file ← File、readelf ← File、strings（GNU） ← File | 配送書類の仕様 | — | PDFを装ったELFを形式と仕様の照合で見分ける。 |
+| [FILE-LINUX-BEGINNER-002](../data/problems/FILE-LINUX-BEGINNER-002.json) | file | linux | 初級 | allow | HashをVendor公開値と照合する | sha256sum ← File、tar ← File、VirusTotal / Hash検索 ← SHA-256、VirusTotal / File Upload ← File | Vendor公開Hash、Approved Software、VirusTotal / Hash検索、VirusTotal / File Upload | — | 配布Archiveの同一性と導入承認を確認する。 |
+| [PROC-LINUX-BEGINNER-001](../data/problems/PROC-LINUX-BEGINNER-001.json) | process | linux | 初級 | allow | psとsystemctlでServiceの起動元を確認する | ps ← PID、systemctl ← Service | Approved Software | — | systemdから起動された承認済みBackup Serviceを調べる。 |
+| [WEB-BEGINNER-001](../data/problems/WEB-BEGINNER-001.json) | web | common | 初級 | allow | Domainの新しさと正規性を区別する | Python / URL分解 ← URL、RDAP ← 登録Domain、Resolve-DnsName [Windows] ← Host / Domain、nslookup ← Host / Domain、dig [Linux] ← Host / Domain | Official Domain、承認済みDNS台帳 | — | 新しい正規研修Domainを承認記録と照合する。 |
+| [EMAIL-BEGINNER-001](../data/problems/EMAIL-BEGINNER-001.json) | email | common | 初級 | block | Headerの認証Domain・From・Reply-Toを照合する | Raw Header ← Email全体 | Company Directory | — | SPF/DKIM Passでも差出人の偽装を見分ける。 |
+| [AUTH-LINUX-BEGINNER-001](../data/problems/AUTH-LINUX-BEGINNER-001.json) | account | linux | 初級 | allow | last・lastlogで過去Loginと比較する | last ← Username、lastlog ← Username | 保守予定 / Company Directory | — | 通常の保守Loginを過去履歴と保守予定で確認する。 |
+| [PKG-PYPI-BEGINNER-001](../data/problems/PKG-PYPI-BEGINNER-001.json) | package | common / pypi | 初級 | block | Package名とRepositoryを照合してTyposquattingを見分ける | 初期情報／Reference | PyPI / Package Metadata、Repository / Approved Component、Lock file / 承認済み依存 | — | 似た名前の別PackageをInstall前のMetadataから識別する。 |
+| [PROC-WIN-INTERMEDIATE-001](../data/problems/PROC-WIN-INTERMEDIATE-001.json) | process | windows | 中級 | block | 親子関係・Command Line・通信を組み合わせる | Process Explorer ← PID、TCPView ← PID | 管理Script台帳、接続先の調査記録 | Living-off-the-Land / PowerShell悪用（攻撃Commandは実行不能なダミー） | Word配下のPowerShellと接続先を照合する。 |
+| [PROC-LINUX-INTERMEDIATE-001](../data/problems/PROC-LINUX-INTERMEDIATE-001.json) | process | linux | 中級 | block | Process Tree・Socket・永続化設定を照合する | pstree ← PID、ps ← PID、lsof -i ← PID、crontab ← User | Service構成台帳 | — | Web Serviceに紛れたshellと定期実行を調べる。 |
+| [WEB-INTERMEDIATE-001](../data/problems/WEB-INTERMEDIATE-001.json) | web | common | 中級 | block | Webページの要求操作を正規手順と比較する | Python / URL分解 ← URL、RDAP ← Host / Domain、urlscan.io / 公開URL ← URL | 会議サービスの手引き、組織内の隔離調査レポート、urlscan.io / 公開URL | ClickFix / Fake CAPTCHA | Fake CAPTCHAによるCommand実行誘導を隔離調査結果から判断する。 |
+| [NET-LINUX-INTERMEDIATE-001](../data/problems/NET-LINUX-INTERMEDIATE-001.json) | network | linux | 中級 | block | Packet・Socket・Processの情報を結び付ける | tcpdump ← 接続先IP、ss ← 接続先IP、ps ← PID、Wireshark ← 接続先IP | Approved Server、組織内の調査記録 | — | 非標準Portの定期通信をProcessと承認記録で検証する。 |
+| [EMAIL-INTERMEDIATE-001](../data/problems/EMAIL-INTERMEDIATE-001.json) | email | common | 中級 | allow | Emailの添付をFile、URLをWebとして調査する | Raw Header ← Email全体、ExifTool / 添付 ← 添付File、7-Zip / 添付Hash ← 添付File、Python / URL分解 ← URL、RDAP / URL ← 登録Domain | Company Directory、公開済み資料台帳、Official Domain | — | 正規研修メールをHeader・添付PDF・URLの3方向で確認する。 |
+| [AUTH-WIN-INTERMEDIATE-001](../data/problems/AUTH-WIN-INTERMEDIATE-001.json) | account | windows | 中級 | block | 過去の認証パターンと今回の認証条件を組み合わせる | Event Viewer ← 送信元IP | 過去Login / Device台帳、認証方針 | — | Password sprayingを疑う履歴と未完了MFAを照合する。 |
+| [AUTH-LINUX-INTERMEDIATE-001](../data/problems/AUTH-LINUX-INTERMEDIATE-001.json) | account | linux | 中級 | block | 認証成功とSessionを許可してよい条件を区別する | journalctl ← 送信元IP、last ← Username | 保守予定 / 認証方針 | — | 過去の失敗と必須認証経路・本人確認を組み合わせる。 |
+| [PKG-NPM-INTERMEDIATE-001](../data/problems/PKG-NPM-INTERMEDIATE-001.json) | package | common / npm | 中級 | block | 正規Packageの更新でも公開物とSourceを比較する | 初期情報／Reference | npm Registry / Package Metadata、Repository / 配布物のReview、Maintainer告知、OSV | npm Supply-chain / 公開Token・Maintainerの侵害（手法を架空Packageへ置換） | Maintainerの公開Token悪用を想定したSupply-chain問題。 |
+| [FILE-WIN-ADVANCED-001](../data/problems/FILE-WIN-ADVANCED-001.json) | file | windows | 上級 | allow | 未署名ソフトの正当性を承認記録で判断する | Sigcheck ← File、Get-FileHash ← File、Strings（Sysinternals） ← File、tar ← 配布Archive、VirusTotal / File Upload ← File、VirusTotal / Hash検索 ← SHA-256 | Approved Software、VirusTotal / File Upload、VirusTotal / Hash検索 | — | 正常な未署名Toolと、機密Fileの外部Uploadを区別する。 |
+| [PROC-WIN-ADVANCED-001](../data/problems/PROC-WIN-ADVANCED-001.json) | process | windows | 上級 | allow | 正常なPowerShellと悪用を文脈で区別する | Task Manager ← PID、Process Explorer ← PID、Get-FileHash ← Script File、TCPView ← PID | 管理Script台帳 | — | 管理Agentが起動した承認済み棚卸しScriptを許可する。 |
+| [WEB-ADVANCED-001](../data/problems/WEB-ADVANCED-001.json) | web | common | 上級 | allow | 対象の安全性と外部調査の適否を別々に判断する | Python / URL分解 ← URL、VirusTotal / Domain検索 ← Domain、urlscan.io / 完全URL ← URL | Official Domain、外部照会方針、VirusTotal / Domain検索、urlscan.io / 完全URL | — | 正規の再設定URLを許可しつつTokenの外部送信を避ける。 |
+| [NET-WIN-ADVANCED-001](../data/problems/NET-WIN-ADVANCED-001.json) | network | windows | 上級 | allow | EDR TelemetryとC2 Beaconを文脈で区別する | Wireshark ← 接続先IP、Get-NetTCPConnection ← 接続先IP、Process Explorer ← PID | Approved Server / Software | — | 周期通信を所有Processと承認済みServer情報で照合する。 |
+| [EMAIL-ADVANCED-001](../data/problems/EMAIL-ADVANCED-001.json) | email | common | 上級 | block | 正規Mailboxからの不正な依頼を別経路で検証する | Raw Header ← Email全体 | 取引先Directory、別経路の確認記録 | Business Email Compromise（正規Mailboxを使う不正送金誘導） | 認証PassのBECを業務手続きと独立確認から判断する。 |
+| [AUTH-WIN-ADVANCED-001](../data/problems/AUTH-WIN-ADVANCED-001.json) | account | windows | 上級 | allow | 正常な新端末Loginを事前記録から確認する | Event Viewer ← Username | Device登録 / 交換申請、過去Login / Approved VPN、認証方針 | — | 端末交換による初回Loginを登録・MFA・接続元で検証する。 |
+| [PKG-NPM-ADVANCED-001](../data/problems/PKG-NPM-ADVANCED-001.json) | package | common / npm | 上級 | allow | 正常なInstall Scriptを悪性更新と区別する | 初期情報／Reference | npm Registry / Package Metadata、Repository / Build Review、Lock file、OSV | — | 正当なNative Module更新をSource ReviewとLock fileで確認する。 |
+
+実例の出典は各問題JSONの sources、仕様と教材上の省略は [設計・教材の方針](learning-design.md) を参照してください。
