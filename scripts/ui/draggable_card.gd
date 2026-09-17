@@ -38,6 +38,11 @@ var stamp_mark: Label
 var stamp_plate: Panel
 var imprint := false
 var drop_available := false
+var hover_drop_available := false:
+	set(value):
+		if hover_drop_available != value:
+			hover_drop_available = value
+			queue_redraw()
 var close_button: Button
 var fit_pending := false
 var analysis_overflow := false
@@ -337,7 +342,7 @@ func _notification(what: int) -> void:
 		queue_redraw()
 
 func _draw() -> void:
-	if drop_available:
+	if drop_available or hover_drop_available:
 		draw_rect(Rect2(Vector2(3, 3), size - Vector2(6, 6)), Color("57edc2"), false, 4)
 
 func show_imprint(caption: String, color: Color) -> void:

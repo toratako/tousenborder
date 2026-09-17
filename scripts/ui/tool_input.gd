@@ -12,6 +12,11 @@ var base_tooltip := ""
 var selected: Dictionary = {}
 var ready_for_input := false
 var drop_ready := false
+var hover_drop_ready := false:
+	set(value):
+		if hover_drop_ready != value:
+			hover_drop_ready = value
+			queue_redraw()
 var tool_icon: TextureRect
 
 func setup_presentation() -> void:
@@ -73,8 +78,8 @@ func update_input(input: Dictionary) -> void:
 func _draw() -> void:
 	if not is_instance_valid(tool_icon):
 		return
-	draw_circle(Vector2(size.x - 12, 12), 4, Color("57edc2") if ready_for_input or drop_ready else Color("29495f"))
-	if drop_ready:
+	draw_circle(Vector2(size.x - 12, 12), 4, Color("57edc2") if ready_for_input or drop_ready or hover_drop_ready else Color("29495f"))
+	if drop_ready or hover_drop_ready:
 		draw_rect(Rect2(Vector2(2, 2), size - Vector2(4, 4)), Color("57edc2"), false, 3)
 
 func _notification(what: int) -> void:

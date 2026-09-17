@@ -110,10 +110,24 @@ func _ready() -> void:
 	_show_start_screen()
 
 func _process(delta: float) -> void:
+	_update_hover_drop_targets()
 	if not playing or pause_menu.visible or external_preview.visible:
 		return
 	shift.tick(delta)
 	_refresh_countdown()
+
+func _update_hover_drop_targets() -> void:
+	var payload: Dictionary = {}
+	if playing and not shift.finished() and not shift.judged and not pause_menu.visible and not external_preview.visible and not get_viewport().gui_is_dragging():
+		var source := get_viewport().gui_get_hovered_control()
+		if source is StampTool and not source.disabled and not source.preview_only and source.is_visible_in_tree():
+			payload = source.payload()
+		elif source is InformationToken and source.is_visible_in_tree() and source.information.draggable and source.information.tool_input:
+			payload = {"kind": "information", "information": source.payload()}
+	if is_instance_valid(target_card):
+		target_card.hover_drop_available = target_card._can_drop_data(Vector2.ZERO, payload)
+	for button in tool_buttons:
+		button.hover_drop_ready = button.is_visible_in_tree() and button._can_drop_data(Vector2.ZERO, payload)
 
 func _input(event: InputEvent) -> void:
 	if is_instance_valid(external_preview) and external_preview.visible and event.is_action_pressed("ui_cancel"):

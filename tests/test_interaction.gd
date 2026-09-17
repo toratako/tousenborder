@@ -48,7 +48,6 @@ func _run() -> void:
 	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-001")
 	desk.shift.start(cases)
 	assert(desk.playing and not desk.tool_drawer.visible)
-	desk.set_process(false)
 	assert(desk.rule_card.visible and desk.rule_card.position.x > 900)
 	var rules_position: Vector2 = desk.rule_card.position
 	await click(desk.rule_card.close_button.get_global_rect().get_center())
@@ -58,6 +57,8 @@ func _run() -> void:
 	assert(desk.card_layer.position.y + desk.card_layer.size.y == 800)
 	assert(not desk.has_node("InputTray"))
 	var card: DraggableCard = desk.target_card
+	await motion(desk.get_stamp("block").get_global_rect().get_center())
+	assert(desk.get_stamp("block").disabled and not card.hover_drop_available)
 	assert(not card.movable and not card.source_label.visible)
 	assert(card.scroll.position.y == 58)
 	assert(card.request_section.get_child(0).get_child(0).text == "申請内容")
@@ -88,12 +89,23 @@ func _run() -> void:
 	assert(desk.tool_drawer.visible)
 	var row: InformationToken = card.tokens[1]
 	await process_frame
+	# ホバーだけで対応する入力先が分かり、選択や調査は発生しない。
+	await motion(card.tokens[0].get_global_rect().get_center())
+	assert(desk.tool_buttons.all(func(tool): return not tool.hover_drop_ready))
+	await motion(row.get_global_rect().get_center())
+	assert(desk.tool_buttons[0].hover_drop_ready)
+	for tool in desk.tool_buttons:
+		assert(tool.hover_drop_ready == tool._can_drop_data(Vector2.ZERO, {"kind": "information", "information": row.payload()}))
+	assert(desk.selected_information.is_empty() and desk.shift.observations.is_empty())
+	await motion(Vector2(850, 760))
+	assert(desk.tool_buttons.all(func(tool): return not tool.hover_drop_ready))
 	# グリップからも本文からも同じ情報を持ち出せる。
 	var grip_point := row.global_position + Vector2(15, row.size.y / 2)
 	await motion(grip_point)
 	await button(grip_point, true)
 	await motion(grip_point + Vector2(30, 0), true)
 	assert(root.gui_is_dragging())
+	assert(desk.tool_buttons[0].drop_ready and not desk.tool_buttons[0].hover_drop_ready)
 	assert(root.gui_get_drag_data().information == row.payload())
 	await motion(Vector2(850, 760), true)
 	await button(Vector2(850, 760), false)
@@ -107,6 +119,15 @@ func _run() -> void:
 	var stamp: StampTool = desk.get_stamp("block")
 	assert(stamp.get_class() == "Control")
 	var stamp_point := stamp.get_global_rect().get_center()
+	await motion(stamp_point)
+	assert(card.hover_drop_available and not card.drop_available)
+	assert(not desk.shift.judged)
+	desk._toggle_menu()
+	await process_frame
+	assert(not card.hover_drop_available)
+	desk._close_menu()
+	await motion(Vector2(850, 760))
+	assert(not card.hover_drop_available)
 	await click(stamp_point)
 	assert(not desk.shift.judged, "click does not judge")
 	await drag(stamp_point, desk.rule_card.header.global_position + Vector2(100, 20))
