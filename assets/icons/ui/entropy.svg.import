@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmbhtlyy6qmdq"
-path="res://.godot/imported/package.svg-81060e64dafcabdf9ff5d25a1e9af37f.ctex"
+uid="uid://c53kliqxor8e3"
+path="res://.godot/imported/entropy.svg-e5a251803bea99f267a505c878dfe4b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/package.svg"
-dest_files=["res://.godot/imported/package.svg-81060e64dafcabdf9ff5d25a1e9af37f.ctex"]
+source_file="res://assets/icons/ui/entropy.svg"
+dest_files=["res://.godot/imported/entropy.svg-e5a251803bea99f267a505c878dfe4b8.ctex"]
 
 [params]
 
