@@ -60,16 +60,14 @@ static func build_start_screen(desk) -> void:
 	Chrome.panel(desk.start_screen, Rect2(56, 60, 1168, 680), Color("101e32"), Color("29495f"))
 	for origin in [Vector2(56, 60), Vector2(1152, 60), Vector2(56, 738), Vector2(1152, 738)]:
 		Chrome.panel(desk.start_screen, Rect2(origin, Vector2(72, 2)), GREEN)
-	Chrome.label(desk.start_screen, Rect2(870, 99, 312, 24), "SECURITY OPERATIONS / ONLINE", GREEN, 13)
-	Chrome.label(desk.start_screen, Rect2(94, 92, 1092, 25), "電子入境管理  /  審査デスク", MUTED, 16)
+	Chrome.label(desk.start_screen, Rect2(94, 92, 1092, 25), "電子入境管理", MUTED, 16)
 	Chrome.panel(desk.start_screen, Rect2(94, 135, 1092, 2), Color("29495f"))
 	Chrome.label(desk.start_screen, Rect2(94, 189, 550, 70), "電子入境管理", PAPER, 44)
 	Chrome.label(desk.start_screen, Rect2(98, 283, 530, 50), "そのアクセスを、許可しますか。", GREEN, 24)
-	Chrome.label(desk.start_screen, Rect2(98, 346, 514, 90), "File・Process・Web・Network・Email・Account・Package\nToolで調べ、Referenceと照合して判定。", PAPER, 16)
 	Chrome.label(desk.start_screen, Rect2(98, 445, 165, 28), "難易度", PAPER, 16)
 	Chrome.label(desk.start_screen, Rect2(274, 445, 165, 28), "問題カテゴリ", PAPER, 16)
 	Chrome.label(desk.start_screen, Rect2(450, 445, 165, 28), "調査環境", PAPER, 16)
-	var difficulties: Array = [{"id": "", "label": "すべての難易度"}]
+	var difficulties: Array = [{"id": "", "label": "すべて"}]
 	for id in ["very_beginner", "beginner", "intermediate", "advanced"]:
 		if desk.catalog.difficulties.has(id):
 			difficulties.append({"id": id, "label": desk.catalog.difficulties[id].label})
@@ -80,7 +78,7 @@ static func build_start_screen(desk) -> void:
 	var categories: Array = [{"id": "", "label": "すべて"}]
 	categories.append_array(desk.catalog.categories)
 	desk.category_select = selection_option(desk, Vector2(274, 480), categories, 162)
-	var platforms: Array = [{"id": "", "label": "すべての環境"}]
+	var platforms: Array = [{"id": "", "label": "すべて"}]
 	for id in desk.catalog.platforms:
 		platforms.append({"id": id, "label": desk.catalog.platforms[id].label})
 	desk.platform_select = selection_option(desk, Vector2(450, 480), platforms, 162)
