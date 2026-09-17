@@ -120,7 +120,7 @@ func _build_scroll(data: Dictionary) -> void:
 	source_label.add_theme_font_size_override("font_size", 13)
 	source_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(source_label)
-	source_label.visible = data.get("category") != "target"
+	source_label.visible = data.get("category") not in ["target", "rule"]
 	scroll = ScrollContainer.new()
 	scroll.position = Vector2(10, 82)
 	scroll.size = Vector2(size.x - 20, size.y - 146 if data.get("category") == "target" else size.y - 94)
@@ -246,6 +246,9 @@ func _layout() -> void:
 		title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	scroll.position = Vector2(12, 58 if target else 82)
 	scroll.size = Vector2(size.x - 24, size.y - (156 if target else 116))
+	if card_data.get("category") == "rule":
+		scroll.position.y = 58
+		scroll.size.y = size.y - 70
 	if card_data.get("category") == "analysis" and not analysis_overflow:
 		scroll.size.y = size.y - 94
 	if is_instance_valid(stamp_plate):
@@ -258,6 +261,9 @@ func _layout() -> void:
 
 func _update_scroll_hint() -> void:
 	if not is_instance_valid(scroll_hint):
+		return
+	if card_data.get("category") == "rule":
+		scroll_hint.hide()
 		return
 	var bar := scroll.get_v_scroll_bar()
 	scroll_hint.text = "↓ 続きがあります · 本文をスクロール" if bar.value + bar.page < bar.max_value - 1 else ""
