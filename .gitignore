@@ -1,3 +1,4 @@
 .godot/
 build/
 __pycache__/
+.tools/

@@ -1,23 +1,37 @@
 godot := env("GODOT", "godot")
+python := env("PYTHON", "python3")
 
 default:
     @just --list
 
+run: _validate
+    "{{ godot }}" --path .
+
+validate: _validate
+    "{{ python }}" scripts/build_problem_catalog.py --check
+
+test: _import
+    GODOT="{{ godot }}" "{{ python }}" scripts/run_tests.py
+
 build: clean build-linux build-windows
 
 install-templates:
-    python3 scripts/install_templates.py --godot "{{ godot }}"
+    "{{ python }}" scripts/install_templates.py --godot "{{ godot }}"
 
 clean:
     rm -rf -- build
 
-build-linux: _import
+build-linux: _validate
     mkdir -p build/linux
     "{{ godot }}" --headless --path . --export-release "Linux" build/linux/packets-please.x86_64
 
-build-windows: _import
+build-windows: _validate
     mkdir -p build/windows
     "{{ godot }}" --headless --path . --export-release "Windows" build/windows/packets-please.exe
+
+[private]
+_validate: _import
+    "{{ godot }}" --headless --path . --script scripts/validate_content.gd
 
 [private]
 _import:
