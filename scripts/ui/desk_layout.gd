@@ -25,12 +25,12 @@ static func build_workspace(desk) -> void:
 	var rules_focus := header_pill_style(Color.TRANSPARENT)
 	rules_focus.border_color = PAPER
 	desk.rules_button.add_theme_stylebox_override("focus", rules_focus)
-	for rect in [Rect2(568, 12, 184, 46), Rect2(768, 12, 224, 46)]:
+	for rect in [Rect2(568, 12, 184, 46), Rect2(768, 12, 128, 46)]:
 		var pill := Chrome.panel(desk.workspace, rect, Color.TRANSPARENT)
 		pill.add_theme_stylebox_override("panel", header_pill_style(Color("101e32")))
 	desk.countdown = Chrome.label(desk.workspace, Rect2(584, 12, 102, 46), "--:--", PAPER, 26)
 	desk.countdown_state = Chrome.label(desk.workspace, Rect2(690, 12, 50, 46), "", MUTED, 12)
-	desk.status = Chrome.label(desk.workspace, Rect2(784, 12, 192, 46), "準備中", PAPER, 15)
+	desk.status = Chrome.label(desk.workspace, Rect2(784, 12, 96, 46), "準備中", PAPER, 15)
 	desk.status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	for label in [desk.countdown, desk.countdown_state, desk.status]:
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -149,7 +149,7 @@ static func build_start_screen(desk) -> void:
 	desk.license_button.pressed.connect(desk._show_licenses)
 
 static func build_tools(desk) -> void:
-	desk.tool_panel = Chrome.panel(desk.workspace, Rect2(996, 72, 284, 728), Color("0c1829"))
+	desk.tool_panel = Chrome.panel(desk.workspace, Rect2(996, 72, 284, 712), Color("0c1829"))
 	var surface := desk.tool_panel.get_theme_stylebox("panel") as StyleBoxFlat
 	surface.border_color = Color("29495f")
 	surface.border_width_left = 1
@@ -361,7 +361,7 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 static func fit_tools(desk) -> void:
 	var message_height: float = desk.tool_message.get_minimum_size().y if not desk.tool_message.text.is_empty() else 0.0
 	var footer := 12.0 + (message_height + 10.0 if message_height > 0 else 0.0)
-	desk.tool_panel.size = desk.workspace.size - desk.tool_panel.position
+	desk.tool_panel.size = desk.workspace.size - desk.tool_panel.position - Vector2(0, 16)
 	desk.tool_scroll.size.x = desk.tool_panel.size.x - 28.0
 	desk.tool_message.size.x = desk.tool_scroll.size.x
 	desk.tool_scroll.size.y = maxf(0.0, desk.tool_panel.size.y - 50.0 - footer)
