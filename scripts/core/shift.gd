@@ -66,13 +66,14 @@ func decline_external(tool: Dictionary, input: Dictionary = {}) -> bool:
 	return true
 
 func decide(verdict: String) -> bool:
-	if finished() or judged or not missing_evidence().is_empty() or verdict not in ["allow", "block"]:
+	if finished() or judged or verdict not in ["allow", "block"]:
 		return false
 	judged = true
 	records.append({"id": current().id, "title": current().title, "verdict": verdict,
 		"investigation_environment": ToolRunner.investigation_environment(current()),
 		"correct": verdict == current().ground_truth, "ground_truth": current().ground_truth,
-		"explanation": current().explanation, "observations": observations.duplicate(true)})
+		"explanation": current().explanation, "observations": observations.duplicate(true),
+		"missing_evidence": missing_evidence()})
 	changed.emit()
 	return true
 

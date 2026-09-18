@@ -75,7 +75,7 @@ func _run() -> void:
 	assert(not desk.has_node("InputTray"))
 	var card: DraggableCard = desk.target_card
 	await motion(desk.get_stamp("block").get_global_rect().get_center())
-	assert(desk.get_stamp("block").disabled and not card.hover_drop_available)
+	assert(not desk.get_stamp("block").disabled and card.hover_drop_available)
 	assert(not card.movable and not card.source_label.visible)
 	assert(card.scroll.position.y == 58)
 	assert(card.request_section.get_child(0).get_child(0).text == "申請内容")

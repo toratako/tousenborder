@@ -34,7 +34,7 @@
 | `resources` | 任意。Packに登録した追加グループIDから資料配列への対応 |
 | `ground_truth`, `explanation` | 正解 `allow` / `block` と根拠の説明 |
 | `topic`, `summary`, `learning_objectives` | 学習主題、要約、学習目標の配列 |
-| `required_evidence` | 判断前に必要な資料IDまたは代替証拠ID。初期情報だけなら `initial_information` |
+| `required_evidence` | 調査の充足を評価する資料IDまたは代替証拠ID。進行は制限しない。初期情報だけなら `initial_information` |
 | `evidence_alternatives` | 任意。証拠IDから `{label, any_of: [資料ID…]}` への対応 |
 | `decision_context`, `scenario_type` | 判断時点とシナリオ分類 |
 | `sources`, `fixture_note` | HTTPS出典URLの配列（空可）と模擬教材の注記 |

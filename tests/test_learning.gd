@@ -74,7 +74,10 @@ func test_environment_routes(catalog: ContentCatalog) -> void:
 			shift.start(cases)
 			check(shift.current().investigation_environment == os, "調査OS: " + item.id)
 			if item.level != "very_beginner":
-				check(not shift.decide(item.ground_truth), "未調査の正解を拒否: " + item.id)
+				check(shift.decide(item.ground_truth), "未調査でも判定可能: " + item.id)
+				check(shift.records.back().missing_evidence == item.required_evidence, "未確認証拠を記録: " + item.id)
+				check(shift.advance() and shift.finished(), "未調査でも次へ進める: " + item.id)
+				shift.start(cases)
 			var pending := catalog.tools_for(item).filter(func(t): return ToolRunner.supports_target(t, item) and t.resource_kind != "external_references")
 			if item.id == "WEB-BEGINNER-001":
 				# nslookupだけでもDNS証拠になり、Windows/Linuxで出力が切り替わる。
@@ -95,6 +98,7 @@ func test_environment_routes(catalog: ContentCatalog) -> void:
 					progress = true
 			check(pending.is_empty() and shift.missing_evidence().is_empty(), "OS別に必要証拠へ到達: " + item.id)
 			check(shift.decide(item.ground_truth), "外部送信なしで判定可能: " + item.id)
+			check(shift.records.back().missing_evidence.is_empty(), "調査済みの証拠は不足に数えない: " + item.id)
 	var item := one_case(catalog, "FILE-WIN-ADVANCED-001")[0]
 	var shift := InspectionShift.new()
 	var cases: Array[Dictionary] = [item]
@@ -191,7 +195,7 @@ func _run() -> void:
 	var before_os: int = desk.shift.observations.size()
 	desk._inspect(windows_tool, host)
 	check(desk.shift.observations.size() == before_os, "直接UI呼び出しもOSを検証")
-	check(not desk._can_stamp(desk.get_stamp(linux_web.ground_truth).payload()), "必要証拠が揃うまで押印不可")
+	check(desk._can_stamp(desk.get_stamp(linux_web.ground_truth).payload()), "必要証拠が揃う前でも押印可能")
 	desk._show_start_screen()
 	desk.platform_select.select(0)
 	desk.common_environment_select.select(0)

@@ -516,22 +516,15 @@ func _update_case_controls(item: Dictionary) -> void:
 		button.update_input(selected_information)
 	for stamp in action_stamps:
 		stamp.visible = not shift.judged
-		stamp.disabled = shift.judged or not shift.missing_evidence().is_empty()
+		stamp.disabled = shift.judged
 		stamp.modulate.a = 0.4 if stamp.disabled else 1.0
-		stamp.tooltip_text = "必要な調査とReferenceの確認を終えてください。" if stamp.disabled and not shift.judged else ""
+		stamp.tooltip_text = ""
 		stamp.case_id = item.id
 		stamp.generation = desk_generation
-	if not shift.missing_evidence().is_empty():
-		var labels: Array[String] = []
-		for id in shift.missing_evidence():
-			var matching := catalog.tools_for(item).filter(func(t): return t.id == id)
-			labels.append(item.get("evidence_alternatives", {}).get(id, {}).get("label", matching[0].label if not matching.is_empty() else id))
-		tool_message.text = "未確認: " + "、".join(labels)
-	else:
-		tool_message.text = "調査完了。資料を照合して判定してください。" if not active_tools.is_empty() else "基本情報を確認して判定してください。"
+	tool_message.text = "必要に応じて調査し、判定してください。" if not active_tools.is_empty() else "基本情報を確認して判定してください。"
 
 func _can_stamp(data: Dictionary) -> bool:
-	return playing and not shift.finished() and not shift.judged and shift.missing_evidence().is_empty() and not pause_menu.visible and not rules_overlay.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
+	return playing and not shift.finished() and not shift.judged and not pause_menu.visible and not rules_overlay.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
 
 func _receive_stamp(card: DraggableCard, data: Dictionary) -> void:
 	if card != target_card or not _can_stamp(data):
