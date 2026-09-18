@@ -27,8 +27,8 @@ static func validate_graph(item: Dictionary, resources: Array[Dictionary]) -> St
 			var bindings: Array = resource.get("input_bindings", [])
 			var ready: bool = resource.resource_kind == "references" or bindings.any(func(binding): return obtained.get(binding.source, {}).has(binding.id))
 			if not ready: continue
-			# 外部照会は任意。外部送信や不適切な調査をしないと解けない教材は拒否する。
-			if resource.resource_kind != "external_references" and resource.get("correct_usage", true):
+			# 許可された外部照会も証拠・後続入力に使える。不適切な調査への依存は拒否する。
+			if resource.get("correct_usage", true):
 				available[resource.id] = true
 				obtained[resource.id] = {}
 				for info in resource.get("output_information", []):

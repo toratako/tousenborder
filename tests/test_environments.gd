@@ -1,7 +1,8 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## 出題フィルタに関係なく共通問題はLinuxで調査し、資料の所有案件を照合する。
 func _initialize() -> void:
-	var catalog := ContentCatalog.new()
+	var catalog := Fixtures.catalog()
 	assert(catalog.load_pack(), str(catalog.errors))
 	for platform in ["", "common", "windows", "linux"]:
 		var item: Dictionary = catalog.select_cases("beginner", "web", platform)[0]

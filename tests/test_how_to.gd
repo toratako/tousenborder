@@ -1,4 +1,5 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## ギャラリーの入力隔離・ページ境界・勤務状態の保持を検証する。
 func _initialize() -> void:
 	_run.call_deferred()
@@ -12,7 +13,7 @@ func _key(code: Key, echo := false) -> void:
 	await process_frame
 
 func _run() -> void:
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	desk.set_process(false)
@@ -23,7 +24,7 @@ func _run() -> void:
 	desk._open_how_to()
 	assert(not desk.how_to_overlay.visible)
 	desk._start_shift()
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-001")
+	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-FILE")
 	desk.shift.start(cases)
 	await process_frame
 	var token: InformationToken = desk.target_card.tokens.filter(func(t): return t.information.id == "File名")[0]

@@ -42,7 +42,9 @@ Referenceは入力不要の `content` を表示します。Tool・External Refer
 | URL → Host → DNS、登録Domain → RDAP | [WEB-BEGINNER-001](../data/problems/WEB-BEGINNER-001.json) |
 | Email内でHeader・添付・URLを調査する追加グループ | [EMAIL-INTERMEDIATE-001](../data/problems/EMAIL-INTERMEDIATE-001.json) |
 
-入力は値・案件・取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも同一とは限らず、RDAPの入力元は登録Domainの台帳等から指定します。
+入力は値・案件・適切な調査で取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも区別します。新教材のRDAPはReferenceの固定資料とし、照会対象をcontentに明記します（既存教材の分類整理は別途）。
+
+ProcessのBacking Executableを直接調査する場合は、初期情報のPIDを入力にし、対象Pathと結果をoutputに明記できます。ScriptのHashとは別資料にします。Windows用DNS Toolを使う問題はplatformをwindowsにし、commonの調査OSはLinuxのままとします。
 
 External Referenceの入力型への適合は送信許可を意味しません。[送信確認](runtime-flow.md#調査から判定まで) と [外部照会の判断](learning-design.md#外部照会の判断) を参照してください。
 
@@ -55,10 +57,11 @@ python3 scripts/build_problem_catalog.py
 just test
 ```
 
-依存の準備は [README](../README.md#開発教材編集)。生成先は `docs/problem-catalog.md` と `build/catalog/problems.json`（Git管理外）。生成処理の `--check` はMarkdownを常に、JSONは存在する場合だけ比較します。別Packの検証は `godot --headless --path . --script scripts/validate_content.gd -- res://data/packs/別名.json`（成功0・失敗1）。
+依存の準備は [README](../README.md#開発教材編集)。生成先は `docs/problem-catalog.md` と `build/catalog/problems.json`（Git管理外）。生成処理の `--check` はMarkdownを常に、JSONは存在する場合だけ比較します。Main Evidenceはrequired_evidence、Main Toolはその入力元を含む適切な調査経路から導出します。代替Toolは併記し、教材に新Fieldを要求しません。別Packの検証は `godot --headless --path . --script scripts/validate_content.gd -- res://data/packs/別名.json`（成功0・失敗1）。
 
 検証の分担:
 
 - 構造は共有Schema。PythonはDraft 2020-12、Godotの `content_schema.gd` は同梱Schemaの構文のみ対応し、未知キーワードはエラー、深度上限128です。Schema拡張時は両方を検証します。
-- 意味・到達性は `scripts/build_problem_catalog.py` と `scripts/core/problem_data.gd` / `investigation_inputs.gd`。循環入力、非対応OSの必須証拠、不適切な調査・外部送信に依存する経路を拒否します。外部照会を代替証拠に含めても、内部で取得する手段が必要です。
-- 資料の意味、出力の事実整合、判定時点は自動検証できません。作問時に確認し、実行経路は `tests/test_learning.gd` で確認します。
+- 意味・到達性は `scripts/build_problem_catalog.py` と `scripts/core/problem_data.gd` / `investigation_inputs.gd`。循環入力、非対応OSの必須証拠、不適切な調査・外部送信に依存する経路を拒否します。correct_usageがtrueの外部照会は必須・代替証拠と後続入力に利用できます。内部調査だけの代替経路は必須ではありません。
+- 資料の意味、出力の事実整合、判定時点は自動検証できません。作問時に確認し、出題用Packの全問の実行経路・送信確認・解説表示は `tests/test_playable_content.gd` で確認します。
+- UI・入力契約の回帰テストは `tests/fixtures/content.json` と `tests/fixtures.gd` の固定データを使用します。通常のPackには登録せず、既存教材の件数・IDを維持するために問題を残す必要はありません。外部証拠の必須化・後続入力・見送りは `tests/test_external_evidence.gd` とPython側でも検証します。

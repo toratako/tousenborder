@@ -1,4 +1,5 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## 実マウスイベントでスタンプを持ち運ぶ。クリックでは判定しない。
 var mouse_position := Vector2.ZERO
 
@@ -41,11 +42,11 @@ func drag(from: Vector2, to: Vector2) -> void:
 
 func _run() -> void:
 	root.size = Vector2i(1280, 800)
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	await click(desk.start_button.get_global_rect().get_center())
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-001")
+	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-FILE")
 	desk.shift.start(cases)
 	assert(desk.playing and desk.tool_panel.visible)
 	await motion(desk.menu_button.get_global_rect().get_center())

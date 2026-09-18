@@ -1,4 +1,5 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## 通常の描画モードで開始画面と外部照会の確認画面を保存する。
 func _initialize() -> void:
 	_capture.call_deferred()
@@ -11,12 +12,12 @@ func _save(name: String) -> void:
 
 func _capture() -> void:
 	DirAccess.make_dir_recursive_absolute("res://build/screenshots")
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	await _save("start")
 	desk.start_button.pressed.emit()
-	var item: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "WEB-ADVANCED-001")[0]
+	var item: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-URL")[0]
 	var cases: Array[Dictionary] = [item]
 	desk.shift.start(cases)
 	await _save("workspace")
@@ -37,7 +38,7 @@ func _capture() -> void:
 	desk.next.pressed.emit()
 	await _save("summary")
 	desk._start_shift()
-	var dense_cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-WIN-ADVANCED-001")
+	var dense_cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-FILE")
 	desk.shift.start(dense_cases)
 	await _save("dense_panel")
 	desk.tool_scroll.scroll_vertical = int(desk.tool_scroll.get_v_scroll_bar().max_value)

@@ -1,4 +1,5 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## 遊び方スライド用の実画面。加工は scripts/build_how_to_slides.py。
 func _initialize() -> void:
 	_capture.call_deferred()
@@ -11,12 +12,12 @@ func _save(name: String) -> void:
 
 func _capture() -> void:
 	DirAccess.make_dir_recursive_absolute("res://build/screenshots/how_to")
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	desk._start_shift()
 	desk.set_process(false)
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-001")
+	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-FILE")
 	desk.shift.start(cases)
 	await _save("target")
 	var token: InformationToken = desk.target_card.tokens.filter(func(t): return t.information.id == "File名")[0]
@@ -33,7 +34,7 @@ func _capture() -> void:
 	desk.target_card._drop_data(Vector2.ZERO, desk.get_stamp("block").payload())
 	await create_timer(0.5).timeout
 	await _save("audit")
-	cases = desk.catalog.cases.filter(func(c): return c.id == "WEB-ADVANCED-001")
+	cases = desk.catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-URL")
 	desk.shift.start(cases)
 	var url: InformationToken = desk.target_card.tokens.filter(func(t): return t.information.data_type == "url")[0]
 	desk._select_information(url.payload())

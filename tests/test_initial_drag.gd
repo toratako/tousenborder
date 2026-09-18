@@ -1,4 +1,5 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## 問題・調査OS・入力の結び付けに応じて基本情報のドラッグ可否を確認する。
 
 func _initialize() -> void:
@@ -18,10 +19,10 @@ func _check_drag(token: InformationToken, enabled: bool) -> void:
 		assert(token._get_drag_data(Vector2.ZERO) == null)
 
 func _run() -> void:
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	desk._start_shift()
-	var file_case: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-001")[0]
+	var file_case: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FIX-FILE")[0]
 	var original: Dictionary = file_case.duplicate(true)
 	_show_case(desk, file_case)
 	for token in desk.target_card.tokens:

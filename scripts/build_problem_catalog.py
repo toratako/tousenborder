@@ -85,14 +85,14 @@ def validate_inputs(item: dict, entries: list[tuple[str, dict]]) -> None:
         if not ready:
             raise ValueError(f"{item['id']}: unreachable inputs on {os} (missing or cyclic safe-input route)")
         for kind, entry in ready:
-            if kind != "external_references" and entry.get("correct_usage", True):
+            if entry.get("correct_usage", True):
                 available.add(entry["id"])
                 obtained.update((entry["id"], o["id"]) for o in entry.get("output_information", []) if o.get("tool_input", True))
             pending.remove((kind, entry))
     for key in item["required_evidence"]:
         options = item.get("evidence_alternatives", {}).get(key, {}).get("any_of", [key])
         if not available.intersection(options):
-            raise ValueError(f"{item['id']}: required evidence unavailable on {os} without external references: {key}")
+            raise ValueError(f"{item['id']}: required evidence unavailable on {os} through permitted investigations: {key}")
 
 
 def read_json(path: Path):
@@ -165,11 +165,31 @@ def build(pack_path: Path) -> tuple[str, str]:
             raise ValueError("Duplicate problem ID: " + item["id"])
         seen.add(item["id"])
         problem = {key: item[key] for key in [
-            "id", "category", "platform", "level", "ground_truth", "topic", "summary",
+            "id", "category", "platform", "level", "ground_truth", "title", "topic", "summary",
             "scenario_type", "decision_context", "learning_objectives", "required_evidence", "sources",
         ]}
         problem.update(path=value, ecosystem=item.get("ecosystem", ""), inspired_by=item.get("inspired_by", ""))
         problem["evidence_alternatives"] = item.get("evidence_alternatives", {})
+        names = {entry["id"]: entry["name"] for _, entry in entries}
+        names["initial_information"] = "初期情報"
+        problem["main_evidence"] = [
+            {"id": key, "label": problem["evidence_alternatives"].get(key, {}).get("label", names.get(key, key)),
+             "any_of": problem["evidence_alternatives"].get(key, {}).get("any_of", [key])}
+            for key in item["required_evidence"]
+        ]
+        # 必須証拠とその入力元を辿る。代替経路を含め、到達不能なOSの候補は載せない。
+        needed = {option for evidence in problem["main_evidence"] for option in evidence["any_of"]}
+        os = "linux" if item["platform"] == "common" else item["platform"]
+        usable = [entry for _, entry in entries if entry.get("correct_usage", True)
+                  and (not entry.get("environments") or os in entry["environments"])]
+        while True:
+            expanded = needed | {binding["source"] for entry in usable if entry["id"] in needed
+                                 for binding in entry.get("input_bindings", [])}
+            if expanded == needed:
+                break
+            needed = expanded
+        problem["main_tools"] = [entry["name"] for kind, entry in entries
+                                 if kind == "tools" and entry in usable and entry["id"] in needed]
         for kind in GROUP_KINDS:
             problem[kind] = [entry["name"] for entry_kind, entry in entries if entry_kind == kind]
         problem["investigation_inputs"] = [
@@ -188,6 +208,7 @@ def build(pack_path: Path) -> tuple[str, str]:
         "schema_version": 1, "content_pack": "res://" + pack_path.relative_to(ROOT).as_posix(),
         "total": total, "by_category": dict(Counter(p["category"] for p in problems)),
         "by_level": dict(Counter(p["level"] for p in problems)),
+        "by_platform": dict(Counter(p["platform"] for p in problems)),
         "by_verdict": dict(Counter(p["ground_truth"] for p in problems)),
         "real_world_inspired": inspired, "problems": problems,
     }
@@ -199,8 +220,8 @@ def build(pack_path: Path) -> tuple[str, str]:
         "", "この一覧には正解が含まれます。"
         "問題JSONを編集し、python scripts/build_problem_catalog.py で再生成してください。"
         "検証のみの場合は --check を指定します。",
-        "", "| ID | 種別 | OS / Ecosystem | Level | 正解 | 主題 | 使用Tool（必要な入力） | Reference / External Reference | 実例 | 短い内容説明 |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "", "| ID | Category | Platform / Ecosystem | Level | Answer | Title | Main Evidence | Main Tool | Scenario Type | Tool | Reference | External Reference | 実例 | 内容 |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     def cell(value):
         return str(value).replace("|", r"\|").replace("\n", " ")
@@ -208,8 +229,9 @@ def build(pack_path: Path) -> tuple[str, str]:
         link = "../" + p["path"][6:]
         values = [
             f"[{p['id']}]({link})", p["category"], p["platform"] + (f" / {p['ecosystem']}" if p["ecosystem"] else ""),
-            LEVEL_LABELS.get(p["level"], p["level"]), p["ground_truth"], p["topic"],
-            "、".join(t["name"] + (" ← " + t["input_hint"] if t["input_hint"] else "") for t in p["investigation_inputs"]) or "初期情報／Reference", "、".join(p["references"] + p["external_references"]) or "—",
+            LEVEL_LABELS.get(p["level"], p["level"]), p["ground_truth"], p["title"],
+            "、".join(e["label"] for e in p["main_evidence"]), "、".join(p["main_tools"]) or "—", p["scenario_type"],
+            "、".join(p["tools"]) or "—", "、".join(p["references"]) or "—", "、".join(p["external_references"]) or "—",
             p["inspired_by"] or "—", p["summary"],
         ]
         lines.append("| " + " | ".join(cell(v) for v in values) + " |")

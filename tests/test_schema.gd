@@ -1,4 +1,5 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## ゲーム内Schema検証の型・分岐・参照と、教材の未知キー拒否を検証する。
 var failures := 0
 
@@ -19,7 +20,7 @@ func _initialize() -> void:
 	for malformed in [{"enum": "abc"}, {"required": [1]}, {"type": [1]}, {"minLength": true}, {"uniqueItems": "yes"}, {"allOf": []}]:
 		check(not ContentSchema.check({}, malformed).is_empty(), "不正Schemaを実行時エラーにせず拒否")
 	check(ContentSchema.check({"x": [false, 2, {"y": "ok"}]}, ContentSchema.read_schema(ContentSchema.PROBLEM)["$defs"].value.merged({"$defs": ContentSchema.read_schema(ContentSchema.PROBLEM)["$defs"]})).is_empty(), "再帰的JSON値")
-	var problem: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/problems/FILE-LINUX-BEGINNER-001.json"))
+	var problem: Dictionary = Fixtures.raw("FIX-FILE")
 	check(ContentSchema.validate(problem, ContentSchema.PROBLEM).is_empty(), "正式な問題")
 	for key in ["fields", "evidence", "expected", "type", "difficulty", "provider", "require_evidence"]:
 		var changed := problem.duplicate(true)
@@ -41,7 +42,7 @@ func _initialize() -> void:
 		changed = problem.duplicate(true)
 		changed.ground_truth = value
 		check(not ContentSchema.validate(changed, ContentSchema.PROBLEM).is_empty(), "旧判定値拒否")
-	var pack: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ContentCatalog.DEFAULT_PACK))
+	var pack: Dictionary = Fixtures.pack()
 	for key in ["cases", "tools", "actions", "platforms", "difficulties", "day", "npcs", "environment", "require_evidence", "require_tool_inputs"]:
 		changed = pack.duplicate(true)
 		changed[key] = []

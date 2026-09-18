@@ -54,7 +54,7 @@ func decline_external(tool: Dictionary, input: Dictionary = {}) -> bool:
 	if not tool.get("accepted_information_types", []).is_empty() and (input.is_empty() or not _owns_information(input) or not Information.accepts(tool, input)):
 		return false
 	observations.append({"tool_id": tool.id, "tool": tool.label, "ok": true, "output": "外部送信を見送りました。", "information": [], "skipped": true, "input": input.duplicate(true),
-		"reason": tool.get("reason", "") if not tool.get("correct_usage", true) else "外部照会は任意です。ToolとReferenceで判断材料を確認してください。"})
+		"reason": tool.get("reason", "") if not tool.get("correct_usage", true) else "この照会の結果は取得していません。判断に必要な証拠が揃っているか確認してください。"})
 	changed.emit()
 	return true
 
@@ -121,7 +121,8 @@ func _owns_information(input: Dictionary) -> bool:
 		return false
 	var candidates: Array = current().get("information", []).duplicate(true)
 	for observation in observations:
-		candidates.append_array(observation.get("information", []))
+		if observation.get("ok", false) and not observation.get("skipped", false) and observation.get("correct_usage", true):
+			candidates.append_array(observation.get("information", []))
 	for item in candidates:
 		if item.id == input.get("id") and item.value == input.get("value") and item.get("source", "") == input.get("source", "") and item.get("data_type", "text") == input.get("data_type", "text"):
 			return item.get("tool_input", true)

@@ -9,11 +9,13 @@
 | Level | 目的 |
 | --- | --- |
 | 超初級 | 初期情報に明示された矛盾・偽装を見る |
-| 初級 | Toolや照合資料で何が分かるかを知る |
-| 中級 | 単独では不十分な複数のEvidenceを組み合わせる |
+| 初級 | 原則1つの主役Toolと必要なReference／External Referenceで調べる |
+| 中級 | Category・OSに自然なTool候補から選び、複数Evidenceを組み合わせる |
 | 上級 | 攻撃と正常挙動で共通する特徴を文脈で区別する |
 
-超初級は初期情報だけで解ける構成とし、Network・Packageには設けません。未調査でも判定可能ですが、教材は内部調査だけで必要証拠を得られる構成にします。一律の使用回数・順序を要求せず、同じ事実を得る代替Toolも認めます。
+超初級は初期情報だけで解ける構成にします。Packageでも申請名と対象名の明確な相違などを扱えます。初級のReference主体の問題では不要なToolを足しません。中級以上では必要なToolだけを表示せず、選択肢の出力も事実として成立させます。
+
+適切な外部照会が必要な問題も認めます。一律の使用回数・順序や調査完了を回答条件にせず、同じ事実を得る代替Toolも認めます。ALLOWは現在のCheckpointの通過許可、BLOCKはその不許可であり、Malwareの証明とは限りません。
 
 ## 種別と判定時点
 
@@ -47,16 +49,12 @@ Hashは合成値、IPは文書用、組織・Domain・Packageは架空です。�
 
 仕様確認には [Sigcheck](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck)、[Process Explorer](https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer)、[Windows Event 4625](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625)、[Wireshark Conversations](https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html)、[npm Scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts/)、[package-lock.json](https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/)、[OSV API](https://google.github.io/osv.dev/api/) を参照しました。Toolの実装・利用OSごとの確認資料は [Tool利用環境](tool-platform-audit.md) に集約します。CLI/GUIのVersion・表示設定による細部の差はあります。
 
-## 今後の192問への拡張計画
+## 次の教材セットの方針
 
-以下は未実装の目標配分です。Category・問題数・Tool・Reference・UI・Schema・Level・判定方法はプロトタイプの評価に応じて変更できます。
+問題数の目標は設けず、判断根拠・Tool選択・正常例との一貫性を優先します。現行問題の内容・分類は別工程で置換するため、この方針への適合は作問時に確認します。
 
-| Level | File Win | File Linux | Process Win | Process Linux | Web | Network Win | Network Linux | Email | Account Win | Account Linux | Package | Total |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 超初級 | 2 | 2 | 1 | 1 | 4 | 0 | 0 | 4 | 1 | 1 | 0 | 16 |
-| 初級 | 5 | 5 | 6 | 6 | 9 | 4 | 4 | 6 | 5 | 5 | 4 | 59 |
-| 中級 | 5 | 5 | 6 | 6 | 7 | 6 | 6 | 8 | 5 | 5 | 5 | 64 |
-| 上級 | 4 | 4 | 5 | 5 | 6 | 5 | 5 | 6 | 4 | 4 | 5 | 53 |
-| Total | 16 | 16 | 18 | 18 | 26 | 15 | 15 | 24 | 15 | 15 | 14 | 192 |
+RDAPとVulnerability DatabaseはReference、Hash／File／Domain／IP／URL ReputationとIsolated URL AnalysisはExternal Referenceです。Referenceを含む調査結果は比較する事実を示し、攻撃名・ゲーム上の結論はTitle・Explanationへ置きます。外部サービス本来の検出数・分類の表示は可能です。
 
-QR phishing、AiTM、Fake update、Cloud通信、追加のSupply-chain事例、その他の基本Toolの反復学習は今後の拡張です。正常問題を十分に用意し、特定のIndicatorがあれば常に悪性という誤学習を防ぐ方針を維持します。
+RDAPの非公開Organizationを捏造しません。Hash・Domain・IP・Full URL・File・PCAP・Emailの送信内容を区別し、機密FileやToken付きURLの外部送信を必要証拠にしません。
+
+Real-world inspiredはFake Update、ClickFix／Fake CAPTCHA（Windows Process）、DLL Side-loading、LOLBin、Cron Persistence、BEC、Windows／SSH Password Spraying、Typosquatting、Dependency Confusionの範囲とします。出典と観測Evidenceが支えない原因・攻撃名を断定せず、正常例も残します。

@@ -1,22 +1,23 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
-	var catalog := ContentCatalog.new()
+	var catalog := Fixtures.catalog()
 	assert(catalog.load_pack(), str(catalog.errors))
-	assert(catalog.select_cases().size() == 24)
+	assert(catalog.select_cases().size() == Fixtures.pack().problems.size())
 	for level in ["very_beginner", "beginner", "intermediate", "advanced"]:
 		var selected := catalog.select_cases(level)
 		assert(not selected.is_empty() and selected.all(func(c): return c.level == level))
-	assert(catalog.select_cases("very_beginner", "file")[0].id == "FILE-WIN-VERY-BEGINNER-001")
+	assert(catalog.select_cases("very_beginner", "file")[0].id == "FIX-VISIBLE-FILE")
 	assert(catalog.select_cases("very_beginner", "process").is_empty())
 	for os in ["windows", "linux"]:
 		var selected := catalog.select_cases("", "", os)
 		assert(selected.all(func(c): return c.platform in [os, "common"] and c.investigation_environment == ("linux" if c.platform == "common" else os)))
 	var common := catalog.select_cases("", "", "common")
 	assert(common.all(func(c): return c.platform == "common" and c.investigation_environment == "linux"))
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	for i in range(desk.difficulty_select.item_count):
