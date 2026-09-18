@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "id": "FILE-LINUX-ARCHIVE-MEMBERS",
+  "category": "file",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "Archive内の実行用Script",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "/srv/inbox/manuals.tar.gz",
+    "申請内容": "PDF手順書をまとめた資料。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "archive",
+      "name": "tar",
+      "description": "Archiveを実行せず内容一覧を表示します。",
+      "output": "tar -tzf manuals.tar.gz\nmanuals/guide.pdf\nmanuals/setup.sh",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / GNU tar",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "format",
+      "name": "受入れ形式",
+      "content": "手順書の配布ArchiveはPDFのみ。実行Scriptを含めない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "archive",
+    "format"
+  ],
+  "explanation": "一覧には手順書以外にsetup.shが含まれ、PDFのみという配布条件に反するため遮断します。",
+  "topic": "tarの一覧を受入れ仕様と比較する",
+  "summary": "tarの一覧を受入れ仕様と比較する",
+  "learning_objectives": [
+    "tarの一覧を受入れ仕様と比較する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://sourceware.org/binutils/docs/binutils/readelf.html",
+    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

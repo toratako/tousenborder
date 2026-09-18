@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "id": "FILE-LINUX-PUBLISHED-HASH",
+  "category": "file",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "Linux配布Archiveの同一性",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "/srv/downloads/aster-cli-4.2.tar.gz",
+    "申請内容": "公開版CLI 4.2の導入。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "hash",
+      "name": "sha256sum",
+      "description": "選択したFileのSHA-256を計算します。",
+      "output": "04a7be8b7f2573b105d0b3eb1c9d30825e77f2463588013f61a5d31957260e6f  /srv/downloads/aster-cli-4.2.tar.gz",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / GNU coreutils",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "対象FileのSHA-256",
+          "value": "04a7be8b7f2573b105d0b3eb1c9d30825e77f2463588013f61a5d31957260e6f",
+          "data_type": "sha256"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "vendor",
+      "name": "Vendor Published Hash",
+      "content": {
+        "配布物": "aster-cli-4.2.tar.gz",
+        "SHA256": "04a7be8b7f2573b105d0b3eb1c9d30825e77f2463588013f61a5d31957260e6f",
+        "公開元": "https://downloads.aster.example/cli/4.2"
+      }
+    },
+    {
+      "id": "approved",
+      "name": "Approved Software",
+      "content": "aster-cli 4.2 / Linux x86-64 / 運用Serverへの導入承認 CHG-435。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "hash",
+    "vendor",
+    "approved"
+  ],
+  "explanation": "SHA-256がVendor公開値と一致し、導入対象も承認済みVersionなので許可します。",
+  "topic": "Linuxで公開Hashと導入承認を照合する",
+  "summary": "Linuxで公開Hashと導入承認を照合する",
+  "learning_objectives": [
+    "Linuxで公開Hashと導入承認を照合する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://sourceware.org/binutils/docs/binutils/readelf.html",
+    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

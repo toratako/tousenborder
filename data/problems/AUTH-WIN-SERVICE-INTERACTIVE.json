@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-WIN-SERVICE-INTERACTIVE",
+  "category": "account",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "Service Accountへの対話Login",
+  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "要求ID": "AUTH-901",
+    "User": "svc_backup",
+    "Source IP": "192.0.2.41",
+    "要求時刻": "2026-08-18 09:10:00",
+    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "要求Logon Type": "2 / Interactive",
+    "Gatewayの認証確認": "Password確認済み / MFA確認済み",
+    "Device ID": "WIN-017"
+  },
+  "initial_information_types": {
+    "User": "username",
+    "Source IP": "ip"
+  },
+  "tools": [
+    {
+      "id": "events",
+      "name": "Event Viewer / Windows Security Log",
+      "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
+      "output": "2026-08-17 02:00 Event ID 4624 / TargetUserName: svc_backup / LogonType: 5 / ProcessName: C:\\Windows\\System32\\services.exe\n今回の09:10要求は保留中のため、このLogに含まれない。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "User",
+      "platform_note": "Windows標準 / Event Viewer",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "policy",
+      "name": "User / Account Policy",
+      "content": "svc_backupはBackup Service専用。Type 5のみ、Type 2・10は禁止。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "events",
+    "policy"
+  ],
+  "explanation": "今回のType 2は対話Login禁止のService Accountに対する要求で、過去のService用Type 5とも用途が異なるため遮断します。",
+  "topic": "今回のLogon TypeとAccountの用途を比較する",
+  "summary": "今回のLogon TypeとAccountの用途を比較する",
+  "learning_objectives": [
+    "今回のLogon TypeとAccountの用途を比較する"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

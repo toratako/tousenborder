@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "WEB-ISOLATED-REDIRECT",
+  "category": "web",
+  "platform": "common",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "隔離解析で判明するLogin先",
+  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "URL": "https://event-invite.example/open",
+    "URLのHost": "event-invite.example",
+    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。",
+    "案内": "Asterの公開イベント案内",
+    "URLの区分": "一般公開リンク、Tokenなし"
+  },
+  "initial_information_types": {
+    "URL": "url",
+    "URLのHost": "domain"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Service / Domain",
+      "content": "AsterのPasswordを入力するHostはlogin.aster.exampleのみ。イベント案内は認証不要。"
+    }
+  ],
+  "external_references": [
+    {
+      "id": "isolated",
+      "name": "Isolated URL Analysis",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "GET https://event-invite.example/open -> 302\nLocation: https://event-identity.example/signin\nFinal HTTP status: 200\nForm labels: Aster email / Aster password\nForm action: https://event-identity.example/submit",
+      "accepted_information_types": [
+        "url"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URL"
+        }
+      ],
+      "input_hint": "URL",
+      "submission_type": "full_url",
+      "submission_value": "https://event-invite.example/open",
+      "confidentiality_warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
+  ],
+  "required_evidence": [
+    "isolated",
+    "official",
+    "disclosure"
+  ],
+  "explanation": "隔離解析では組織のPasswordを要求する別Hostへ遷移し、公式の認証先と一致しないため遮断します。通常Browserを開かずに得た解析結果を使います。",
+  "topic": "外部隔離解析のRedirectと公式認証先を比較する",
+  "summary": "外部隔離解析のRedirectと公式認証先を比較する",
+  "learning_objectives": [
+    "外部隔離解析のRedirectと公式認証先を比較する"
+  ],
+  "decision_context": "before_access",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.icann.org/rdap"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

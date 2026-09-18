@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "FILE-WIN-ARCHIVE-CONTENTS",
+  "category": "file",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "資料Archiveに含まれるScript",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "C:\\Inbox\\meeting-notes.zip",
+    "申請内容": "会議資料PDFだけを配布するArchive。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "archive",
+      "name": "7-Zip",
+      "description": "Archiveを実行せず内容一覧を表示します。",
+      "output": "7z l meeting-notes.zip\nType = zip\n2026-08-18 08:10  18240 notes.pdf\n2026-08-18 08:10   1240 notes.vbs\n2026-08-18 08:10    912 open-notes.lnk",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "7-Zip / 対象OS向け版を導入済み",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "format",
+      "name": "受入れ形式",
+      "content": "会議資料はPDFのみ。Script・Shortcut・Executableを含むArchiveは受入れない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "archive",
+    "format"
+  ],
+  "explanation": "ArchiveにはPDFに加えてVBSとLNKが含まれ、PDFのみという受入れ条件を満たさないため遮断します。中のScriptは実行していません。",
+  "topic": "Archiveを展開・実行せず内容一覧を確認する",
+  "summary": "Archiveを展開・実行せず内容一覧を確認する",
+  "learning_objectives": [
+    "Archiveを展開・実行せず内容一覧を確認する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

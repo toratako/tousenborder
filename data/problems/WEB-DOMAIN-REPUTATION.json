@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "WEB-DOMAIN-REPUTATION",
+  "category": "web",
+  "platform": "common",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "Domainの既知Phishing報告",
+  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "URL": "https://portal-check.example/login",
+    "URLのHost": "portal-check.example",
+    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。"
+  },
+  "initial_information_types": {
+    "URL": "url",
+    "URLのHost": "domain"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    }
+  ],
+  "external_references": [
+    {
+      "id": "domain_rep",
+      "name": "Domain Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "Domain: portal-check.example\n2026-08-18: phishing 13/16 feeds; last seen 00:00Z",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのHost",
+      "submission_type": "domain",
+      "submission_value": "portal-check.example",
+      "confidentiality_warning": "Domain名のみを送信します。URLのPath・Queryは送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
+  ],
+  "required_evidence": [
+    "domain_rep",
+    "disclosure"
+  ],
+  "explanation": "照会先Domainに現行のPhishing報告が複数確認できるためアクセスを遮断します。未知Domainだからという判断ではありません。",
+  "topic": "Domainだけを送って既知の評判を確認する",
+  "summary": "Domainだけを送って既知の評判を確認する",
+  "learning_objectives": [
+    "Domainだけを送って既知の評判を確認する"
+  ],
+  "decision_context": "before_access",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.icann.org/rdap"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

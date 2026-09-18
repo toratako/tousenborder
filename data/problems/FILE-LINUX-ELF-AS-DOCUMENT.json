@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "id": "FILE-LINUX-ELF-AS-DOCUMENT",
+  "category": "file",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "PDFとして届いたELF",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "/home/user/inbox/delivery.pdf",
+    "申請内容": "配送伝票PDFを表示する。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "file",
+      "name": "file",
+      "description": "MagicなどからFile形式を識別します。",
+      "output": "/home/user/inbox/delivery.pdf: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / fileパッケージ",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "format",
+      "name": "受入れ形式",
+      "content": "配送伝票はPDFのみ。実行Fileを伝票として開かない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "file",
+    "format"
+  ],
+  "explanation": "fileの結果はPDFではなくELF実行Fileで、伝票の受入れ形式に合わないため遮断します。",
+  "topic": "File名ではなく実際の形式を確認する",
+  "summary": "File名ではなく実際の形式を確認する",
+  "learning_objectives": [
+    "File名ではなく実際の形式を確認する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://sourceware.org/binutils/docs/binutils/readelf.html",
+    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

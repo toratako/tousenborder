@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-WIN-RETIRED-USER",
+  "category": "account",
+  "platform": "windows",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "退職済みUserへのLogin要求",
+  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "要求ID": "AUTH-901",
+    "User": "sato",
+    "Source IP": "192.0.2.42",
+    "要求時刻": "2026-08-18 09:10:00",
+    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "要求Logon Type": "10 / RemoteInteractive",
+    "Gatewayの認証確認": "Password確認済み / MFA確認済み",
+    "Device ID": "WIN-017"
+  },
+  "initial_information_types": {
+    "User": "username",
+    "Source IP": "ip"
+  },
+  "tools": [
+    {
+      "id": "events",
+      "name": "Event Viewer / Windows Security Log",
+      "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
+      "output": "2026-05-31 17:10 Event ID 4624 / TargetUserName: sato / LogonType: 10 / IpAddress: 192.0.2.42\n検索範囲2026-06-01〜08-18 09:09:59: 対象Userの4624は0件。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "User",
+      "platform_note": "Windows標準 / Event Viewer",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "policy",
+      "name": "User / Account Policy",
+      "content": "sato / 雇用終了2026-05-31 / Login利用許可終了2026-06-01 / IdP上の無効化作業は未反映でもGatewayで拒否する。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "events",
+    "policy"
+  ],
+  "explanation": "Account台帳では退職によりLogin権限を失っているため、Passwordが検証できてもSession成立を遮断します。長期間未使用というだけの判断ではありません。",
+  "topic": "未使用期間と現行のAccount権限を区別する",
+  "summary": "未使用期間と現行のAccount権限を区別する",
+  "learning_objectives": [
+    "未使用期間と現行のAccount権限を区別する"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

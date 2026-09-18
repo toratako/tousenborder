@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "id": "PKG-NPM-INSTALL-SCRIPT",
+  "category": "package",
+  "platform": "common",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "承認外のInstall Script",
+  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Package": "@aster-ui/native-render",
+    "Version": "3.2.1",
+    "Ecosystem": "npm",
+    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。"
+  },
+  "initial_information_types": {
+    "Package": "package"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "metadata",
+      "name": "npm Registry / Package Metadata",
+      "content": {
+        "Name": "@aster-ui/native-render",
+        "Version": "3.2.1",
+        "Registry": "https://registry.npmjs.org",
+        "Project URL / Repository": "https://git.aster.example/components/native-render",
+        "Maintainer": "aster-release",
+        "dependencies": {},
+        "SHA256": "c3f35d2a46ecff6ba38f09d7947c4684aa36ee24b70c791af0a4e77d3972eb71",
+        "scripts": {
+          "postinstall": "node scripts/setup.js"
+        }
+      }
+    },
+    {
+      "id": "source",
+      "name": "Package Source / 静的Review",
+      "content": {
+        "対象": "配布tarball内scripts/setup.js",
+        "抜粋": "const url = \"https://render-assets.example/bootstrap.bin\";\n// download(url) -> temporary executable\n// execute: <TRAINING-PLACEHOLDER>",
+        "取得方法": "InstallせずArchive内のSourceを表示"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Repository / Approved Component",
+      "content": "@aster-ui/native-render 3.2.1の承認Commitではpostinstall=node-gyp rebuild。外部Binaryの取得・起動処理は存在しない。"
+    },
+    {
+      "id": "release",
+      "name": "Release / Change Reference",
+      "content": "3.2.1はNative Sourceのコンパイル修正のみ。外部Bootstrapへの切替承認なし。"
+    },
+    {
+      "id": "lock",
+      "name": "Lock File",
+      "content": {
+        "現行Version": "3.2.0",
+        "Source": "https://registry.npmjs.org",
+        "更新条件": "公式Release Sourceとの一致が必要"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "metadata",
+    "source",
+    "official",
+    "release"
+  ],
+  "explanation": "配布物のpostinstallは承認Sourceにない外部実行Fileの取得・起動を含むため、Install前に遮断します。Scriptの静的内容を比較しており、実行済みとは扱いません。",
+  "topic": "Install Scriptを公式Repositoryの同Versionと比較する",
+  "summary": "Install Scriptを公式Repositoryの同Versionと比較する",
+  "learning_objectives": [
+    "Install Scriptを公式Repositoryの同Versionと比較する"
+  ],
+  "decision_context": "before_install",
+  "scenario_type": "standard",
+  "sources": [
+    "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "ecosystem": "npm"
+}

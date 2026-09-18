@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "id": "NET-LINUX-IP-REPUTATION",
+  "category": "network",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "接続先IPの既知検出",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "接続ID": "CONNECT-701",
+    "PID": 5100,
+    "Process表示名": "cache-worker",
+    "Remote IP": "203.0.113.100",
+    "Remote Port": 443,
+    "Protocol": "TCP",
+    "端末": "192.0.2.30",
+    "保留中のLocal Port": 52410,
+    "要求時刻": "2026-08-18 09:10:00",
+    "保存PCAP": "flow-before-0910.pcap",
+    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "Remote IP": "ip",
+    "保存PCAP": "pcap"
+  },
+  "tools": [
+    {
+      "id": "lsof_i",
+      "name": "lsof -i",
+      "description": "選択PIDが所有するInternet Socketを確認します。",
+      "output": "COMMAND PID USER FD TYPE NAME\ncache-worker 5100 agent 5u IPv4 192.0.2.30:52400->203.0.113.100:443 (ESTABLISHED)",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / lsof",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "203.0.113.100",
+          "data_type": "ip"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    }
+  ],
+  "external_references": [
+    {
+      "id": "ip_rep",
+      "name": "IP Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "IP: 203.0.113.100\nDedicated endpoint; malicious-infrastructure 12/16 feeds\nLast confirmed: 2026-08-18 00:00Z",
+      "accepted_information_types": [
+        "ip"
+      ],
+      "input_bindings": [
+        {
+          "source": "lsof_i",
+          "id": "ip"
+        }
+      ],
+      "input_hint": "ip",
+      "submission_type": "ip",
+      "submission_value": "203.0.113.100",
+      "confidentiality_warning": "IP Addressをサービスへ送信します。PCAPや通信本文は送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
+  ],
+  "required_evidence": [
+    "lsof_i",
+    "ip_rep",
+    "disclosure"
+  ],
+  "explanation": "対象Processの接続先IPには、現在も有効な悪性インフラとしての報告があるため新しい接続を遮断します。",
+  "topic": "Socket所有ProcessとIP評判を確認する",
+  "summary": "Socket所有ProcessとIP評判を確認する",
+  "learning_objectives": [
+    "Socket所有ProcessとIP評判を確認する"
+  ],
+  "decision_context": "before_connection",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

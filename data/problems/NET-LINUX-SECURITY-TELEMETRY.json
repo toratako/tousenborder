@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "id": "NET-LINUX-SECURITY-TELEMETRY",
+  "category": "network",
+  "platform": "linux",
+  "level": "advanced",
+  "ground_truth": "allow",
+  "title": "定期送信するSecurity Agent",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "接続ID": "CONNECT-701",
+    "PID": 5100,
+    "Process表示名": "agent",
+    "Remote IP": "192.0.2.80",
+    "Remote Port": 443,
+    "Protocol": "TCP",
+    "端末": "192.0.2.30",
+    "保留中のLocal Port": 52410,
+    "要求時刻": "2026-08-18 09:10:00",
+    "保存PCAP": "flow-before-0910.pcap",
+    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "Remote IP": "ip",
+    "保存PCAP": "pcap"
+  },
+  "tools": [
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのSocket・相手IP・Portを確認します。",
+      "output": "ESTAB 0 0 192.0.2.30:52400 192.0.2.80:443 users:((\"agent\",pid=5100,fd=5))",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "192.0.2.80",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "lsof_i",
+      "name": "lsof -i",
+      "description": "選択PIDが所有するInternet Socketを確認します。",
+      "output": "COMMAND PID USER FD TYPE NAME\nagent 5100 agent 5u IPv4 192.0.2.30:52400->192.0.2.80:443 (ESTABLISHED)",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / lsof",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "192.0.2.80",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "output": "PID PPID USER COMMAND\n5100 1 agent /opt/aster/agent --telemetry --interval 60",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのPacketやConversation統計を表示します。所有ProcessはSocket Toolで照合します。",
+      "output": "File: flow-before-0910.pcap\n09:06:00 192.0.2.30:52400 -> 192.0.2.80:443 TLSv1.3 / TCP Len=512 bytes\n09:07:00 192.0.2.30:52400 -> 192.0.2.80:443 TLSv1.3 / TCP Len=512 bytes\n09:08:00 192.0.2.30:52400 -> 192.0.2.80:443 TLSv1.3 / TCP Len=512 bytes\n09:09:00 192.0.2.30:52400 -> 192.0.2.80:443 TLSv1.3 / TCP Len=512 bytes",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "tcpdump",
+      "name": "tcpdump",
+      "description": "保存済みPCAPのPacketを読みます。所有PIDや暗号化本文は分かりません。",
+      "output": "tcpdump -nn -tttt -r flow-before-0910.pcap\n2026-08-18 09:06:00 IP 192.0.2.30.52400 > 192.0.2.80.443: Flags [P.], seq 1:513, ack 1, win 501, length 512\n2026-08-18 09:07:00 IP 192.0.2.30.52400 > 192.0.2.80.443: Flags [P.], seq 513:1025, ack 1, win 501, length 512\n2026-08-18 09:08:00 IP 192.0.2.30.52400 > 192.0.2.80.443: Flags [P.], seq 1025:1537, ack 1, win 501, length 512\n2026-08-18 09:09:00 IP 192.0.2.30.52400 > 192.0.2.80.443: Flags [P.], seq 1537:2049, ack 1, win 501, length 512",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Linux / tcpdump",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "server",
+      "name": "Approved Servers",
+      "content": {
+        "Image": "/opt/aster/agent",
+        "引数": "--telemetry --interval 60",
+        "宛先": "192.0.2.80:443",
+        "周期": "60秒",
+        "送信量": "400–800 bytes/回",
+        "承認": "管理済みAgent / NET-707"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "lsof_i",
+    "ps",
+    "flow",
+    "server"
+  ],
+  "explanation": "所有Process・管理Path・宛先・60秒間隔の送信量が承認済みSecurity Telemetryの仕様に一致するため接続を許可します。暗号化本文の内容をPCAPから推測してはいません。",
+  "topic": "定期通信をSecurity Agentの仕様と照合する",
+  "summary": "定期通信をSecurity Agentの仕様と照合する",
+  "learning_objectives": [
+    "定期通信をSecurity Agentの仕様と照合する"
+  ],
+  "decision_context": "before_connection",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "evidence_alternatives": {
+    "flow": {
+      "label": "周期と送信量",
+      "any_of": [
+        "capture",
+        "tcpdump"
+      ]
+    }
+  }
+}

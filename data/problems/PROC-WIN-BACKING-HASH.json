@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "PROC-WIN-BACKING-HASH",
+  "category": "process",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "実行中ImageのHash不一致",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "inventory.exe",
+    "PID": 4200,
+    "User": "ASTER\\svc_inventory",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "output": "PID 4200 のBacking Executable: C:\\Company\\inventory.exe\nAlgorithm: SHA256\nHash: 42d315fc39b4d404ce86d5da8bc4ef329fe3720a95b7bc61bd9fd8a0cafa4ce4",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "Backing ExecutableのSHA-256",
+          "value": "42d315fc39b4d404ce86d5da8bc4ef329fe3720a95b7bc61bd9fd8a0cafa4ce4",
+          "data_type": "sha256"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "approved",
+      "name": "Approved Software",
+      "content": {
+        "対象": "C:\\Company\\inventory.exe",
+        "承認Version": "3.0",
+        "SHA256": "11aa0ab9e47516e704156dc44538a051030d1a7a30efecefe65d97db46a95a67"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "hash",
+    "approved"
+  ],
+  "explanation": "PIDから選んだ実行ImageのHashが承認版と異なるため停止します。Process Explorerを経由しなくても実行本体を特定して比較できます。",
+  "topic": "Process本体のHashを承認版と直接照合する",
+  "summary": "Process本体のHashを承認版と直接照合する",
+  "learning_objectives": [
+    "Process本体のHashを承認版と直接照合する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

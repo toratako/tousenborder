@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "id": "PKG-PYPI-LEGITIMATE-VULNERABLE",
+  "category": "package",
+  "platform": "common",
+  "level": "advanced",
+  "ground_truth": "block",
+  "title": "正規だが導入禁止の脆弱Package",
+  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Package": "aster-template-engine",
+    "Version": "1.7.2",
+    "Ecosystem": "pypi",
+    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。",
+    "利用用途": "顧客がアップロードするTemplateをServer側で描画"
+  },
+  "initial_information_types": {
+    "Package": "package"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "metadata",
+      "name": "PyPI Registry / Package Metadata",
+      "content": {
+        "Name": "aster-template-engine",
+        "Version": "1.7.2",
+        "Registry": "https://pypi.org",
+        "Project URL / Repository": "https://git.aster.example/components/aster-template-engine",
+        "Maintainer": "aster-release",
+        "Requires-Dist": {},
+        "SHA256": "b81381023af414916738dc514161b67a7c75421b1d95dfefa36c055159d2f968"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Repository / Approved Component",
+      "content": {
+        "Name": "aster-template-engine",
+        "Version": "1.7.2",
+        "Repository": "https://git.aster.example/components/aster-template-engine",
+        "SHA256": "b81381023af414916738dc514161b67a7c75421b1d95dfefa36c055159d2f968",
+        "配布元": "https://pypi.org"
+      }
+    },
+    {
+      "id": "lock",
+      "name": "Lock File",
+      "content": {
+        "Name": "aster-template-engine",
+        "Version": "1.7.2",
+        "SHA256": "b81381023af414916738dc514161b67a7c75421b1d95dfefa36c055159d2f968",
+        "注記": "過去のLock。導入承認は現在のVulnerability Policyも満たす必要がある。"
+      }
+    },
+    {
+      "id": "release",
+      "name": "Release / Change Reference",
+      "content": "1.7.3でTemplateの式評価を制限。1.7.2は旧動作を維持したRelease。"
+    },
+    {
+      "id": "vuln",
+      "name": "Vulnerability Database",
+      "content": {
+        "ID": "TRAINING-2026-TEMPLATE-02（架空）",
+        "Package": "PyPI / aster-template-engine",
+        "Affected": "<1.7.3",
+        "条件": "信頼しないTemplateの評価",
+        "Fixed": "1.7.3",
+        "更新日": "2026-08-17"
+      }
+    },
+    {
+      "id": "policy",
+      "name": "Component導入方針",
+      "content": "顧客のTemplateを扱うServerではTRAINING-2026-TEMPLATE-02の影響Versionを導入禁止。社内固定Template向けの旧例外はこの用途に適用しない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "metadata",
+    "official",
+    "vuln",
+    "policy"
+  ],
+  "explanation": "配布元とHashは正規Releaseに一致しますが、今回の外部Templateを扱う用途では脆弱性の影響を受け、導入禁止方針に該当するため遮断します。正規PackageをMalwareと呼ぶ判断ではありません。",
+  "topic": "真正な配布物でも脆弱性と利用条件を評価する",
+  "summary": "真正な配布物でも脆弱性と利用条件を評価する",
+  "learning_objectives": [
+    "真正な配布物でも脆弱性と利用条件を評価する"
+  ],
+  "decision_context": "before_install",
+  "scenario_type": "standard",
+  "sources": [
+    "https://packaging.python.org/en/latest/guides/index-mirrors-and-caches/"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "ecosystem": "pypi"
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "FILE-WIN-PUBLISHER",
+  "category": "file",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "承認された署名付き配布物",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "C:\\Downloads\\AsterPrint-6.1.exe",
+    "申請内容": "社内カタログから取得したプリンタDriver 6.1。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "sig",
+      "name": "Sigcheck",
+      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "output": "C:\\Downloads\\AsterPrint-6.1.exe:\n  Verified: Signed\n  Publisher: Aster Devices Ltd.\nProduct: AsterPrint\nFile version: 6.1",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "publisher",
+      "name": "Trusted Publisher",
+      "content": "署名検証がSignedでPublisherがAster Devices Ltd.であるAsterPrint 6.1を承認。社内カタログ配布のみ。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "sig",
+    "publisher"
+  ],
+  "explanation": "署名の検証結果とPublisher・Versionが承認された配布条件に一致するため、この導入を許可します。署名一般が安全性を保証するという意味ではありません。",
+  "topic": "署名を承認Publisher・Versionと照合する",
+  "summary": "署名を承認Publisher・Versionと照合する",
+  "learning_objectives": [
+    "署名を承認Publisher・Versionと照合する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

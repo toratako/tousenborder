@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "PROC-WIN-STARTUP-ENTRY",
+  "category": "process",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "Temp配下からの自動起動",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "helper.exe",
+    "PID": 4200,
+    "User": "ASTER\\mori",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "autoruns",
+      "name": "Autoruns",
+      "description": "選択PIDのImageに対応する自動起動登録を検索します。PIDから対象Pathを選ぶ操作は教材のラッパーです。",
+      "output": "Logon\nHKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\OfficeHelper\nImage Path: C:\\Users\\mori\\AppData\\Local\\Temp\\helper.exe",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "startup",
+      "name": "自動起動方針",
+      "content": "業務端末のUser Run登録は管理配布Pathの承認済みAgentのみ。Temp配下のFileを指定する登録は不可。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "autoruns",
+    "startup"
+  ],
+  "explanation": "AutorunsでTemp配下のhelper.exeを起動するRunエントリが確認され、端末の自動起動許可条件に反するため停止します。",
+  "topic": "Autorunsの登録先を組織の自動起動規則と比較する",
+  "summary": "Autorunsの登録先を組織の自動起動規則と比較する",
+  "learning_objectives": [
+    "Autorunsの登録先を組織の自動起動規則と比較する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

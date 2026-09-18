@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "id": "PKG-NPM-SUBTLE-TYPO",
+  "category": "package",
+  "platform": "common",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "Subtle Typosquatting",
+  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Package": "@aster-ui/calender",
+    "Version": "2.4.0",
+    "Ecosystem": "npm",
+    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。",
+    "業務用途": "社内Calendar UI",
+    "申請Ticket": "COMP-1007"
+  },
+  "initial_information_types": {
+    "Package": "package"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "metadata",
+      "name": "npm Registry / Package Metadata",
+      "content": {
+        "Name": "@aster-ui/calender",
+        "Version": "2.4.0",
+        "Registry": "https://registry.npmjs.org",
+        "Project URL / Repository": "https://git.calendar-widgets.example/ui/calender",
+        "Maintainer": "calendar-widget-team",
+        "dependencies": {},
+        "SHA256": "590864c35d2f9d7fb16d6e4b52099b24d834efa001467299f38da390cdf3df9f"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Repository / Approved Component",
+      "content": "COMP-1007 / @aster-ui/calendar 2.4.0 / https://git.aster.example/components/calendar / Maintainer=aster-release。"
+    },
+    {
+      "id": "lock",
+      "name": "Lock File",
+      "content": {
+        "現行依存": "@aster-ui/calendar@2.3.0",
+        "Registry": "https://registry.npmjs.org",
+        "更新申請": "Versionを2.4.0へ。Package名の変更なし。"
+      }
+    },
+    {
+      "id": "release",
+      "name": "Release / Change Reference",
+      "content": "公式Calendar 2.4.0は表示修正。Package名・Maintainer・Repositoryの変更なし。"
+    },
+    {
+      "id": "vuln",
+      "name": "Vulnerability Database",
+      "content": "@aster-ui/calender 2.4.0: 該当する脆弱性登録なし。照会時点2026-08-18。公式性の情報は含まれない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "metadata",
+    "official",
+    "lock"
+  ],
+  "explanation": "見た目が似ていてもPackage名・Maintainer・Repositoryが公式Calendar Componentと異なるため導入を遮断します。ダウンロード数や似た説明文は公式性の根拠になりません。",
+  "topic": "似たPackageのMetadataを公式Componentと比較する",
+  "summary": "似たPackageのMetadataを公式Componentと比較する",
+  "learning_objectives": [
+    "似たPackageのMetadataを公式Componentと比較する"
+  ],
+  "decision_context": "before_install",
+  "scenario_type": "real_world_inspired",
+  "sources": [
+    "https://github.com/ossf/malicious-packages"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "inspired_by": "Subtle Typosquatting",
+  "ecosystem": "npm"
+}

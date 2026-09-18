@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "id": "NET-LINUX-RDAP-NETBLOCK",
+  "category": "network",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "割当Netblockと承認Server",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "接続ID": "CONNECT-701",
+    "PID": 5100,
+    "Process表示名": "report-client",
+    "Remote IP": "198.51.100.70",
+    "Remote Port": 443,
+    "Protocol": "TCP",
+    "端末": "192.0.2.30",
+    "保留中のLocal Port": 52410,
+    "要求時刻": "2026-08-18 09:10:00",
+    "保存PCAP": "flow-before-0910.pcap",
+    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "Remote IP": "ip",
+    "保存PCAP": "pcap"
+  },
+  "tools": [
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのSocket・相手IP・Portを確認します。",
+      "output": "ESTAB 0 0 192.0.2.30:52400 198.51.100.70:443 users:((\"report-client\",pid=5100,fd=5))",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "198.51.100.70",
+          "data_type": "ip"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "rdap",
+      "name": "RDAP",
+      "content": {
+        "照会IP": "198.51.100.70",
+        "startAddress": "198.51.100.64",
+        "endAddress": "198.51.100.79",
+        "割当組織": "Aster Hosting Ltd.",
+        "用途": "文書用IPによる架空の割当応答。Tenant識別情報は含まれない。"
+      }
+    },
+    {
+      "id": "server",
+      "name": "Approved Servers",
+      "content": "report-client / PID 5100 / 198.51.100.70:443 / 委託契約H-770の専用帳票受信Server / NET-703。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "ss",
+    "rdap",
+    "server"
+  ],
+  "explanation": "RDAPの割当先と委託先が一致し、個別IP・Port・用途も承認Server台帳に一致するため許可します。Netblockの所属だけでTenantや安全性を判断していません。",
+  "topic": "IPの割当組織と個別Service承認を区別する",
+  "summary": "IPの割当組織と個別Service承認を区別する",
+  "learning_objectives": [
+    "IPの割当組織と個別Service承認を区別する"
+  ],
+  "decision_context": "before_connection",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

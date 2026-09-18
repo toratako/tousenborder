@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "id": "NET-WIN-CONFIDENTIAL-UPLOAD",
+  "category": "network",
+  "platform": "windows",
+  "level": "advanced",
+  "ground_truth": "block",
+  "title": "個人Cloudへの機密File送信",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "接続ID": "CONNECT-701",
+    "PID": 5100,
+    "Process表示名": "cloud-copy.exe",
+    "Remote IP": "198.51.100.90",
+    "Remote Port": 443,
+    "Protocol": "TCP",
+    "端末": "192.0.2.25",
+    "保留中のLocal Port": 52410,
+    "要求時刻": "2026-08-18 09:10:00",
+    "保存PCAP": "flow-before-0910.pcap",
+    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "Remote IP": "ip",
+    "保存PCAP": "pcap"
+  },
+  "tools": [
+    {
+      "id": "nettcp",
+      "name": "Get-NetTCPConnection",
+      "description": "選択PIDの既存TCP接続を表示します。今回の保留中要求とは別です。",
+      "output": "LocalAddress: 192.0.2.25\nLocalPort: 52400\nRemoteAddress: 198.51.100.90\nRemotePort: 443\nState: Established\nOwningProcess: 5100",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / PowerShell NetTCPIP",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "198.51.100.90",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのSocketと相手IP・Portを確認します。",
+      "output": "Process: C:\\Users\\mori\\Downloads\\cloud-copy.exe\n192.0.2.25:52400 -> 198.51.100.90:443 ESTABLISHED / PID 5100 / cloud-copy.exe",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "198.51.100.90",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "output": "PID: 5100\nImage: C:\\Users\\mori\\Downloads\\cloud-copy.exe\nCommand line: C:\\Users\\mori\\Downloads\\cloud-copy.exe --source C:\\Finance\\forecast.csv --destination https://personal-cloud.example/u/demo\nParent: services.exe (800)",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのPacketやConversation統計を表示します。所有ProcessはSocket Toolで照合します。",
+      "output": "File: flow-before-0910.pcap\n09:05–09:09 192.0.2.25:52400 -> 198.51.100.90:443\nTCP conversation: sent 128 MiB; received 64 KiB\nTLS Application Data; 本文は暗号化",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "policy",
+      "name": "File / 通信方針",
+      "content": {
+        "機密資料": "C:\\Finance\\forecast.csv",
+        "分類": "社外秘・財務予測",
+        "承認転送先": "192.0.2.85:443の法人管理Storageのみ",
+        "198.51.100.90": "personal-cloud.exampleの個人用Endpoint",
+        "転送Tool": "管理配布のcorp-transferのみ。cloud-copy.exeは未承認。"
+      }
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "社外秘"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "pe",
+    "tcp",
+    "policy"
+  ],
+  "explanation": "Processの引数は機密資料を個人Cloudへ転送する指定で、宛先・利用Toolとも送信方針に反するため遮断します。大量のTLS通信だけからFile内容を読み取った判断ではありません。",
+  "topic": "転送対象・宛先・用途を送信方針と照合する",
+  "summary": "転送対象・宛先・用途を送信方針と照合する",
+  "learning_objectives": [
+    "転送対象・宛先・用途を送信方針と照合する"
+  ],
+  "decision_context": "before_connection",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "PROC-WIN-SYSTEM-NAME",
+  "category": "process",
+  "platform": "windows",
+  "level": "very_beginner",
+  "ground_truth": "block",
+  "title": "System Processを名乗る別配置のFile",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "svchost.exe",
+    "PID": 4200,
+    "User": "ASTER\\mori",
+    "採取時点": "2026-08-18 09:10 / 起動済み",
+    "Image": "C:\\Users\\mori\\AppData\\Local\\Temp\\svchost.exe"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "approved",
+      "name": "Approved Software",
+      "content": {
+        "svchost.exeの実行許可条件": "svchost.exeはC:\\Windows\\System32またはSysWOW64の管理対象だけ継続可。Temp配下での同名実行は不可。"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "initial_information",
+    "approved"
+  ],
+  "explanation": "svchost.exeの完全PathがUserのTemp配下で、Approved Softwareの実行許可条件を満たさないため停止します。名前だけでSystem Processとは判断しません。",
+  "topic": "System風の名前と完全Pathを比較する",
+  "summary": "System風の名前と完全Pathを比較する",
+  "learning_objectives": [
+    "System風の名前と完全Pathを比較する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

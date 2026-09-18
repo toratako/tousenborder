@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "EMAIL-BEC-DESTINATION",
+  "category": "email",
+  "platform": "common",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "BEC — 振込先の変更依頼",
+  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Email": "quarantine/message-1081.eml",
+    "From": "Cedar請求 <billing@cedar-invoices.example>",
+    "To": "mori@aster.example",
+    "Subject": "振込先変更のお知らせ",
+    "本文": "請求PO-821の振込先を別銀行の口座末尾9912へ変更してください。今日は担当者へ電話がつながりません。",
+    "受信時刻": "2026-08-18 09:10",
+    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。"
+  },
+  "initial_information_types": {
+    "Email": "email"
+  },
+  "tools": [
+    {
+      "id": "header",
+      "name": "Raw Header / View Source",
+      "description": "信頼する受信GatewayのHeaderと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "output": "Received: from outbound.cedar-invoices.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=cedar-invoices.example; dkim=pass header.d=cedar-invoices.example; dmarc=pass header.from=cedar-invoices.example\nFrom: Cedar請求 <billing@cedar-invoices.example>\nTo: mori@aster.example\nReply-To: Cedar請求 <billing@cedar-invoices.example>\nReturn-Path: <bounce@cedar-invoices.example>\nSubject: 振込先変更のお知らせ\n\nMIME本文の抜粋:\n請求PO-821の振込先を別銀行の口座末尾9912へ変更してください。今日は担当者へ電話がつながりません。",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Email"
+        }
+      ],
+      "input_hint": "Email",
+      "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "gateway",
+      "name": "Mail Gateway構成",
+      "content": "信頼する受信Gatewayはmx.aster.example。自Gatewayが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+    },
+    {
+      "id": "vendor",
+      "name": "Vendor Directory",
+      "content": "Cedar商事請求窓口=billing@cedar.example / 登録済み口座末尾2048 / 連絡先=契約台帳の電話番号 / cedar-invoices.exampleの登録なし。"
+    },
+    {
+      "id": "procedure",
+      "name": "口座変更手順",
+      "content": "変更Ticketと登録電話番号への折返し確認、経理2名承認が必要。PO-821について当日時点の変更Ticket・確認記録は0件。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "header",
+    "vendor",
+    "procedure"
+  ],
+  "explanation": "取引先の登録Addressと送信Domainが異なり、変更依頼にも登録番号での確認記録がないため受入れを遮断します。緊急性の主張だけで振込先を変えません。",
+  "topic": "送信元と口座変更手順を独立した台帳で検証する",
+  "summary": "送信元と口座変更手順を独立した台帳で検証する",
+  "learning_objectives": [
+    "送信元と口座変更手順を独立した台帳で検証する"
+  ],
+  "decision_context": "before_delivery",
+  "scenario_type": "real_world_inspired",
+  "sources": [
+    "https://www.fbi.gov/how-we-can-help-you/common-frauds-and-scams/business-email-compromise"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "inspired_by": "BEC — Payment Destination Change"
+}

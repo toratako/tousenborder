@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-LINUX-SERVICE-LOGIN",
+  "category": "account",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "Service Userへの対話SSH",
+  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "要求ID": "AUTH-901",
+    "User": "svc_backup",
+    "Source IP": "203.0.113.150",
+    "要求時刻": "2026-08-18 09:10:00",
+    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "認証方式": "SSH publickey",
+    "Gatewayの鍵検証": "SHA256:DEMO_APPROVED_KEY_17 と一致",
+    "GatewayのMFA": "確認済み"
+  },
+  "initial_information_types": {
+    "User": "username",
+    "Source IP": "ip"
+  },
+  "tools": [
+    {
+      "id": "lastlog",
+      "name": "lastlog",
+      "description": "Accountの過去の最終Login記録を表示します。",
+      "output": "Username Port From Latest\nsvc_backup **Never logged in**",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "User",
+      "platform_note": "Linux / shadow-utilsのlastlogを備える教材環境",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "policy",
+      "name": "User / Account Policy",
+      "content": "svc_backup / systemd Backup Service専用 / 対話SSH・Shell Sessionは禁止。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "lastlog",
+    "policy"
+  ],
+  "explanation": "svc_backupはService専用で対話SSHを禁止しているため遮断します。lastlogに履歴がないことだけではなく、Accountの用途を根拠にしています。",
+  "topic": "lastlogの履歴とAccountの対話利用許可を区別する",
+  "summary": "lastlogの履歴とAccountの対話利用許可を区別する",
+  "learning_objectives": [
+    "lastlogの履歴とAccountの対話利用許可を区別する"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

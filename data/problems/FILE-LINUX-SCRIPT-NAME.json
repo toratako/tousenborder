@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "FILE-LINUX-SCRIPT-NAME",
+  "category": "file",
+  "platform": "linux",
+  "level": "very_beginner",
+  "ground_truth": "block",
+  "title": "PDF名を含むShell Script",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "/home/user/inbox/invoice.pdf.sh",
+    "申請内容": "PDF請求書を開く。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "format",
+      "name": "受入れ形式",
+      "content": "請求書はPDFのみ受け入れる。実行File・Shell Scriptは不可。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "initial_information",
+    "format"
+  ],
+  "explanation": "完全名は.shであり、PDFだけを受け入れる条件と矛盾するため遮断します。",
+  "topic": "Linuxでも完全なFile名と申請形式を比較する",
+  "summary": "Linuxでも完全なFile名と申請形式を比較する",
+  "learning_objectives": [
+    "Linuxでも完全なFile名と申請形式を比較する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://sourceware.org/binutils/docs/binutils/readelf.html",
+    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

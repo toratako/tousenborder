@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-WIN-CORPORATE-VPN",
+  "category": "account",
+  "platform": "windows",
+  "level": "advanced",
+  "ground_truth": "allow",
+  "title": "遠方に見える企業VPN出口",
+  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "要求ID": "AUTH-901",
+    "User": "mori",
+    "Source IP": "198.51.100.140",
+    "要求時刻": "2026-08-18 09:10:00",
+    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "要求Logon Type": "10 / RemoteInteractive",
+    "Gatewayの認証確認": "Password確認済み / MFA確認済み",
+    "Device ID": "WIN-017",
+    "Gatewayの経路確認": "企業VPN Tunnel V-140 / mori / WIN-017 / 接続08:59",
+    "IP位置表示": "海外RegionのData Center"
+  },
+  "initial_information_types": {
+    "User": "username",
+    "Source IP": "ip"
+  },
+  "tools": [
+    {
+      "id": "events",
+      "name": "Event Viewer / Windows Security Log",
+      "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
+      "output": "2026-08-17 09:01 Event ID 4624 / TargetUserName: mori / LogonType: 10 / IpAddress: 192.0.2.41\n今回の要求に対応する4624はまだ存在しない。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "User",
+      "platform_note": "Windows標準 / Event Viewer",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "vpn",
+      "name": "Approved VPN",
+      "content": "198.51.100.140 / 企業VPN出口 / 契約VPN-140 / Tunnel V-140をmori・WIN-017へ割当済み。"
+    },
+    {
+      "id": "device",
+      "name": "Device Reference",
+      "content": "WIN-017 / mori / Active / 管理登録済み。"
+    },
+    {
+      "id": "policy",
+      "name": "User / Account Policy",
+      "content": "管理端末から承認VPNを経由し、GatewayがPasswordとMFAを確認済みならRemoteInteractive可。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "vpn",
+    "device",
+    "policy"
+  ],
+  "explanation": "接続元IPは契約済み企業VPN出口で、Tunnelの本人・管理Device・今回のMFAが一致するため許可します。IPの地理表示だけを移動や侵害の証拠にはしません。",
+  "topic": "VPN出口のIPと利用者の実際の経路を区別する",
+  "summary": "VPN出口のIPと利用者の実際の経路を区別する",
+  "learning_objectives": [
+    "VPN出口のIPと利用者の実際の経路を区別する"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

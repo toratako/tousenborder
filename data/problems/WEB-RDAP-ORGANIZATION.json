@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "WEB-RDAP-ORGANIZATION",
+  "category": "web",
+  "platform": "common",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "公開RDAPと公式Serviceの照合",
+  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "URL": "https://aster-training.example/",
+    "URLのHost": "aster-training.example",
+    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。"
+  },
+  "initial_information_types": {
+    "URL": "url",
+    "URLのHost": "domain"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "rdap",
+      "name": "RDAP",
+      "content": {
+        "照会対象Domain": "aster-training.example",
+        "登録日": "2018-04-03",
+        "Registrar": "Example Registrar 1",
+        "Status": "client transfer prohibited",
+        "Registrant Organization": "Aster Training Foundation",
+        "注記": "登録日・登録者情報はサイト内容や安全性を保証しない。"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Service / Domain",
+      "content": "委託先Aster Training Foundationの公開研修Hostはaster-training.example。契約TR-601で掲載。個人情報の入力は不要。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "rdap",
+    "official"
+  ],
+  "explanation": "公開された登録組織情報と、別途管理された公式Service記録のHostが一致するため公開ページへのアクセスを許可します。RDAPだけからサイトの安全性は判断していません。",
+  "topic": "取得可能なRDAP情報を公式資料の補助に使う",
+  "summary": "取得可能なRDAP情報を公式資料の補助に使う",
+  "learning_objectives": [
+    "取得可能なRDAP情報を公式資料の補助に使う"
+  ],
+  "decision_context": "before_access",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.icann.org/rdap"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

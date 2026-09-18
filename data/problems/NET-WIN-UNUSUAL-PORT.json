@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "id": "NET-WIN-UNUSUAL-PORT",
+  "category": "network",
+  "platform": "windows",
+  "level": "advanced",
+  "ground_truth": "allow",
+  "title": "8443番の正規収集Service",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "接続ID": "CONNECT-701",
+    "PID": 5100,
+    "Process表示名": "agent.exe",
+    "Remote IP": "192.0.2.86",
+    "Remote Port": 8443,
+    "Protocol": "TCP",
+    "端末": "192.0.2.25",
+    "保留中のLocal Port": 52410,
+    "要求時刻": "2026-08-18 09:10:00",
+    "保存PCAP": "flow-before-0910.pcap",
+    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "Remote IP": "ip",
+    "保存PCAP": "pcap"
+  },
+  "tools": [
+    {
+      "id": "nettcp",
+      "name": "Get-NetTCPConnection",
+      "description": "選択PIDの既存TCP接続を表示します。今回の保留中要求とは別です。",
+      "output": "LocalAddress: 192.0.2.25\nLocalPort: 52400\nRemoteAddress: 192.0.2.86\nRemotePort: 8443\nState: Established\nOwningProcess: 5100",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / PowerShell NetTCPIP",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "192.0.2.86",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのSocketと相手IP・Portを確認します。",
+      "output": "Process: C:\\Program Files\\AsterAgent\\agent.exe\n192.0.2.25:52400 -> 192.0.2.86:8443 ESTABLISHED / PID 5100 / agent.exe",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "192.0.2.86",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "output": "PID: 5100\nImage: C:\\Program Files\\AsterAgent\\agent.exe\nCommand line: C:\\Program Files\\AsterAgent\\agent.exe --collector 192.0.2.86:8443\nParent: services.exe (800)",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのPacketやConversation統計を表示します。所有ProcessはSocket Toolで照合します。",
+      "output": "File: flow-before-0910.pcap\n09:09:00 192.0.2.25:52400 -> 192.0.2.86:8443 TCP [SYN]\n09:09:01 TLSv1.3 Application Data length 512\n暗号化された本文はこのPCAPから読めない。",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "server",
+      "name": "Approved Servers",
+      "content": {
+        "Image": "C:\\Program Files\\AsterAgent\\agent.exe",
+        "引数": "--collector 192.0.2.86:8443",
+        "宛先": "192.0.2.86:8443",
+        "用途": "Collector専用TLS Service",
+        "承認": "NET-709"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "tcp",
+    "pe",
+    "server"
+  ],
+  "explanation": "8443番PortでもProcess・引数・宛先が承認済み収集Serviceの仕様に一致するため許可します。一般的でないPort番号だけでは遮断しません。",
+  "topic": "非標準PortをService仕様で判断する",
+  "summary": "非標準PortをService仕様で判断する",
+  "learning_objectives": [
+    "非標準PortをService仕様で判断する"
+  ],
+  "decision_context": "before_connection",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

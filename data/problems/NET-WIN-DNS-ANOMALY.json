@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "id": "NET-WIN-DNS-ANOMALY",
+  "category": "network",
+  "platform": "windows",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "Processと結び付くDNSの反復",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "接続ID": "CONNECT-701",
+    "PID": 5100,
+    "Process表示名": "dns-helper.exe",
+    "Remote IP": "203.0.113.53",
+    "Remote Port": 53,
+    "Protocol": "TCP",
+    "端末": "192.0.2.25",
+    "保留中のLocal Port": 52410,
+    "要求時刻": "2026-08-18 09:10:00",
+    "保存PCAP": "flow-before-0910.pcap",
+    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "Remote IP": "ip",
+    "保存PCAP": "pcap"
+  },
+  "tools": [
+    {
+      "id": "nettcp",
+      "name": "Get-NetTCPConnection",
+      "description": "選択PIDの既存TCP接続を表示します。今回の保留中要求とは別です。",
+      "output": "LocalAddress: 192.0.2.25\nLocalPort: 52400\nRemoteAddress: 203.0.113.53\nRemotePort: 53\nState: Established\nOwningProcess: 5100",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / PowerShell NetTCPIP",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "203.0.113.53",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのSocketと相手IP・Portを確認します。",
+      "output": "Process: C:\\Users\\mori\\AppData\\Local\\Temp\\dns-helper.exe\n192.0.2.25:52400 -> 203.0.113.53:53 ESTABLISHED / PID 5100 / dns-helper.exe",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "203.0.113.53",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "output": "PID: 5100\nImage: C:\\Users\\mori\\AppData\\Local\\Temp\\dns-helper.exe\nCommand line: C:\\Users\\mori\\AppData\\Local\\Temp\\dns-helper.exe \nParent: services.exe (800)",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのPacketやConversation統計を表示します。所有ProcessはSocket Toolで照合します。",
+      "output": "File: flow-before-0910.pcap\n09:09:10 192.0.2.25:52400 -> 203.0.113.53:53 DNS over TCP query A a8f29e77b1c44d92.part1.metrics-out.example\n09:09:11 same stream query A 7d913c44a129bb01.part2.metrics-out.example\n09:09:12 same stream query A 8ca10eef51db0407.part3.metrics-out.example",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "server",
+      "name": "Approved Servers",
+      "content": "全業務ProcessはResolver 192.0.2.53のみ利用。dns-helper.exeというProcess・metrics-out.exampleへの業務Queryは登録なし。指定外ResolverへのDNS接続は禁止。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "tcp",
+    "pe",
+    "flow",
+    "server"
+  ],
+  "explanation": "台帳にないProcessが指定外Resolverへ特徴的なDNS Queryを繰り返し、組織のDNS利用方針に反するため遮断します。長い名前だけから情報漏洩を断定しません。",
+  "topic": "Queryの内容とProcess・Resolver方針を照合する",
+  "summary": "Queryの内容とProcess・Resolver方針を照合する",
+  "learning_objectives": [
+    "Queryの内容とProcess・Resolver方針を照合する"
+  ],
+  "decision_context": "before_connection",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "evidence_alternatives": {
+    "flow": {
+      "label": "DNS Queryの観測",
+      "any_of": [
+        "capture"
+      ]
+    }
+  }
+}

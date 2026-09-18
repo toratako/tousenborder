@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "PROC-LINUX-CRON-JOB",
+  "category": "process",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "定例crontabの保守Job",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "rotate-reports",
+    "PID": 4200,
+    "User": "reports",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "cron",
+      "name": "crontab",
+      "description": "選択PIDの実効Userのcrontabを表示します。User選択は教材のラッパーで、起動原因の断定には別の観測も必要です。",
+      "output": "crontab -u reports -l\n10 9 * * * /opt/reports/rotate-reports --days 30",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / cron・cronie等のcrontab実装",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "job",
+      "name": "承認済みJob",
+      "content": "reports / 毎日09:10 / /opt/reports/rotate-reports --days 30 / JOB-503。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "cron",
+    "job"
+  ],
+  "explanation": "Userのcrontabにある起動時刻・Script・引数が承認済みの帳票整理Jobと一致するため継続を許可します。cron登録そのものは不正の根拠ではありません。",
+  "topic": "crontabのScheduleとJob承認を照合する",
+  "summary": "crontabのScheduleとJob承認を照合する",
+  "learning_objectives": [
+    "crontabのScheduleとJob承認を照合する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

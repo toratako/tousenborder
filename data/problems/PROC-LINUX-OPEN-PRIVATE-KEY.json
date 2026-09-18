@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "PROC-LINUX-OPEN-PRIVATE-KEY",
+  "category": "process",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "業務外の秘密鍵を開くProcess",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "thumbnail-worker",
+    "PID": 4200,
+    "User": "media",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "lsof",
+      "name": "lsof",
+      "description": "選択PIDが開いているFile・FDを確認します。",
+      "output": "COMMAND PID USER FD TYPE NAME\nthumbnail-worker 4200 media txt REG /opt/media/thumbnail-worker\nthumbnail-worker 4200 media 7r REG /root/.ssh/id_ed25519",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / lsof",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "service",
+      "name": "Service構成台帳",
+      "content": "thumbnail-workerは/srv/media以下の画像だけを扱う。秘密鍵へのアクセスは業務上不要で、管理設定でも禁止。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "lsof",
+    "service"
+  ],
+  "explanation": "thumbnail-workerがrootのSSH秘密鍵を開いており、画像ディレクトリだけを扱う仕様から外れるため停止します。lsofで分かるのはFileを開いている事実で、送信の証明ではありません。",
+  "topic": "lsofのOpen Fileを処理権限・用途と比較する",
+  "summary": "lsofのOpen Fileを処理権限・用途と比較する",
+  "learning_objectives": [
+    "lsofのOpen Fileを処理権限・用途と比較する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

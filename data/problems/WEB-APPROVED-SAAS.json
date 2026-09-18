@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "id": "WEB-APPROVED-SAAS",
+  "category": "web",
+  "platform": "windows",
+  "level": "advanced",
+  "ground_truth": "allow",
+  "title": "一覧に追加中の正規SaaS",
+  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "URL": "https://support.aster-services.example/",
+    "URLのHost": "support.aster-services.example",
+    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。"
+  },
+  "initial_information_types": {
+    "URL": "url",
+    "URLのHost": "domain"
+  },
+  "tools": [
+    {
+      "id": "resolve",
+      "name": "Resolve-DnsName",
+      "description": "選択したHostのDNSレコードを問い合わせます。",
+      "output": "Name: support.aster-services.example\nType: CNAME; NameHost: tenant-412.helpdesk-cloud.example\nType: A; IPAddress: 198.51.100.63; TTL: 300",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのHost",
+      "platform_note": "Windows / PowerShell DnsClient",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "解決先IP",
+          "value": "198.51.100.63",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "nslookup",
+      "name": "nslookup",
+      "description": "選択したHostのDNS応答を表示します。",
+      "output": "Server: 192.0.2.53\nName: tenant-412.helpdesk-cloud.example\nAddress: 198.51.100.63\nAliases: support.aster-services.example",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのHost",
+      "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "解決先IP",
+          "value": "198.51.100.63",
+          "data_type": "ip"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "rdap",
+      "name": "RDAP",
+      "content": {
+        "照会対象Domain": "aster-services.example",
+        "登録日": "2018-04-03",
+        "Registrar": "Example Registrar 1",
+        "Status": "client transfer prohibited",
+        "Registrant Organization": "非公開（redacted）。この応答から所有組織は特定できない。",
+        "注記": "登録日・登録者情報はサイト内容や安全性を保証しない。"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Service / Domain",
+      "content": "現行一覧: helpdesk.aster.example / 週次反映のため2026-08-17時点。"
+    },
+    {
+      "id": "contract",
+      "name": "契約 / Change Reference",
+      "content": "CHG-607 / support.aster-services.exampleを承認 / CNAME=tenant-412.helpdesk-cloud.example / A=198.51.100.63 / 契約HD-412 / 管理担当がTenantのDomain紐付け完了を08:30に確認。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "dns",
+    "official",
+    "contract"
+  ],
+  "explanation": "通常のDomain一覧への反映は未完了ですが、変更承認と契約TenantへのCNAMEが一致するためアクセスを許可します。CNAMEだけで所有権を判断したわけではありません。",
+  "topic": "Domain一覧の不足を契約・変更承認で補う",
+  "summary": "Domain一覧の不足を契約・変更承認で補う",
+  "learning_objectives": [
+    "Domain一覧の不足を契約・変更承認で補う"
+  ],
+  "decision_context": "before_access",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.icann.org/rdap"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "evidence_alternatives": {
+    "dns": {
+      "label": "DNSのCNAME・A",
+      "any_of": [
+        "resolve",
+        "nslookup"
+      ]
+    }
+  }
+}

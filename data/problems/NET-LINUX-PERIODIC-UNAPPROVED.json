@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "id": "NET-LINUX-PERIODIC-UNAPPROVED",
+  "category": "network",
+  "platform": "linux",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "周期通信と実行元の不一致",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "接続ID": "CONNECT-701",
+    "PID": 5100,
+    "Process表示名": "cache-agent",
+    "Remote IP": "203.0.113.102",
+    "Remote Port": 8443,
+    "Protocol": "TCP",
+    "端末": "192.0.2.30",
+    "保留中のLocal Port": 52410,
+    "要求時刻": "2026-08-18 09:10:00",
+    "保存PCAP": "flow-before-0910.pcap",
+    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "Remote IP": "ip",
+    "保存PCAP": "pcap"
+  },
+  "tools": [
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのSocket・相手IP・Portを確認します。",
+      "output": "ESTAB 0 0 192.0.2.30:52400 203.0.113.102:8443 users:((\"cache-agent\",pid=5100,fd=5))",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "203.0.113.102",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "lsof_i",
+      "name": "lsof -i",
+      "description": "選択PIDが所有するInternet Socketを確認します。",
+      "output": "COMMAND PID USER FD TYPE NAME\ncache-agent 5100 agent 5u IPv4 192.0.2.30:52400->203.0.113.102:8443 (ESTABLISHED)",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / lsof",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "203.0.113.102",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "output": "PID PPID USER COMMAND\n5100 1 agent /tmp/.cache/cache-agent ",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのPacketやConversation統計を表示します。所有ProcessはSocket Toolで照合します。",
+      "output": "File: flow-before-0910.pcap\n09:06:00 192.0.2.30:52400 -> 203.0.113.102:8443 TLS / TCP Len=192 bytes\n09:07:00 192.0.2.30:52400 -> 203.0.113.102:8443 TLS / TCP Len=192 bytes\n09:08:00 192.0.2.30:52400 -> 203.0.113.102:8443 TLS / TCP Len=192 bytes\n09:09:00 192.0.2.30:52400 -> 203.0.113.102:8443 TLS / TCP Len=192 bytes",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "tcpdump",
+      "name": "tcpdump",
+      "description": "保存済みPCAPのPacketを読みます。所有PIDや暗号化本文は分かりません。",
+      "output": "tcpdump -nn -tttt -r flow-before-0910.pcap\n2026-08-18 09:06:00 IP 192.0.2.30.52400 > 203.0.113.102.8443: Flags [P.], seq 1:193, ack 1, win 501, length 192\n2026-08-18 09:07:00 IP 192.0.2.30.52400 > 203.0.113.102.8443: Flags [P.], seq 193:385, ack 1, win 501, length 192\n2026-08-18 09:08:00 IP 192.0.2.30.52400 > 203.0.113.102.8443: Flags [P.], seq 385:577, ack 1, win 501, length 192\n2026-08-18 09:09:00 IP 192.0.2.30.52400 > 203.0.113.102.8443: Flags [P.], seq 577:769, ack 1, win 501, length 192",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Linux / tcpdump",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "server",
+      "name": "Approved Servers",
+      "content": {
+        "業務Agent": "AsterAgent / /opt/aster/agent",
+        "宛先": "192.0.2.80:443",
+        "cache-agent": "登録なし",
+        "203.0.113.102": "登録なし"
+      }
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    }
+  ],
+  "external_references": [
+    {
+      "id": "ip_rep",
+      "name": "IP Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "IP: 203.0.113.102\n2026-08-18: malicious-infrastructure 11/14 feeds",
+      "accepted_information_types": [
+        "ip"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Remote IP"
+        }
+      ],
+      "input_hint": "Remote IP",
+      "submission_type": "ip",
+      "submission_value": "203.0.113.102",
+      "confidentiality_warning": "IP Addressをサービスへ送信します。PCAPや通信本文は送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
+  ],
+  "required_evidence": [
+    "ps",
+    "lsof_i",
+    "flow",
+    "server",
+    "ip_rep"
+  ],
+  "explanation": "未承認PathのProcessが台帳外の宛先へ周期的に通信し、そのIPにも現行の悪性報告があるため新しい接続を遮断します。周期性だけでC2とは断定しません。",
+  "topic": "周期・Process・宛先・評判を組み合わせる",
+  "summary": "周期・Process・宛先・評判を組み合わせる",
+  "learning_objectives": [
+    "周期・Process・宛先・評判を組み合わせる"
+  ],
+  "decision_context": "before_connection",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "evidence_alternatives": {
+    "flow": {
+      "label": "直前の周期Flow",
+      "any_of": [
+        "capture",
+        "tcpdump"
+      ]
+    }
+  }
+}

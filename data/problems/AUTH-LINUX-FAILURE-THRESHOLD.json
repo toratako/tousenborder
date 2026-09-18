@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-LINUX-FAILURE-THRESHOLD",
+  "category": "account",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "SSH失敗のSource閾値",
+  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "要求ID": "AUTH-901",
+    "User": "ops-mori",
+    "Source IP": "203.0.113.151",
+    "要求時刻": "2026-08-18 09:10:00",
+    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "認証方式": "SSH password",
+    "Gatewayの鍵検証": "対象外 / Password認証要求",
+    "GatewayのMFA": "未実施"
+  },
+  "initial_information_types": {
+    "User": "username",
+    "Source IP": "ip"
+  },
+  "tools": [
+    {
+      "id": "journal",
+      "name": "journalctl",
+      "description": "今回の要求より前のsshd記録を確認します。集計は保存Logからの抽出表示です。",
+      "output": "2026-08-18T09:00:00+09:00 server sshd[3100]: Failed password for ops-mori from 203.0.113.151 port 53000 ssh2\n2026-08-18T09:09:40+09:00 server sshd[3220]: Failed password for ops-mori from 203.0.113.151 port 53120 ssh2\n上記区間の同一Source・UserのFailed password行: 120件（保存Logの集計）。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "User",
+      "platform_note": "Linux / systemd",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "policy",
+      "name": "User / Account Policy",
+      "content": "10分で同一Sourceから20回以上の認証失敗があれば15分間一時遮断。再認証方法の変更だけでは解除しない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "journal",
+    "policy"
+  ],
+  "explanation": "直前の同一SourceからのSSH認証失敗が一時遮断の閾値を超えているため今回の要求を遮断します。今回のSessionが成立したとは扱いません。",
+  "topic": "journalctlの直前履歴を認証方針と比較する",
+  "summary": "journalctlの直前履歴を認証方針と比較する",
+  "learning_objectives": [
+    "journalctlの直前履歴を認証方針と比較する"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

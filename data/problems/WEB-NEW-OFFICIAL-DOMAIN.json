@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "id": "WEB-NEW-OFFICIAL-DOMAIN",
+  "category": "web",
+  "platform": "linux",
+  "level": "advanced",
+  "ground_truth": "allow",
+  "title": "新規登録された公式Domain",
+  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "URL": "https://aster-learning.example/",
+    "URLのHost": "aster-learning.example",
+    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。"
+  },
+  "initial_information_types": {
+    "URL": "url",
+    "URLのHost": "domain"
+  },
+  "tools": [
+    {
+      "id": "dig",
+      "name": "dig",
+      "description": "選択したHostのDNSレコードとTTLを表示します。",
+      "output": ";; ANSWER SECTION:\naster-learning.example. 300 IN A 198.51.100.62",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのHost",
+      "platform_note": "Linux / BIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "解決先IP",
+          "value": "198.51.100.62",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "nslookup",
+      "name": "nslookup",
+      "description": "選択したHostのDNS応答を表示します。",
+      "output": "Server: 192.0.2.53\nName: aster-learning.example\nAddress: 198.51.100.62\n",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのHost",
+      "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "解決先IP",
+          "value": "198.51.100.62",
+          "data_type": "ip"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "rdap",
+      "name": "RDAP",
+      "content": {
+        "照会対象Domain": "aster-learning.example",
+        "登録日": "2026-08-16",
+        "Registrar": "Example Registrar 1",
+        "Status": "client transfer prohibited",
+        "Registrant Organization": "非公開（redacted）。この応答から所有組織は特定できない。",
+        "注記": "登録日・登録者情報はサイト内容や安全性を保証しない。"
+      }
+    },
+    {
+      "id": "change",
+      "name": "Release / Change Reference",
+      "content": "CHG-606 / 旧training.aster.exampleからaster-learning.exampleへ公開教材を移行 / 切替2026-08-18 08:00 / A=198.51.100.62 / 社内の承認済み広報記録。認証不要。"
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    }
+  ],
+  "external_references": [
+    {
+      "id": "domain_rep",
+      "name": "Domain Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "Domain: aster-learning.example\nNo record / submissions: 0",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのHost",
+      "submission_type": "domain",
+      "submission_value": "aster-learning.example",
+      "confidentiality_warning": "Domain名のみを送信します。URLのPath・Queryは送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
+  ],
+  "required_evidence": [
+    "dns",
+    "change",
+    "rdap"
+  ],
+  "explanation": "登録日は新しいものの、承認済み移行通知・DNS・接続先が一致するため公開ページへのアクセスを許可します。RDAPで非公開の登録組織を推測していません。",
+  "topic": "新規Domainを公式変更記録で検証する",
+  "summary": "新規Domainを公式変更記録で検証する",
+  "learning_objectives": [
+    "新規Domainを公式変更記録で検証する"
+  ],
+  "decision_context": "before_access",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.icann.org/rdap"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "evidence_alternatives": {
+    "dns": {
+      "label": "DNSの解決先",
+      "any_of": [
+        "dig",
+        "nslookup"
+      ]
+    }
+  }
+}

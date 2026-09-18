@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "id": "NET-LINUX-DNS-ANOMALY",
+  "category": "network",
+  "platform": "linux",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "Processと結び付くDNSの反復",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "接続ID": "CONNECT-701",
+    "PID": 5100,
+    "Process表示名": "dns-helper",
+    "Remote IP": "203.0.113.53",
+    "Remote Port": 53,
+    "Protocol": "TCP",
+    "端末": "192.0.2.30",
+    "保留中のLocal Port": 52410,
+    "要求時刻": "2026-08-18 09:10:00",
+    "保存PCAP": "flow-before-0910.pcap",
+    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "Remote IP": "ip",
+    "保存PCAP": "pcap"
+  },
+  "tools": [
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのSocket・相手IP・Portを確認します。",
+      "output": "ESTAB 0 0 192.0.2.30:52400 203.0.113.53:53 users:((\"dns-helper\",pid=5100,fd=5))",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "203.0.113.53",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "lsof_i",
+      "name": "lsof -i",
+      "description": "選択PIDが所有するInternet Socketを確認します。",
+      "output": "COMMAND PID USER FD TYPE NAME\ndns-helper 5100 agent 5u IPv4 192.0.2.30:52400->203.0.113.53:53 (ESTABLISHED)",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / lsof",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "203.0.113.53",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "output": "PID PPID USER COMMAND\n5100 1 agent /tmp/dns-helper ",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのPacketやConversation統計を表示します。所有ProcessはSocket Toolで照合します。",
+      "output": "File: flow-before-0910.pcap\n09:09:10 192.0.2.30:52400 -> 203.0.113.53:53 DNS over TCP query A a8f29e77b1c44d92.part1.metrics-out.example\n09:09:11 same stream query A 7d913c44a129bb01.part2.metrics-out.example\n09:09:12 same stream query A 8ca10eef51db0407.part3.metrics-out.example",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "tcpdump",
+      "name": "tcpdump",
+      "description": "保存済みPCAPのPacketを読みます。所有PIDや暗号化本文は分かりません。",
+      "output": "tcpdump -nn -tttt -r flow-before-0910.pcap\n2026-08-18 09:09:10 IP 192.0.2.30.52400 > 203.0.113.53.53: 5301+ A? a8f29e77b1c44d92.part1.metrics-out.example. (75)\n2026-08-18 09:09:11 IP 192.0.2.30.52400 > 203.0.113.53.53: 5302+ A? 7d913c44a129bb01.part2.metrics-out.example. (75)\n2026-08-18 09:09:12 IP 192.0.2.30.52400 > 203.0.113.53.53: 5303+ A? 8ca10eef51db0407.part3.metrics-out.example. (75)",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Linux / tcpdump",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "server",
+      "name": "Approved Servers",
+      "content": "全業務ProcessはResolver 192.0.2.53のみ利用。dns-helperというProcess・metrics-out.exampleへの業務Queryは登録なし。指定外ResolverへのDNS接続は禁止。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "lsof_i",
+    "ps",
+    "flow",
+    "server"
+  ],
+  "explanation": "台帳にないProcessが指定外Resolverへ特徴的なDNS Queryを繰り返し、組織のDNS利用方針に反するため遮断します。長い名前だけから情報漏洩を断定しません。",
+  "topic": "Queryの内容とProcess・Resolver方針を照合する",
+  "summary": "Queryの内容とProcess・Resolver方針を照合する",
+  "learning_objectives": [
+    "Queryの内容とProcess・Resolver方針を照合する"
+  ],
+  "decision_context": "before_connection",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "evidence_alternatives": {
+    "flow": {
+      "label": "DNS Queryの観測",
+      "any_of": [
+        "capture",
+        "tcpdump"
+      ]
+    }
+  }
+}

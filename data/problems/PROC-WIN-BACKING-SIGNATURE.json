@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "PROC-WIN-BACKING-SIGNATURE",
+  "category": "process",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "実行中Imageの署名照合",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "print-agent.exe",
+    "PID": 4200,
+    "User": "ASTER\\svc_print",
+    "採取時点": "2026-08-18 09:10 / 起動済み",
+    "端末管理記録": "Print Agent 6.1 / Software Center配布 / CHG-440"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "sig",
+      "name": "Sigcheck",
+      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "output": "PID 4200 のBacking Executable: C:\\Program Files\\AsterPrint\\print-agent.exe\nVerified: Signed\nPublisher: Aster Devices Ltd.",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "publisher",
+      "name": "Trusted Publisher",
+      "content": "Print Agent 6.1 / Publisher=Aster Devices Ltd. / C:\\Program Files\\AsterPrint\\print-agent.exe / ASTER\\svc_print / Signedであること。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "sig",
+    "publisher"
+  ],
+  "explanation": "PIDに対応する実行Imageの署名・Publisher・配置が台帳と一致し、管理されたPrint Agentの継続条件を満たすため許可します。",
+  "topic": "PIDからBacking Executableの署名を直接確認する",
+  "summary": "PIDからBacking Executableの署名を直接確認する",
+  "learning_objectives": [
+    "PIDからBacking Executableの署名を直接確認する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

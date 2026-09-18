@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "id": "PROC-WIN-HIGH-CPU",
+  "category": "process",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "高CPUの動画変換",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "video-encoder.exe",
+    "PID": 4200,
+    "User": "ASTER\\mori",
+    "採取時点": "2026-08-18 09:10 / 起動済み",
+    "端末": "ENC-04",
+    "起動依頼": "動画課から08:50に登録されたジョブ ENC-188"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "task",
+      "name": "Task Manager",
+      "description": "選択PIDのUser・CPU・Memory使用量を確認します。",
+      "output": "Name: video-encoder.exe\nPID: 4200\nUser: ASTER\\mori\nCPU: 96%\nMemory: 64 MiB",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows標準",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "job",
+      "name": "承認済みJob",
+      "content": "ENC-188 / ENC-04 / mori / video-encoder.exe / 08:50–10:00 / 動画変換中はCPU 90–100%を想定。管理配布済み。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "task",
+    "job"
+  ],
+  "explanation": "高CPU使用率は申請済みの動画変換時間帯・専用端末・Processに一致するため継続を許可します。CPU使用率だけは悪性根拠になりません。",
+  "topic": "Resource使用量を業務の予定と照合する",
+  "summary": "Resource使用量を業務の予定と照合する",
+  "learning_objectives": [
+    "Resource使用量を業務の予定と照合する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}
