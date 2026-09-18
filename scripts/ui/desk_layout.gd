@@ -133,7 +133,7 @@ static func build_start_screen(desk) -> void:
 	desk.license_button.pressed.connect(desk._show_licenses)
 
 static func build_tools(desk) -> void:
-	desk.tool_panel = Chrome.panel(desk.workspace, Rect2(996, 74, 268, 624), Color("101e32"), Color("34556f"))
+	desk.tool_panel = Chrome.panel(desk.workspace, Rect2(996, 74, 268, 710), Color("101e32"))
 	desk.tool_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	Chrome.label(desk.tool_panel, Rect2(16, 12, 180, 28), "調査", PAPER, 18)
 	var scroll := ScrollContainer.new()
@@ -143,7 +143,7 @@ static func build_tools(desk) -> void:
 	desk.tool_panel.add_child(scroll)
 	var rack := VBoxContainer.new()
 	rack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	rack.add_theme_constant_override("separation", 8)
+	rack.add_theme_constant_override("separation", 4)
 	scroll.add_child(rack)
 	desk.tool_message = Chrome.label(desk.tool_panel, Rect2(14, 560, 240, 52), "", PAPER, 12)
 	desk.tool_message.max_lines_visible = 4
@@ -308,15 +308,28 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 		var entries := available.filter(func(tool): return tool.get("group", "tools") == group)
 		if entries.is_empty():
 			continue
+		if desk.catalog.resource_groups[group].kind == "external_references":
+			var gap := MarginContainer.new()
+			gap.add_theme_constant_override("margin_top", 14)
+			gap.add_theme_constant_override("margin_bottom", 2)
+			desk.tool_rack.add_child(gap)
+			var divider := HSeparator.new()
+			var line := StyleBoxLine.new()
+			line.color = Color("34556f")
+			line.thickness = 1
+			divider.add_theme_stylebox_override("separator", line)
+			gap.add_child(divider)
 		var heading := Label.new()
 		heading.text = "外部照会" if desk.catalog.resource_groups[group].kind == "external_references" else desk.catalog.resource_groups[group].label
-		heading.add_theme_font_size_override("font_size", 14)
+		heading.add_theme_font_size_override("font_size", 13)
+		heading.custom_minimum_size.y = 32
+		heading.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 		desk.tool_rack.add_child(heading)
 		for tool in entries:
-			var button := Chrome.button(desk.tool_rack, Rect2(0, 0, 240, 78), tool.label, PAPER)
+			var button := Chrome.button(desk.tool_rack, Rect2(0, 0, 240, 64), tool.label, PAPER)
 			button.set_script(preload("res://scripts/ui/tool_input.gd"))
 			button.tool = tool
-			button.custom_minimum_size = Vector2(0, 78)
+			button.custom_minimum_size = Vector2(0, 64)
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			button.tooltip_text = tool.description
 			if desk.catalog.resource_groups[group].kind == "external_references":
@@ -329,7 +342,7 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 static func fit_tools(desk) -> void:
 	var message_height: float = desk.tool_message.get_minimum_size().y if not desk.tool_message.text.is_empty() else 0.0
 	var footer := 12.0 + (message_height + 10.0 if message_height > 0 else 0.0)
-	desk.tool_panel.size.y = desk.stamp_rack.position.y - desk.tool_panel.position.y - 12.0
+	desk.tool_panel.size.y = desk.workspace.size.y - desk.tool_panel.position.y - 16.0
 	desk.tool_scroll.size.y = maxf(0.0, desk.tool_panel.size.y - 50.0 - footer)
 	desk.tool_message.tooltip_text = desk.tool_message.text
 	desk.tool_message.position.y = 50.0 + desk.tool_scroll.size.y + 10.0

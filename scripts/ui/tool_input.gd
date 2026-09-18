@@ -1,5 +1,6 @@
 class_name ToolInput
 extends Button
+const Chrome = preload("res://scripts/ui/cyber_theme.gd")
 
 signal information_dropped(tool: Dictionary, information: Dictionary)
 var tool: Dictionary
@@ -17,13 +18,27 @@ var hover_drop_ready := false:
 			hover_drop_ready = value
 			queue_redraw()
 var reviewed := false
+var reference_icon: TextureRect
 
 func setup_presentation() -> void:
 	base_tooltip = tooltip_text
 	text = ""
+	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color("19394d") if state in ["hover", "pressed"] else _resting_color()
+		if state == "focus":
+			style.bg_color = Color.TRANSPARENT
+		style.set_corner_radius_all(4)
+		if state == "focus":
+			style.border_color = Color("e4f5ff")
+			style.border_width_left = 2
+		add_theme_stylebox_override(state, style)
 	heading = Label.new()
-	heading.position = Vector2(12, 6)
-	heading.add_theme_font_size_override("font_size", 15)
+	var is_reference: bool = tool.get("resource_kind") == "references"
+	if is_reference:
+		reference_icon = Chrome.icon(self, Rect2(10, 11, 22, 22), "res://assets/icons/document.svg")
+	heading.position = Vector2(40, 10) if is_reference else Vector2(12, 6)
+	heading.add_theme_font_size_override("font_size", 15 if is_reference else 16)
 	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	heading.max_lines_visible = 2
 	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -35,6 +50,7 @@ func setup_presentation() -> void:
 	hint.add_theme_font_size_override("font_size", 12)
 	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	hint.visible = not is_reference
 	add_child(hint)
 	resized.connect(_layout_labels)
 	heading.minimum_size_changed.connect(_layout_labels)
@@ -44,10 +60,13 @@ func setup_presentation() -> void:
 	update_input({})
 
 func _layout_labels() -> void:
-	heading.size = Vector2(size.x - 30, 44)
+	heading.size = Vector2(size.x - heading.position.x - 22, 0)
 	hint.size = Vector2(size.x - 24, 20)
-	hint.position.y = maxf(53.0, heading.get_rect().end.y + 4.0)
-	custom_minimum_size.y = maxf(78.0, hint.get_rect().end.y + 6.0)
+	hint.position.y = heading.get_rect().end.y + 4.0
+	custom_minimum_size.y = maxf(44.0, heading.get_rect().end.y + 10.0) if not hint.visible else maxf(64.0, hint.get_rect().end.y + 8.0)
+
+func _resting_color() -> Color:
+	return Color("19394d", 0.55) if tool.get("resource_kind") == "tools" else Color.TRANSPARENT
 
 func update_input(input: Dictionary) -> void:
 	selected = input.duplicate(true)
@@ -58,7 +77,9 @@ func update_input(input: Dictionary) -> void:
 	var color := Color("e4f5ff")
 	if tool.get("resource_kind", "") == "references":
 		hint.text = "確認済み · クリックで再表示" if reviewed else "未読 · クリックで読む"
-		color = Color("57edc2") if reviewed else color
+	elif tool.get("resource_kind", "") == "external_references":
+		hint.text = "送信：" + Information.input_hint(tool) + (" →" if compatible else "")
+		color = Color("57edc2") if compatible else color
 	elif compatible:
 		hint.text = "この情報を調べる →"
 		color = Color("57edc2")
@@ -70,23 +91,32 @@ func update_input(input: Dictionary) -> void:
 	if not input.is_empty() and not compatible and not tool.accepted_information_types.is_empty():
 		tooltip_text += "\n選択した情報は、このToolの調査対象に対応していません。"
 	heading.add_theme_color_override("font_color", color)
-	hint.add_theme_color_override("font_color", color)
+	hint.add_theme_color_override("font_color", color if compatible else Color("b0c8da"))
 	var style := get_theme_stylebox("normal").duplicate() as StyleBoxFlat
-	style.bg_color = Color("164255") if compatible else Color("101e32")
-	style.border_color = Color("57e4f2") if compatible else Color("34556f")
-	style.set_corner_radius_all(5)
-	style.shadow_color = Color(0, 0, 0, 0.3)
-	style.shadow_size = 3
-	style.shadow_offset = Vector2(0, 3)
+	style.bg_color = Color("164255") if compatible else _resting_color()
 	add_theme_stylebox_override("normal", style)
 	queue_redraw()
 
 func _draw() -> void:
 	if not is_instance_valid(heading):
 		return
-	draw_circle(Vector2(size.x - 12, 12), 4, Color("57edc2") if ready_for_input or drop_ready or hover_drop_ready else Color("29495f"))
 	if drop_ready or hover_drop_ready:
-		draw_rect(Rect2(Vector2(2, 2), size - Vector2(4, 4)), Color("57edc2"), false, 3)
+		draw_style_box(_drop_style(), Rect2(Vector2.ZERO, size))
+	if ready_for_input or drop_ready or hover_drop_ready:
+		draw_line(Vector2(1, 10), Vector2(1, size.y - 10), Color("57edc2"), 2)
+	elif reviewed:
+		var point := Vector2(size.x - 12, 22)
+		draw_polyline(PackedVector2Array([point + Vector2(-4, 0), point + Vector2(-1, 3), point + Vector2(5, -4)]), Color("57edc2"), 1.5, true)
+	elif tool.get("resource_kind") == "external_references":
+		var point := Vector2(size.x - 12, 18)
+		draw_line(point + Vector2(-4, 4), point + Vector2(4, -4), Color("b0c8da"), 1.5, true)
+		draw_polyline(PackedVector2Array([point + Vector2(-3, -4), point + Vector2(4, -4), point + Vector2(4, 3)]), Color("b0c8da"), 1.5, true)
+
+func _drop_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("164255")
+	style.set_corner_radius_all(4)
+	return style
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_BEGIN and is_instance_valid(hint):

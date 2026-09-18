@@ -18,7 +18,8 @@ func _run() -> void:
 	await _settle()
 	var panel_height: float = desk.tool_panel.size.y
 	var scroll_height: float = desk.tool_scroll.size.y
-	assert(desk.tool_panel.position.y + panel_height < desk.stamp_rack.position.y)
+	assert(desk.tool_panel.get_rect().end.y <= desk.workspace.size.y)
+	assert(not desk.tool_panel.get_global_rect().intersects(desk.stamp_rack.get_global_rect()))
 	assert(desk.tool_scroll.size.y >= desk.tool_rack.get_combined_minimum_size().y)
 	desk.tool_message.text = "Select a compatible information item. ".repeat(20)
 	await _settle()
@@ -30,8 +31,10 @@ func _run() -> void:
 	assert(is_equal_approx(desk.tool_scroll.size.y, scroll_height))
 	var dense_cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-WIN-ADVANCED-001")
 	desk.shift.start(dense_cases)
+	for button in desk.tool_buttons:
+		button.heading.text = (button.tool.label + " Extended description ").repeat(3)
 	await _settle()
-	assert(desk.tool_panel.position.y + desk.tool_panel.size.y < desk.stamp_rack.position.y)
+	assert(desk.tool_panel.get_rect().end.y <= desk.workspace.size.y)
 	assert(desk.tool_scroll.get_v_scroll_bar().max_value > desk.tool_scroll.get_v_scroll_bar().page)
 	var short_card = desk.add_information_card({"category": "analysis", "information": [{"label": "Status", "value": "OK"}]})
 	var long_card = desk.add_information_card({"category": "analysis", "information": [{"label": "Result", "value": "Long wrapped output with details. ".repeat(200)}]})

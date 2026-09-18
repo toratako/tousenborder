@@ -18,8 +18,10 @@ func _run() -> void:
 			headings.append(child.text)
 	assert(headings == ["Reference"], "空のTool・外部照会の見出しは出さない")
 	var button: ToolInput = desk.tool_buttons[0]
-	assert(button.heading.size.x > 180 and button.hint.size.x > 180)
-	assert(button.heading.get_rect().end.y <= button.hint.position.y)
+	assert(button.heading.size.x > 150)
+	assert(is_instance_valid(button.reference_icon) and not button.hint.visible)
+	assert(button.reference_icon.get_rect().end.x < button.heading.position.x)
+	assert(button.get_theme_stylebox("normal").bg_color.a == 0)
 	assert(button.hint.text.begins_with("未読"))
 	button.pressed.emit()
 	assert(desk.tool_panel.visible)
