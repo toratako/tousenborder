@@ -31,6 +31,7 @@ static func build_workspace(desk) -> void:
 	desk.countdown = Chrome.label(desk.workspace, Rect2(584, 12, 102, 46), "--:--", PAPER, 26)
 	desk.countdown_state = Chrome.label(desk.workspace, Rect2(690, 12, 50, 46), "", MUTED, 12)
 	desk.status = Chrome.label(desk.workspace, Rect2(784, 12, 192, 46), "準備中", PAPER, 15)
+	desk.status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	for label in [desk.countdown, desk.countdown_state, desk.status]:
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	desk.card_layer = Control.new()

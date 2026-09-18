@@ -174,12 +174,18 @@ func _close_menu() -> void:
 	menu_previous_focus = null
 
 func _refresh_countdown() -> void:
+	var unlimited := not shift.cases.is_empty() and shift.time_limit_seconds == 0
+	countdown.size.x = 152 if unlimited else 102
+	countdown.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER if unlimited else HORIZONTAL_ALIGNMENT_LEFT
+	countdown.add_theme_font_size_override("font_size", 20 if unlimited else 26)
+	countdown_state.visible = not unlimited
 	if shift.cases.is_empty():
 		countdown.text = "--:--"
+		countdown_state.text = ""
 		return
-	if shift.time_limit_seconds == 0:
-		countdown.text = "--:--"
-		countdown_state.text = "無制限"
+	if unlimited:
+		countdown.text = "無制限"
+		countdown_state.text = ""
 		countdown.add_theme_color_override("font_color", MUTED)
 		return
 	var seconds := ceili(shift.remaining_seconds)
@@ -455,12 +461,11 @@ func _finish_external(submit: bool) -> void:
 func _refresh() -> void:
 	_refresh_countdown()
 	audit_overlay.hide()
+	status.text = "問題: %d/%d" % [mini(shift.index + 1, shift.cases.size()), shift.cases.size()]
 	if shift.finished():
-		status.text = "勤務終了 / 全%02d件" % shift.cases.size()
 		_show_summary()
 		return
 	var item := shift.current()
-	status.text = "調査 %s / %02d・%02d件" % [catalog.platform_label(ToolRunner.investigation_environment(item)), mini(shift.index + 1, shift.cases.size()), shift.cases.size()]
 	if displayed_case != item.id:
 		_display_case(item)
 	_display_observations(item)

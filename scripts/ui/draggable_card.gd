@@ -159,13 +159,11 @@ func _build_stamp_plate() -> void:
 	stamp_plate = Panel.new()
 	stamp_plate.mouse_filter = Control.MOUSE_FILTER_PASS
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("091b2b")
-	style.border_color = Color("57e4f2")
-	style.set_border_width_all(1)
+	style.bg_color = Color.TRANSPARENT
 	stamp_plate.add_theme_stylebox_override("panel", style)
 	add_child(stamp_plate)
+	stamp_plate.hide()
 	stamp_mark = Label.new()
-	stamp_mark.text = "判定印"
 	stamp_mark.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stamp_mark.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	stamp_mark.add_theme_font_size_override("font_size", 16)
@@ -240,7 +238,9 @@ func _layout() -> void:
 		title_label.size = Vector2(title_width, 32)
 		title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	scroll.position = Vector2(12, 58 if target else 82)
-	scroll.size = Vector2(size.x - 24, size.y - (156 if target else 116))
+	scroll.size = Vector2(size.x - 24, size.y - 116)
+	if target:
+		scroll.size.y = size.y - (138 if imprint else 70)
 	if card_data.get("category") == "rule":
 		scroll.position.y = 58
 		scroll.size.y = size.y - 70
@@ -257,7 +257,7 @@ func _layout() -> void:
 func _update_scroll_hint() -> void:
 	if not is_instance_valid(scroll_hint):
 		return
-	if card_data.get("category") == "rule":
+	if card_data.get("category") in ["rule", "target"]:
 		scroll_hint.hide()
 		return
 	var bar := scroll.get_v_scroll_bar()
@@ -349,6 +349,8 @@ func _draw() -> void:
 
 func show_imprint(caption: String, color: Color) -> void:
 	imprint = true
+	stamp_plate.show()
+	_layout()
 	stamp_mark.text = caption
 	stamp_mark.add_theme_font_size_override("font_size", 30)
 	stamp_mark.add_theme_color_override("font_color", color)
