@@ -136,9 +136,6 @@ static func build_start_screen(desk) -> void:
 	Chrome.label(briefing, Rect2(26, 20, 387, 23), "勤務前の手引き", Color("b0c8da"), 13)
 	Chrome.label(briefing, Rect2(26, 64, 387, 40), "調査 → 判定 → 監査", INK, 24)
 	Chrome.label(briefing, Rect2(26, 120, 387, 180), "01  情報を選択・ドラッグしてToolへ渡す\n\n02  調査結果をReferenceと照合\n       必要なら結果を次のToolへ渡す\n\n03  ALLOW / BLOCKを対象へ押印", INK, 16)
-	Chrome.label(desk.start_screen, Rect2(450, 526, 240, 22), "共通問題の調査OS", MUTED, 13)
-	desk.common_environment_select = selection_option(desk, Vector2(450, 551), [{"id": "windows", "label": "Windows"}, {"id": "linux", "label": "Linux"}], 162)
-	desk.common_environment_select.tooltip_text = "すべての環境・共通のみを選んだ場合の調査OSです。OS固有の問題はそのOSで調査します。"
 	desk.start_button = Chrome.button(desk.start_screen, Rect2(98, 602, 514, 60), "勤務を開始  >", PAPER)
 	desk.start_button.add_theme_font_size_override("font_size", 22)
 	desk.start_button.pressed.connect(desk._start_shift)

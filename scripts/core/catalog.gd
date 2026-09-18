@@ -36,15 +36,14 @@ func tools_for(item: Dictionary) -> Array[Dictionary]:
 func platform_label(id: String) -> String:
 	return platforms.get(id, {}).get("label", id)
 
-func select_cases(level: String = "", category: String = "", platform: String = "", common_environment: String = "windows") -> Array[Dictionary]:
+func select_cases(level: String = "", category: String = "", platform: String = "") -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
-	if common_environment not in ["windows", "linux"]: return result
 	for item in cases:
 		if not level.is_empty() and item.level != level: continue
 		if not category.is_empty() and item.category != category: continue
 		if not platform.is_empty() and item.platform not in [platform, "common"]: continue
 		var selected: Dictionary = item.duplicate(true)
-		selected.investigation_environment = (platform if platform in ["windows", "linux"] else common_environment) if item.platform == "common" else item.platform
+		selected.investigation_environment = ToolRunner.investigation_environment(item)
 		result.append(selected)
 	return result
 

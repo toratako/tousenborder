@@ -59,7 +59,6 @@ var start_button: Button
 var difficulty_select: OptionButton
 var category_select: OptionButton
 var platform_select: OptionButton
-var common_environment_select: OptionButton
 var license_button: Button
 var license_overlay: Panel
 var license_body: RichTextLabel
@@ -83,15 +82,12 @@ var external_skip: Button
 var pending_external: Dictionary = {}
 
 func _selected_cases() -> Array[Dictionary]:
-	return catalog.select_cases(difficulty_select.get_item_metadata(difficulty_select.selected), category_select.get_item_metadata(category_select.selected), platform_select.get_item_metadata(platform_select.selected), common_environment_select.get_item_metadata(common_environment_select.selected))
+	return catalog.select_cases(difficulty_select.get_item_metadata(difficulty_select.selected), category_select.get_item_metadata(category_select.selected), platform_select.get_item_metadata(platform_select.selected))
 
 func _refresh_selection(_index: int = 0) -> void:
 	var count := _selected_cases().size()
 	start_button.tooltip_text = "" if count > 0 else "該当する問題がありません。条件を変更してください。"
 	start_button.disabled = count == 0
-	common_environment_select.disabled = platform_select.get_item_metadata(platform_select.selected) in ["windows", "linux"]
-	if common_environment_select.disabled:
-		common_environment_select.select(0 if platform_select.get_item_metadata(platform_select.selected) == "windows" else 1)
 
 func _ready() -> void:
 	theme = Chrome.create(preload("res://assets/fonts/NotoSansCJK-Regular.ttc"))

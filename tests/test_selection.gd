@@ -13,8 +13,8 @@ func _run() -> void:
 	assert(catalog.select_cases("very_beginner", "process").is_empty())
 	for os in ["windows", "linux"]:
 		var selected := catalog.select_cases("", "", os)
-		assert(selected.all(func(c): return c.platform in [os, "common"] and c.investigation_environment == os))
-	var common := catalog.select_cases("", "", "common", "linux")
+		assert(selected.all(func(c): return c.platform in [os, "common"] and c.investigation_environment == ("linux" if c.platform == "common" else os)))
+	var common := catalog.select_cases("", "", "common")
 	assert(common.all(func(c): return c.platform == "common" and c.investigation_environment == "linux"))
 	var desk = load("res://scenes/main.tscn").instantiate()
 	root.add_child(desk)

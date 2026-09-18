@@ -132,7 +132,7 @@ func _notification(what: int) -> void:
 func _can_drop_data(_position: Vector2, data: Variant) -> bool:
 	if disabled or not data is Dictionary or data.get("kind") != "information" or not data.get("information") is Dictionary:
 		return false
-	return data.information.get("case_id") == case_id and Information.accepts(tool, data.information) and ToolRunner.supports_target(tool, {"investigation_environment": target_environment})
+	return data.information.get("case_id") == case_id and Information.accepts(tool, data.information) and ToolRunner.supports_target(tool, {"platform": target_environment})
 
 func _drop_data(_position: Vector2, data: Variant) -> void:
 	if _can_drop_data(_position, data):

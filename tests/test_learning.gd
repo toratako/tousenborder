@@ -69,10 +69,11 @@ func test_input_contracts(catalog: ContentCatalog) -> void:
 func test_environment_routes(catalog: ContentCatalog) -> void:
 	for os in ["windows", "linux"]:
 		for item in catalog.select_cases("", "", os):
+			var investigation_os: String = "linux" if item.platform == "common" else os
 			var shift := InspectionShift.new()
 			var cases: Array[Dictionary] = [item]
 			shift.start(cases)
-			check(shift.current().investigation_environment == os, "調査OS: " + item.id)
+			check(shift.current().investigation_environment == investigation_os, "調査OS: " + item.id)
 			if item.level != "very_beginner":
 				check(shift.decide(item.ground_truth), "未調査でも判定可能: " + item.id)
 				check(shift.records.back().missing_evidence == item.required_evidence, "未確認証拠を記録: " + item.id)
@@ -80,9 +81,9 @@ func test_environment_routes(catalog: ContentCatalog) -> void:
 				shift.start(cases)
 			var pending := catalog.tools_for(item).filter(func(t): return ToolRunner.supports_target(t, item) and t.resource_kind != "external_references")
 			if item.id == "WEB-BEGINNER-001":
-				# nslookupだけでもDNS証拠になり、Windows/Linuxで出力が切り替わる。
+				# Windowsの出題フィルタでも、共通問題のnslookupはLinux出力になる。
 				pending = pending.filter(func(t): return t.id not in ["dig", "resolve_dnsname"])
-				var unsupported: Dictionary = item.tools.filter(func(t): return t.id == ("dig" if os == "windows" else "resolve_dnsname"))[0]
+				var unsupported: Dictionary = item.tools.filter(func(t): return t.id == "resolve_dnsname")[0]
 				check(not shift.inspect(unsupported).ok, "他OSのDNS Toolを拒否")
 			var progress := true
 			while not pending.is_empty() and progress:
@@ -93,7 +94,7 @@ func test_environment_routes(catalog: ContentCatalog) -> void:
 					var result := shift.inspect(tool, input)
 					check(result.ok, "OS別調査: " + os + "/" + item.id + "/" + tool.id)
 					if tool.id == "nslookup":
-						check(result.output.contains("C:\\> nslookup") if os == "windows" else result.output.contains("$ nslookup") and not result.output.contains("C:\\>"), "nslookup出力OS")
+						check(result.output.contains("C:\\> nslookup") if investigation_os == "windows" else result.output.contains("$ nslookup") and not result.output.contains("C:\\>"), "nslookup出力OS")
 					pending.erase(tool)
 					progress = true
 			check(pending.is_empty() and shift.missing_evidence().is_empty(), "OS別に必要証拠へ到達: " + item.id)
@@ -176,15 +177,15 @@ func _run() -> void:
 	desk.tool_guide_button.pressed.emit()
 	check(desk.tool_guide_tabs.size() > 20 and not desk.tool_guide_body.text.contains("登録されているツールはありません"), "新教材のガイドを表示")
 	desk.tool_guide_close.pressed.emit()
-	# 共通問題だけをLinuxで開始し、表示・ドラッグ・直接呼び出しで同じ制限を使う。
-	for i in range(desk.platform_select.item_count):
-		if desk.platform_select.get_item_metadata(i) == "common": desk.platform_select.select(i)
-	desk.common_environment_select.select(1)
+	# Windowsで絞って開始しても、共通問題はLinuxのTool・入力制限を使う。
+	for selection in [desk.platform_select, desk.category_select, desk.difficulty_select]:
+		var value: String = "windows" if selection == desk.platform_select else ("web" if selection == desk.category_select else "beginner")
+		for i in range(selection.item_count):
+			if selection.get_item_metadata(i) == value: selection.select(i)
 	desk._refresh_selection()
 	desk.start_button.pressed.emit()
-	var linux_web: Dictionary = desk.catalog.select_cases("", "web", "common", "linux").filter(func(c): return c.id == "WEB-BEGINNER-001")[0]
-	var linux_cases: Array[Dictionary] = [linux_web]
-	desk.shift.start(linux_cases)
+	var linux_web: Dictionary = desk.shift.current()
+	check(linux_web.id == "WEB-BEGINNER-001", "画面の選択条件から共通Web問題を開始")
 	check(desk.shift.current().platform == "common" and desk.shift.current().investigation_environment == "linux", "問題OSと調査OSを保持")
 	var windows_tool: Dictionary = linux_web.tools.filter(func(t): return t.id == "resolve_dnsname")[0]
 	var linux_button: ToolInput = desk.tool_buttons.filter(func(b): return b.tool.id == "dig")[0]
@@ -198,7 +199,8 @@ func _run() -> void:
 	check(desk._can_stamp(desk.get_stamp(linux_web.ground_truth).payload()), "必要証拠が揃う前でも押印可能")
 	desk._show_start_screen()
 	desk.platform_select.select(0)
-	desk.common_environment_select.select(0)
+	desk.category_select.select(0)
+	desk.difficulty_select.select(0)
 	desk.start_button.pressed.emit()
 	for item in catalog.cases:
 		check(desk.shift.current().id == item.id, "画面の出題順")

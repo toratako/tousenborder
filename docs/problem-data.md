@@ -72,7 +72,7 @@ ToolとExternal Referenceには `output`、空でない `accepted_information_ty
 | --- | --- |
 | File → SHA-256 → 外部Hash検索、Vendor公開値との照合 | [FILE-LINUX-BEGINNER-002](../data/problems/FILE-LINUX-BEGINNER-002.json) |
 | PID → 実行ScriptのPath → Hash（Process本体と区別） | [PROC-WIN-ADVANCED-001](../data/problems/PROC-WIN-ADVANCED-001.json) |
-| URL → Host → OS別DNS、登録Domain → RDAP | [WEB-BEGINNER-001](../data/problems/WEB-BEGINNER-001.json) |
+| URL → Host → DNS、登録Domain → RDAP | [WEB-BEGINNER-001](../data/problems/WEB-BEGINNER-001.json) |
 | Email内でHeader・添付・URLを調査する追加グループ | [EMAIL-INTERMEDIATE-001](../data/problems/EMAIL-INTERMEDIATE-001.json) |
 
 External Referenceはさらに `submission_type / submission_value / confidentiality_warning / correct_usage / reason` が必須です。`submission_type` は任意の文字列で、型の適合は送信許可を意味しません。利用適否は [送信確認と評価](runtime-flow.md#調査から判定まで)、Hash検索・Upload・URLの扱いは [学習設計](learning-design.md#外部照会の判断) を参照してください。
@@ -80,7 +80,7 @@ External Referenceはさらに `submission_type / submission_value / confidentia
 ## 追加・変更の手順
 
 1. `data/problems/` の近い問題を複製し、新しいID、依頼、初期情報、照合資料、正解と解説を整えます。
-2. 入力参照と必要証拠を結び、対応する調査OSのそれぞれで判断まで到達できるようにします。
+2. 入力参照と必要証拠を結び、問題の調査OS（共通問題はLinux）で判断まで到達できるようにします。
 3. Packの `problems` にパスを追加し、新カテゴリ・追加資料グループがあれば登録します。
 4. 検証して一覧を再生成します。
 

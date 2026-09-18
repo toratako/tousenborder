@@ -3,8 +3,8 @@ extends RefCounted
 ## 検証済みの問題内資料を表示する。外部コマンドやネットワーク通信は実行しない。
 
 static func investigation_environment(target: Dictionary) -> String:
-	var platform: String = target.get("platform", "common")
-	return target.get("investigation_environment", "windows" if platform == "common" else platform)
+	var platform: String = target.platform
+	return "linux" if platform == "common" else platform
 
 static func supports_target(tool: Dictionary, target: Dictionary) -> bool:
 	var environments: Array = tool.get("environments", [])

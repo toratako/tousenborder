@@ -29,7 +29,7 @@ godot --path .
 | `docs/problem-catalog.md`     | 問題JSONから生成する一覧                 |
 | `build/catalog/problems.json` | 自動生成する一覧JSON（Git管理外）        |
 
-形式は1つです。入力条件と必要証拠の確認は常に有効です。JSON Schemaに加え、参照先や各OSでの調査経路を検証します。
+形式は1つです。入力条件と必要証拠の確認は常に有効です。JSON Schemaに加え、参照先や問題の調査OSでの調査経路を検証します。
 
 - [キーと値・作問手順](docs/problem-data.md)
 - [問題一覧](docs/problem-catalog.md)

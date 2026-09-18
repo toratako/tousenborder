@@ -74,25 +74,25 @@ def validate_inputs(item: dict, entries: list[tuple[str, dict]]) -> None:
                 raise ValueError(f"{item['id']}: missing input source {key}")
             if facts[key] not in entry["accepted_information_types"]:
                 raise ValueError(f"{item['id']}: input type mismatch {key}")
-    for os in (["windows", "linux"] if item["platform"] == "common" else [item["platform"]]):
-        available = {"initial_information"}
-        obtained = set(initial)
-        pending = [(kind, e) for kind, e in entries if not e.get("environments") or os in e["environments"]]
-        while pending:
-            ready = [(kind, e) for kind, e in pending if not e.get("input_bindings") or any(
-                (b["source"], b["id"]) in obtained for b in e["input_bindings"]
-            )]
-            if not ready:
-                raise ValueError(f"{item['id']}: unreachable inputs on {os} (missing or cyclic safe-input route)")
-            for kind, entry in ready:
-                if kind != "external_references" and entry.get("correct_usage", True):
-                    available.add(entry["id"])
-                    obtained.update((entry["id"], o["id"]) for o in entry.get("output_information", []) if o.get("tool_input", True))
-                pending.remove((kind, entry))
-        for key in item["required_evidence"]:
-            options = item.get("evidence_alternatives", {}).get(key, {}).get("any_of", [key])
-            if not available.intersection(options):
-                raise ValueError(f"{item['id']}: required evidence unavailable on {os} without external references: {key}")
+    os = "linux" if item["platform"] == "common" else item["platform"]
+    available = {"initial_information"}
+    obtained = set(initial)
+    pending = [(kind, e) for kind, e in entries if not e.get("environments") or os in e["environments"]]
+    while pending:
+        ready = [(kind, e) for kind, e in pending if not e.get("input_bindings") or any(
+            (b["source"], b["id"]) in obtained for b in e["input_bindings"]
+        )]
+        if not ready:
+            raise ValueError(f"{item['id']}: unreachable inputs on {os} (missing or cyclic safe-input route)")
+        for kind, entry in ready:
+            if kind != "external_references" and entry.get("correct_usage", True):
+                available.add(entry["id"])
+                obtained.update((entry["id"], o["id"]) for o in entry.get("output_information", []) if o.get("tool_input", True))
+            pending.remove((kind, entry))
+    for key in item["required_evidence"]:
+        options = item.get("evidence_alternatives", {}).get(key, {}).get("any_of", [key])
+        if not available.intersection(options):
+            raise ValueError(f"{item['id']}: required evidence unavailable on {os} without external references: {key}")
 
 
 def read_json(path: Path):

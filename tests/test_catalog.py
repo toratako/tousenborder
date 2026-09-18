@@ -116,7 +116,9 @@ class CatalogTests(unittest.TestCase):
             next(c for c in self.cases if c["id"] == "WEB-BEGINNER-001")
         )
         item["evidence_alternatives"]["dns_lookup"]["any_of"] = ["dig"]
-        with self.assertRaisesRegex(ValueError, "unavailable on windows"):
+        validate_authoring(item, self.pack)
+        item["evidence_alternatives"]["dns_lookup"]["any_of"] = ["resolve_dnsname"]
+        with self.assertRaisesRegex(ValueError, "unavailable on linux"):
             validate_authoring(item, self.pack)
         item = copy.deepcopy(
             next(c for c in self.cases if c["id"] == "WEB-BEGINNER-001")

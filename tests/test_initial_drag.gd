@@ -46,10 +46,10 @@ func _run() -> void:
 	var os_case := file_case.duplicate(true)
 	for tool in os_case.tools:
 		tool.environments = ["windows"]
-	os_case.investigation_environment = "linux"
+	os_case.platform = "linux"
 	_show_case(desk, os_case)
 	_check_drag(desk.target_card.tokens[1], false)
-	os_case.investigation_environment = "windows"
+	os_case.platform = "windows"
 	_show_case(desk, os_case)
 	_check_drag(desk.target_card.tokens[1], true)
 	for flag in ["draggable", "tool_input"]:

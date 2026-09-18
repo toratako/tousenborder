@@ -56,7 +56,10 @@ func _initialize() -> void:
 	rejected(item, "外部照会を必要証拠にできない")
 	item = raw("WEB-BEGINNER-001")
 	item.required_evidence = ["dig"]
-	rejected(item, "Windowsでは得られない必要証拠")
+	check(ProblemData.normalize(item, catalog, schema).is_empty(), "共通問題はLinuxだけで必要証拠を取得できれば有効")
+	item = raw("WEB-BEGINNER-001")
+	item.required_evidence = ["resolve_dnsname"]
+	rejected(item, "共通問題でLinuxでは得られない必要証拠")
 	item = raw("WEB-BEGINNER-001")
 	var nslookup: Dictionary = item.tools.filter(func(t): return t.id == "nslookup")[0]
 	nslookup.output_by_environment.erase("linux")
