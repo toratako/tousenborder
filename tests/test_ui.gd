@@ -76,6 +76,34 @@ func _run() -> void:
 	assert(desk.tool_buttons.is_empty())
 	assert(not desk.audit_overlay.visible)
 	desk.set_process(false)
+	assert(not desk.rules_overlay.visible)
+	desk.rules_button.grab_focus()
+	desk.rules_button.pressed.emit()
+	assert(desk.rules_overlay.visible and desk.rules_close.has_focus())
+	assert(desk.rules_overlay.mouse_filter == Control.MOUSE_FILTER_STOP)
+	for rule in desk.catalog.rules:
+		assert(desk.rules_body.get_parsed_text().contains(rule.label))
+		assert(desk.rules_body.get_parsed_text().contains(Information.display(rule.value)))
+	var book_time: float = desk.shift.remaining_seconds
+	desk._process(600)
+	assert(desk.shift.remaining_seconds == book_time)
+	for i in range(6):
+		var tab := InputEventKey.new()
+		tab.keycode = KEY_TAB
+		tab.pressed = true
+		Input.parse_input_event(tab)
+		await process_frame
+		assert(root.gui_get_focus_owner() in [desk.rules_close, desk.rules_body])
+	await _escape(true)
+	assert(desk.rules_overlay.visible)
+	await _escape()
+	assert(not desk.rules_overlay.visible and not desk.pause_menu.visible)
+	assert(desk.rules_button.has_focus())
+	desk.rules_button.pressed.emit()
+	desk._show_start_screen()
+	assert(not desk.rules_overlay.visible)
+	desk.start_button.pressed.emit()
+	assert(not desk.rules_overlay.visible)
 	desk._process(12)
 	var paused_time: float = desk.shift.remaining_seconds
 	var paused_log: Array = desk.shift.observations.duplicate(true)
@@ -114,7 +142,7 @@ func _run() -> void:
 	assert(not desk.workspace.visible and desk.start_button.has_focus())
 	desk.start_button.pressed.emit()
 	for i in range(2):
-		assert(desk.target_card.card_data.title == desk.shift.current().title)
+		assert(desk.target_card.title_label.text == "検査対象")
 		assert(desk.target_card.tokens.size() == desk.shift.current().information.size() + 1)
 		assert(not desk.target_card.card_data.has("ground_truth"))
 		var evidence: Array = desk.shift.observations.duplicate(true)

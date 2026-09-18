@@ -19,6 +19,10 @@ func _capture() -> void:
 	var item: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "WEB-ADVANCED-001")[0]
 	var cases: Array[Dictionary] = [item]
 	desk.shift.start(cases)
+	await _save("workspace")
+	desk.rules_button.pressed.emit()
+	await _save("rules")
+	desk.rules_close.pressed.emit()
 	desk._toggle_tools()
 	await _save("tools")
 	var external: Dictionary = desk.catalog.tools_for(item).filter(func(t): return t.id == "urlscan_private")[0]

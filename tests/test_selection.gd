@@ -23,7 +23,7 @@ func _run() -> void:
 		if desk.difficulty_select.get_item_metadata(i) == "beginner":
 			desk.difficulty_select.select(i)
 			desk.difficulty_select.item_selected.emit(i)
-	assert(desk.selection_summary.text.contains(str(catalog.select_cases("beginner").size())))
+	assert(not desk.start_button.disabled)
 	desk.start_button.pressed.emit()
 	assert(desk.shift.current().level == "beginner")
 	desk._show_start_screen()
@@ -31,7 +31,7 @@ func _run() -> void:
 	for i in range(desk.category_select.item_count):
 		if desk.category_select.get_item_metadata(i) == "process": desk.category_select.select(i)
 	desk._refresh_selection()
-	assert(desk.start_button.disabled and desk.selection_summary.text.contains("該当する問題がありません"))
+	assert(desk.start_button.disabled and desk.start_button.tooltip_text.contains("該当する問題がありません"))
 	desk.start_button.pressed.emit()
 	assert(not desk.playing)
 	desk.queue_free()

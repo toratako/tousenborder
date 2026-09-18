@@ -48,12 +48,13 @@ func _run() -> void:
 	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-001")
 	desk.shift.start(cases)
 	assert(desk.playing and not desk.tool_drawer.visible)
-	assert(desk.rule_card.visible and desk.rule_card.position.x > 900)
-	var rules_position: Vector2 = desk.rule_card.position
-	await click(desk.rule_card.close_button.get_global_rect().get_center())
-	assert(not desk.rule_card.visible)
+	assert(not desk.rules_overlay.visible)
 	await click(desk.rules_button.get_global_rect().get_center())
-	assert(desk.rule_card.visible and desk.rule_card.position == rules_position)
+	assert(desk.rules_overlay.visible)
+	await click(desk.tools_toggle.get_global_rect().get_center())
+	assert(not desk.tool_drawer.visible, "book blocks background input")
+	await click(desk.rules_close.get_global_rect().get_center())
+	assert(not desk.rules_overlay.visible and desk.rules_button.has_focus())
 	assert(desk.card_layer.position.y + desk.card_layer.size.y == 800)
 	assert(not desk.has_node("InputTray"))
 	var card: DraggableCard = desk.target_card
@@ -63,6 +64,7 @@ func _run() -> void:
 	assert(card.scroll.position.y == 58)
 	assert(card.request_section.get_child(0).get_child(0).text == "申請内容")
 	assert(card.basic_section.get_child(0).get_child(0).text == "基本情報")
+	assert(card.basic_section.get_child_count() == card.tokens.size())
 	assert(card.tokens[0].get_parent() == card.request_section)
 	for i in range(1, card.tokens.size()):
 		assert(card.tokens[i].get_parent() == card.basic_section)
@@ -71,20 +73,6 @@ func _run() -> void:
 	await drag(grab, grab + Vector2(100, 15))
 	assert(card.position == original, "target stays fixed")
 	assert(card.position == original)
-	# グリップ上からも移動でき、離した後は持ち上げ表現が残らない。
-	var rule_grab: Vector2 = desk.rule_card.header.global_position + Vector2(15, 23)
-	var resting_shadow: int = desk.rule_card.get_theme_stylebox("panel").shadow_size
-	await motion(rule_grab)
-	await button(rule_grab, true)
-	await motion(rule_grab + Vector2(-80, 24), true)
-	assert(desk.rule_card.dragging)
-	assert(desk.rule_card.get_theme_stylebox("panel").shadow_size > resting_shadow)
-	await button(rule_grab + Vector2(-80, 24), false)
-	await process_frame
-	assert(not desk.rule_card.dragging)
-	assert(desk.rule_card.get_theme_stylebox("panel").shadow_size == resting_shadow)
-	assert(desk.rule_card.position.x < 900)
-	desk.rule_card.position = desk.rule_card.home_position
 	await click(desk.tools_toggle.get_global_rect().get_center())
 	assert(desk.tool_drawer.visible)
 	var row: InformationToken = card.tokens[1]
@@ -114,6 +102,19 @@ func _run() -> void:
 	assert(desk.shift.observations.size() == 1 and desk.shift.observations[0].ok)
 	assert(not desk.tool_drawer.visible)
 	assert(desk.cards.back().card_data.category == "analysis")
+	# 調査結果はグリップで移動でき、離すと持ち上げ表現が戻る。
+	var movable_card: DraggableCard = desk.cards.back()
+	var result_grab: Vector2 = movable_card.header.global_position + Vector2(15, 23)
+	var resting_shadow: int = movable_card.get_theme_stylebox("panel").shadow_size
+	await motion(result_grab)
+	await button(result_grab, true)
+	await motion(result_grab + Vector2(80, 24), true)
+	assert(movable_card.dragging)
+	assert(movable_card.get_theme_stylebox("panel").shadow_size > resting_shadow)
+	await button(result_grab + Vector2(80, 24), false)
+	assert(not movable_card.dragging)
+	assert(movable_card.get_theme_stylebox("panel").shadow_size == resting_shadow)
+	assert(movable_card.position != movable_card.home_position)
 	var reference: Dictionary = desk.catalog.tools_for(desk.shift.current()).filter(func(t): return t.resource_kind == "references")[0]
 	desk._inspect(reference)
 	var stamp: StampTool = desk.get_stamp("block")
@@ -130,8 +131,11 @@ func _run() -> void:
 	assert(not card.hover_drop_available)
 	await click(stamp_point)
 	assert(not desk.shift.judged, "click does not judge")
-	await drag(stamp_point, desk.rule_card.header.global_position + Vector2(100, 20))
-	assert(not desk.shift.judged, "rulebook rejects stamp")
+	desk.rules_button.pressed.emit()
+	assert(not desk._can_stamp(stamp.payload()), "book blocks stamping")
+	await drag(stamp_point, card.tokens[1].get_global_rect().get_center())
+	assert(not desk.shift.judged, "book blocks background stamp drag")
+	desk.rules_close.pressed.emit()
 	await drag(stamp_point, Vector2(860, 770))
 	assert(not desk.shift.judged, "desk rejects stamp")
 	var result_card: DraggableCard = desk.cards.back()
@@ -147,7 +151,7 @@ func _run() -> void:
 	assert(desk.shift.finished() and desk.summary_overlay.visible)
 	desk.summary_restart.pressed.emit()
 	await process_frame
-	assert(not desk.tool_drawer.visible and desk.rule_card.visible)
+	assert(not desk.tool_drawer.visible and not desk.rules_overlay.visible)
 	var stale: Dictionary = desk.get_stamp("allow").payload()
 	desk._start_shift()
 	assert(not desk.target_card._can_drop_data(Vector2.ZERO, stale))
@@ -155,5 +159,5 @@ func _run() -> void:
 	assert(not desk.target_card._can_drop_data(Vector2.ZERO, desk.get_stamp("allow").payload()))
 	desk.queue_free()
 	await process_frame
-	print("実操作テスト: ツール開閉・情報D&D・スタンプ移動・誤ドロップ拒否・押印・規則集移動に成功")
+	print("実操作テスト: ツール開閉・情報D&D・スタンプ移動・誤ドロップ拒否・押印・規則集の開閉に成功")
 	quit()

@@ -27,7 +27,10 @@ var countdown_state: Label
 var card_layer: Control
 var cards: Array[DraggableCard] = []
 var target_card: DraggableCard
-var rule_card: DraggableCard
+var rules_overlay: Panel
+var rules_body: RichTextLabel
+var rules_close: Button
+var rules_previous_focus: Control
 var selected_information: Dictionary = {}
 var displayed_case := ""
 var displayed_observations := 0
@@ -58,7 +61,6 @@ var difficulty_select: OptionButton
 var category_select: OptionButton
 var platform_select: OptionButton
 var common_environment_select: OptionButton
-var selection_summary: Label
 var license_button: Button
 var license_overlay: Panel
 var license_body: RichTextLabel
@@ -85,8 +87,7 @@ func _selected_cases() -> Array[Dictionary]:
 
 func _refresh_selection(_index: int = 0) -> void:
 	var count := _selected_cases().size()
-	var limit_text := "時間制限なし" if catalog.time_limit_seconds == 0 else "制限時間 %02d:%02d" % [catalog.time_limit_seconds / 60, catalog.time_limit_seconds % 60]
-	selection_summary.text = "全%d案件 / %s" % [count, limit_text] if count > 0 else "該当する問題がありません。条件を変更してください。"
+	start_button.tooltip_text = "" if count > 0 else "該当する問題がありません。条件を変更してください。"
 	start_button.disabled = count == 0
 	common_environment_select.disabled = platform_select.get_item_metadata(platform_select.selected) in ["windows", "linux"]
 	if common_environment_select.disabled:
@@ -105,20 +106,21 @@ func _ready() -> void:
 	_build_audit()
 	_build_start_screen()
 	_build_pause_menu()
+	Layout.build_rules(self)
 	Layout.build_external_preview(self)
 	shift.changed.connect(_refresh)
 	_show_start_screen()
 
 func _process(delta: float) -> void:
 	_update_hover_drop_targets()
-	if not playing or pause_menu.visible or external_preview.visible:
+	if not playing or pause_menu.visible or rules_overlay.visible or external_preview.visible:
 		return
 	shift.tick(delta)
 	_refresh_countdown()
 
 func _update_hover_drop_targets() -> void:
 	var payload: Dictionary = {}
-	if playing and not shift.finished() and not shift.judged and not pause_menu.visible and not external_preview.visible and not get_viewport().gui_is_dragging():
+	if playing and not shift.finished() and not shift.judged and not pause_menu.visible and not rules_overlay.visible and not external_preview.visible and not get_viewport().gui_is_dragging():
 		var source := get_viewport().gui_get_hovered_control()
 		if source is StampTool and not source.disabled and not source.preview_only and source.is_visible_in_tree():
 			payload = source.payload()
@@ -130,6 +132,11 @@ func _update_hover_drop_targets() -> void:
 		button.hover_drop_ready = button.is_visible_in_tree() and button._can_drop_data(Vector2.ZERO, payload)
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(rules_overlay) and rules_overlay.visible and event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		if not event.is_echo():
+			_close_rules()
+		return
 	if is_instance_valid(external_preview) and external_preview.visible and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		_finish_external(false)
@@ -143,7 +150,7 @@ func _build_pause_menu() -> void:
 	Layout.build_pause_menu(self)
 
 func _toggle_menu() -> void:
-	if not playing:
+	if not playing or rules_overlay.visible:
 		return
 	if pause_menu.visible:
 		_close_menu()
@@ -252,6 +259,7 @@ func _close_summary() -> void:
 		summary_overlay = null
 
 func _show_start_screen() -> void:
+	_close_rules(false)
 	_clear_external()
 	_close_menu()
 	playing = false
@@ -271,6 +279,7 @@ func _start_shift() -> void:
 	var selected := _selected_cases()
 	if selected.is_empty():
 		return
+	_close_rules(false)
 	_close_menu()
 	_close_summary()
 	start_screen.hide()
@@ -287,7 +296,7 @@ func _build() -> void:
 	Layout.build_workspace(self)
 
 func _toggle_tools() -> void:
-	if not playing or shift.finished() or shift.judged:
+	if not playing or shift.finished() or shift.judged or rules_overlay.visible:
 		tools_toggle.set_pressed_no_signal(false)
 		return
 	tool_drawer.visible = not tool_drawer.visible
@@ -338,6 +347,7 @@ func get_stamp(action_id: String) -> StampTool:
 	return null
 
 func _clear_desk() -> void:
+	_close_rules(false)
 	_clear_external()
 	desk_generation += 1
 	for card in cards:
@@ -345,7 +355,6 @@ func _clear_desk() -> void:
 		card.queue_free()
 	cards.clear()
 	target_card = null
-	rule_card = null
 	displayed_case = ""
 	displayed_observations = 0
 	selected_information.clear()
@@ -359,8 +368,6 @@ func add_information_card(data: Dictionary, origin := Vector2(524, 116)) -> Drag
 	var dimensions := Vector2(380, 478)
 	if data.get("category") == "target":
 		dimensions = Vector2(480, 672)
-	elif data.get("category") == "rule":
-		dimensions = Vector2(326, 620)
 	card.setup(data, origin, dimensions)
 	card.clamp_to_desk()
 	card.information_selected.connect(_select_information)
@@ -377,13 +384,26 @@ func _activate_card(card: DraggableCard) -> void:
 		entry.set_active(entry == card)
 
 func _open_rules() -> void:
-	if not playing or shift.finished():
+	if not playing or shift.finished() or shift.judged or pause_menu.visible or external_preview.visible or rules_overlay.visible:
 		return
-	if not is_instance_valid(rule_card):
-		rule_card = add_information_card({"id": "rules", "title": "セキュリティ運用規則", "category": "rule",
-			"icon": "res://assets/icons/ui/book.svg", "source": catalog.title, "information": catalog.rules}, Vector2(940, 10))
-	rule_card.show()
-	rule_card.bring_to_front()
+	for card in cards:
+		card.dragging = false
+	rules_previous_focus = get_viewport().gui_get_focus_owner()
+	move_child(rules_overlay, -1)
+	rules_body.scroll_to_line(0)
+	rules_overlay.show()
+	rules_close.grab_focus()
+
+func _close_rules(restore_focus := true) -> void:
+	if not is_instance_valid(rules_overlay) or not rules_overlay.visible:
+		return
+	rules_overlay.hide()
+	if restore_focus:
+		if is_instance_valid(rules_previous_focus) and rules_previous_focus.is_visible_in_tree():
+			rules_previous_focus.grab_focus()
+		else:
+			rules_button.grab_focus()
+	rules_previous_focus = null
 
 func _select_information(token: Dictionary) -> void:
 	selected_information = token.duplicate(true)
@@ -394,7 +414,7 @@ func _select_information(token: Dictionary) -> void:
 		button.update_input(token)
 
 func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
-	if not playing or shift.finished() or shift.judged or pause_menu.visible or not pending_external.is_empty():
+	if not playing or shift.finished() or shift.judged or pause_menu.visible or rules_overlay.visible or not pending_external.is_empty():
 		return
 	if not ToolRunner.supports_target(tool, shift.current()):
 		tool_message.text = "この調査環境では利用できません。"
@@ -465,13 +485,11 @@ func _display_case(item: Dictionary) -> void:
 	var information: Array = [{"id": "_request", "label": "申請内容", "value": item.request,
 		"category": "request", "tool_input": false, "draggable": false}]
 	information.append_array(item.information)
-	target_card = add_information_card({"id": item.id, "case_id": item.id, "title": item.title,
+	target_card = add_information_card({"id": item.id, "case_id": item.id, "title": "検査対象",
 		"category": "target", "source": _type_label(item.category) + " / " + item.id,
-		"metadata": _type_label(item.category) + " / " + catalog.platform_label(item.platform) + " / 調査: " + catalog.platform_label(ToolRunner.investigation_environment(item)) + " / " + catalog.difficulties[item.level].label,
 		"icon": "res://assets/icons/document.svg",
 		"information": information}, Vector2(20, 20))
 	_select_information({})
-	_open_rules()
 
 func _display_observations(item: Dictionary) -> void:
 	while displayed_observations < shift.observations.size():
@@ -510,7 +528,7 @@ func _update_case_controls(item: Dictionary) -> void:
 		tool_message.text = "調査完了。資料を照合して判定してください。"
 
 func _can_stamp(data: Dictionary) -> bool:
-	return playing and not shift.finished() and not shift.judged and shift.missing_evidence().is_empty() and not pause_menu.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
+	return playing and not shift.finished() and not shift.judged and shift.missing_evidence().is_empty() and not pause_menu.visible and not rules_overlay.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
 
 func _receive_stamp(card: DraggableCard, data: Dictionary) -> void:
 	if card != target_card or not _can_stamp(data):
@@ -550,6 +568,7 @@ func _show_audit(record: Dictionary) -> void:
 	next.grab_focus()
 
 func _show_summary() -> void:
+	_close_rules(false)
 	if is_instance_valid(summary_overlay):
 		return
 	_clear_external()

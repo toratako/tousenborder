@@ -199,7 +199,7 @@ func _run() -> void:
 	desk.start_button.pressed.emit()
 	for item in catalog.cases:
 		check(desk.shift.current().id == item.id, "画面の出題順")
-		check(desk.target_card.card_data.metadata.contains(catalog.platform_label(item.platform)), "環境を表示")
+		check(desk.target_card.title_label.text == "検査対象", "対象のタイトルを統一")
 		var pending_buttons: Array = desk.tool_buttons.filter(func(b): return b.visible)
 		var progress := true
 		while not pending_buttons.is_empty() and progress:

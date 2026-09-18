@@ -141,12 +141,6 @@ func _build_information(data: Dictionary) -> void:
 		rows.add_theme_constant_override("separation", 16)
 		request_section = _section("申請内容")
 		basic_section = _section("基本情報", "項目をツールへドラッグ")
-		if data.has("metadata"):
-			var metadata := Label.new()
-			metadata.text = data.metadata
-			metadata.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			metadata.add_theme_font_size_override("font_size", 13)
-			basic_section.add_child(metadata)
 	for item in Information.normalize(data.get("information", []), data.get("source", "")):
 		var token := InformationToken.new()
 		var is_request: bool = data.get("category") == "target" and item.category == "request"

@@ -15,7 +15,7 @@ static func build_workspace(desk) -> void:
 	desk.tools_toggle = icon_button(desk, Rect2(1128, 12, 136, 46), "file", "ツール", "解析ツールを開く / 閉じる")
 	desk.tools_toggle.toggle_mode = true
 	desk.tools_toggle.pressed.connect(desk._toggle_tools)
-	desk.rules_button = icon_button(desk, Rect2(968, 12, 144, 46), "book", "規則集", "閉じた規則集を表示する")
+	desk.rules_button = icon_button(desk, Rect2(968, 12, 144, 46), "book", "規則集", "セキュリティ運用規則を開く")
 	desk.rules_button.pressed.connect(desk._open_rules)
 	desk.countdown = Chrome.label(desk.workspace, Rect2(580, 13, 132, 46), "--:--", PAPER, 30)
 	desk.countdown_state = Chrome.label(desk.workspace, Rect2(718, 29, 72, 22), "", MUTED, 12)
@@ -53,6 +53,37 @@ static func build_pause_menu(desk) -> void:
 		button.focus_neighbor_right = next_path
 	desk.pause_menu.hide()
 
+static func build_rules(desk) -> void:
+	desk.rules_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.78))
+	desk.rules_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	desk.rules_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	var book := Chrome.panel(desk.rules_overlay, Rect2(200, 55, 880, 690), Color("101e32"), Color("34556f"))
+	Chrome.icon(book, Rect2(30, 24, 40, 40), "res://assets/icons/ui/book.svg")
+	Chrome.label(book, Rect2(86, 22, 764, 45), "セキュリティ運用規則", INK, 30)
+	Chrome.panel(book, Rect2(30, 86, 820, 2), Color("34556f"))
+	desk.rules_body = Chrome.rich(book, Rect2(30, 110, 820, 480), INK, 20)
+	desk.rules_body.focus_mode = Control.FOCUS_ALL
+	desk.rules_body.get_v_scroll_bar().focus_mode = Control.FOCUS_NONE
+	for rule in desk.catalog.rules:
+		desk.rules_body.push_font_size(22)
+		desk.rules_body.push_color(GREEN)
+		desk.rules_body.add_text(rule.label + "\n")
+		desk.rules_body.pop()
+		desk.rules_body.pop()
+		desk.rules_body.add_text(Information.display(rule.value) + "\n\n")
+	desk.rules_close = Chrome.button(book, Rect2(30, 620, 820, 42), "閉じる  [ESC]", PAPER)
+	desk.rules_close.pressed.connect(desk._close_rules)
+	for control in [desk.rules_body, desk.rules_close]:
+		var other: Control = desk.rules_close if control == desk.rules_body else desk.rules_body
+		var path: NodePath = control.get_path_to(other)
+		control.focus_next = path
+		control.focus_previous = path
+		control.focus_neighbor_left = path
+		control.focus_neighbor_right = path
+		control.focus_neighbor_top = path
+		control.focus_neighbor_bottom = path
+	desk.rules_overlay.hide()
+
 static func build_start_screen(desk) -> void:
 	desk.start_screen = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color("070e1b"))
 	desk.start_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -87,7 +118,6 @@ static func build_start_screen(desk) -> void:
 	Chrome.label(briefing, Rect2(26, 20, 387, 23), "勤務前の手引き", Color("b0c8da"), 13)
 	Chrome.label(briefing, Rect2(26, 64, 387, 40), "調査 → 判定 → 監査", INK, 24)
 	Chrome.label(briefing, Rect2(26, 120, 387, 180), "01  情報を選択・ドラッグしてToolへ渡す\n\n02  調査結果をReferenceと照合\n       必要なら結果を次のToolへ渡す\n\n03  ALLOW / BLOCKを対象へ押印", INK, 16)
-	desk.selection_summary = Chrome.label(desk.start_screen, Rect2(98, 535, 345, 28), "", MUTED, 14)
 	Chrome.label(desk.start_screen, Rect2(450, 526, 240, 22), "共通問題の調査OS", MUTED, 13)
 	desk.common_environment_select = selection_option(desk, Vector2(450, 551), [{"id": "windows", "label": "Windows"}, {"id": "linux", "label": "Linux"}], 162)
 	desk.common_environment_select.tooltip_text = "すべての環境・共通のみを選んだ場合の調査OSです。OS固有の問題はそのOSで調査します。"
