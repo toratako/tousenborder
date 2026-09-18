@@ -1,53 +1,20 @@
 # 教材データと作問
 
-編集対象は `data/packs/*.json` と `data/problems/*.json`。標準教材は `data/packs/learning.json` の24問です。[Pack Schema](../data/schemas/pack.schema.json) と [Problem Schema](../data/schemas/problem.schema.json) をPython生成処理とGodot読込処理で共有します。未知のキー・旧形式・別名は拒否します。`cases / type / fields / evidence / expected` の変換や、未知Metadataの保持は行いません。
+正本は `data/packs/*.json` と `data/problems/*.json`。キー・必須条件・値域は [Pack Schema](../data/schemas/pack.schema.json) / [Problem Schema](../data/schemas/problem.schema.json)、動く問題は [生成一覧](problem-catalog.md) から辿れます。未知キー・旧形式・別名は拒否し、変換しません。
 
-[Problem Catalog](problem-catalog.md) は生成一覧、`build/catalog/problems.json` は生成JSONです。問題JSONを編集して再生成します。作問方針・判定時点・拡張計画は [学習設計](learning-design.md)、操作と実行条件は [実行時の教材処理](runtime-flow.md) を参照してください。
+## PackとProblemの注意点
 
-## Packのキー
-
-「任意」以外は必須です。別Packの起動は `scenes/main.tscn` の `InspectionDesk` の **Content Pack** にパスを指定します。
-
-| キー | 内容 |
-| --- | --- |
-| `schema_version`, `id`, `title` | 版1、Pack識別子、表示名。必須 |
-| `problems` | `res://data/problems/ID.json` の重複しない配列。1件以上。順序が出題の基準 |
-| `rules` | `{id, label, value}` の配列 |
-| `categories` | `{id, label}` の配列。問題のカテゴリを登録 |
-| `resource_groups` | 任意の `{id, label, kind}` 配列。kindは `tools`, `references`, `external_references`。標準グループのkindはidと同じ |
-| `feedback` | 任意。`show_expected`, `show_reason` は真偽値（既定true）、`correct_heading`, `incorrect_heading` は監査票の見出し |
-
-入力条件と必要証拠の確認は常に有効で、無効化フラグはありません。カテゴリ・資料グループは追加できますが、判定種別・難易度・OSの追加にはSchemaと実装の変更が必要です。標準の3資料グループはトップレベル、追加グループだけを問題の `resources` に置きます。
-
-## Problemのキー
-
-| キー | 内容 |
-| --- | --- |
-| `schema_version`, `id`, `title`, `request` | 版1、一意の問題ID、見出し、判断依頼 |
-| `category` | Packに登録したカテゴリID |
-| `platform` | `windows`, `linux`, `common` |
-| `level` | `very_beginner`, `beginner`, `intermediate`, `advanced` |
-| `initial_information` | 表示名をキーとする情報。文字列・数値・真偽値・null・配列・オブジェクト |
-| `initial_information_types` | 入力可能な初期情報のキーと型名の対応。表示だけの情報は省略可 |
-| `tools`, `references`, `external_references` | 調査資料の配列。空配列も可 |
-| `resources` | 任意。Packに登録した追加グループIDから資料配列への対応 |
-| `ground_truth`, `explanation` | 正解 `allow` / `block` と根拠の説明 |
-| `topic`, `summary`, `learning_objectives` | 学習主題、要約、学習目標の配列 |
-| `required_evidence` | 調査の充足を評価する資料IDまたは代替証拠ID。進行は制限しない。初期情報だけなら `initial_information` |
-| `evidence_alternatives` | 任意。証拠IDから `{label, any_of: [資料ID…]}` への対応 |
-| `decision_context`, `scenario_type` | 判断時点とシナリオ分類 |
-| `sources`, `fixture_note` | HTTPS出典URLの配列（空可）と模擬教材の注記 |
-| `inspired_by`, `ecosystem` | 任意。実例の着想元、Packageのエコシステム |
-
-任意と明記した項目以外は必須です。`scenario_type: real_world_inspired` には `inspired_by` と1件以上の出典が必要です。ID・型名・情報の文字列は空白だけにできません。`initial_information` と `evidence_alternatives` のキーも空文字・空白だけを拒否します。入力型マップのキーは初期情報に実在し、未指定の型は `text` です。型名は追加できますが、値の構文から型を推測する機能はありません。
-
-超初級は全資料配列を空にし、`required_evidence: ["initial_information"]` とします。判定スコアは `ground_truth` との一致件数で、規則文章や自由記述から推論しません。
+- 別Packは `scenes/main.tscn` の `InspectionDesk` → **Content Pack** に指定。`problems` の登録順が出題順です。
+- カテゴリ・資料グループはPackで追加可能。判定種別・難易度・OSの追加にはSchemaと実装の変更が必要です。
+- 標準の `tools / references / external_references` は問題のトップレベル、追加グループだけを `resources` に置きます。標準グループのkindは変更できません。
+- `initial_information_types` は初期情報のキーと型名の対応。未指定は `text` で、値から型を推測しません。型名は追加できます。
+- 超初級は資料なし、`required_evidence: ["initial_information"]`。`required_evidence` は調査充足の定義で、進行条件ではありません（[判定・履歴](runtime-flow.md#調査から判定まで)）。
 
 ## 資料と情報の接続
 
-すべての資料に `id` と `name` を指定し、IDはグループをまたいで問題内で一意にします。Referenceの `content` はJSON値で、クリックすると保存済みの照合資料を表示します。入力条件や旧形式の照合結果 `output` は付けません。
+Referenceは入力不要の `content` を表示します。Tool・External Referenceは `accepted_information_types` と `input_bindings` で入力を指定し、型・取得元・情報IDを照合します。複数のbindingはいずれか1つを使う代替入力です。
 
-ToolとExternal Referenceには `output`、空でない `accepted_information_types` と `input_bindings`、`input_hint` が必要です。入力は型・取得元・情報IDのすべてに一致させます。複数の `input_bindings` は代替入力（いずれか1つ）です。以下は資料定義の抜粋で、問題の `initial_information` に数値のPID、`initial_information_types` に `"PID": "pid"` を用意します。
+以下は資料定義の抜粋です。初期情報に数値のPID、型マップに `"PID": "pid"` を用意します。
 
 ```json
 {
@@ -75,20 +42,23 @@ ToolとExternal Referenceには `output`、空でない `accepted_information_ty
 | URL → Host → DNS、登録Domain → RDAP | [WEB-BEGINNER-001](../data/problems/WEB-BEGINNER-001.json) |
 | Email内でHeader・添付・URLを調査する追加グループ | [EMAIL-INTERMEDIATE-001](../data/problems/EMAIL-INTERMEDIATE-001.json) |
 
-External Referenceはさらに `submission_type / submission_value / confidentiality_warning / correct_usage / reason` が必須です。`submission_type` は任意の文字列で、型の適合は送信許可を意味しません。利用適否は [送信確認と評価](runtime-flow.md#調査から判定まで)、Hash検索・Upload・URLの扱いは [学習設計](learning-design.md#外部照会の判断) を参照してください。
+入力は値・案件・取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも同一とは限らず、RDAPの入力元は登録Domainの台帳等から指定します。
+
+External Referenceの入力型への適合は送信許可を意味しません。[送信確認](runtime-flow.md#調査から判定まで) と [外部照会の判断](learning-design.md#外部照会の判断) を参照してください。
 
 ## 追加・変更の手順
 
-1. `data/problems/` の近い問題を複製し、新しいID、依頼、初期情報、照合資料、正解と解説を整えます。
-2. 入力参照と必要証拠を結び、問題の調査OS（共通問題はLinux）で判断まで到達できるようにします。
-3. Packの `problems` にパスを追加し、新カテゴリ・追加資料グループがあれば登録します。
-4. 検証して一覧を再生成します。
+近い問題を複製して新しいIDを付け、Packの `problems` に登録します。[学習設計](learning-design.md) に沿って独立した照合資料から結論を導ける構成にし、問題の調査OS（共通問題はLinux）で入力・必要証拠に到達できるようにします。
 
 ```sh
-python -m pip install -r requirements-dev.txt
-python scripts/build_problem_catalog.py
-python scripts/build_problem_catalog.py --check
-godot --headless --path . --script scripts/validate_content.gd -- res://data/packs/learning.json
+python3 scripts/build_problem_catalog.py
+just test
 ```
 
-Schemaは形と値域、意味検証はID重複・参照先・登録カテゴリ・資料グループ種別・OS別出力・入力と証拠への到達性を確認します。循環入力、他OSでしか取れない証拠、不適切な外部送信を必須とする問題は拒否します。`--check` は書き換えずに検証し、Markdownは常に、生成JSONは存在する場合だけ一致を確認します。Godot Validatorは成功時0・失敗時1で終了します。
+依存の準備は [README](../README.md#開発教材編集)。生成先は `docs/problem-catalog.md` と `build/catalog/problems.json`（Git管理外）。生成処理の `--check` はMarkdownを常に、JSONは存在する場合だけ比較します。別Packの検証は `godot --headless --path . --script scripts/validate_content.gd -- res://data/packs/別名.json`（成功0・失敗1）。
+
+検証の分担:
+
+- 構造は共有Schema。PythonはDraft 2020-12、Godotの `content_schema.gd` は同梱Schemaの構文のみ対応し、未知キーワードはエラー、深度上限128です。Schema拡張時は両方を検証します。
+- 意味・到達性は `scripts/build_problem_catalog.py` と `scripts/core/problem_data.gd` / `investigation_inputs.gd`。循環入力、非対応OSの必須証拠、不適切な調査・外部送信に依存する経路を拒否します。外部照会を代替証拠に含めても、内部で取得する手段が必要です。
+- 資料の意味、出力の事実整合、判定時点は自動検証できません。作問時に確認し、実行経路は `tests/test_learning.gd` で確認します。

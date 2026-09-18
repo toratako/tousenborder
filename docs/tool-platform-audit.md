@@ -1,8 +1,6 @@
 # Tool利用環境の確認（2026-09-17）
 
-> 当日の公式資料の確認記録です。現行の実行条件は [対象OSと調査OS](runtime-flow.md#対象osと調査os)、配置済みの教材は [Problem Catalog](problem-catalog.md) を参照してください。
-
-`platform_note` は代表的な利用環境の説明で、出題先OSや実行制御とは別。移植版・追加ランタイム等の網羅や全バージョンの動作保証は対象外です。
+当日の公式資料の確認記録で、動作保証ではありません。`platform_note` は代表環境の説明専用です。現行の制御は [OS条件](runtime-flow.md#対象osと調査os)、配置教材は [問題一覧](problem-catalog.md)。移植版・追加ランタイム・全バージョンの網羅は対象外です。
 
 | Tool / 機能 | 確認・修正内容 | 一次資料 |
 | --- | --- | --- |
@@ -28,6 +26,6 @@
 | RDAP / WHOIS | OS共通の照会方式。特定のOS標準コマンドとは扱わない | [ICANN RDAP](https://www.icann.org/rdap) |
 | VirusTotal / urlscan.io | OS共通のWeb/APIサービス。ゲーム内は模擬照会 | [VirusTotal](https://docs.virustotal.com/docs/how-it-works)、[urlscan.io](https://urlscan.io/docs/) |
 
-Raw HeaderはEmailの元Headerを表示する調査方法、RDAPは照会方式で、特定のOS標準コマンド名ではありません。
+Raw HeaderはEmailの元Headerを表示する方法で、OS標準コマンド名ではありません。
 
-WSL・コンテナ・リモート実行で使えることと、Windows本体のProcess・通信を直接調べられることは別である。利用環境の説明は問題選択やTool実行可否の条件に転用しない。
+WSL・コンテナ・リモートで使えることと、Windows本体のProcess・通信を直接調べられることは別です。
