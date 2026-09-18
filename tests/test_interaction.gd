@@ -46,11 +46,27 @@ func _run() -> void:
 	await process_frame
 	await click(desk.start_button.get_global_rect().get_center())
 	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-001")
-	desk.shift.start(cases)
+	desk.shift.start(cases, 300)
 	assert(desk.playing and not desk.tool_drawer.visible)
+	await motion(desk.menu_button.get_global_rect().get_center())
+	assert(root.gui_get_hovered_control() == desk.menu_button)
+	assert(desk.menu_button.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND)
+	await click(desk.menu_button.get_global_rect().get_center())
+	assert(desk.pause_menu.visible and desk.menu_resume.has_focus())
+	var paused_time: float = desk.shift.remaining_seconds
+	desk._process(600)
+	assert(desk.shift.remaining_seconds == paused_time)
+	var escape := InputEventKey.new()
+	escape.keycode = KEY_ESCAPE
+	escape.pressed = true
+	Input.parse_input_event(escape)
+	await process_frame
+	assert(not desk.pause_menu.visible and desk.menu_button.has_focus())
 	assert(not desk.rules_overlay.visible)
 	await click(desk.rules_button.get_global_rect().get_center())
 	assert(desk.rules_overlay.visible)
+	await click(desk.menu_button.get_global_rect().get_center())
+	assert(not desk.pause_menu.visible, "book blocks background menu button")
 	await click(desk.tools_toggle.get_global_rect().get_center())
 	assert(not desk.tool_drawer.visible, "book blocks background input")
 	await click(desk.rules_close.get_global_rect().get_center())

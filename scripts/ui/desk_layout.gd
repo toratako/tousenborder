@@ -11,7 +11,11 @@ static func build_workspace(desk) -> void:
 	desk.workspace = Control.new()
 	desk.workspace.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.add_child(desk.workspace)
-	Chrome.label(desk.workspace, Rect2(24, 21, 160, 32), "電子入境管理", PAPER, 23)
+	desk.menu_button = Chrome.button(desk.workspace, Rect2(12, 12, 190, 46), "電子入境管理", PAPER)
+	desk.menu_button.flat = true
+	desk.menu_button.add_theme_font_size_override("font_size", 23)
+	desk.menu_button.tooltip_text = "メニューを開く [ESC]"
+	desk.menu_button.pressed.connect(desk._toggle_menu)
 	desk.tools_toggle = icon_button(desk, Rect2(1128, 12, 136, 46), "file", "ツール", "解析ツールを開く / 閉じる")
 	desk.tools_toggle.toggle_mode = true
 	desk.tools_toggle.pressed.connect(desk._toggle_tools)

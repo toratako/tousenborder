@@ -72,6 +72,7 @@ var audit_overlay: Panel
 var audit_heading: Label
 var audit_body: RichTextLabel
 var pause_menu: Panel
+var menu_button: Button
 var menu_resume: Button
 var menu_restart: Button
 var menu_home: Button
