@@ -5,6 +5,7 @@
 - UIに無駄な説明を足さない
 - ドキュメントは後続のAgentの理解を助けるために書く (正本はコードなので冗長に書かない)
 - ドキュメントはハマりポイントと，軽いRouting Index程度
+- Do NOT use `main` branch. Use `development/*` branches for all development.
 
 ---
 
