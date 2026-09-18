@@ -485,7 +485,11 @@ func _display_case(item: Dictionary) -> void:
 	_set_case_tools(item)
 	var information: Array = [{"id": "_request", "label": "申請内容", "value": item.request,
 		"category": "request", "tool_input": false, "draggable": false}]
-	information.append_array(item.information)
+	for fact in item.information:
+		var displayed: Dictionary = fact.duplicate(true)
+		displayed.draggable = fact.draggable and active_tools.any(func(tool):
+			return ToolRunner.supports_target(tool, item) and Information.accepts(tool, fact))
+		information.append(displayed)
 	target_card = add_information_card({"id": item.id, "case_id": item.id, "title": "検査対象",
 		"category": "target", "source": _type_label(item.category) + " / " + item.id,
 		"icon": "res://assets/icons/document.svg",
