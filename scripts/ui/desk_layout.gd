@@ -151,7 +151,7 @@ static func build_start_screen(desk) -> void:
 static func build_tools(desk) -> void:
 	desk.tool_panel = Chrome.panel(desk.workspace, Rect2(996, 72, 284, 712), Color("0c1829"))
 	var surface := desk.tool_panel.get_theme_stylebox("panel") as StyleBoxFlat
-	surface.border_color = Color("29495f")
+	surface.border_color = Color("436982")
 	surface.border_width_left = 1
 	desk.tool_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	Chrome.label(desk.tool_panel, Rect2(16, 12, 180, 28), "調査", PAPER, 18)
