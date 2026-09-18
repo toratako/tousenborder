@@ -1,7 +1,8 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## 正式教材で判定の状態遷移、重複防止、経過時間を検証する。
 func _initialize() -> void:
-	var catalog := ContentCatalog.new()
+	var catalog := Fixtures.catalog()
 	assert(catalog.load_pack(), str(catalog.errors))
 	var shift := InspectionShift.new()
 	var cases := catalog.select_cases("very_beginner")

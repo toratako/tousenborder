@@ -3,6 +3,7 @@
 import copy
 import json
 from pathlib import Path
+from unittest.mock import patch
 import subprocess
 import sys
 import tempfile
@@ -22,8 +23,9 @@ from build_problem_catalog import (
 class CatalogTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.pack = read_json(ROOT / "data/packs/learning.json")
-        cls.cases = [read_json(resource_path(p)) for p in cls.pack["problems"]]
+        fixture = read_json(ROOT / "tests/fixtures/content.json")
+        cls.pack = fixture["pack"]
+        cls.cases = fixture["problems"]
 
     def test_catalog_matches_playable_source(self):
         result, markdown = build(ROOT / "data/packs/learning.json")
@@ -31,7 +33,12 @@ class CatalogTests(unittest.TestCase):
             markdown,
             (ROOT / "docs/problem-catalog.md").read_text(encoding="utf-8"),
         )
-        self.assertEqual(len(json.loads(result)["problems"]), 24)
+        pack = read_json(ROOT / "data/packs/learning.json")
+        problems = json.loads(result)["problems"]
+        self.assertEqual([p["path"] for p in problems], pack["problems"])
+        for p in problems:
+            self.assertEqual(p["title"], read_json(resource_path(p["path"]))["title"])
+            self.assertTrue(p["main_evidence"])
 
     def test_missing_evidence_is_rejected(self):
         item = copy.deepcopy(self.cases[0])
@@ -70,7 +77,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_missing_or_wrong_type_input_source_is_rejected(self):
         original = next(
-            c for c in self.cases if c["id"] == "FILE-LINUX-BEGINNER-002"
+            c for c in self.cases if c["id"] == "FIX-HASH"
         )
         for id in ["missing-field", "Size"]:
             item = copy.deepcopy(original)
@@ -80,7 +87,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_cycle_cannot_make_unearned_hash_available(self):
         item = copy.deepcopy(
-            next(c for c in self.cases if c["id"] == "FILE-LINUX-BEGINNER-002")
+            next(c for c in self.cases if c["id"] == "FIX-HASH")
         )
         sha = next(t for t in item["tools"] if t["id"] == "sha256sum")
         sha["accepted_information_types"] = ["sha256"]
@@ -113,7 +120,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_os_restriction_cannot_break_evidence_or_input_chain(self):
         item = copy.deepcopy(
-            next(c for c in self.cases if c["id"] == "WEB-BEGINNER-001")
+            next(c for c in self.cases if c["id"] == "FIX-DNS")
         )
         item["evidence_alternatives"]["dns_lookup"]["any_of"] = ["dig"]
         validate_authoring(item, self.pack)
@@ -121,7 +128,7 @@ class CatalogTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unavailable on linux"):
             validate_authoring(item, self.pack)
         item = copy.deepcopy(
-            next(c for c in self.cases if c["id"] == "WEB-BEGINNER-001")
+            next(c for c in self.cases if c["id"] == "FIX-DNS")
         )
         next(t for t in item["tools"] if t["id"] == "url_parse")[
             "environments"
@@ -183,7 +190,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_os_output_must_cover_supported_environments(self):
         item = copy.deepcopy(
-            next(c for c in self.cases if c["id"] == "WEB-BEGINNER-001")
+            next(c for c in self.cases if c["id"] == "FIX-DNS")
         )
         next(t for t in item["tools"] if t["id"] == "nslookup")[
             "output_by_environment"
@@ -193,7 +200,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_unsafe_upload_cannot_be_required_evidence(self):
         item = copy.deepcopy(
-            next(c for c in self.cases if c["id"] == "FILE-WIN-ADVANCED-001")
+            next(c for c in self.cases if c["id"] == "FIX-PRIVATE-FILE")
         )
         item["required_evidence"].append("vt_upload")
         with self.assertRaisesRegex(
@@ -202,7 +209,7 @@ class CatalogTests(unittest.TestCase):
             validate_authoring(item, self.pack)
 
     def test_output_provenance_and_eligibility_are_enforced(self):
-        original = next(c for c in self.cases if c["id"] == "FILE-LINUX-BEGINNER-002")
+        original = next(c for c in self.cases if c["id"] == "FIX-HASH")
         for field, value in [("source", "initial_information"), ("id", "output")]:
             item = copy.deepcopy(original)
             sha = next(t for t in item["tools"] if t["id"] == "sha256sum")
@@ -259,17 +266,15 @@ class CatalogTests(unittest.TestCase):
         pack["schema_version"] = 1.0
         validate_authoring(item, pack)
 
-    def test_external_results_cannot_be_required_evidence(self):
+    def test_permitted_external_results_can_be_required_evidence(self):
         original = next(c for c in self.cases if any(e["correct_usage"] for e in c["external_references"]))
         item = copy.deepcopy(original)
         external = next(e for e in item["external_references"] if e["correct_usage"])
         item["required_evidence"] = [external["id"]]
-        with self.assertRaisesRegex(ValueError, "without external references"):
-            validate_authoring(item, self.pack)
+        validate_authoring(item, self.pack)
         item["evidence_alternatives"] = {"external_only": {"label": "External only", "any_of": [external["id"]]}}
         item["required_evidence"] = ["external_only"]
-        with self.assertRaisesRegex(ValueError, "without external references"):
-            validate_authoring(item, self.pack)
+        validate_authoring(item, self.pack)
         item["evidence_alternatives"]["external_only"]["any_of"].append("initial_information")
         validate_authoring(item, self.pack)
 
@@ -281,6 +286,56 @@ class CatalogTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "Non-finite JSON number"):
                     read_json(path)
 
+    def test_external_output_unlocks_followup_only_when_permitted(self):
+        item = copy.deepcopy(next(c for c in self.cases if c["id"] == "FIX-HASH"))
+        external = item["external_references"][0]
+        external["output_information"] = [
+            {"id": "domain", "label": "Observed domain", "value": "analysis.example", "data_type": "domain"}
+        ]
+        followup = copy.deepcopy(external)
+        followup.update(id="domain_report", accepted_information_types=["domain"],
+                        input_bindings=[{"source": external["id"], "id": "domain"}],
+                        submission_type="domain", submission_value="analysis.example", output_information=[])
+        item["external_references"].append(followup)
+        item["required_evidence"] = [followup["id"]]
+        validate_authoring(item, self.pack)
+        external["correct_usage"] = False
+        with self.assertRaisesRegex(ValueError, "safe-input route"):
+            validate_authoring(item, self.pack)
+        external["correct_usage"] = True
+        external["environments"] = ["windows"]
+        with self.assertRaisesRegex(ValueError, "safe-input route"):
+            validate_authoring(item, self.pack)
+
+    def test_external_alternatives_do_not_make_unsafe_evidence_required(self):
+        item = copy.deepcopy(next(c for c in self.cases if c["id"] == "FIX-PRIVATE-FILE"))
+        item["evidence_alternatives"] = {"report": {"label": "Report", "any_of": ["vt_upload", "vt_hash"]}}
+        item["required_evidence"] = ["report"]
+        validate_authoring(item, self.pack)
+        item["evidence_alternatives"]["report"]["any_of"] = ["vt_upload"]
+        with self.assertRaisesRegex(ValueError, "required evidence unavailable"):
+            validate_authoring(item, self.pack)
+
+    def test_catalog_includes_tools_that_produce_external_inputs(self):
+        item = copy.deepcopy(next(c for c in self.cases if c["id"] == "FIX-HASH"))
+        item["required_evidence"] = ["vt_hash"]
+        pack = copy.deepcopy(self.pack)
+        pack["problems"] = ["res://data/problems/FIX-HASH.json"]
+        pack_path = ROOT / "data/packs/fixture.json"
+        def fixture_reader(path):
+            if path == pack_path:
+                return pack
+            if path == resource_path(pack["problems"][0]):
+                return item
+            return read_json(path)
+        with patch("build_problem_catalog.read_json", side_effect=fixture_reader):
+            result, markdown = build(pack_path)
+        problem = json.loads(result)["problems"][0]
+        self.assertEqual(problem["main_tools"], ["sha256sum"])
+        self.assertEqual(problem["main_evidence"][0]["any_of"], ["vt_hash"])
+        self.assertIn("Main Evidence", markdown)
+        self.assertIn("External Reference", markdown)
+
     def test_correct_usage_requires_explanation(self):
         item = copy.deepcopy(next(c for c in self.cases if c["tools"]))
         item["tools"][0]["correct_usage"] = True
@@ -289,7 +344,7 @@ class CatalogTests(unittest.TestCase):
             validate_authoring(item, self.pack)
 
     def test_incorrect_usage_output_cannot_unlock_followup(self):
-        item = copy.deepcopy(next(c for c in self.cases if c["id"] == "FILE-LINUX-BEGINNER-002"))
+        item = copy.deepcopy(next(c for c in self.cases if c["id"] == "FIX-HASH"))
         tool = next(t for t in item["tools"] if t["id"] == "sha256sum")
         tool.update(correct_usage=False, reason="Unsafe fixture for graph regression")
         with self.assertRaisesRegex(ValueError, "safe-input route"):
@@ -297,7 +352,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_equivalent_packet_views_agree(self):
         item = next(
-            c for c in self.cases if c["id"] == "NET-LINUX-INTERMEDIATE-001"
+            c for c in self.cases if c["id"] == "FIX-PACKETS"
         )
         tcpdump = next(
             t["output"] for t in item["tools"] if t["id"] == "tcpdump"

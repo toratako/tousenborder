@@ -1,6 +1,7 @@
 """ネットワークや実際の導入先を使わず、配置と失敗時の保存を検証する。"""
 
 import hashlib
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -36,9 +37,11 @@ class TemplateInstallTests(unittest.TestCase):
         self.assertTrue((self.destination / "icudt77l.dat").exists())
         self.assertFalse((self.root / "unexpected").exists())
         self.assertFalse((self.destination / "android_release.apk").exists())
-        self.assertTrue(
-            (self.destination / "linux_release.x86_64").stat().st_mode & 0o100
-        )
+        # WindowsのstatはPOSIX実行権限を保持しない。配置自体は全OSで検証する。
+        if os.name != "nt":
+            self.assertTrue(
+                (self.destination / "linux_release.x86_64").stat().st_mode & 0o100
+            )
 
     def test_wrong_hash_leaves_destination_absent(self):
         with self.assertRaises(ValueError):

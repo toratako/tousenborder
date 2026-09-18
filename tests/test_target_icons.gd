@@ -1,17 +1,18 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 
 func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	desk.start_button.pressed.emit()
 	var category_icons := {"web": "web", "email": "email", "network": "packet",
 		"process": "process", "account": "account", "package": "package"}
-	var file_icons := {"FILE-LINUX-BEGINNER-001": "document", "FILE-LINUX-BEGINNER-002": "archive",
-		"FILE-WIN-ADVANCED-001": "executable", "FILE-WIN-VERY-BEGINNER-001": "executable"}
+	var file_icons := {"FIX-FILE": "document", "FIX-HASH": "archive",
+		"FIX-PRIVATE-FILE": "executable", "FIX-VISIBLE-FILE": "executable"}
 	for item in desk.catalog.cases:
 		var cases: Array[Dictionary] = [item]
 		desk.shift.start(cases)

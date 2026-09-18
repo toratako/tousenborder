@@ -1,4 +1,5 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## 実際のシーンとボタンのシグナルを使い、勤務全体を検証する。
 
 func _initialize() -> void:
@@ -13,7 +14,7 @@ func _escape(echo: bool = false) -> void:
 	await process_frame
 
 func _run() -> void:
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	assert(desk.start_screen.visible and not desk.workspace.visible)
@@ -69,7 +70,7 @@ func _run() -> void:
 	assert(desk.shift.cases.is_empty() and not desk.playing)
 	desk.start_button.pressed.emit()
 	assert(desk.elapsed_time.text == "00:00")
-	assert(desk.status.text == "問題: 1/24")
+	assert(desk.status.text == "問題: 1/%d" % Fixtures.pack().problems.size())
 	assert(not desk.target_card.scroll_hint.visible and not desk.target_card.stamp_plate.visible)
 	desk._show_start_screen()
 	desk.difficulty_select.select(1)

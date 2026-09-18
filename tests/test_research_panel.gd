@@ -1,13 +1,14 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 
 func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	desk._start_shift()
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "PKG-NPM-ADVANCED-001")
+	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-REFERENCES")
 	desk.shift.start(cases)
 	await process_frame
 	assert(desk.tool_panel.is_visible_in_tree())

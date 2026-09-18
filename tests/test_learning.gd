@@ -1,5 +1,6 @@
 extends SceneTree
-## 代表教材を実際のUIとcoreで通し、送信前確認・見送り・採点の分離を検証する。
+const Fixtures = preload("res://tests/fixtures.gd")
+## 固定データを実際のUIとcoreで通し、送信前確認・見送り・採点の分離を検証する。
 var failures := 0
 
 func check(value: bool, message: String) -> void:
@@ -35,7 +36,7 @@ func one_case(catalog: ContentCatalog, id: String) -> Array[Dictionary]:
 
 func test_input_contracts(catalog: ContentCatalog) -> void:
 	var shift := InspectionShift.new()
-	shift.start(one_case(catalog, "FILE-LINUX-BEGINNER-002"))
+	shift.start(one_case(catalog, "FIX-HASH"))
 	var item := shift.current()
 	var hash_tool: Dictionary = item.tools.filter(func(t): return t.id == "sha256sum")[0]
 	var external: Dictionary = item.external_references[0]
@@ -54,7 +55,7 @@ func test_input_contracts(catalog: ContentCatalog) -> void:
 	check(not shift.inspect(external, forged).ok, "同じID・型でも値の改変は拒否")
 	check(shift.inspect(external, hash).ok, "実際に取得したHashで照会できる")
 	var stale := hash.duplicate(true)
-	shift.start(one_case(catalog, "PROC-WIN-ADVANCED-001"))
+	shift.start(one_case(catalog, "FIX-PROCESS"))
 	item = shift.current()
 	var process_tool: Dictionary = item.tools.filter(func(t): return t.id == "process_explorer")[0]
 	var get_hash: Dictionary = item.tools.filter(func(t): return t.id == "get_filehash")[0]
@@ -79,8 +80,8 @@ func test_environment_routes(catalog: ContentCatalog) -> void:
 				check(shift.records.back().missing_evidence == item.required_evidence, "未確認証拠を記録: " + item.id)
 				check(shift.advance() and shift.finished(), "未調査でも次へ進める: " + item.id)
 				shift.start(cases)
-			var pending := catalog.tools_for(item).filter(func(t): return ToolRunner.supports_target(t, item) and t.resource_kind != "external_references")
-			if item.id == "WEB-BEGINNER-001":
+			var pending := catalog.tools_for(item).filter(func(t): return ToolRunner.supports_target(t, item) and t.get("correct_usage", true))
+			if item.id == "FIX-DNS":
 				# Windowsの出題フィルタでも、共通問題のnslookupはLinux出力になる。
 				pending = pending.filter(func(t): return t.id not in ["dig", "resolve_dnsname"])
 				var unsupported: Dictionary = item.tools.filter(func(t): return t.id == "resolve_dnsname")[0]
@@ -98,9 +99,9 @@ func test_environment_routes(catalog: ContentCatalog) -> void:
 					pending.erase(tool)
 					progress = true
 			check(pending.is_empty() and shift.missing_evidence().is_empty(), "OS別に必要証拠へ到達: " + item.id)
-			check(shift.decide(item.ground_truth), "外部送信なしで判定可能: " + item.id)
+			check(shift.decide(item.ground_truth), "許可された調査で判定可能: " + item.id)
 			check(shift.records.back().missing_evidence.is_empty(), "調査済みの証拠は不足に数えない: " + item.id)
-	var item := one_case(catalog, "FILE-WIN-ADVANCED-001")[0]
+	var item := one_case(catalog, "FIX-PRIVATE-FILE")[0]
 	var shift := InspectionShift.new()
 	var cases: Array[Dictionary] = [item]
 	shift.start(cases)
@@ -109,14 +110,12 @@ func test_environment_routes(catalog: ContentCatalog) -> void:
 	check(not shift.decline_external(external, available_input(shift, external)), "非対応OSでは見送りも拒否")
 
 func _run() -> void:
-	var catalog := ContentCatalog.new()
+	var catalog := Fixtures.catalog()
 	check(catalog.load_pack("res://data/packs/learning.json"), "代表教材読込: " + str(catalog.errors))
 	if not catalog.errors.is_empty():
 		quit(1)
 		return
-	check(catalog.cases.size() == 24, "代表24問")
-	check(catalog.cases.filter(func(c): return c.ground_truth == "allow").size() == 11, "正常11問")
-	check(catalog.cases.filter(func(c): return c.scenario_type == "real_world_inspired").size() == 4, "実例4問")
+	check(catalog.cases.size() == Fixtures.pack().problems.size(), "固定テストデータの登録件数")
 	check(catalog.categories.size() == 7, "7種別")
 	for platform in ["windows", "linux"]:
 		var selected := catalog.select_cases("", "", platform)
@@ -126,7 +125,7 @@ func _run() -> void:
 	var guide := catalog.guide_tools()
 	for tool in guide:
 		check(not tool.get("platform_note", "").is_empty(), "利用環境の説明漏れ: " + tool.id)
-	check(guide.any(func(t): return t.id == "get_filehash") and guide.any(func(t): return t.id == "attachment_hash"), "問題内・添付Toolのガイド")
+	check(guide.any(func(t): return t.id == "get_filehash"), "問題内Toolのガイド")
 	test_input_contracts(catalog)
 	test_environment_routes(catalog)
 	# 全問の全資料を実行し、見送りを含めて正解・解説を保存する。
@@ -160,9 +159,9 @@ func _run() -> void:
 		check(shift.decide(item.ground_truth), "正解を記録")
 		check(shift.records.back().explanation == item.explanation, "解説を保持")
 		shift.advance()
-	check(shift.finished() and shift.score() == 24 and shift.unsafe_investigations() == 0, "24問完了・判定と調査を分離")
+	check(shift.finished() and shift.score() == catalog.cases.size() and shift.unsafe_investigations() == 0, "固定テストデータ完了・判定と調査を分離")
 	# 主シーンからUIを操作し、誤った外部送信と見送りの両方を検証する。
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	for tool_id in ["resolve_dnsname", "nslookup", "dig", "wireshark"]:
 		var tool: Dictionary = guide.filter(func(t): return t.id == tool_id)[0]
 		check(tool.has("platform_note"), "Tool固有の利用環境: " + tool_id)
@@ -175,7 +174,7 @@ func _run() -> void:
 	check(desk._tool_description(dns).contains("Toolの主な利用環境: Windows") and not desk._tool_description(dns).contains("教材の出題環境:"), "ガイドはToolの利用OSを表示")
 	check(desk._tool_description(capture).contains("Windows / Linux"), "Wiresharkの両対応を表示")
 	desk.tool_guide_button.pressed.emit()
-	check(desk.tool_guide_tabs.size() > 20 and not desk.tool_guide_body.text.contains("登録されているツールはありません"), "新教材のガイドを表示")
+	check(desk.tool_guide_tabs.size() == guide.size() and not desk.tool_guide_body.text.contains("登録されているツールはありません"), "新教材のガイドを表示")
 	desk.tool_guide_close.pressed.emit()
 	# Windowsで絞って開始しても、共通問題はLinuxのTool・入力制限を使う。
 	for selection in [desk.platform_select, desk.category_select, desk.difficulty_select]:
@@ -185,7 +184,7 @@ func _run() -> void:
 	desk._refresh_selection()
 	desk.start_button.pressed.emit()
 	var linux_web: Dictionary = desk.shift.current()
-	check(linux_web.id == "WEB-BEGINNER-001", "画面の選択条件から共通Web問題を開始")
+	check(linux_web.id == "FIX-DNS", "画面の選択条件から共通Web問題を開始")
 	check(desk.shift.current().platform == "common" and desk.shift.current().investigation_environment == "linux", "問題OSと調査OSを保持")
 	var windows_tool: Dictionary = linux_web.tools.filter(func(t): return t.id == "resolve_dnsname")[0]
 	var linux_button: ToolInput = desk.tool_buttons.filter(func(b): return b.tool.id == "dig")[0]
@@ -255,18 +254,18 @@ func _run() -> void:
 		check(desk._can_stamp(desk.get_stamp(item.ground_truth).payload()), "対象にスタンプを使用可能")
 		desk.shift.decide(item.ground_truth)
 		check(desk.audit_body.text.contains(item.explanation), "UIに全問の解説")
-		if item.id == "FILE-WIN-ADVANCED-001":
+		if item.id == "FIX-PRIVATE-FILE":
 			check(desk.shift.records.back().correct and desk.audit_body.text.contains("不適切な利用"), "正解でも不適切なFile Uploadを明示")
-		if item.id == "WEB-ADVANCED-001":
+		if item.id == "FIX-PRIVATE-URL":
 			check(desk.audit_body.text.contains("外部送信を見送り"), "Token付きURLを送らなかった記録")
 		desk.next.pressed.emit()
 		await process_frame
-	check(desk.shift.score() == 24 and desk.shift.unsafe_investigations() == 1, "判定24正解・不適切調査1件")
+	check(desk.shift.score() == catalog.cases.size() and desk.shift.unsafe_investigations() == 1, "全件正解・不適切調査1件")
 	check(desk.summary_stats.text.contains("不適切な調査 1件"), "調査手段の集計")
 	check(desk.summary_review.get_parsed_text().contains("不適切な利用") and desk.summary_review.get_parsed_text().contains("外部送信を見送り"), "一覧でも調査の適否を確認")
 	# 確認途中のリスタートが古い案件の資料を実行しないこと。
 	desk._start_shift()
-	var token_case: Dictionary = catalog.cases.filter(func(c): return c.id == "WEB-ADVANCED-001")[0]
+	var token_case: Dictionary = catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-URL")[0]
 	var token_cases: Array[Dictionary] = [token_case]
 	desk.shift.start(token_cases)
 	var unsafe_tool: Dictionary = catalog.tools_for(token_case).filter(func(t): return t.id == "urlscan_private")[0]

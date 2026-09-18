@@ -1,4 +1,5 @@
 extends SceneTree
+const Fixtures = preload("res://tests/fixtures.gd")
 ## 長時間の調査と判定後のフィードバックを検証する。
 var failures := 0
 
@@ -29,13 +30,13 @@ func submit_external(desk, item: Dictionary) -> void:
 	check(not desk.external_preview.visible and desk.shift.observations.size() == before + 1, "確認後に調査を記録")
 
 func _run() -> void:
-	var desk = load("res://scenes/main.tscn").instantiate()
+	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	desk.set_process(false)
 	# 異なる案件を使い、調査所見が他の案件に混入しないことを確認する。
-	var item: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FILE-WIN-ADVANCED-001")[0]
-	var future: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FILE-WIN-VERY-BEGINNER-001")[0]
+	var item: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-FILE")[0]
+	var future: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FIX-VISIBLE-FILE")[0]
 	var cases: Array[Dictionary] = [item, future]
 	for hide_reason in [false, true]:
 		desk.catalog.feedback = {"show_reason": not hide_reason, "show_expected": false}
