@@ -147,8 +147,8 @@ def validate_authoring(item: dict, pack: dict) -> list[tuple[str, dict]]:
             raise ValueError(f"{item['id']}: invalid evidence alternative")
     if not set(item["required_evidence"]) <= ids | set(alternatives):
         raise ValueError(f"{item['id']}: required_evidence refers to missing resources")
-    if item["level"] == "very_beginner" and (entries or item["required_evidence"] != ["initial_information"]):
-        raise ValueError(f"{item['id']}: very_beginner must be solvable from initial information")
+    if item["level"] == "very_beginner" and any(kind != "references" for kind, _ in entries):
+        raise ValueError(f"{item['id']}: very_beginner investigations allow only Reference resources")
     validate_inputs(item, entries)
     return entries
 

@@ -46,6 +46,39 @@ class CatalogTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "missing resources"):
             validate_authoring(item, self.pack)
 
+    def test_very_beginner_allows_reference_evidence_in_any_reference_group(self):
+        item = copy.deepcopy(self.cases[0])
+        reference = {"id": "policy", "name": "Policy", "content": "Accept PDF documents only."}
+        item["references"] = [reference]
+        item["required_evidence"] = ["initial_information", "policy"]
+        validate_authoring(item, self.pack)
+        item["evidence_alternatives"] = {"format_policy": {"label": "Format policy", "any_of": ["policy"]}}
+        item["required_evidence"] = ["format_policy"]
+        validate_authoring(item, self.pack)
+        pack = copy.deepcopy(self.pack)
+        pack["resource_groups"].append({"id": "policy_documents", "label": "Policy documents", "kind": "references"})
+        item["references"] = []
+        item["resources"] = {"policy_documents": [reference]}
+        validate_authoring(item, pack)
+
+    def test_very_beginner_rejects_tools_and_external_references_in_any_group(self):
+        tool = copy.deepcopy(next(c for c in self.cases if c["id"] == "FIX-FILE")["tools"][0])
+        external = copy.deepcopy(next(c for c in self.cases if c["id"] == "FIX-PRIVATE-FILE")["external_references"][0])
+        external["accepted_information_types"] = ["file"]
+        external["input_bindings"] = [{"source": "initial_information", "id": "File名"}]
+        for kind, resource in [("tools", tool), ("external_references", external)]:
+            for custom in [False, True]:
+                with self.subTest(kind=kind, custom=custom):
+                    item = copy.deepcopy(self.cases[0])
+                    pack = copy.deepcopy(self.pack)
+                    if custom:
+                        pack["resource_groups"].append({"id": "extra", "label": "Extra", "kind": kind})
+                        item["resources"] = {"extra": [resource]}
+                    else:
+                        item[kind] = [resource]
+                    with self.assertRaisesRegex(ValueError, "very_beginner investigations allow only Reference"):
+                        validate_authoring(item, pack)
+
     def test_external_submission_needs_actual_value_and_boolean_usage(self):
         original = next(c for c in self.cases if c["external_references"])
         for key, value in [

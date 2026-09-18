@@ -8,12 +8,12 @@
 
 | Level | 目的 |
 | --- | --- |
-| 超初級 | 初期情報に明示された矛盾・偽装を見る |
+| 超初級 | 提示された対象情報とReferenceを見比べ、明確な矛盾・偽装を見る |
 | 初級 | 原則1つの主役Toolと必要なReference／External Referenceで調べる |
 | 中級 | Category・OSに自然なTool候補から選び、複数Evidenceを組み合わせる |
 | 上級 | 攻撃と正常挙動で共通する特徴を文脈で区別する |
 
-超初級は初期情報だけで解ける構成にします。Packageでも申請名と対象名の明確な相違などを扱えます。初級のReference主体の問題では不要なToolを足しません。中級以上では必要なToolだけを表示せず、選択肢の出力も事実として成立させます。
+超初級はTool・External Referenceを使わず、初期情報とReferenceの単純な比較で解ける構成にします。規則・正規連絡先・承認情報は難易度にかかわらず調査側のReferenceに置き、検査対象には対象の情報を表示します。PackageでもReferenceの申請名と対象名の明確な相違などを扱えます。初級のReference主体の問題では不要なToolを足しません。中級以上では必要なToolだけを表示せず、選択肢の出力も事実として成立させます。
 
 適切な外部照会が必要な問題も認めます。一律の使用回数・順序や調査完了を回答条件にせず、同じ事実を得る代替Toolも認めます。ALLOWは現在のCheckpointの通過許可、BLOCKはその不許可であり、Malwareの証明とは限りません。
 
@@ -29,7 +29,7 @@
 | Email | 受信保留中のEmailの受入れ |
 | Account / Authentication | Session成立前 |
 
-PackageのPyPI/npmは `ecosystem` で区別します。Email内の添付・URLは追加グループで調査し、親Emailの履歴に残します（[例](../data/problems/EMAIL-INTERMEDIATE-001.json)）。別問題へ自動遷移しません。
+PackageのPyPI/npmは `ecosystem` で区別します。Email内の添付・URLは追加グループで調査し、親Emailの履歴に残します（[例](../data/problems/EMAIL-GENUINE-URGENT.json)）。別問題へ自動遷移しません。
 
 Accountでは今回のSession成立後のLog・操作を使いません。4624・last等は過去Sessionに限定し、今回のMFA結果はGateway/認証基盤の初期情報として明示します。Windows Security LogにMFA成功が記録されるとは仮定しません。
 
@@ -45,13 +45,13 @@ urlscan.ioのPublic・Unlisted・Privateは公開範囲であり、Privateでも
 
 Hashは合成値、IPは文書用、組織・Domain・Packageは架空です。攻撃Commandは `<TRAINING-PLACEHOLDER>` 等に置換し、実行可能なPayloadを配布しません。Registry Metadata・OSVも保存済み模擬資料で、実在Packageの評判や現在の脆弱性情報を示しません。
 
-実例は攻撃名を知らなくてもEvidenceから解ける構成にし、各問題の `sources` に一次資料を残します。ClickFix・PowerShell悪用・BEC・npm供給網の事例は [問題一覧](problem-catalog.md) から辿れます。
+実例は攻撃名を知らなくてもEvidenceから解ける構成にし、各問題の `sources` に一次資料を残します。ClickFix・DLL Side-loading・Cron Persistence・BEC・Password Spraying・Package供給元の事例は [問題一覧](problem-catalog.md) から辿れます。
 
 仕様確認には [Sigcheck](https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck)、[Process Explorer](https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer)、[Windows Event 4625](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625)、[Wireshark Conversations](https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html)、[npm Scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts/)、[package-lock.json](https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/)、[OSV API](https://google.github.io/osv.dev/api/) を参照しました。Toolの実装・利用OSごとの確認資料は [Tool利用環境](tool-platform-audit.md) に集約します。CLI/GUIのVersion・表示設定による細部の差はあります。
 
-## 次の教材セットの方針
+## 現行教材の方針
 
-問題数の目標は設けず、判断根拠・Tool選択・正常例との一貫性を優先します。現行問題の内容・分類は別工程で置換するため、この方針への適合は作問時に確認します。
+問題数の目標は設けず、判断根拠・Tool選択・正常例との一貫性を優先します。旧24問は削除し、現行Packは新しい112問に置換しました。
 
 RDAPとVulnerability DatabaseはReference、Hash／File／Domain／IP／URL ReputationとIsolated URL AnalysisはExternal Referenceです。Referenceを含む調査結果は比較する事実を示し、攻撃名・ゲーム上の結論はTitle・Explanationへ置きます。外部サービス本来の検出数・分類の表示は可能です。
 

@@ -26,6 +26,8 @@ static func normalize(item: Dictionary, catalog: ContentCatalog, schema: Diction
 		for resource in source.get(group, []):
 			var errors := ContentSchema.check(resource, resource_schema)
 			if not errors.is_empty(): return group + ": " + "; ".join(errors)
+			if item.level == "very_beginner" and kind != "references":
+				return "超初級の調査にはReferenceのみ使用できます。"
 			if ids.has(resource.id): return "資料IDが重複しています: " + resource.id
 			ids[resource.id] = true
 			resource.merge({"label": resource.name, "description": "資料を表示します。",
@@ -47,6 +49,4 @@ static func normalize(item: Dictionary, catalog: ContentCatalog, schema: Diction
 			if not ids.has(option): return "代替証拠の資料が存在しません: " + option
 	for id in item.required_evidence:
 		if not ids.has(id) and not alternatives.has(id): return "必要証拠が存在しません: " + id
-	if item.level == "very_beginner" and (ids.size() != 1 or item.required_evidence != ["initial_information"]):
-		return "超初級は初期情報のみで判断できる問題にしてください。"
 	return InvestigationInputs.validate_graph(item, catalog.tools_for(item))

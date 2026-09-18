@@ -31,6 +31,38 @@ func _initialize() -> void:
 		check(not item.has("fields") and not item.has("expected") and not item.has("type"), "実行時にも旧フィールドを持たない")
 	for tool in catalog.guide_tools():
 		check(not tool.has("output") and not tool.has("output_information") and not tool.has("correct_usage"), "ガイドから結果を漏らさない")
+	var visible := raw("FIX-VISIBLE-FILE")
+	var policy := {"id": "policy", "name": "受入れ形式", "content": "PDFのみ受け入れる。"}
+	visible.references = [policy]
+	visible.required_evidence = ["initial_information", "policy"]
+	check(ProblemData.normalize(visible, catalog, schema).is_empty(), "超初級でReferenceを必要証拠にできる")
+	var reference_shift := InspectionShift.new()
+	reference_shift.start([visible])
+	check(reference_shift.missing_evidence() == ["policy"], "超初級でもReferenceは閲覧するまで未確認")
+	check(reference_shift.inspect(catalog.tools_for(visible)[0]).ok, "入力なしでReferenceを閲覧できる")
+	check(reference_shift.missing_evidence().is_empty(), "閲覧でReferenceの証拠が揃う")
+	var custom_catalog := Fixtures.catalog()
+	check(custom_catalog.load_pack(), "追加グループ用のPack読込")
+	custom_catalog.resource_groups.policy_documents = {"id": "policy_documents", "label": "規則", "kind": "references"}
+	visible = raw("FIX-VISIBLE-FILE")
+	visible.resources = {"policy_documents": [{"id": "policy", "name": "受入れ形式", "content": "PDFのみ受け入れる。"}]}
+	visible.evidence_alternatives = {"format_policy": {"label": "形式の規則", "any_of": ["policy"]}}
+	visible.required_evidence = ["format_policy"]
+	check(ProblemData.normalize(visible, custom_catalog, schema).is_empty(), "超初級で追加Referenceグループと代替証拠を使用できる")
+	for kind in ["tools", "external_references"]:
+		var source := raw("FIX-FILE") if kind == "tools" else raw("FIX-PRIVATE-FILE")
+		var resource: Dictionary = source[kind][0].duplicate(true)
+		resource.accepted_information_types = ["file"]
+		resource.input_bindings = [{"source": "initial_information", "id": "File名"}]
+		for custom in [false, true]:
+			visible = raw("FIX-VISIBLE-FILE")
+			if custom:
+				custom_catalog.resource_groups.extra = {"id": "extra", "label": "追加資料", "kind": kind}
+				visible.resources = {"extra": [resource.duplicate(true)]}
+			else:
+				visible[kind] = [resource.duplicate(true)]
+			check(ContentSchema.check(visible, schema).is_empty(), "構造が有効な超初級の調査候補")
+			check(ProblemData.normalize(visible, custom_catalog, schema).contains("Referenceのみ"), "超初級のTool・External Referenceは追加グループでも拒否")
 	var item := raw("FIX-FILE")
 	item.initial_information_types.unknown = "file"
 	rejected(item, "未登録の初期情報型")

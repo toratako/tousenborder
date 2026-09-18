@@ -133,7 +133,7 @@ func _run() -> void:
 	shift.start(catalog.cases)
 	for item in catalog.cases:
 		if item.level == "very_beginner":
-			check(catalog.tools_for(item).is_empty() and item.required_evidence == ["initial_information"], "超初級は初期情報のみ")
+			check(catalog.tools_for(item).all(func(resource): return resource.resource_kind == "references"), "超初級の調査はReferenceのみ")
 		if item.category == "account":
 			check(item.decision_context == "before_session", "認証問題は成立前")
 		if item.category == "process":
