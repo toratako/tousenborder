@@ -37,6 +37,23 @@ var stamp_pending := false
 var desk_generation := 0
 var action_stamps: Array[StampTool] = []
 var tool_panel: Panel
+var how_to_button: Button
+var how_to_overlay: Panel
+var how_to_image: TextureRect
+var how_to_previous: Button
+var how_to_next: Button
+var how_to_close: Button
+var how_to_counter: Label
+var how_to_previous_focus: Control
+var how_to_index := 0
+const HOW_TO_SLIDES := [
+	"res://assets/how_to/01-target.png",
+	"res://assets/how_to/02-tools.png",
+	"res://assets/how_to/03-compare.png",
+	"res://assets/how_to/04-external.png",
+	"res://assets/how_to/05-stamp.png",
+	"res://assets/how_to/06-audit.png",
+]
 var rules_button: Button
 var tool_message: Label
 var tool_scroll: ScrollContainer
@@ -103,20 +120,21 @@ func _ready() -> void:
 	_build_start_screen()
 	_build_pause_menu()
 	Layout.build_rules(self)
+	Layout.build_how_to(self)
 	Layout.build_external_preview(self)
 	shift.changed.connect(_refresh)
 	_show_start_screen()
 
 func _process(delta: float) -> void:
 	_update_hover_drop_targets()
-	if not playing or pause_menu.visible or rules_overlay.visible or external_preview.visible:
+	if not playing or pause_menu.visible or rules_overlay.visible or how_to_overlay.visible or external_preview.visible:
 		return
 	shift.tick(delta)
 	_refresh_elapsed_time()
 
 func _update_hover_drop_targets() -> void:
 	var payload: Dictionary = {}
-	if playing and not shift.finished() and not shift.judged and not pause_menu.visible and not rules_overlay.visible and not external_preview.visible and not get_viewport().gui_is_dragging():
+	if playing and not shift.finished() and not shift.judged and not pause_menu.visible and not rules_overlay.visible and not how_to_overlay.visible and not external_preview.visible and not get_viewport().gui_is_dragging():
 		var source := get_viewport().gui_get_hovered_control()
 		if source is StampTool and not source.disabled and not source.preview_only and source.is_visible_in_tree():
 			payload = source.payload()
@@ -128,6 +146,16 @@ func _update_hover_drop_targets() -> void:
 		button.hover_drop_ready = button.is_visible_in_tree() and button._can_drop_data(Vector2.ZERO, payload)
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(how_to_overlay) and how_to_overlay.visible:
+		if event.is_action_pressed("ui_cancel"):
+			get_viewport().set_input_as_handled()
+			if not event.is_echo():
+				_close_how_to()
+		elif event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right"):
+			get_viewport().set_input_as_handled()
+			if not event.is_echo():
+				_change_how_to(-1 if event.is_action_pressed("ui_left") else 1)
+		return
 	if is_instance_valid(rules_overlay) and rules_overlay.visible and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if not event.is_echo():
@@ -146,7 +174,7 @@ func _build_pause_menu() -> void:
 	Layout.build_pause_menu(self)
 
 func _toggle_menu() -> void:
-	if not playing or rules_overlay.visible:
+	if not playing or rules_overlay.visible or how_to_overlay.visible:
 		return
 	if pause_menu.visible:
 		_close_menu()
@@ -245,6 +273,7 @@ func _close_summary() -> void:
 		summary_overlay = null
 
 func _show_start_screen() -> void:
+	_close_how_to(false)
 	_close_rules(false)
 	_clear_external()
 	_close_menu()
@@ -265,6 +294,7 @@ func _start_shift() -> void:
 	var selected := _selected_cases()
 	if selected.is_empty():
 		return
+	_close_how_to(false)
 	_close_rules(false)
 	_close_menu()
 	_close_summary()
@@ -316,6 +346,7 @@ func get_stamp(action_id: String) -> StampTool:
 	return null
 
 func _clear_desk() -> void:
+	_close_how_to(false)
 	_close_rules(false)
 	_clear_external()
 	desk_generation += 1
@@ -354,8 +385,51 @@ func _activate_card(card: DraggableCard) -> void:
 	for entry in cards:
 		entry.set_active(entry == card)
 
+func _open_how_to() -> void:
+	if not playing or shift.finished() or shift.judged or pause_menu.visible or rules_overlay.visible or external_preview.visible or how_to_overlay.visible:
+		return
+	for card in cards:
+		card.dragging = false
+	how_to_previous_focus = get_viewport().gui_get_focus_owner()
+	move_child(how_to_overlay, -1)
+	_change_how_to(0)
+	how_to_overlay.show()
+	how_to_close.grab_focus()
+
+func _change_how_to(direction: int) -> void:
+	var previous_focus := get_viewport().gui_get_focus_owner()
+	how_to_index = clampi(how_to_index + direction, 0, HOW_TO_SLIDES.size() - 1)
+	how_to_image.texture = load(HOW_TO_SLIDES[how_to_index])
+	how_to_counter.text = "%d / %d" % [how_to_index + 1, HOW_TO_SLIDES.size()]
+	how_to_previous.disabled = how_to_index == 0
+	how_to_next.disabled = how_to_index == HOW_TO_SLIDES.size() - 1
+	# 無効になった端のボタンからフォーカスを戻し、Tabをギャラリー内に留める。
+	var controls: Array[Button] = [how_to_close]
+	for button in [how_to_previous, how_to_next]:
+		if not button.disabled:
+			controls.append(button)
+		elif previous_focus == button:
+			how_to_close.grab_focus()
+	for i in range(controls.size()):
+		var button := controls[i]
+		button.focus_previous = button.get_path_to(controls[(i - 1 + controls.size()) % controls.size()])
+		button.focus_next = button.get_path_to(controls[(i + 1) % controls.size()])
+		button.focus_neighbor_top = button.focus_previous
+		button.focus_neighbor_bottom = button.focus_next
+
+func _close_how_to(restore_focus := true) -> void:
+	if not is_instance_valid(how_to_overlay) or not how_to_overlay.visible:
+		return
+	how_to_overlay.hide()
+	if restore_focus:
+		if is_instance_valid(how_to_previous_focus) and how_to_previous_focus.is_visible_in_tree():
+			how_to_previous_focus.grab_focus()
+		else:
+			how_to_button.grab_focus()
+	how_to_previous_focus = null
+
 func _open_rules() -> void:
-	if not playing or shift.finished() or shift.judged or pause_menu.visible or external_preview.visible or rules_overlay.visible:
+	if not playing or shift.finished() or shift.judged or pause_menu.visible or external_preview.visible or rules_overlay.visible or how_to_overlay.visible:
 		return
 	for card in cards:
 		card.dragging = false
@@ -385,7 +459,7 @@ func _select_information(token: Dictionary) -> void:
 		button.update_input(token)
 
 func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
-	if not playing or shift.finished() or shift.judged or pause_menu.visible or rules_overlay.visible or not pending_external.is_empty():
+	if not playing or shift.finished() or shift.judged or pause_menu.visible or rules_overlay.visible or how_to_overlay.visible or not pending_external.is_empty():
 		return
 	if not ToolRunner.supports_target(tool, shift.current()):
 		tool_message.text = "この調査環境では利用できません。"
@@ -503,7 +577,7 @@ func _update_case_controls(item: Dictionary) -> void:
 	tool_message.text = "必要に応じて調査し、判定してください。" if not active_tools.is_empty() else "基本情報を確認して判定してください。"
 
 func _can_stamp(data: Dictionary) -> bool:
-	return playing and not shift.finished() and not shift.judged and not pause_menu.visible and not rules_overlay.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
+	return playing and not shift.finished() and not shift.judged and not pause_menu.visible and not rules_overlay.visible and not how_to_overlay.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
 
 func _receive_stamp(card: DraggableCard, data: Dictionary) -> void:
 	if card != target_card or not _can_stamp(data):
@@ -543,6 +617,7 @@ func _show_audit(record: Dictionary) -> void:
 	next.grab_focus()
 
 func _show_summary() -> void:
+	_close_how_to(false)
 	_close_rules(false)
 	if is_instance_valid(summary_overlay):
 		return

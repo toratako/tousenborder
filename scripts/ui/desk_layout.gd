@@ -17,14 +17,17 @@ static func build_workspace(desk) -> void:
 	desk.menu_button.add_theme_font_size_override("font_size", 23)
 	desk.menu_button.tooltip_text = "メニューを開く [ESC]"
 	desk.menu_button.pressed.connect(desk._toggle_menu)
+	desk.how_to_button = icon_button(desk, Rect2(960, 12, 144, 46), "book", "遊び方", "遊び方を開く")
+	desk.how_to_button.pressed.connect(desk._open_how_to)
 	desk.rules_button = icon_button(desk, Rect2(1120, 12, 144, 46), "book", "規則集", "セキュリティ運用規則を開く")
 	desk.rules_button.pressed.connect(desk._open_rules)
-	for button in [desk.menu_button, desk.rules_button]:
+	for button in [desk.menu_button, desk.how_to_button, desk.rules_button]:
 		for state in ["normal", "hover", "pressed", "disabled"]:
 			button.add_theme_stylebox_override(state, header_pill_style(Color("19394d") if state in ["hover", "pressed"] else Color("101e32")))
 	var rules_focus := header_pill_style(Color.TRANSPARENT)
 	rules_focus.border_color = PAPER
 	desk.rules_button.add_theme_stylebox_override("focus", rules_focus)
+	desk.how_to_button.add_theme_stylebox_override("focus", rules_focus)
 	for rect in [Rect2(624, 12, 128, 46), Rect2(768, 12, 128, 46)]:
 		var pill := Chrome.panel(desk.workspace, rect, Color.TRANSPARENT)
 		pill.add_theme_stylebox_override("panel", header_pill_style(Color("101e32")))
@@ -101,6 +104,30 @@ static func build_rules(desk) -> void:
 		control.focus_neighbor_top = path
 		control.focus_neighbor_bottom = path
 	desk.rules_overlay.hide()
+
+static func build_how_to(desk) -> void:
+	desk.how_to_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.9))
+	desk.how_to_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	desk.how_to_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	var sheet := Chrome.panel(desk.how_to_overlay, Rect2(40, 24, 1200, 752), Color("101e32"), Color("34556f"))
+	Chrome.label(sheet, Rect2(28, 16, 500, 40), "遊び方", INK, 26)
+	desk.how_to_close = Chrome.button(sheet, Rect2(980, 16, 192, 40), "閉じる  [ESC]", PAPER)
+	desk.how_to_close.pressed.connect(desk._close_how_to)
+	desk.how_to_image = TextureRect.new()
+	desk.how_to_image.position = Vector2(24, 72)
+	desk.how_to_image.size = Vector2(1152, 600)
+	desk.how_to_image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	desk.how_to_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	desk.how_to_image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sheet.add_child(desk.how_to_image)
+	desk.how_to_previous = Chrome.button(sheet, Rect2(376, 690, 144, 42), "←  前へ", PAPER)
+	desk.how_to_next = Chrome.button(sheet, Rect2(680, 690, 144, 42), "次へ  →", PAPER)
+	desk.how_to_previous.pressed.connect(desk._change_how_to.bind(-1))
+	desk.how_to_next.pressed.connect(desk._change_how_to.bind(1))
+	desk.how_to_counter = Chrome.label(sheet, Rect2(536, 690, 128, 42), "", MUTED, 18)
+	desk.how_to_counter.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	desk.how_to_counter.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	desk.how_to_overlay.hide()
 
 static func build_start_screen(desk) -> void:
 	desk.start_screen = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color("070e1b"))
