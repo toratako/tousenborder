@@ -1,0 +1,1967 @@
+{
+  "schema_version": 1,
+  "content_pack": "res://data/packs/learning.json",
+  "reviews": {
+    "FILE-WIN-DOUBLE-EXTENSION": {
+      "overview": "PDF請求書として受領したinvoice.pdf.exeを開いてよいか判断する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "完全名の末尾が.pdfではなく.exeであることを確認する"
+        },
+        {
+          "resource_id": "format",
+          "action": "PDFのみ受入れ可という規則と照合する"
+        }
+      ],
+      "decisive_evidence": "完全名がinvoice.pdf.exeで、実行Fileを認めないPDF限定の受入れ規則に反する。"
+    },
+    "FILE-LINUX-SCRIPT-NAME": {
+      "overview": "PDF請求書として届いたinvoice.pdf.shを開く申請を審査する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "完全名の末尾.shとPDF請求書という申請内容を比較する"
+        },
+        {
+          "resource_id": "format",
+          "action": "Shell Scriptを受け入れないPDF限定規則を確認する"
+        }
+      ],
+      "decisive_evidence": "申請はPDFだが完全名は.shで、Shell Scriptを禁止する受入れ条件を満たさない。"
+    },
+    "PROC-WIN-SYSTEM-NAME": {
+      "overview": "svchost.exeを名乗る稼働Processの継続を、提示された実行Pathから判断する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "ImageがUserのTemp配下であることを確認する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "管理対象のSystem32またはSysWOW64だけを認める条件と比較する"
+        }
+      ],
+      "decisive_evidence": "実行ImageがUserのTemp配下であり、同名でもSystem32またはSysWOW64の管理対象に限る継続条件を満たさない。"
+    },
+    "WEB-MISLEADING-HOST": {
+      "overview": "組織のアカウント確認をうたうURLが、正規Login先かをアクセス前に判断する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "URLのHost全体を読み、verify-account.example側のHostであることを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "正規Login Hostのlogin.aster.exampleと完全一致しないことを確認する"
+        }
+      ],
+      "decisive_evidence": "実際のHostはlogin.aster.example.verify-account.exampleであり、組織Password用の正規Hostとは異なる。"
+    },
+    "WEB-LINK-MISMATCH": {
+      "overview": "社内Password変更のリンクについて、表示文字と実際の遷移先を比較する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "リンク表示のhelpdesk.aster.exampleと実URLのaster-helpdesk.exampleを比較する"
+        },
+        {
+          "resource_id": "official",
+          "action": "正規Helpdesk Hostに一致するのは表示文字だけであることを確認する"
+        }
+      ],
+      "decisive_evidence": "実際のリンク先Hostが正規Helpdeskと異なり、社内Password変更先としての条件を満たさない。"
+    },
+    "EMAIL-DISPLAY-NAME": {
+      "overview": "代表者名を表示する至急振込メールについて、送信Addressと確認手順を比較する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "表示名に頼らずFromのfree-mail.exampleと電話確認を避ける依頼を確認する"
+        },
+        {
+          "resource_id": "directory",
+          "action": "正規役員Address ceo@aster.exampleと比較する"
+        },
+        {
+          "resource_id": "payment",
+          "action": "役員依頼でもTicketと登録番号への確認が必要という手順を確認する"
+        }
+      ],
+      "decisive_evidence": "Fromが正規役員Addressと異なり、本文も必須の独立確認を省く振込を要求している。"
+    },
+    "EMAIL-ATTACHMENT-NAME": {
+      "overview": "PDF請求書と説明された添付メールを、添付の完全名から審査する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "添付完全名invoice.pdf.exeの末尾を確認する"
+        },
+        {
+          "resource_id": "format",
+          "action": "請求書はPDFのみで実行Fileは不可という条件と比較する"
+        }
+      ],
+      "decisive_evidence": "添付完全名が.exeであり、PDFという説明とPDF限定の受入れ条件に反する。"
+    },
+    "AUTH-WIN-FAILURE-BURST": {
+      "overview": "認証Gatewayで保留中の要求を、同一Source・Userの直前の失敗集計と一時遮断規則から判断する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "今回09:10の要求と、09:05–09:09:59の同一Source・Userへの失敗400回を区別して確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "5分で20回以上なら15分遮断というGatewayの教材上の規則に照らす"
+        }
+      ],
+      "decisive_evidence": "直前5分の同一Source・Userへの失敗400回が20回の閾値を超え、今回09:10の要求は15分の遮断期間内に当たる。侵入成功は示されていない。",
+      "review_notes": "自動遮断を想定する場合、20回の閾値に対して400回が集計される理由が未説明。拒否済み要求を数えるのか、遮断前の集計なのかを明確にする必要がある。またSource・Userの組への規則は教材のGateway独自方針として明示するとよい。"
+    },
+    "PKG-PYPI-OBVIOUS-TYPO": {
+      "overview": "Install直前に解決されたPackage名が、申請したComponent名と一致するか確認する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "解決された名前aster-reqestsを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "申請名aster-requestsと綴りを比較し、申請済み名のみ導入可という条件を適用する"
+        }
+      ],
+      "decisive_evidence": "導入対象aster-reqestsは申請したaster-requestsと別名で、申請名に限定する導入条件を満たさない。"
+    },
+    "FILE-WIN-PUBLISHED-HASH": {
+      "overview": "承認済みEditor 4.2として取得したInstallerが、導入を認められた配布物か確認する。",
+      "flow": [
+        {
+          "resource_id": "hash",
+          "action": "対象InstallerのSHA-256を取得する"
+        },
+        {
+          "resource_id": "vendor",
+          "action": "Version 4.2の公開SHA-256と全桁を比較し一致を確認する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "製品・Version・対象用途が導入承認に一致することを確認する"
+        }
+      ],
+      "decisive_evidence": "計算SHA-256がAsterEditor 4.2のVendor公開値と完全一致し、その製品・Versionの導入もCHG-401で承認されている。"
+    },
+    "FILE-WIN-KNOWN-HASH": {
+      "overview": "公開サイトから取得した閲覧用追加ソフトの初回実行を審査する。",
+      "flow": [
+        {
+          "resource_id": "hash",
+          "action": "対象FileのSHA-256を取得する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開配布FileのHash照会が許可されることを確認する"
+        },
+        {
+          "resource_id": "hash_rep",
+          "action": "取得したHashを照会し、対象一致・分析日時・downloaderの検出48/70を確認する"
+        }
+      ],
+      "decisive_evidence": "対象から取得したSHA-256に一致する外部記録で、現行のdownloader検出48/70が報告されている。"
+    },
+    "FILE-WIN-PUBLISHER": {
+      "overview": "社内カタログから取得したプリンタDriver 6.1の導入条件を確認する。",
+      "flow": [
+        {
+          "resource_id": "sig",
+          "action": "署名検証結果・Publisher・製品・Versionを確認する"
+        },
+        {
+          "resource_id": "publisher",
+          "action": "Signed、Aster Devices Ltd.、AsterPrint 6.1と社内カタログ配布の承認条件を照合する"
+        }
+      ],
+      "decisive_evidence": "署名が検証済みで、Publisher・製品・Version・申告された入手経路がTrusted Publisherの承認条件に一致する。"
+    },
+    "FILE-WIN-EMBEDDED-DOMAIN": {
+      "overview": "公開の変換ツールに含まれる静的文字列を調べ、初回実行を判断する。",
+      "flow": [
+        {
+          "resource_id": "strings",
+          "action": "埋め込みURLからasset-fetch.exampleを確認する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開Domainだけの外部照会が許可されることを確認する"
+        },
+        {
+          "resource_id": "domain_rep",
+          "action": "抽出Domainを照会し、直近のMalware配布先という報告を確認する"
+        }
+      ],
+      "decisive_evidence": "File中の取得先Domainが、外部記録で直近にもMalware配布先として9/12 feedsに報告されている。静的文字列であり通信実績ではない。"
+    },
+    "FILE-WIN-ARCHIVE-CONTENTS": {
+      "overview": "PDFだけの会議資料として届いたZIPを受け入れてよいか判断する。",
+      "flow": [
+        {
+          "resource_id": "archive",
+          "action": "実行せずArchive一覧を取得し、notes.vbsとopen-notes.lnkを確認する"
+        },
+        {
+          "resource_id": "format",
+          "action": "PDF以外のScript・Shortcutを禁止する規則と比較する"
+        }
+      ],
+      "decisive_evidence": "ArchiveがPDFに加えてVBSとLNKを含み、PDFのみという受入れ規則に反する。"
+    },
+    "FILE-LINUX-ELF-AS-DOCUMENT": {
+      "overview": "配送伝票delivery.pdfの実形式を調べ、表示してよいか判断する。",
+      "flow": [
+        {
+          "resource_id": "file",
+          "action": "拡張子に頼らずFile内容の形式を確認する"
+        },
+        {
+          "resource_id": "format",
+          "action": "ELF実行Fileという結果をPDF限定の受入れ条件と比較する"
+        }
+      ],
+      "decisive_evidence": "fileの結果はELF実行Fileで、伝票として認められるPDFではない。"
+    },
+    "FILE-LINUX-PUBLISHED-HASH": {
+      "overview": "Linux用CLI 4.2の配布Archiveが承認されたReleaseと同一か確認する。",
+      "flow": [
+        {
+          "resource_id": "hash",
+          "action": "ArchiveのSHA-256を計算する"
+        },
+        {
+          "resource_id": "vendor",
+          "action": "CLI 4.2の公開値と全桁が一致することを確認する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "Linux x86-64版と運用Serverへの導入承認を確認する"
+        }
+      ],
+      "decisive_evidence": "ArchiveのHashがCLI 4.2のVendor公開値と一致し、対象Version・環境の導入がCHG-435で承認されている。"
+    },
+    "FILE-LINUX-KNOWN-HASH": {
+      "overview": "公開配布のLinux用プレビュー補助プログラムを実行する前にHash評判を確認する。",
+      "flow": [
+        {
+          "resource_id": "hash",
+          "action": "対象実行FileのSHA-256を取得する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開配布物のHash照会を認める方針を確認する"
+        },
+        {
+          "resource_id": "hash_rep",
+          "action": "取得Hashで照会し、downloader検出35/62と分析日時を確認する"
+        }
+      ],
+      "decisive_evidence": "対象Hashと一致する外部記録に、現行のdownloader検出35/62がある。"
+    },
+    "FILE-LINUX-ARCHIVE-MEMBERS": {
+      "overview": "PDF手順書として届いたtar.gzの内容が受入れ条件に合うか調べる。",
+      "flow": [
+        {
+          "resource_id": "archive",
+          "action": "Archive内のFile一覧からguide.pdfとsetup.shを確認する"
+        },
+        {
+          "resource_id": "format",
+          "action": "PDFのみで実行Scriptを含めないという配布条件と照合する"
+        }
+      ],
+      "decisive_evidence": "資料Archiveにsetup.shが含まれ、実行Scriptを認めないPDF限定条件に反する。"
+    },
+    "FILE-LINUX-ELF-INTERPRETER": {
+      "overview": "統計Agent 2.0のELF構成が承認された導入仕様と一致するか確認する。",
+      "flow": [
+        {
+          "resource_id": "elf",
+          "action": "ELFのINTERPが/tmp/ld-stats.soであることを確認する"
+        },
+        {
+          "resource_id": "service",
+          "action": "標準Loaderを要求する構成台帳と比較する"
+        }
+      ],
+      "decisive_evidence": "INTERPが/tmp/ld-stats.soを指し、承認構成の/lib64/ld-linux-x86-64.so.2と異なる。"
+    },
+    "PROC-WIN-HIGH-CPU": {
+      "overview": "専用端末でCPUを多く使用する動画変換Processを継続してよいか判断する。",
+      "flow": [
+        {
+          "resource_id": "task",
+          "action": "選択PIDのProcess名・UserとCPU 96%を確認する"
+        },
+        {
+          "resource_id": "job",
+          "action": "ENC-188の端末・User・時間帯と想定CPU 90–100%を照合する"
+        }
+      ],
+      "decisive_evidence": "CPU 96%が承認Jobの想定範囲内で、端末ENC-04・User・Process・実行時間帯も一致する。"
+    },
+    "PROC-WIN-IMAGE-PATH": {
+      "overview": "業務Agentらしい名前のProcessが、承認された配置と起動方法で動いているか確認する。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "Image・User・親Processを確認する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "Program Files配置・svc_agent・services.exe配下という承認構成と比較する"
+        }
+      ],
+      "decisive_evidence": "実際はDownloads配下・mori・explorer.exe起動で、承認された管理Path・Service Account・親Processの組合せと異なる。"
+    },
+    "PROC-WIN-OFFICE-DOWNLOAD": {
+      "overview": "稼働中のPowerShellについて、起動元とCommand内の取得先を調べる。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "Wordを親とする外部Script取得・実行のCommandと取得先Domainを確認する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開Domainの外部照会を認める方針を確認する"
+        },
+        {
+          "resource_id": "domain_rep",
+          "action": "取得したoffice-assets.exampleを照会し、Malware配布先の報告と照合する"
+        }
+      ],
+      "decisive_evidence": "Wordから起動したPowerShellが外部Scriptを取得・実行するCommandを持ち、その取得先DomainにMalware配布先という現行の報告がある。"
+    },
+    "PROC-WIN-STARTUP-ENTRY": {
+      "overview": "稼働中helper.exeに対応する自動起動登録が、端末の運用方針に合うか調べる。",
+      "flow": [
+        {
+          "resource_id": "autoruns",
+          "action": "対象Imageに対応するHKCU Run登録とTemp配下の起動Pathを確認する"
+        },
+        {
+          "resource_id": "startup",
+          "action": "管理配布Pathの承認Agentのみという登録条件と照合する"
+        }
+      ],
+      "decisive_evidence": "UserのRunキーがTemp配下のhelper.exeを指定し、その配置からの自動起動は規則で禁止されている。"
+    },
+    "PROC-WIN-BACKING-SIGNATURE": {
+      "overview": "管理配布されたPrint Agentの実行本体をPIDから特定し、継続条件を確認する。",
+      "flow": [
+        {
+          "resource_id": "sig",
+          "action": "PIDに対応するImageのPath・署名検証結果・Publisherを確認する"
+        },
+        {
+          "resource_id": "publisher",
+          "action": "Print Agent 6.1の署名・Publisher・管理Path・Service Userと管理記録を照合する"
+        }
+      ],
+      "decisive_evidence": "実行本体のSigned・Aster Devices Ltd.・管理Pathが台帳と一致し、Userと管理配布記録も承認条件を満たす。"
+    },
+    "PROC-WIN-BACKING-HASH": {
+      "overview": "稼働中inventory.exeの実行本体が、承認版3.0と同一か確認する。",
+      "flow": [
+        {
+          "resource_id": "hash",
+          "action": "PIDに対応するBacking ExecutableのPathとSHA-256を取得する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "inventory.exeの承認Hashと全桁を比較する"
+        }
+      ],
+      "decisive_evidence": "PIDに対応する実行本体のHashが、台帳にあるinventory.exe 3.0の承認Hashと異なる。"
+    },
+    "PROC-LINUX-APPROVED-ARGS": {
+      "overview": "稼働Backup AgentのUser・実行Path・引数が登録Jobに一致するか確認する。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "User、PPID、完全Path、設定File引数を確認する"
+        },
+        {
+          "resource_id": "job",
+          "action": "backup Userと登録された実行Commandを照合する"
+        }
+      ],
+      "decisive_evidence": "backup Userによる/opt/aster/backup-agentと--config /etc/aster/backup.tomlがJOB-501の指定に一致する。"
+    },
+    "PROC-LINUX-WEB-CHILD": {
+      "overview": "www-dataで動作するShellがどのProcessから起動されたか確認する。",
+      "flow": [
+        {
+          "resource_id": "pstree",
+          "action": "nginx→web-worker→shという親子関係を確認する"
+        },
+        {
+          "resource_id": "service",
+          "action": "静的サイトのWorkerにはShell起動を認めないという構成と比較する"
+        }
+      ],
+      "decisive_evidence": "静的File応答専用のweb-worker配下にshがあり、明示的な子Shell起動禁止に反する。"
+    },
+    "PROC-LINUX-OPEN-PRIVATE-KEY": {
+      "overview": "画像用Workerが開いているFileを調べ、業務範囲に収まっているか判断する。",
+      "flow": [
+        {
+          "resource_id": "lsof",
+          "action": "対象PIDが/root/.ssh/id_ed25519を読取り用に開いていることを確認する"
+        },
+        {
+          "resource_id": "service",
+          "action": "/srv/mediaの画像のみを扱い秘密鍵アクセスを禁止する仕様と比較する"
+        }
+      ],
+      "decisive_evidence": "画像Workerが業務範囲外のrootのSSH秘密鍵を開いており、アクセス禁止条件に反する。外部送信の証拠ではない。"
+    },
+    "PROC-LINUX-SOCKET-REPUTATION": {
+      "overview": "cache-workerの接続先をPIDに結び付け、外部評判で継続可否を判断する。",
+      "flow": [
+        {
+          "resource_id": "ss",
+          "action": "PID 4200のSocketからRemote IP 203.0.113.88を取得する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開IPだけの照会が許可されることを確認する"
+        },
+        {
+          "resource_id": "ip_rep",
+          "action": "取得したIPを照会し、専用のMalware配布先という直近の報告を確認する"
+        }
+      ],
+      "decisive_evidence": "対象Processの実接続先IPが、当日08:50にもMalware配布基盤として確認された専用Endpointと一致する。"
+    },
+    "PROC-LINUX-SERVICE-UNIT": {
+      "overview": "監視AgentのPIDが属するsystemd Unitと登録構成を照合する。",
+      "flow": [
+        {
+          "resource_id": "systemctl",
+          "action": "MainPID・User・ExecStart・FragmentPathを確認する"
+        },
+        {
+          "resource_id": "service",
+          "action": "metrics.serviceの承認済みUser・Command・Unit配置と比較する"
+        }
+      ],
+      "decisive_evidence": "選択PIDがmetrics.serviceのMainPIDで、User・ExecStart・Unit配置がCHG-502に一致する。"
+    },
+    "PROC-LINUX-CRON-JOB": {
+      "overview": "09:10に動作する帳票整理Processについて、Userのcrontabと定例Jobを照合する。",
+      "flow": [
+        {
+          "resource_id": "cron",
+          "action": "reportsのcrontabから毎日09:10のScriptと--days 30を確認する"
+        },
+        {
+          "resource_id": "job",
+          "action": "JOB-503のUser・時刻・Path・引数と登録内容を比較する"
+        }
+      ],
+      "decisive_evidence": "reportsのcrontabにある09:10・/opt/reports/rotate-reports --days 30がJOB-503と一致し、提示されたUser・Process名・採取時刻とも整合する。",
+      "review_notes": "crontabは登録内容の証拠であり、選択PIDがそのJobから起動された実績や完全な実行Commandはこの問題の資料にない。"
+    },
+    "WEB-WIN-DNS": {
+      "overview": "Windows環境で公開研修サイトのHostとDNS解決先を確認する。",
+      "flow": [
+        {
+          "resource_id": "resolve",
+          "action": "URLのHostからAレコード198.51.100.20を取得する"
+        },
+        {
+          "resource_id": "official",
+          "action": "Host・IP・公開研修という用途を最新の承認記録と照合する"
+        }
+      ],
+      "decisive_evidence": "training.aster.exampleとAレコード198.51.100.20が、承認済み公開研修トップページの記録に一致する。"
+    },
+    "WEB-LINUX-DNS": {
+      "overview": "Linux環境で公開マニュアルの接続先が承認DNS構成に一致するか確認する。",
+      "flow": [
+        {
+          "resource_id": "dig",
+          "action": "docs.aster.exampleのAレコードを取得する"
+        },
+        {
+          "resource_id": "official",
+          "action": "Hostと198.51.100.21をCHG-601の公開マニュアルServerと照合する"
+        }
+      ],
+      "decisive_evidence": "URLのHostとDNSのAレコードが、承認された公開マニュアルServerの指定に一致する。"
+    },
+    "WEB-RDAP-ORGANIZATION": {
+      "overview": "委託研修サイトについて、公開登録情報と独立した契約・公式Host記録を照合する。",
+      "flow": [
+        {
+          "resource_id": "rdap",
+          "action": "照会対象Domainと公開Registrant Organizationを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "契約TR-601にある委託先・公式Host・認証不要の公開用途と照合する"
+        }
+      ],
+      "decisive_evidence": "登録組織Aster Training FoundationとHostが、別途管理された研修委託契約の公式Service記録に一致する。"
+    },
+    "WEB-DOMAIN-REPUTATION": {
+      "overview": "Login URLのHostを公開Domainとして照会し、アクセス可否を判断する。",
+      "flow": [
+        {
+          "resource_id": "disclosure",
+          "action": "公開Domainの外部照会を許可する方針を確認する"
+        },
+        {
+          "resource_id": "domain_rep",
+          "action": "portal-check.exampleを照会し、当日のPhishing報告13/16 feedsを確認する"
+        }
+      ],
+      "decisive_evidence": "アクセス先Domainに当日も確認されたPhishing報告が複数ある。未知であることを遮断理由にはしない。"
+    },
+    "WEB-URL-REPUTATION": {
+      "overview": "Tokenのない公開告知URLについて、個別Pathの評判を調べる。",
+      "flow": [
+        {
+          "resource_id": "disclosure",
+          "action": "初期情報の公開範囲と照合し、完全URLに機密情報がないことを確認する"
+        },
+        {
+          "resource_id": "url_rep",
+          "action": "/view/noticeまで一致するURLを照会し、現行Phishing検出10/14を確認する"
+        }
+      ],
+      "decisive_evidence": "対象の完全URLと一致する個別Pathに現行のPhishing検出がある。Domain全体の評判を代用していない。"
+    },
+    "WEB-ISOLATED-REDIRECT": {
+      "overview": "公開イベント案内URLの遷移先と認証フォームを、隔離解析で確認する。",
+      "flow": [
+        {
+          "resource_id": "disclosure",
+          "action": "Tokenのない公開URLを隔離解析へ送信できることを確認する"
+        },
+        {
+          "resource_id": "isolated",
+          "action": "302の遷移先、組織Passwordを要求するフォーム、送信先Hostを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "認証不要のイベント案内と、正規Password入力先login.aster.exampleに照らして判断する"
+        }
+      ],
+      "decisive_evidence": "認証不要の案内から別Hostへ遷移し、正規認証先ではないevent-identity.exampleが組織Passwordを要求・受信する。"
+    },
+    "WEB-TOKEN-DOMAIN-ONLY": {
+      "overview": "招待Tokenを含むURLを外部へ漏らさず、アクセス先のDomainを調べる。",
+      "flow": [
+        {
+          "resource_id": "disclosure",
+          "action": "Tokenを含む完全URLの送信は禁止、公開Domainの照会は可と確認する"
+        },
+        {
+          "resource_id": "domain_rep",
+          "action": "Hostだけを入力してsecure-review.exampleのPhishing報告を確認する"
+        }
+      ],
+      "decisive_evidence": "Tokenを送信せずに取得したDomain評判に、当日のPhishing検出12/15 feedsがある。"
+    },
+    "NET-WIN-ACTIVE-APPROVED": {
+      "overview": "Windowsの管理Agentから棚卸しServerへの新規接続を、現在のPIDと既存Socketを手掛かりに審査する。",
+      "flow": [
+        {
+          "resource_id": "nettcp",
+          "action": "選択PIDが所有する既存接続のRemote IP・Portを確認する"
+        },
+        {
+          "resource_id": "server",
+          "action": "端末・現在の管理Agent PID・宛先を台帳と照合し、同じ宛先への保留中接続を判断する"
+        }
+      ],
+      "decisive_evidence": "端末192.0.2.25のPID 5100と接続先192.0.2.80:443が、現在の管理Agent記録と一致する。既存接続と保留中接続は区別されている。"
+    },
+    "NET-WIN-IP-REPUTATION": {
+      "overview": "Windows Processの新規接続先について、PIDに結び付く既存接続とIP評判を確認する。",
+      "flow": [
+        {
+          "resource_id": "tcp",
+          "action": "対象PIDの接続先203.0.113.100を取得する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開IPの照会が許可されることを確認する"
+        },
+        {
+          "resource_id": "ip_rep",
+          "action": "取得したIPを照会し、専用Endpointの現行悪性報告を確認する"
+        }
+      ],
+      "decisive_evidence": "対象PIDが接続する203.0.113.100に、当日の悪性インフラ報告12/16 feedsがあり、保留中接続も同じ宛先を指定している。"
+    },
+    "NET-WIN-PLAINTEXT-POST": {
+      "overview": "Windows端末から保留中の接続について、直前の同一宛先へのHTTP通信を確認する。",
+      "flow": [
+        {
+          "resource_id": "capture",
+          "action": "保存PCAPの09:09:30のPOSTから、外部Hostへの平文username・passwordを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "認証情報は正規Login ServerへTLSで送るという条件と照合する"
+        }
+      ],
+      "decisive_evidence": "直前の同一宛先Flowに平文の認証情報があり、送信先も許可された192.0.2.82:443ではない。今回の保留中接続の送信実績ではない。"
+    },
+    "NET-WIN-RDAP-NETBLOCK": {
+      "overview": "Windowsの帳票Clientから委託先Serverへの接続について、個別承認とIP割当情報を照合する。",
+      "flow": [
+        {
+          "resource_id": "nettcp",
+          "action": "対象PIDのRemote IP 198.51.100.70と443番を確認する"
+        },
+        {
+          "resource_id": "rdap",
+          "action": "IPが委託先Aster Hostingの割当範囲内であることを確認する"
+        },
+        {
+          "resource_id": "server",
+          "action": "個別IP・Port・PID・用途と専用Server契約を照合する"
+        }
+      ],
+      "decisive_evidence": "IP割当組織が委託先と一致し、個別IP:Port・PID・用途もNET-703の専用Server承認に一致する。RDAP単独でTenantを特定していない。"
+    },
+    "NET-LINUX-ACTIVE-APPROVED": {
+      "overview": "Linuxの管理Agentから棚卸しServerへの新規接続を、現在のPIDと既存Socketから確認する。",
+      "flow": [
+        {
+          "resource_id": "ss",
+          "action": "PID 5100のSocketとRemote IP・Portを確認する"
+        },
+        {
+          "resource_id": "server",
+          "action": "端末・管理AgentのPID・棚卸し用宛先を台帳と照合する"
+        }
+      ],
+      "decisive_evidence": "端末192.0.2.30のPID 5100と接続先192.0.2.80:443が、現在の管理Agent記録に一致する。"
+    },
+    "NET-LINUX-IP-REPUTATION": {
+      "overview": "Linux Processの接続先IPをSocketから取得し、新規接続の可否を判断する。",
+      "flow": [
+        {
+          "resource_id": "lsof_i",
+          "action": "選択PIDのSocketから203.0.113.100を取得する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開IPの照会を認める方針を確認する"
+        },
+        {
+          "resource_id": "ip_rep",
+          "action": "取得IPに一致する悪性インフラ報告と確認日時を調べる"
+        }
+      ],
+      "decisive_evidence": "対象ProcessのRemote IPが現行の悪性インフラ報告に一致し、今回の接続もその専用Endpointへ向かう。"
+    },
+    "NET-LINUX-PLAINTEXT-POST": {
+      "overview": "Linux端末の保存PCAPから直前のHTTP送信を調べ、同一宛先への新規接続を判断する。",
+      "flow": [
+        {
+          "resource_id": "tcpdump",
+          "action": "保存PCAPをローカルで読み、HTTP POST本文の認証情報と宛先を確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "正規Login Server限定・TLS必須という送信条件と比較する"
+        }
+      ],
+      "decisive_evidence": "同一宛先への過去のFlowでusernameとpasswordが平文送信されており、宛先・暗号化とも通信方針に反する。"
+    },
+    "NET-LINUX-RDAP-NETBLOCK": {
+      "overview": "Linuxの帳票Clientの接続先が、承認された専用Serverと割当範囲に一致するか確認する。",
+      "flow": [
+        {
+          "resource_id": "ss",
+          "action": "対象PIDの198.51.100.70:443への接続を確認する"
+        },
+        {
+          "resource_id": "rdap",
+          "action": "委託先に割り当てられたNetblockに対象IPが含まれることを確認する"
+        },
+        {
+          "resource_id": "server",
+          "action": "個別IP・Port・Process・専用帳票用途をNET-703と照合する"
+        }
+      ],
+      "decisive_evidence": "個別の接続先と用途が契約済み専用Serverの承認記録に一致し、RDAPの割当情報も委託先と整合する。"
+    },
+    "EMAIL-SERVICE-NOTICE": {
+      "overview": "本人の研修申込みに対応する、リンクも添付もない受付通知を確認する。",
+      "flow": [
+        {
+          "resource_id": "gateway",
+          "action": "信頼するGatewayが付けたReceivedと認証結果を採用する規則を確認する"
+        },
+        {
+          "resource_id": "header",
+          "action": "Gatewayの認証結果、配送元、Fromと受付番号TR-810を確認する"
+        },
+        {
+          "resource_id": "directory",
+          "action": "登録された研修通知Address・配送元・DKIMと本人の申込記録を照合する"
+        }
+      ],
+      "decisive_evidence": "Gatewayが確認した認証・配送元・送信Addressが登録仕様に一致し、通知内容も本人のTR-810申込みに対応する。"
+    },
+    "EMAIL-REPLY-ADDRESS": {
+      "overview": "取引先から口座資料を返信するよう求めるメールの、実際の返信先を確認する。",
+      "flow": [
+        {
+          "resource_id": "header",
+          "action": "FromだけでなくReply-Toのsettlement@cedar-payments.exampleを確認する"
+        },
+        {
+          "resource_id": "vendor",
+          "action": "登録Addressとfinance.cedar.example経由のみという資料送付条件を比較する"
+        }
+      ],
+      "decisive_evidence": "返信先が未登録Domainで、口座資料は契約済みPortal経由のみという送付手順にも反する。"
+    },
+    "EMAIL-BOUNCE-DOMAIN": {
+      "overview": "FromとReturn-PathのDomainが異なる配送通知を、委託配信の登録情報から確認する。",
+      "flow": [
+        {
+          "resource_id": "gateway",
+          "action": "信頼する認証結果の付与元を確認する"
+        },
+        {
+          "resource_id": "header",
+          "action": "Return-Path、Fromと整合するDKIM、配送元IPを確認する"
+        },
+        {
+          "resource_id": "vendor",
+          "action": "委託Bounce Domain・配送元・署名Domain・PO-821の配送予定を照合する"
+        }
+      ],
+      "decisive_evidence": "異なるReturn-Pathは登録済み委託配信Domainで、整合するDKIM・配送元・発注内容も一致する。"
+    },
+    "EMAIL-AUTH-FAILURE": {
+      "overview": "自社IT管理者を名乗る設定更新メールについて、直接配送元と認証条件を確認する。",
+      "flow": [
+        {
+          "resource_id": "gateway",
+          "action": "信頼するGatewayと通常の転送経路を確認する"
+        },
+        {
+          "resource_id": "header",
+          "action": "直接配送元203.0.113.120とSPF・DKIM・DMARCの失敗を確認する"
+        },
+        {
+          "resource_id": "directory",
+          "action": "社内配信元・署名Domain・直接配送のDMARC必須条件と照合する"
+        }
+      ],
+      "decisive_evidence": "自社Domainを名乗る直接配送が認証に失敗し、配送元も承認済みの社内配信・転送経路に該当しない。"
+    },
+    "AUTH-WIN-SERVICE-INTERACTIVE": {
+      "overview": "Service専用Accountに対する対話Login要求が用途制限に適合するか確認する。",
+      "flow": [
+        {
+          "resource_id": "events",
+          "action": "過去のsvc_backupの成功履歴はType 5のService Loginだったことを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "今回のType 2を、Type 5のみ許可しType 2・10を禁止する規則と比較する"
+        }
+      ],
+      "decisive_evidence": "今回の要求はType 2 / Interactiveで、svc_backupに認められるType 5 / Serviceとは異なり明示的な禁止対象である。"
+    },
+    "AUTH-WIN-USUAL-LOGIN": {
+      "overview": "通常の管理端末からのRemoteInteractive要求について、現在の認証と端末承認を確認する。",
+      "flow": [
+        {
+          "resource_id": "events",
+          "action": "過去のUser・Source・端末を確認し、今回の成功記録とは区別する"
+        },
+        {
+          "resource_id": "device",
+          "action": "WIN-017がmoriのActiveな管理端末でIPも一致することを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "管理Device・承認Source・今回のPasswordとMFA確認が利用条件を満たすか照合する"
+        }
+      ],
+      "decisive_evidence": "現在のDevice・User・Sourceが承認に一致し、今回のGateway確認もPassword・MFAを満たしている。過去の4624だけに依存しない。"
+    },
+    "AUTH-WIN-REVOKED-DEVICE": {
+      "overview": "以前は正常にLoginしていた端末について、現在の失効状態を確認する。",
+      "flow": [
+        {
+          "resource_id": "events",
+          "action": "前日の成功記録にあるDeviceと今回のWIN-017を比較する"
+        },
+        {
+          "resource_id": "device",
+          "action": "当日08:00の紛失によるRevokedを、今回09:10の要求時刻と照合する"
+        }
+      ],
+      "decisive_evidence": "今回のDeviceは要求前の08:00に失効済みで、Active Device以外からのLogin禁止に該当する。"
+    },
+    "AUTH-LINUX-LOGIN-HISTORY": {
+      "overview": "踏み台からのSSH要求を、過去履歴と今回の鍵・MFA・保守条件から確認する。",
+      "flow": [
+        {
+          "resource_id": "last",
+          "action": "過去のops-moriの接続元と保守時間帯を確認する"
+        },
+        {
+          "resource_id": "bastion",
+          "action": "192.0.2.150が承認踏み台で管理端末の確認があることを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "今回のUser・時刻・鍵Fingerprint・MFAを保守条件と照合する"
+        }
+      ],
+      "decisive_evidence": "今回のUser・踏み台・09:10の時刻・検証済み鍵・MFAが保守許可条件に一致し、過去履歴とも整合する。"
+    },
+    "AUTH-LINUX-SERVICE-LOGIN": {
+      "overview": "Backup Service用Userに対して要求された対話SSHを審査する。",
+      "flow": [
+        {
+          "resource_id": "lastlog",
+          "action": "svc_backupに過去のLogin履歴がないことを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "systemd Service専用で対話SSH・Shell Sessionは禁止という用途制限を確認する"
+        }
+      ],
+      "decisive_evidence": "svc_backupは対話SSH禁止のService専用Userで、今回の要求はその用途制限に反する。履歴の欠如だけを根拠にはしない。"
+    },
+    "AUTH-LINUX-FAILURE-THRESHOLD": {
+      "overview": "同じSourceから繰り返されたSSH Password失敗を調べ、保留中の要求を判断する。",
+      "flow": [
+        {
+          "resource_id": "journal",
+          "action": "09:00–09:09:40の同一Source・UserへのFailed password 120件を確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "10分で20回以上なら15分遮断という条件を今回09:10の要求に適用する"
+        }
+      ],
+      "decisive_evidence": "直前10分の同一Sourceからの失敗120件が一時遮断閾値20回を超え、今回の要求はその遮断期間内である。",
+      "review_notes": "閾値到達時から自動遮断される運用を想定する場合、120件まで集計された経緯や失敗数に拒否済み要求を含むかが未説明。"
+    },
+    "PKG-PYPI-REGISTRY-METADATA": {
+      "overview": "PyPIで解決したHTTP Clientが、承認されたComponentの配布情報と一致するか確認する。",
+      "flow": [
+        {
+          "resource_id": "metadata",
+          "action": "Name・Version・Registry・Repository・Maintainer・配布Hashを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "同じ属性を独立した承認Component記録CHG-1001と照合する"
+        }
+      ],
+      "decisive_evidence": "aster-http-client 2.4.0の供給元・Repository・Maintainer・配布Hashが承認Componentの記録に一致する。Registry掲載だけでは判断していない。"
+    },
+    "PKG-NPM-REGISTRY-METADATA": {
+      "overview": "npmで解決したCalendar UIの配布元とRelease情報を承認台帳と照合する。",
+      "flow": [
+        {
+          "resource_id": "metadata",
+          "action": "Scopeを含む名前・Version・Maintainer・Repository・Hashを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "@aster-ui/calendar 2.4.0の承認情報CHG-1002と照合する"
+        }
+      ],
+      "decisive_evidence": "Package名・Version・Maintainer・Repository・Registry・配布Hashが承認されたCalendar Componentと一致する。"
+    },
+    "PKG-NPM-REPOSITORY-MISMATCH": {
+      "overview": "名前とVersionが同じnpm Packageについて、RepositoryとMaintainerの変更が承認済みか確認する。",
+      "flow": [
+        {
+          "resource_id": "metadata",
+          "action": "配布MetadataのRepositoryとMaintainer table-extrasを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "公式Repository・aster-releaseと比較し、移管・Maintainer変更の承認がないことを確認する"
+        }
+      ],
+      "decisive_evidence": "RepositoryとMaintainerが公式Component台帳と異なり、同日までに変更承認もない。"
+    },
+    "PKG-NPM-LOCKED-DEPENDENCY": {
+      "overview": "Resolverが取得したtarballとIntegrityを、承認済みLockに固定された依存と比較する。",
+      "flow": [
+        {
+          "resource_id": "lock",
+          "action": "初期情報の名前・Version・取得URL・検証済みIntegrityをpackage-lock.jsonの指定と照合する"
+        },
+        {
+          "resource_id": "official",
+          "action": "本番UIで当該Versionを利用し、固定tarball・Integrityで照合する承認を確認する"
+        }
+      ],
+      "decisive_evidence": "Resolverの取得URLと検証済みsha512 Integrityが承認Lockに完全一致し、当該名前・Versionの利用も承認されている。"
+    },
+    "PKG-PYPI-KNOWN-VULNERABILITY": {
+      "overview": "外部Archiveを展開する予定のPackageが、導入禁止の脆弱Versionに該当するか確認する。",
+      "flow": [
+        {
+          "resource_id": "vuln",
+          "action": "対象2.2.1が影響範囲2.0.0以上2.2.5未満に含まれることを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "外部Archive処理で影響Versionの新規導入を禁止する条件を適用する"
+        }
+      ],
+      "decisive_evidence": "Version 2.2.1はPath traversalの影響範囲に入り、今回の外部Archive展開用途では組織方針が新規導入を禁止している。"
+    },
+    "FILE-WIN-MODIFIED-INSTALLER": {
+      "overview": "Editor 4.2の同一配布物として申請された再梱包Installerを確認する。",
+      "flow": [
+        {
+          "resource_id": "hash",
+          "action": "受領したInstallerのSHA-256を取得する"
+        },
+        {
+          "resource_id": "vendor",
+          "action": "承認Hashと比較し不一致を確認する。署名表示があっても再梱包を認めない条件を適用する"
+        }
+      ],
+      "decisive_evidence": "計算Hashが承認済み4.2の公開Hashと異なり、このHashの配布物だけを認める条件を満たさない。"
+    },
+    "FILE-WIN-FAKE-UPDATE": {
+      "overview": "閲覧サイトの更新案内から取得したbrowser-update.jsを実行してよいか判断する。",
+      "flow": [
+        {
+          "resource_id": "strings",
+          "action": "外部payloadの取得先とWScript.Shellを含むScript内容を確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "Software Center経由の公式更新手順と比較し、Web配布.jsの実行が手順外と確認する"
+        }
+      ],
+      "decisive_evidence": "受領物は外部内容を取得・実行するJavaScriptで、Software Centerのみを使う公式更新経路と矛盾する。"
+    },
+    "FILE-LINUX-WRITABLE-RUNPATH": {
+      "overview": "標準Report Agentとして導入予定のELFについて、共有ライブラリ探索先を確認する。",
+      "flow": [
+        {
+          "resource_id": "elf",
+          "action": "RUNPATHが/var/tmp/sharedを/opt/report/libより先に探索することを確認する"
+        },
+        {
+          "resource_id": "service",
+          "action": "台帳の配置権限1777と、root管理の専用libのみを探索する条件を照合する"
+        }
+      ],
+      "decisive_evidence": "RUNPATHが一般Userも書込み可能な/var/tmp/sharedを優先し、専用libのみという承認仕様に反する。実際のロードは未観測。"
+    },
+    "PROC-WIN-CLICKFIX": {
+      "overview": "利用者が会議ページのCAPTCHA案内を信じてWin+Rに貼り付けた後のPowerShellを審査する。",
+      "flow": [
+        {
+          "resource_id": "initial_information",
+          "action": "CAPTCHAに従ってOS Commandを貼り付けた操作経緯を確認する"
+        },
+        {
+          "resource_id": "pe",
+          "action": "親Processと外部check.ps1の取得・実行Commandを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "Browser内で完了しOS Commandを使わない公式認証手順と比較する"
+        }
+      ],
+      "decisive_evidence": "CAPTCHA案内に続いてPowerShellが外部Scriptを取得・実行するCommandで起動されているが、公式会議サービスにその手順はない。"
+    },
+    "PROC-WIN-DLL-SIDELOAD": {
+      "overview": "署名付きViewerが実際にロードしたDLLの配置と同一性を確認する。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "ViewerのImageと、Downloadsからロードされたrender.dllのPathを取得する"
+        },
+        {
+          "resource_id": "dll_hash",
+          "action": "取得したDLLのPathを入力にしてDLL自体のSHA-256を計算する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "ViewerとDLLの承認配置・DLL Hashを照合する"
+        }
+      ],
+      "decisive_evidence": "ViewerがUserのDownloads配下から、承認Hashと異なるrender.dllをロードしている。実行本体の署名ではこのDLLを保証できない。"
+    },
+    "PROC-LINUX-WEB-SHELL-COMMAND": {
+      "overview": "Web Userで動くShellのCommandと親子関係を組み合わせて継続を判断する。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "www-dataのShellが外部a.shを取得・実行する引数を確認する"
+        },
+        {
+          "resource_id": "pstree",
+          "action": "nginx→web-worker→shの関係を確認する"
+        },
+        {
+          "resource_id": "service",
+          "action": "静的サイトでは外部Script起動を禁止し、保守は専用Jobに限る仕様と比較する"
+        }
+      ],
+      "decisive_evidence": "静的配信専用Workerの子Shellが外部Script取得・実行Commandを動かし、承認Service構成と矛盾する。"
+    },
+    "PROC-LINUX-CRON-PERSISTENCE": {
+      "overview": "www-dataで動くupdate-cacheについて、実行Pathと再起動用cron登録を確認する。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "/tmp/.cache/update-cache --quietという稼働Commandを確認する"
+        },
+        {
+          "resource_id": "cron",
+          "action": "同じCommandがwww-dataのcrontabに毎分登録されていることを確認する"
+        },
+        {
+          "resource_id": "service",
+          "action": "crontabは空、実行物は/opt/web以下という承認構成と比較する"
+        }
+      ],
+      "decisive_evidence": "www-dataが/tmp配下のImageを動かし、同じCommandを毎分起動するcron登録もある。双方が静的Web Serviceの承認条件に反する。"
+    },
+    "WEB-UNKNOWN-CAMPAIGN": {
+      "overview": "公開直後で外部評判に記録がないCampaignサイトを、内部承認とDNSから確認する。",
+      "flow": [
+        {
+          "resource_id": "dig",
+          "action": "HostのAレコード198.51.100.60を取得する。nslookupでも代替可能"
+        },
+        {
+          "resource_id": "rdap",
+          "action": "親Domainの登録日と公開された運営組織を確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "CampaignのHost・A・運営・公開日・公開用途をCHG-604と照合する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開Hostの照会が許可されることを確認する"
+        },
+        {
+          "resource_id": "domain_rep",
+          "action": "No recordは安全・悪性の確定情報ではないと扱い、承認記録との一致を判断根拠にする"
+        }
+      ],
+      "decisive_evidence": "Campaignの承認記録、実DNS、RDAPの公開組織情報が一致する。外部評判の未登録ではなく独立した承認照合が許可根拠。"
+    },
+    "WEB-REDIRECT-CHAIN": {
+      "overview": "会議リンクを隔離解析した後、その結果から得た最終Hostを追加照会する。",
+      "flow": [
+        {
+          "resource_id": "disclosure",
+          "action": "公開URLと遷移先の公開Domainを照会できることを確認する"
+        },
+        {
+          "resource_id": "isolated",
+          "action": "最終Host identity-event.exampleとPasswordフォームの送信先を取得する"
+        },
+        {
+          "resource_id": "final_rep",
+          "action": "隔離解析で取得した最終Hostを入力し、Phishing報告を確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "最終認証先が公式Login Hostと異なることを確認する"
+        }
+      ],
+      "decisive_evidence": "組織Passwordの送信先が承認外Hostで、同じ最終Hostに当日のPhishing報告14/17 feedsがある。入口DNSの正常さだけでは説明できない。"
+    },
+    "NET-WIN-PERIODIC-UNAPPROVED": {
+      "overview": "Windowsのcache-agentが行う周期通信を、実行元・承認宛先・外部評判から審査する。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "実行ImageがUserのTemp配下にあることを確認する"
+        },
+        {
+          "resource_id": "tcp",
+          "action": "PIDと203.0.113.102:8443への既存Socketを結び付ける"
+        },
+        {
+          "resource_id": "capture",
+          "action": "同じFlowの09:06–09:09の60秒間隔・192 bytesの通信を確認する"
+        },
+        {
+          "resource_id": "server",
+          "action": "Imageと宛先が承認台帳に登録されていないことを確認する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開IPのみの照会を認める方針を確認する"
+        },
+        {
+          "resource_id": "ip_rep",
+          "action": "同じ宛先IPの現行悪性インフラ報告を確認する"
+        }
+      ],
+      "decisive_evidence": "未承認PathのProcessが台帳外の宛先へ周期通信し、そのIPに当日の悪性インフラ報告もある。周期性だけを根拠にしていない。"
+    },
+    "NET-WIN-DNS-ANOMALY": {
+      "overview": "WindowsのDNS Helperが繰り返すQueryを、所有Processと組織のResolver方針から確認する。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "Temp配下のdns-helper.exeという実行元を確認する"
+        },
+        {
+          "resource_id": "tcp",
+          "action": "対象PIDの指定外Resolver 203.0.113.53:53へのSocketを特定する"
+        },
+        {
+          "resource_id": "capture",
+          "action": "同じTCP streamに連続するmetrics-out.example宛ての特徴的なQueryを確認する"
+        },
+        {
+          "resource_id": "server",
+          "action": "192.0.2.53以外のResolverは禁止という規則と照合する"
+        }
+      ],
+      "decisive_evidence": "未登録ProcessのSocketが指定外Resolverへの反復Queryに結び付き、Resolver限定方針に違反する。長い名前だけで情報漏洩とは断定しない。"
+    },
+    "NET-LINUX-PERIODIC-UNAPPROVED": {
+      "overview": "Linuxのcache-agentによる周期通信を、Processと宛先の承認状況に結び付けて判断する。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "実行Commandが/tmp/.cache/cache-agentであることを確認する"
+        },
+        {
+          "resource_id": "lsof_i",
+          "action": "PIDと203.0.113.102:8443へのSocketを結び付ける"
+        },
+        {
+          "resource_id": "capture",
+          "action": "同じFlowの60秒周期を確認する。tcpdumpの同じPCAPでも代替可能"
+        },
+        {
+          "resource_id": "server",
+          "action": "Imageと宛先が未登録であることを確認する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "公開IPのみの照会が許可されることを確認する"
+        },
+        {
+          "resource_id": "ip_rep",
+          "action": "対象IPの現行悪性インフラ報告を確認する"
+        }
+      ],
+      "decisive_evidence": "承認外の/tmp配下Processと台帳外の宛先が周期Flowに結び付き、同じIPに現行の悪性報告がある。"
+    },
+    "NET-LINUX-DNS-ANOMALY": {
+      "overview": "Linuxのdns-helperによる反復DNS通信を、実行元・Socket・保存PCAPから調べる。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "実行元が/tmp/dns-helperであることを確認する"
+        },
+        {
+          "resource_id": "lsof_i",
+          "action": "PIDと203.0.113.53:53へのSocketを結び付ける"
+        },
+        {
+          "resource_id": "capture",
+          "action": "同じFlowで繰り返される長いQuery名を確認する。tcpdumpでも代替可能"
+        },
+        {
+          "resource_id": "server",
+          "action": "指定Resolver 192.0.2.53のみ利用可という規則に照らす"
+        }
+      ],
+      "decisive_evidence": "未登録Processが指定外ResolverへDNS Queryを反復しており、明示的なDNS利用方針に反する。"
+    },
+    "EMAIL-CONFLICTING-HEADERS": {
+      "overview": "認証済みと主張して口座一覧を要求するメールで、認証結果の出所を見分ける。",
+      "flow": [
+        {
+          "resource_id": "gateway",
+          "action": "自Gateway由来の認証結果だけを採用する規則を確認する"
+        },
+        {
+          "resource_id": "header",
+          "action": "Gatewayのfailと外部由来のX-Original-Authentication-Resultsのpass、外部Reply-Toを区別する"
+        },
+        {
+          "resource_id": "directory",
+          "action": "経理の正式な配信元・署名・返信先・資料送付業務と比較する"
+        }
+      ],
+      "decisive_evidence": "信頼するGatewayの認証はfailで、配送元と返信先も社内仕様と異なる。外部由来のpass表記はこの不一致を解消しない。"
+    },
+    "EMAIL-BEC-DESTINATION": {
+      "overview": "取引先を名乗る別Domainから届いた振込先変更依頼を、登録窓口と業務手順から審査する。",
+      "flow": [
+        {
+          "resource_id": "header",
+          "action": "実際のFromがbilling@cedar-invoices.exampleであることを確認する"
+        },
+        {
+          "resource_id": "vendor",
+          "action": "正規窓口billing@cedar.exampleと登録口座末尾2048を確認する"
+        },
+        {
+          "resource_id": "procedure",
+          "action": "変更Ticket・登録番号への確認・2名承認の必要性と、今回の記録がないことを確認する"
+        }
+      ],
+      "decisive_evidence": "送信Domainが取引先の登録と異なり、口座末尾9912への変更に必須のTicket・独立確認記録がない。"
+    },
+    "EMAIL-AUTHENTICATED-LINK": {
+      "overview": "送信Domainの認証にPassしたサポートメールについて、リンク先のPassword要求を確認する。",
+      "flow": [
+        {
+          "resource_id": "gateway",
+          "action": "採用する認証結果の出所を確認する"
+        },
+        {
+          "resource_id": "header",
+          "action": "Passはaster-support.example自身についての結果と確認し、本文のURLを取得する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "取得したURLにToken等がないことを確認し、許可された隔離解析を選ぶ"
+        },
+        {
+          "resource_id": "isolated",
+          "action": "Headerから得たURLを入力し、Passwordフォームと送信先を確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "正規通知AddressとLogin Hostに一致しないことを確認する"
+        }
+      ],
+      "decisive_evidence": "認証Passは別Domain自身について成立しているが、そのDomain上のフォームが組織Passwordを要求・受信し、公式Login先とは異なる。"
+    },
+    "EMAIL-ARCHIVE-ATTACHMENT": {
+      "overview": "PDFだけと説明されたメール添付Archiveを、メールから抽出されたFileとして調査する。",
+      "flow": [
+        {
+          "resource_id": "header",
+          "action": "MIMEから抽出されたorder-docs.zipの保存Pathを取得する"
+        },
+        {
+          "resource_id": "archive",
+          "action": "取得した添付Pathを入力して一覧を確認する。unzipでも代替可能"
+        },
+        {
+          "resource_id": "format",
+          "action": "review.vbsとopen-order.lnkがPDF限定の受入れ条件に反することを確認する"
+        }
+      ],
+      "decisive_evidence": "メールに紐付く添付ArchiveがScriptとShortcutを含み、発注資料のPDF限定条件を満たさない。"
+    },
+    "AUTH-WIN-PASSWORD-SPRAY": {
+      "overview": "少数回ずつ多数Userに分散したWindows認証失敗を、Source単位で評価する。",
+      "flow": [
+        {
+          "resource_id": "events",
+          "action": "同一Sourceから40 Userへ各2回、直前10分の4625集計を確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "20 User以上への失敗でSourceを15分遮断する規則と比較する"
+        }
+      ],
+      "decisive_evidence": "今回のSourceは直前10分に40 Userへ失敗を起こし、20 Userの遮断閾値を超える。ログにPassword値はなく、同一Passwordの使用や侵入成功は断定できない。"
+    },
+    "AUTH-WIN-RETIRED-USER": {
+      "overview": "退職者Accountの認証が通っていても、現在のLogin利用許可があるか確認する。",
+      "flow": [
+        {
+          "resource_id": "events",
+          "action": "最後の成功は5月末で、その後の成功履歴がないことを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "6月1日で利用許可終了、IdP反映前でもGatewayで拒否する条件を確認する"
+        }
+      ],
+      "decisive_evidence": "satoのLogin利用許可は既に終了しているため、今回のPassword・MFA検証結果にかかわらずSessionを許可できない。"
+    },
+    "AUTH-LINUX-SSH-PASSWORD-SPRAY": {
+      "overview": "多数UserへのSSH Password失敗と接続経路を確認し、新しい要求を審査する。",
+      "flow": [
+        {
+          "resource_id": "journal",
+          "action": "直前10分に同一Sourceから35 Userへ各2件の失敗があることを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "20 User以上のSource遮断条件と、ops-moriの鍵認証要件を確認する"
+        },
+        {
+          "resource_id": "bastion",
+          "action": "今回のSourceが承認踏み台192.0.2.150ではなく、試験登録もないことを確認する"
+        }
+      ],
+      "decisive_evidence": "同一Sourceの失敗対象35 Userが遮断閾値を超え、今回のPassword認証・直接Sourceも承認踏み台と鍵認証の条件に合わない。"
+    },
+    "PKG-NPM-SUBTLE-TYPO": {
+      "overview": "Calendar UI更新として解決されたよく似た名前のPackageを、供給元と更新申請から確認する。",
+      "flow": [
+        {
+          "resource_id": "metadata",
+          "action": "実際はcalenderで、Maintainer・Repositoryも別であることを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "COMP-1007の申請名calendarと公式供給元を比較する"
+        },
+        {
+          "resource_id": "lock",
+          "action": "現行依存からの更新はVersionだけでPackage名変更を含まないことを確認する"
+        }
+      ],
+      "decisive_evidence": "導入対象calenderは申請したcalendarと名前・Maintainer・Repositoryが異なり、既存依存のVersion更新という承認範囲にも合わない。"
+    },
+    "PKG-PYPI-DEPENDENCY-CONFUSION": {
+      "overview": "社内IndexとPublic Registryを併用するResolverが、社内Packageと同名の公開版を選んだ案件を審査する。",
+      "flow": [
+        {
+          "resource_id": "metadata",
+          "action": "選択された9.9.0のPublic Registry・Repository・Maintainerを確認する"
+        },
+        {
+          "resource_id": "internal",
+          "action": "社内専用Packageは3.4.0・社内Index限定で公開配布なしと確認する"
+        },
+        {
+          "resource_id": "lock",
+          "action": "初期情報のPublic取得元と選択Versionを、承認された社内Source・Versionに照らす"
+        }
+      ],
+      "decisive_evidence": "Resolverは社内専用3.4.0ではなくPublic Registryの同名9.9.0を選択し、承認されたSource・Versionと一致しない。"
+    },
+    "PKG-NPM-INSTALL-SCRIPT": {
+      "overview": "Install前にPackageのpostinstallと同梱Scriptを読み、承認Sourceからの差分を確認する。",
+      "flow": [
+        {
+          "resource_id": "metadata",
+          "action": "postinstallがnode scripts/setup.jsを実行する設定と確認する"
+        },
+        {
+          "resource_id": "source",
+          "action": "Installせずsetup.jsを読み、外部Binaryの取得・実行内容を確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "承認Commitのnode-gyp rebuildと比較する"
+        },
+        {
+          "resource_id": "release",
+          "action": "Releaseはコンパイル修正のみでBootstrap切替承認がないことを確認する"
+        }
+      ],
+      "decisive_evidence": "配布物のpostinstallが外部実行Fileの取得・起動を含み、同Versionの承認Sourceと変更記録にその処理がない。実行はまだ行っていない。"
+    },
+    "PKG-NPM-UNEXPECTED-DEPENDENCY": {
+      "overview": "Chart Packageの同Versionで、配布Metadataにだけ追加された依存を確認する。",
+      "flow": [
+        {
+          "resource_id": "metadata",
+          "action": "coreに加えてaster-chart-telemetry依存があることを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "承認Commitのpackage.jsonにはcoreしかないことを比較する"
+        },
+        {
+          "resource_id": "release",
+          "action": "Release説明はcoreのVersion更新だけと確認する"
+        },
+        {
+          "resource_id": "lock",
+          "action": "更新申請と現行依存にもPublic telemetry追加がないことを確認する"
+        }
+      ],
+      "decisive_evidence": "同じ2.5.0の配布物にだけPublic telemetry依存があり、公式Source・変更記録・更新申請の依存集合と一致しない。"
+    },
+    "FILE-WIN-UNSIGNED-INTERNAL": {
+      "overview": "社外秘Templateを内蔵する未署名の社内帳票ツールを実行してよいか審査する。",
+      "flow": [
+        {
+          "resource_id": "sig",
+          "action": "未署名であることを確認する"
+        },
+        {
+          "resource_id": "hash",
+          "action": "社内Fileを外部送信せずSHA-256を計算する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "Hash・Path・Versionと未署名例外承認CHG-433を照合する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "社外秘FileのUpload禁止を確認し、外部File照会は行わない"
+        }
+      ],
+      "decisive_evidence": "未署名だがHash・Pathが例外承認済みreport-builder 2.3に一致し、未署名を認める明示的な承認がある。",
+      "review_notes": "解説は配布経路も一致すると述べるが、対象の入手経路は初期情報に明示されていない。台帳の期待経路と対象の実績は区別が必要。"
+    },
+    "FILE-WIN-SIGNED-UNAPPROVED": {
+      "overview": "署名があるという理由で実行を求められた経理監査用ソフトを審査する。",
+      "flow": [
+        {
+          "resource_id": "sig",
+          "action": "SignedでPublisherがCedar Utilities Ltd.と確認する"
+        },
+        {
+          "resource_id": "hash",
+          "action": "対象配布物のSHA-256を取得する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "登録されたAsterAudit 8.0のPublisher・Hashと比較し不一致を確認する"
+        }
+      ],
+      "decisive_evidence": "有効な署名はあるが、製品・Publisher・Hashが承認監査ツールと異なり、Cedar Utilitiesの登録もない。"
+    },
+    "FILE-LINUX-STRIPPED-INTERNAL": {
+      "overview": "strippedと表示される社内監視Agent 5.0が、承認Releaseの仕様どおりか確認する。",
+      "flow": [
+        {
+          "resource_id": "file",
+          "action": "ELF・strippedという形式情報を確認する"
+        },
+        {
+          "resource_id": "hash",
+          "action": "対象のSHA-256を取得する"
+        },
+        {
+          "resource_id": "elf",
+          "action": "Interpreter・NEEDED・RUNPATHを確認する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "HashとELF構成、strip適用済みというRelease仕様を照合する"
+        }
+      ],
+      "decisive_evidence": "Hash・標準Loader・libc依存・RUNPATHなしが台帳に一致し、strippedも承認Releaseの仕様として記録されている。"
+    },
+    "FILE-LINUX-ORDINARY-ELF": {
+      "overview": "監視Agent 5.0として受領した、形式上は普通のELFの導入可否を判断する。",
+      "flow": [
+        {
+          "resource_id": "hash",
+          "action": "対象FileのSHA-256を計算する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "社内成果物庫の承認Hashと比較し、不一致を確認する"
+        }
+      ],
+      "decisive_evidence": "標準的なELF構成でも、対象Hashが導入条件である承認ReleaseのHashと一致しない。"
+    },
+    "PROC-WIN-ADMIN-POWERSHELL": {
+      "overview": "管理Agentが起動したPowerShellについて、実行Scriptと通信先まで承認Jobに一致するか確認する。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "親InventoryAgent・User・Inventory.ps1の実行Pathを確認する"
+        },
+        {
+          "resource_id": "script_hash",
+          "action": "PowerShell本体ではなく、取得したScriptのPathからSHA-256を計算する"
+        },
+        {
+          "resource_id": "tcp",
+          "action": "同じPIDの接続先192.0.2.80:443を確認する"
+        },
+        {
+          "resource_id": "job",
+          "action": "親Agent・User・Script Hash・送信先をCHG-442と照合する"
+        }
+      ],
+      "decisive_evidence": "親Agent・Service User・Inventory.ps1のHash・接続先が、承認済み棚卸しJobの指定に一致する。"
+    },
+    "PROC-WIN-LOLBIN": {
+      "overview": "正規Windows Binaryのmshta.exeが、どの親から何を実行しているか調べる。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "Word起動と外部view.htaを指定するCommandを確認する"
+        },
+        {
+          "resource_id": "admin",
+          "action": "Officeからの外部HTA起動禁止と、承認業務がないことを確認する"
+        }
+      ],
+      "decisive_evidence": "Wordがmshta.exeで外部HTAを起動しており、文書端末の明示的な禁止条件に該当する。Microsoft署名は実行文脈の承認にはならない。"
+    },
+    "PROC-WIN-LEGIT-UPDATER": {
+      "overview": "外部接続を持つUpdaterについて、実行本体・Service起動・送信先の承認を確認する。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "管理Path・services.exe起動・SYSTEM・--scheduledを確認する"
+        },
+        {
+          "resource_id": "hash",
+          "action": "実行本体のSHA-256を取得する"
+        },
+        {
+          "resource_id": "sig",
+          "action": "署名検証結果とPublisherを確認する"
+        },
+        {
+          "resource_id": "tcp",
+          "action": "接続先198.51.100.20:443を確認する"
+        },
+        {
+          "resource_id": "approved",
+          "action": "Image・Hash・署名・起動元・User・宛先を承認仕様と照合する"
+        }
+      ],
+      "decisive_evidence": "管理PathのImage Hash、Aster Softwareの署名、ServiceからのSYSTEM起動、更新先IP:Portがすべて承認仕様に一致する。"
+    },
+    "PROC-LINUX-BACKUP-JOB": {
+      "overview": "業務Fileを読み外部へ接続するBackup Agentについて、Jobの範囲とService構成を確認する。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "User・実行Path・設定File引数を確認する"
+        },
+        {
+          "resource_id": "lsof",
+          "action": "開いている帳票Fileが/srv/reports配下であることを確認する"
+        },
+        {
+          "resource_id": "ss",
+          "action": "対象PIDの接続先198.51.100.40:443を確認する"
+        },
+        {
+          "resource_id": "systemctl",
+          "action": "backup.serviceのMainPID・User・ExecStartを確認する"
+        },
+        {
+          "resource_id": "job",
+          "action": "対象File・時刻・User・Command・保存先をJOB-504と照合する"
+        }
+      ],
+      "decisive_evidence": "観測された帳票読取り・接続先・実行User・Command・Serviceが、当該時間帯に承認されたBackup Jobに一致する。"
+    },
+    "PROC-LINUX-MONITORING-AGENT": {
+      "overview": "60秒間隔を指定して動作する監視Agentの設定と通信先を確認する。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "metrics Userと--interval 60・--server 192.0.2.80を確認する"
+        },
+        {
+          "resource_id": "ss",
+          "action": "対象PIDの接続先192.0.2.80:443を確認する"
+        },
+        {
+          "resource_id": "systemctl",
+          "action": "metrics.serviceのMainPID・User・ExecStartを確認する"
+        },
+        {
+          "resource_id": "service",
+          "action": "実行設定・Unit・宛先がCHG-505の監視構成に一致することを確認する"
+        }
+      ],
+      "decisive_evidence": "実行引数・User・Unit・接続先が承認済み監視Agentと一致する。60秒間隔はCommandとUnitの設定値として確認できる。"
+    },
+    "WEB-CONFIDENTIAL-URL": {
+      "overview": "本人が申請したPassword再設定URLを、TokenやUser IDを外部送信せず確認する。",
+      "flow": [
+        {
+          "resource_id": "disclosure",
+          "action": "機密情報を含む完全URLの隔離解析・URL照会を行わないと判断する"
+        },
+        {
+          "resource_id": "resolve",
+          "action": "Hostだけを使ってDNSの192.0.2.81を確認する。nslookupでも代替可能"
+        },
+        {
+          "resource_id": "official",
+          "action": "Host・Path・DNSとREQ-318の本人申請・発行通知を照合する"
+        }
+      ],
+      "decisive_evidence": "Host・Path・DNSが認証基盤の指定に合い、本人のREQ-318に対応する発行通知がある。完全URLの外部照会を必要としない。",
+      "review_notes": "Referenceに有効期限09:17はあるが、初期情報に現在の判定時刻がないため、有効期限内であること自体は明示的に照合できない。"
+    },
+    "WEB-NEW-OFFICIAL-DOMAIN": {
+      "overview": "登録直後の公開教材Domainが、正式な移行先かを確認する。",
+      "flow": [
+        {
+          "resource_id": "dig",
+          "action": "新HostのAレコード198.51.100.62を取得する。nslookupでも代替可能"
+        },
+        {
+          "resource_id": "rdap",
+          "action": "登録日の新しさと登録組織の非公開を確認し、所有者を推測しない"
+        },
+        {
+          "resource_id": "change",
+          "action": "旧Hostからの移行承認CHG-606、切替時刻、新Host・A・認証不要の用途を照合する"
+        }
+      ],
+      "decisive_evidence": "新HostとDNSのAが承認済み移行通知に一致する。新しい登録日やRDAPの非公開情報だけで遮断していない。"
+    },
+    "WEB-APPROVED-SAAS": {
+      "overview": "定期更新のDomain一覧にまだ載っていないSaaSについて、最新の変更承認を確認する。",
+      "flow": [
+        {
+          "resource_id": "resolve",
+          "action": "CNAMEの契約Tenant名とAレコードを取得する。nslookupでも代替可能"
+        },
+        {
+          "resource_id": "official",
+          "action": "通常一覧が前日時点であり反映に遅れがあることを確認する"
+        },
+        {
+          "resource_id": "contract",
+          "action": "CHG-607の新Host・CNAME・IPと、管理担当のTenant紐付け完了記録を照合する"
+        }
+      ],
+      "decisive_evidence": "最新の変更承認と管理担当の確認があり、新HostのCNAME・IPが契約Tenantの指定に一致する。一覧未反映だけでは未承認とはならない。"
+    },
+    "NET-WIN-SECURITY-TELEMETRY": {
+      "overview": "Windows Agentの定期送信がSecurity Telemetryの承認仕様どおりか確認する。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "管理Pathと--telemetry --interval 60を確認する"
+        },
+        {
+          "resource_id": "tcp",
+          "action": "対象PIDの192.0.2.80:443へのSocketを確認する"
+        },
+        {
+          "resource_id": "capture",
+          "action": "既存Flowの60秒間隔・512 bytesという観測を確認する"
+        },
+        {
+          "resource_id": "server",
+          "action": "Image・引数・宛先・周期・量をNET-707の承認範囲と照合する"
+        }
+      ],
+      "decisive_evidence": "管理Image・引数・宛先が一致し、観測した60秒間隔・512 bytesも承認範囲400–800 bytes/回に収まる。TLS本文は判断に用いない。"
+    },
+    "NET-WIN-CONFIDENTIAL-UPLOAD": {
+      "overview": "Windowsの転送Processが指定するFileと送信先を調べ、機密資料の送信可否を判断する。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "Commandの転送元forecast.csvと個人Cloud宛てURLを確認する"
+        },
+        {
+          "resource_id": "tcp",
+          "action": "同じPIDの接続先198.51.100.90を確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "資料の機密区分、法人Storage限定、承認転送Toolという条件と比較する"
+        }
+      ],
+      "decisive_evidence": "機密財務資料を未承認Toolで個人Cloudへ転送するCommandがあり、Socketの宛先も当該Endpointに一致する。TLSからFile内容を読み取った判断ではない。"
+    },
+    "NET-WIN-UNUSUAL-PORT": {
+      "overview": "通常のHTTPSと異なる8443番への接続を、収集Serviceの承認仕様に照らして判断する。",
+      "flow": [
+        {
+          "resource_id": "pe",
+          "action": "管理Imageと--collector 192.0.2.86:8443を確認する"
+        },
+        {
+          "resource_id": "tcp",
+          "action": "選択PIDの実際のRemote IP・Portを確認する"
+        },
+        {
+          "resource_id": "server",
+          "action": "専用CollectorのImage・引数・宛先がNET-709に一致することを確認する"
+        }
+      ],
+      "decisive_evidence": "8443番が承認済みCollectorの指定Portで、Image・引数・実接続先も承認仕様に一致する。"
+    },
+    "NET-LINUX-SECURITY-TELEMETRY": {
+      "overview": "Linux Agentの周期通信を、実行設定と承認Telemetryの宛先・量から確認する。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "/opt/aster/agentと--telemetry --interval 60を確認する"
+        },
+        {
+          "resource_id": "lsof_i",
+          "action": "同じPIDが所有する192.0.2.80:443へのSocketを確認する"
+        },
+        {
+          "resource_id": "capture",
+          "action": "60秒間隔・512 bytesのFlowを確認する。tcpdumpでも代替可能"
+        },
+        {
+          "resource_id": "server",
+          "action": "Process・宛先・周期・量をNET-707と照合する"
+        }
+      ],
+      "decisive_evidence": "実行元と宛先が承認済みで、実測60秒周期・512 bytesも承認仕様に一致する。周期性だけでC2とは判断しない。"
+    },
+    "NET-LINUX-CONFIDENTIAL-UPLOAD": {
+      "overview": "Linuxのcloud-copyが送ろうとする資料・宛先・利用Toolを組織方針と照合する。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "--source /srv/finance/forecast.csvと個人Cloudへの--destinationを確認する"
+        },
+        {
+          "resource_id": "lsof_i",
+          "action": "同じPIDの個人用Endpoint 198.51.100.90へのSocketを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "社外秘資料、法人Storage限定、corp-transfer限定という規則と比較する"
+        }
+      ],
+      "decisive_evidence": "Processの引数が機密資料を個人Cloudへ転送する指定で、宛先と転送Toolの双方が承認条件に反する。"
+    },
+    "NET-LINUX-BACKUP-TRANSFER": {
+      "overview": "大量の外向き通信が定例財務Backupの承認範囲内かを確認する。",
+      "flow": [
+        {
+          "resource_id": "ps",
+          "action": "管理Backup Agentと--job daily-financeを確認する"
+        },
+        {
+          "resource_id": "ss",
+          "action": "同じPIDの198.51.100.40:443へのSocketを確認する"
+        },
+        {
+          "resource_id": "capture",
+          "action": "09:00–09:09の送信4 GiBという会話統計を確認する"
+        },
+        {
+          "resource_id": "server",
+          "action": "Job・Image・宛先・09:00–10:00の時間帯・最大30 GiBと比較する"
+        }
+      ],
+      "decisive_evidence": "送信元Process・Job・宛先が承認済みBackupに一致し、観測時間帯と4 GiBの量も許可範囲内である。"
+    },
+    "EMAIL-BEC-REAL-ACCOUNT": {
+      "overview": "正規Mailbox・既存Threadから届いた口座変更依頼が、業務上承認された変更か確認する。",
+      "flow": [
+        {
+          "resource_id": "gateway",
+          "action": "信頼するHeaderの境界を確認する"
+        },
+        {
+          "resource_id": "header",
+          "action": "正式なFrom・認証Pass・返信Threadと、口座変更および電話確認省略の本文を確認する"
+        },
+        {
+          "resource_id": "vendor",
+          "action": "登録口座末尾2048と送信元の登録を照合する"
+        },
+        {
+          "resource_id": "thread",
+          "action": "前日の取引口座と変更予告の有無を比較する"
+        },
+        {
+          "resource_id": "procedure",
+          "action": "今回のTicket・独立確認・承認がすべて未登録であることを確認する"
+        }
+      ],
+      "decisive_evidence": "正規Mailboxでも口座末尾9912への変更は過去の登録と異なり、必須の変更承認手続がない。Mailbox侵害そのものを証明する資料ではない。"
+    },
+    "EMAIL-GENUINE-URGENT": {
+      "overview": "当日研修の会場変更メールについて、送信元・既存の申込み・添付・URLをまとめて確認する。",
+      "flow": [
+        {
+          "resource_id": "gateway",
+          "action": "信頼するGatewayの認証結果を使うことを確認する"
+        },
+        {
+          "resource_id": "header",
+          "action": "配送元・From・Threadと、添付Path・会場Hostを取得する"
+        },
+        {
+          "resource_id": "directory",
+          "action": "送信元Address・配信元IP・DKIMを登録と照合する"
+        },
+        {
+          "resource_id": "thread",
+          "action": "本人申込済みTR-810と会場変更の後送予定を確認する"
+        },
+        {
+          "resource_id": "attachment_hash",
+          "action": "抽出添付のSHA-256を取得する"
+        },
+        {
+          "resource_id": "dig",
+          "action": "Headerから得た会場HostのDNSを確認する。nslookupでも代替可能"
+        },
+        {
+          "resource_id": "approved",
+          "action": "B会議室への変更承認・添付Hash・URL・DNSをすべて照合する"
+        }
+      ],
+      "decisive_evidence": "信頼できる配送経路と既存Threadに加え、会場変更承認CHG-811、添付Hash、会場URLとDNSが一致する。急ぎという表現は遮断根拠にならない。"
+    },
+    "AUTH-WIN-NEW-DEVICE": {
+      "overview": "交換したばかりの端末からの初回Loginを、端末登録と交換承認から確認する。",
+      "flow": [
+        {
+          "resource_id": "device",
+          "action": "WIN-044がmoriのActive端末で、IPと登録時刻が今回の要求に合うことを確認する"
+        },
+        {
+          "resource_id": "change",
+          "action": "CHG-904の交換作業と本人受領確認を照合する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "交換申請・管理登録・今回のMFAによる初回Loginの許可条件を確認する"
+        }
+      ],
+      "decisive_evidence": "新端末の管理登録・交換申請・User・IPが一致し、今回のMFAも確認済みである。過去履歴に端末がないことは遮断根拠にならない。"
+    },
+    "AUTH-WIN-CORPORATE-VPN": {
+      "overview": "IP位置表示が海外の認証要求について、企業VPNの出口と本人への経路紐付けを確認する。",
+      "flow": [
+        {
+          "resource_id": "vpn",
+          "action": "Source IPが契約済みVPN出口で、Tunnel V-140がmori・WIN-017に割当済みと確認する"
+        },
+        {
+          "resource_id": "device",
+          "action": "WIN-017が本人のActiveな管理端末であることを確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "今回のTunnel確認・Password・MFAが承認経路の要件を満たすことを確認する"
+        }
+      ],
+      "decisive_evidence": "海外に見えるSourceは承認済みVPN出口で、今回のTunnel・本人・管理Device・MFAが一致する。IP位置を本人の物理的位置と同一視していない。"
+    },
+    "AUTH-WIN-PRIVILEGED-PATH": {
+      "overview": "MFA済み管理AccountのRDP要求が、特権利用専用の端末・経路を使っているか確認する。",
+      "flow": [
+        {
+          "resource_id": "events",
+          "action": "過去の管理LoginはPAW-017と管理Gateway経由だったことを確認する"
+        },
+        {
+          "resource_id": "admin",
+          "action": "専用Deviceと管理Gatewayのみを許可する条件を確認する"
+        },
+        {
+          "resource_id": "device",
+          "action": "今回のPERSONAL-42は管理外で、直接RDP要求も許可経路に合わないことを確認する"
+        }
+      ],
+      "decisive_evidence": "今回の管理外Deviceと直接RDPは、PAW-017・管理Gateway経由のみという特権利用条件に違反する。MFAだけでは経路制約を満たさない。"
+    },
+    "AUTH-LINUX-PRIVILEGED-PATH": {
+      "overview": "鍵とMFAが確認済みのrootへの直接SSH要求を、承認管理経路と比較する。",
+      "flow": [
+        {
+          "resource_id": "journal",
+          "action": "過去の保守が個人Accountの踏み台SSHとsudo昇格だったことを確認する"
+        },
+        {
+          "resource_id": "admin",
+          "action": "root直接SSH禁止と、個人Account・踏み台・Ticketによる昇格手順を確認する"
+        }
+      ],
+      "decisive_evidence": "今回のroot直接SSHは明示的に禁止され、承認された個人Accountと踏み台経由の管理手順に一致しない。"
+    },
+    "AUTH-LINUX-BASTION-LOGIN": {
+      "overview": "共有踏み台を経由する保守SSHを、本人への紐付けと今回の保守承認から確認する。",
+      "flow": [
+        {
+          "resource_id": "journal",
+          "action": "過去のUser・Source・鍵FingerprintとSession終了を確認する"
+        },
+        {
+          "resource_id": "last",
+          "action": "過去の保守時刻と踏み台Sourceを照合する"
+        },
+        {
+          "resource_id": "bastion",
+          "action": "踏み台・個人端末OPS-017・ops-moriへの紐付けを確認する"
+        },
+        {
+          "resource_id": "admin",
+          "action": "今回の経路Ticket MAINT-906、時間帯、鍵、MFAと一般権限SSHの承認を照合する"
+        }
+      ],
+      "decisive_evidence": "今回のGateway経路確認が個人Userと管理端末に結び付き、鍵・MFA・時間帯・Ticketが承認保守条件に一致する。"
+    },
+    "PKG-NPM-MAJOR-UPDATE": {
+      "overview": "Native Buildと依存追加を伴う大規模更新が、正式なRelease変更として承認されているか確認する。",
+      "flow": [
+        {
+          "resource_id": "metadata",
+          "action": "installのnode-gyp rebuild、追加依存、配布Hashを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "同梱SourceのBuildだけで任意外部Executable取得はなく、Hashも承認Commitと一致すると確認する"
+        },
+        {
+          "resource_id": "release",
+          "action": "Native化とnode-addon-api追加が公式変更内容に含まれることを確認する"
+        },
+        {
+          "resource_id": "lock",
+          "action": "名前・Version・供給元・Hash・依存が更新承認Lockに固定されていることを確認する"
+        },
+        {
+          "resource_id": "vuln",
+          "action": "この固定構成に現在の組織禁止対象の登録がないことを確認する"
+        }
+      ],
+      "decisive_evidence": "大きな変更でも配布Hash・Source・依存追加・Release説明・更新LockがCHG-1011に一致し、現行の禁止対象にも該当しない。"
+    },
+    "PKG-PYPI-LEGITIMATE-VULNERABLE": {
+      "overview": "正規のTemplate Engineでも、顧客Templateを評価する用途で導入可能か確認する。",
+      "flow": [
+        {
+          "resource_id": "metadata",
+          "action": "対象1.7.2の配布元・Repository・Hashを確認する"
+        },
+        {
+          "resource_id": "official",
+          "action": "正規Releaseの供給元とHashが一致することを確認する"
+        },
+        {
+          "resource_id": "vuln",
+          "action": "1.7.3未満と信頼しないTemplate評価という影響条件を確認する"
+        },
+        {
+          "resource_id": "policy",
+          "action": "顧客Template用途は導入禁止で、社内固定Template用の例外は適用できないと確認する"
+        }
+      ],
+      "decisive_evidence": "対象は正規ReleaseだがVersion 1.7.2と顧客Template評価の用途が脆弱性の影響条件に一致し、組織の導入禁止方針に該当する。"
+    }
+  }
+}

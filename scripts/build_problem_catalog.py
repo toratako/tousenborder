@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 from functools import lru_cache
+import html
 import json
 import math
 from pathlib import Path
@@ -17,7 +18,7 @@ LEVEL_LABELS = {
 }
 GROUP_KINDS = {"tools": "tools", "references": "references", "external_references": "external_references"}
 
-@lru_cache(maxsize=2)
+@lru_cache(maxsize=3)
 def schema_validator(name: str) -> Draft202012Validator:
     schema = read_json(ROOT / f"data/schemas/{name}.schema.json")
     Draft202012Validator.check_schema(schema)
@@ -153,8 +154,54 @@ def validate_authoring(item: dict, pack: dict) -> list[tuple[str, dict]]:
     return entries
 
 
+def validate_review(item: dict, entries: list[tuple[str, dict]], review: dict) -> None:
+    """The authored walkthrough must be executable, safe and evidence-complete."""
+    resources = {entry["id"]: entry for _, entry in entries}
+    os = "linux" if item["platform"] == "common" else item["platform"]
+    obtained = {("initial_information", key) for key in item["initial_information"]}
+    visited = {"initial_information"}
+    for step in review["flow"]:
+        key = step["resource_id"]
+        if key == "initial_information":
+            continue
+        if key not in resources:
+            raise ValueError(f"{item['id']}: review flow refers to missing resource {key}")
+        entry = resources[key]
+        if not entry.get("correct_usage", True) or (entry.get("environments") and os not in entry["environments"]):
+            raise ValueError(f"{item['id']}: review flow uses an unsafe or unavailable resource {key}")
+        if entry.get("input_bindings") and not any(
+            (binding["source"], binding["id"]) in obtained for binding in entry["input_bindings"]
+        ):
+            raise ValueError(f"{item['id']}: review flow uses {key} before its input is available")
+        visited.add(key)
+        obtained.update((key, output["id"]) for output in entry.get("output_information", [])
+                        if output.get("tool_input", True))
+    for key in item["required_evidence"]:
+        options = item.get("evidence_alternatives", {}).get(key, {}).get("any_of", [key])
+        if not visited.intersection(options):
+            raise ValueError(f"{item['id']}: review flow omits required evidence {key}")
+
+
+def display_value(value) -> str:
+    """Readable initial facts; only explicit code strings retain JSON punctuation."""
+    if isinstance(value, dict):
+        return " / ".join(f"{key}: {display_value(part)}" for key, part in value.items()) or "なし"
+    if isinstance(value, list):
+        return "、".join(display_value(part) for part in value) or "なし"
+    return str(value)
+
+
 def build(pack_path: Path) -> tuple[str, str]:
     pack = read_json(pack_path)
+    pack_resource = "res://" + pack_path.relative_to(ROOT).as_posix()
+    review_path = pack_path.parent.parent / "catalog" / pack_path.name
+    reviews = None
+    if review_path.exists():
+        review_data = read_json(review_path)
+        validate_schema(review_data, "catalog-review")
+        if review_data["content_pack"] != pack_resource:
+            raise ValueError(f"Catalog review content_pack mismatch: {review_path}")
+        reviews = review_data["reviews"]
     problems = []
     seen = set()
     validate_pack(pack)
@@ -199,42 +246,104 @@ def build(pack_path: Path) -> tuple[str, str]:
              "input_bindings": entry.get("input_bindings", [])}
             for kind, entry in entries if kind != "references"
         ]
+        review = reviews.get(item["id"]) if reviews is not None else None
+        if reviews is not None and review is None:
+            raise ValueError(f"Missing catalog review: {item['id']}")
+        if review is not None:
+            validate_review(item, entries, review)
+        problem.update(
+            overview=review["overview"] if review else item["summary"],
+            request=item["request"],
+            initial_information=item["initial_information"],
+            expected_investigation_flow=[
+                {"resource_id": step["resource_id"], "name": names[step["resource_id"]], "action": step["action"]}
+                for step in review["flow"]
+            ] if review else [],
+            decisive_evidence=review["decisive_evidence"] if review else "未レビュー",
+            reason=item["explanation"],
+            review_notes=review.get("review_notes", "") if review else "レビュー用JSONが未作成。想定手順と決定的な証拠は未レビュー。",
+            available_investigation=[
+                {"resource_id": entry["id"], "kind": kind, "name": entry["name"],
+                 "available": not entry.get("environments") or os in entry["environments"],
+                 "correct_usage": entry.get("correct_usage", True),
+                 "reason": entry.get("reason", "")}
+                for kind, entry in entries
+            ],
+        )
         problems.append(problem)
+    if reviews is not None and set(reviews) != seen:
+        raise ValueError("Catalog reviews refer to unregistered problems: " + ", ".join(sorted(set(reviews) - seen)))
     total = len(problems)
     if total == 0:
         raise ValueError("The content pack contains no problems")
     inspired = sum(p["scenario_type"] == "real_world_inspired" for p in problems)
     result = {
-        "schema_version": 1, "content_pack": "res://" + pack_path.relative_to(ROOT).as_posix(),
+        "schema_version": 1, "content_pack": pack_resource,
         "total": total, "by_category": dict(Counter(p["category"] for p in problems)),
         "by_level": dict(Counter(p["level"] for p in problems)),
         "by_platform": dict(Counter(p["platform"] for p in problems)),
         "by_verdict": dict(Counter(p["ground_truth"] for p in problems)),
-        "real_world_inspired": inspired, "problems": problems,
+        "real_world_inspired": inspired,
+        "review_source": "res://" + review_path.relative_to(ROOT).as_posix() if reviews is not None else None,
+        "problems": problems,
     }
     lines = [
-        "# Problem Catalog", "",
+        "# Problem Catalog / 人間向け全問題確認表", "",
         f"対象: {result['content_pack']}。実装済み{total}問。"
         f"許可{result['by_verdict'].get('allow', 0)}問・遮断{result['by_verdict'].get('block', 0)}問。"
         f"Real-world inspired {inspired}問（{inspired / total:.1%}）。",
-        "", "この一覧には正解が含まれます。"
-        "問題JSONを編集し、python scripts/build_problem_catalog.py で再生成してください。"
+        "", "開発者・レビュー担当者向け。Titleは回答後の表示名で、この一覧には正解を含みます。"
+        "問題JSONとレビュー用JSONを編集し、python scripts/build_problem_catalog.py で再生成してください。"
         "検証のみの場合は --check を指定します。",
-        "", "| ID | Category | Platform / Ecosystem | Level | Answer | Title | Main Evidence | Main Tool | Scenario Type | Tool | Reference | External Reference | 実例 | 内容 |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "", "Initial Informationはプレイヤーに提示される事実のみ。Available Investigationは補助資料も含む全候補です。"
+        "Expected Investigation Flowは必要証拠を満たす代表経路で、最後にCorrect Answerの判定を行います。"
+        "代替手段の全候補はMain Evidenceに記載します。資料の生OutputはIDリンク先の問題JSONを参照してください。",
+        "", "| ID | Category | Platform / Ecosystem | Difficulty | Title | Scenario Type | Overview | Initial Information | Available Investigation | Expected Investigation Flow | Decisive Evidence | Correct Answer | Reason | Learning Objective | Real-world Inspiration |",
+        "| " + " | ".join(["---"] * 15) + " |",
     ]
     def cell(value):
-        return str(value).replace("|", r"\|").replace("\n", " ")
+        # Escape literal HTML/Markdown (including Windows paths and placeholder code).
+        text = html.escape(str(value), quote=False)
+        for literal in "\\|*_`[]":
+            text = text.replace(literal, f"&#{ord(literal)};")
+        return text.replace("\r", "").replace("\n", "<br>")
     for p in problems:
         link = "../" + p["path"][6:]
+        available = []
+        for kind, label in [("tools", "Tool"), ("references", "Reference"), ("external_references", "External Reference")]:
+            resources = []
+            for entry in p["available_investigation"]:
+                if entry["kind"] == kind:
+                    note = "（この調査OSでは利用不可）" if not entry["available"] else ""
+                    if not entry["correct_usage"]:
+                        note += "（利用不適切：" + entry["reason"] + "）"
+                    resources.append(entry["name"] + note)
+            available.append(label + ": " + ("、".join(resources) or "なし"))
+        flow = [f"{i}. {step['name']}：{step['action']}"
+                for i, step in enumerate(p["expected_investigation_flow"], 1)]
+        if flow:
+            flow.append(f"{len(flow) + 1}. 照合結果から{p['ground_truth'].upper()}と判断する")
         values = [
-            f"[{p['id']}]({link})", p["category"], p["platform"] + (f" / {p['ecosystem']}" if p["ecosystem"] else ""),
-            LEVEL_LABELS.get(p["level"], p["level"]), p["ground_truth"], p["title"],
-            "、".join(e["label"] for e in p["main_evidence"]), "、".join(p["main_tools"]) or "—", p["scenario_type"],
-            "、".join(p["tools"]) or "—", "、".join(p["references"]) or "—", "、".join(p["external_references"]) or "—",
-            p["inspired_by"] or "—", p["summary"],
+            p["category"].title(), p["platform"].title() + (f" / {p['ecosystem']}" if p["ecosystem"] else ""),
+            LEVEL_LABELS.get(p["level"], p["level"]), p["title"],
+            {"standard": "Normal", "real_world_inspired": "Real-world inspired"}.get(p["scenario_type"], p["scenario_type"]),
+            p["overview"], "\n".join(f"{key}: {display_value(value)}" for key, value in p["initial_information"].items()),
+            "\n".join(available), "\n".join(flow) or "未レビュー", p["decisive_evidence"],
+            p["ground_truth"].upper(), p["reason"], "\n".join(p["learning_objectives"]), p["inspired_by"] or "—",
         ]
-        lines.append("| " + " | ".join(cell(v) for v in values) + " |")
+        lines.append(f"| [{p['id']}]({link}) | " + " | ".join(cell(v) for v in values) + " |")
+    notes = [p for p in problems if p["review_notes"]]
+    if notes:
+        lines += ["", "## 設計レビュー注記", "", "元の問題に残る説明不足です。Catalogだけで不足を補って問題が成立したとは扱いません。", "", "| ID | 確認事項 |", "| --- | --- |"]
+        for p in notes:
+            lines.append(f"| {p['id']} | {cell(p['review_notes'])} |")
+    lines += ["", "## Main Evidence / 必須資料と代替手段", "", "代表経路で省略した代替候補を含みます。資料名は証拠の所在であり、判断を成立させる事実は上表のDecisive Evidenceに記載しています。", "", "| ID | Main Evidence | Main Tool |", "| --- | --- | --- |"]
+    for p in problems:
+        names = {entry["resource_id"]: entry["name"] for entry in p["available_investigation"]}
+        names["initial_information"] = "初期情報"
+        labels = [e["label"] + ("（" + " / ".join(names[key] for key in e["any_of"]) + "）" if e["id"] in p["evidence_alternatives"] else "")
+                  for e in p["main_evidence"]]
+        lines.append(f"| {p['id']} | {cell('、'.join(labels))} | {cell('、'.join(p['main_tools']) or '—')} |")
     lines += ["", "実例の出典は各問題JSONの sources、仕様と教材上の省略は [設計・教材の方針](learning-design.md) を参照してください。", ""]
     return json.dumps(result, ensure_ascii=False, indent=2) + "\n", "\n".join(lines)
 
@@ -256,7 +365,7 @@ def main() -> int:
                     raise ValueError(f"Stale or missing catalog: {path}")
             else:
                 path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(content, encoding="utf-8")
+                path.write_text(content, encoding="utf-8", newline="\n")
     except (ValueError, KeyError, TypeError, OSError) as exc:
         print(str(exc), file=sys.stderr)
         return 1

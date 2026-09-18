@@ -59,7 +59,11 @@ python3 scripts/build_problem_catalog.py
 just test
 ```
 
-依存の準備は [README](../README.md#開発教材編集)。生成先は `docs/problem-catalog.md` と `build/catalog/problems.json`（Git管理外）。生成処理の `--check` はMarkdownを常に、JSONは存在する場合だけ比較します。Main Evidenceはrequired_evidence、Main Toolはその入力元を含む適切な調査経路から導出します。代替Toolは併記し、教材に新Fieldを要求しません。別Packの検証は `godot --headless --path . --script scripts/validate_content.gd -- res://data/packs/別名.json`（成功0・失敗1）。
+依存の準備は [README](../README.md#開発教材編集)。生成先は `docs/problem-catalog.md` と `build/catalog/problems.json`（Git管理外）。生成処理の `--check` はMarkdownを常に、JSONは存在する場合だけ比較します。別Packの検証は `godot --headless --path . --script scripts/validate_content.gd -- res://data/packs/別名.json`（成功0・失敗1）。
+
+レビュー用の説明は [data/catalog/learning.json](../data/catalog/learning.json)。Packと同じFile名で `data/catalog/` に置き、[Review Schema](../data/schemas/catalog-review.schema.json) に従って全登録IDの `overview / flow / decisive_evidence` を記述します。`flow` は資料IDと確認内容の順序付き配列で、初期情報は常に取得済みとし、必要な入力を先に取得する代表経路を記載します。代替証拠は利用可能な経路を一つ選びます。機密Uploadなど不適切な調査は実行手順にせず、方針を読む手順に見送りを記述してください。問題JSONの変更時には説明も再確認し、不足は `review_notes` に残します。これらはゲームUIへ読み込みません。
+
+初期情報・全調査候補・正解・理由・学習目標は問題JSONから直接転記します。Main Evidenceはrequired_evidence、Main Toolはその入力元も含む経路から導出し、代替候補を併記します。レビューJSONがあるPackでは登録IDの過不足、手順の入力順序・OS適合・適切な利用・必須証拠の充足も検証します。レビューJSONがない別Packは想定手順・決定的証拠を「未レビュー」と表示し、自動推測しません。
 
 検証の分担:
 
