@@ -15,7 +15,6 @@ var cases: Array[Dictionary] = []
 var rules: Array[Dictionary] = []
 var errors: PackedStringArray = []
 var title := ""
-var time_limit_seconds := 0
 var actions: Array[Dictionary] = default_actions()
 var feedback: Dictionary = {}
 var categories: Array[Dictionary] = []
@@ -86,7 +85,6 @@ func load_pack(path: String = DEFAULT_PACK) -> bool:
 		resource_groups[group.id] = group.duplicate(true)
 	if not errors.is_empty(): return false
 	title = pack.title
-	time_limit_seconds = int(pack.time_limit_seconds)
 	feedback = pack.get("feedback", {}).duplicate(true)
 	categories.assign(pack.categories)
 	for rule in pack.rules:
@@ -118,7 +116,6 @@ func _reset() -> void:
 	rules.clear()
 	errors.clear()
 	title = ""
-	time_limit_seconds = 0
 	feedback.clear()
 	categories.clear()
 	actions = default_actions()

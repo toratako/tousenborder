@@ -25,14 +25,13 @@ static func build_workspace(desk) -> void:
 	var rules_focus := header_pill_style(Color.TRANSPARENT)
 	rules_focus.border_color = PAPER
 	desk.rules_button.add_theme_stylebox_override("focus", rules_focus)
-	for rect in [Rect2(568, 12, 184, 46), Rect2(768, 12, 128, 46)]:
+	for rect in [Rect2(624, 12, 128, 46), Rect2(768, 12, 128, 46)]:
 		var pill := Chrome.panel(desk.workspace, rect, Color.TRANSPARENT)
 		pill.add_theme_stylebox_override("panel", header_pill_style(Color("101e32")))
-	desk.countdown = Chrome.label(desk.workspace, Rect2(584, 12, 102, 46), "--:--", PAPER, 26)
-	desk.countdown_state = Chrome.label(desk.workspace, Rect2(690, 12, 50, 46), "", MUTED, 12)
+	desk.elapsed_time = Chrome.label(desk.workspace, Rect2(640, 12, 96, 46), "00:00", Color("57e4f2"), 26)
 	desk.status = Chrome.label(desk.workspace, Rect2(784, 12, 96, 46), "準備中", PAPER, 15)
-	desk.status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	for label in [desk.countdown, desk.countdown_state, desk.status]:
+	for label in [desk.elapsed_time, desk.status]:
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	desk.card_layer = Control.new()
 	desk.card_layer.position = Vector2(0, 74)
@@ -282,8 +281,8 @@ static func build_summary(desk) -> void:
 	desk.summary_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	Chrome.panel(desk.summary_overlay, Rect2(252, 97, 800, 630), Color("050a12"))
 	desk.summary = Chrome.panel(desk.summary_overlay, Rect2(240, 85, 800, 630), Color("101e32"), Color("34556f"))
-	desk.summary_title = Chrome.label(desk.summary, Rect2(30, 22, 740, 45), "時間切れ / 勤務結果" if desk.shift.timed_out else "勤務結果", INK, 30)
-	desk.summary_stats = Chrome.label(desk.summary, Rect2(30, 77, 740, 30), "正解 %d件  /  誤判定 %d件  /  未審査 %d件" % [desk.shift.score(), desk.shift.records.size() - desk.shift.score(), desk.shift.cases.size() - desk.shift.records.size()], INK, 18)
+	desk.summary_title = Chrome.label(desk.summary, Rect2(30, 22, 740, 45), "勤務結果", INK, 30)
+	desk.summary_stats = Chrome.label(desk.summary, Rect2(30, 77, 740, 30), "正解 %d件  /  誤判定 %d件" % [desk.shift.score(), desk.shift.records.size() - desk.shift.score()], INK, 18)
 	desk.summary_stats.text += "  /  不適切な調査 %d件" % desk.shift.unsafe_investigations()
 	desk.summary_stats.add_theme_font_size_override("font_size", 16)
 	Chrome.panel(desk.summary, Rect2(30, 119, 740, 2), Color("34556f"))

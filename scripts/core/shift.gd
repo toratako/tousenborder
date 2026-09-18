@@ -9,17 +9,13 @@ var records: Array[Dictionary] = []
 var observations: Array[Dictionary] = []
 var judged := false
 var runner := ToolRunner.new()
-var time_limit_seconds := 0
-var remaining_seconds := 0.0
-var timed_out := false
+var elapsed_seconds := 0.0
 
-func start(items: Array[Dictionary], limit_seconds: int = 0) -> void:
+func start(items: Array[Dictionary]) -> void:
 	cases = items.duplicate(true)
 	for item in cases:
 		item.investigation_environment = ToolRunner.investigation_environment(item)
-	time_limit_seconds = maxi(0, limit_seconds)
-	remaining_seconds = float(time_limit_seconds)
-	timed_out = false
+	elapsed_seconds = 0.0
 	index = 0
 	records.clear()
 	observations.clear()
@@ -30,15 +26,12 @@ func current() -> Dictionary:
 	return {} if finished() else cases[index]
 
 func finished() -> bool:
-	return timed_out or index >= cases.size()
+	return index >= cases.size()
 
 func tick(delta: float) -> void:
-	if finished() or judged or time_limit_seconds == 0 or not is_finite(delta) or delta <= 0:
+	if finished() or judged or not is_finite(delta) or delta <= 0:
 		return
-	remaining_seconds = maxf(0.0, remaining_seconds - delta)
-	if remaining_seconds == 0:
-		timed_out = true
-		changed.emit()
+	elapsed_seconds += delta
 
 func inspect(tool: Dictionary, input: Dictionary = {}) -> Dictionary:
 	if finished() or judged:

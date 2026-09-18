@@ -2,7 +2,6 @@
   "schema_version": 1,
   "id": "learning",
   "title": "セキュリティ判断の基礎 / 代表24問",
-  "time_limit_seconds": 0,
   "categories": [
     {
       "id": "file",

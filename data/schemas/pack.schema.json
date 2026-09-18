@@ -22,11 +22,6 @@
       "minItems": 1,
       "uniqueItems": true
     },
-    "time_limit_seconds": {
-      "type": "integer",
-      "minimum": 0,
-      "maximum": 86400
-    },
     "rules": {
       "type": "array",
       "items": {
@@ -71,7 +66,6 @@
     "id",
     "title",
     "problems",
-    "time_limit_seconds",
     "rules",
     "categories"
   ],

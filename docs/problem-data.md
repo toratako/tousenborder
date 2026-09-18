@@ -12,7 +12,6 @@
 | --- | --- |
 | `schema_version`, `id`, `title` | 版1、Pack識別子、表示名。必須 |
 | `problems` | `res://data/problems/ID.json` の重複しない配列。1件以上。順序が出題の基準 |
-| `time_limit_seconds` | 0〜86400の整数。0は時間制限なし |
 | `rules` | `{id, label, value}` の配列 |
 | `categories` | `{id, label}` の配列。問題のカテゴリを登録 |
 | `resource_groups` | 任意の `{id, label, kind}` 配列。kindは `tools`, `references`, `external_references`。標準グループのkindはidと同じ |

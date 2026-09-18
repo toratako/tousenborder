@@ -235,9 +235,9 @@ func _run() -> void:
 					check(desk.external_preview_body.text.contains(Information.display(input.value)), "選択した入力を送信前に確認")
 					check(not desk.external_preview_body.text.contains(tool.output), "実行前に調査結果を漏らさない")
 					check(not desk._can_stamp(desk.get_stamp(item.ground_truth).payload()), "確認中の判定を防ぐ")
-					var remaining: float = desk.shift.remaining_seconds
+					var elapsed: float = desk.shift.elapsed_seconds
 					desk._process(1)
-					check(desk.shift.remaining_seconds == remaining, "確認文を読む間は時計停止")
+					check(desk.shift.elapsed_seconds == elapsed, "確認文を読む間は時計停止")
 					if tool.id == "urlscan_private":
 						desk.external_skip.pressed.emit()
 						check(desk.shift.observations.back().get("skipped", false), "UIの見送りを保存")
@@ -266,11 +266,11 @@ func _run() -> void:
 	desk._start_shift()
 	var token_case: Dictionary = catalog.cases.filter(func(c): return c.id == "WEB-ADVANCED-001")[0]
 	var token_cases: Array[Dictionary] = [token_case]
-	desk.shift.start(token_cases, 10)
+	desk.shift.start(token_cases)
 	var unsafe_tool: Dictionary = catalog.tools_for(token_case).filter(func(t): return t.id == "urlscan_private")[0]
 	desk._inspect(unsafe_tool, available_input(desk.shift, unsafe_tool))
 	desk._process(2)
-	check(desk.shift.remaining_seconds == 10, "実際に制限時間がある場合も確認中に停止")
+	check(desk.shift.elapsed_seconds == 0, "送信確認中は経過時間の計測を停止")
 	desk._start_shift()
 	desk._finish_external(true)
 	check(desk.pending_external.is_empty() and desk.shift.observations.is_empty(), "リスタートで保留中の外部照会を破棄")

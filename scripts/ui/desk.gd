@@ -22,8 +22,7 @@ var tool_guide_body: RichTextLabel
 var tool_guide_tabs: Array[Button] = []
 var guide_tools: Array[Dictionary] = []
 var status: Label
-var countdown: Label
-var countdown_state: Label
+var elapsed_time: Label
 var card_layer: Control
 var cards: Array[DraggableCard] = []
 var target_card: DraggableCard
@@ -117,7 +116,7 @@ func _process(delta: float) -> void:
 	if not playing or pause_menu.visible or rules_overlay.visible or external_preview.visible:
 		return
 	shift.tick(delta)
-	_refresh_countdown()
+	_refresh_elapsed_time()
 
 func _update_hover_drop_targets() -> void:
 	var payload: Dictionary = {}
@@ -173,25 +172,9 @@ func _close_menu() -> void:
 		menu_button.grab_focus()
 	menu_previous_focus = null
 
-func _refresh_countdown() -> void:
-	var unlimited := not shift.cases.is_empty() and shift.time_limit_seconds == 0
-	countdown.size.x = 152 if unlimited else 102
-	countdown.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER if unlimited else HORIZONTAL_ALIGNMENT_LEFT
-	countdown.add_theme_font_size_override("font_size", 20 if unlimited else 26)
-	countdown_state.visible = not unlimited
-	if shift.cases.is_empty():
-		countdown.text = "--:--"
-		countdown_state.text = ""
-		return
-	if unlimited:
-		countdown.text = "無制限"
-		countdown_state.text = ""
-		countdown.add_theme_color_override("font_color", MUTED)
-		return
-	var seconds := ceili(shift.remaining_seconds)
-	countdown.text = "%02d:%02d" % [seconds / 60, seconds % 60]
-	countdown_state.text = "終了" if shift.finished() else ("監査中" if shift.judged else "")
-	countdown.add_theme_color_override("font_color", RED if seconds <= 30 else Color("57e4f2"))
+func _refresh_elapsed_time() -> void:
+	var seconds := floori(shift.elapsed_seconds)
+	elapsed_time.text = "%02d:%02d" % [seconds / 60, seconds % 60]
 
 func _build_start_screen() -> void:
 	Layout.build_start_screen(self)
@@ -293,7 +276,7 @@ func _start_shift() -> void:
 	workspace.show()
 	playing = true
 	_clear_desk()
-	shift.start(selected, catalog.time_limit_seconds)
+	shift.start(selected)
 	menu_button.grab_focus()
 
 func _draw() -> void:
@@ -458,7 +441,7 @@ func _finish_external(submit: bool) -> void:
 			break
 
 func _refresh() -> void:
-	_refresh_countdown()
+	_refresh_elapsed_time()
 	audit_overlay.hide()
 	status.text = "問題: %d/%d" % [mini(shift.index + 1, shift.cases.size()), shift.cases.size()]
 	if shift.finished():
@@ -577,13 +560,6 @@ func _show_summary() -> void:
 			+ (" / 正しい判定：" + _verdict_label(record.ground_truth) if catalog.feedback.get("show_expected", true) else "")
 			+ ("\n" + record.explanation + "\n" + InspectionShift.investigation_feedback(record) if catalog.feedback.get("show_reason", true) else ""),
 			Color("57edc2") if record.correct else Color("ff718b"))
-	for i in range(shift.records.size(), shift.cases.size()):
-		var body := "時間切れのため、判定は記録されていません。"
-		if shift.timed_out and i == shift.index and not shift.judged and catalog.feedback.get("show_reason", true):
-			var investigation := InspectionShift.investigation_feedback({"observations": shift.observations})
-			if not investigation.is_empty():
-				body += "\n\n調査手段の振り返り\n" + investigation
-		_summary_item(shift.cases[i].title, shift.cases[i].id, "未審査", body, Color("b0c8da"))
 	Layout.build_summary_actions(self)
 	next.visible = false
 	for stamp in action_stamps:
