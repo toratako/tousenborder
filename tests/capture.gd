@@ -23,8 +23,6 @@ func _capture() -> void:
 	desk.rules_button.pressed.emit()
 	await _save("rules")
 	desk.rules_close.pressed.emit()
-	desk._toggle_tools()
-	await _save("tools")
 	var external: Dictionary = desk.catalog.tools_for(item).filter(func(t): return t.id == "urlscan_private")[0]
 	var url: Dictionary = item.information.filter(func(i): return i.data_type == "url")[0].duplicate(true)
 	url.case_id = item.id
@@ -33,10 +31,17 @@ func _capture() -> void:
 	desk.external_skip.pressed.emit()
 	for reference in item.references:
 		desk._inspect(reference)
+	await _save("references")
 	desk.shift.decide(item.ground_truth)
 	await _save("audit")
 	desk.next.pressed.emit()
 	await _save("summary")
+	desk._start_shift()
+	var dense_cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-WIN-ADVANCED-001")
+	desk.shift.start(dense_cases)
+	await _save("dense_panel")
+	desk.tool_scroll.scroll_vertical = int(desk.tool_scroll.get_v_scroll_bar().max_value)
+	await _save("dense_panel_scrolled")
 	desk.queue_free()
 	await process_frame
 	print("Learning screenshots: build/screenshots/*.png")

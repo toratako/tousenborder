@@ -47,7 +47,7 @@ func _run() -> void:
 	await click(desk.start_button.get_global_rect().get_center())
 	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-001")
 	desk.shift.start(cases, 300)
-	assert(desk.playing and not desk.tool_drawer.visible)
+	assert(desk.playing and desk.tool_panel.visible)
 	await motion(desk.menu_button.get_global_rect().get_center())
 	assert(root.gui_get_hovered_control() == desk.menu_button)
 	assert(desk.menu_button.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND)
@@ -67,8 +67,8 @@ func _run() -> void:
 	assert(desk.rules_overlay.visible)
 	await click(desk.menu_button.get_global_rect().get_center())
 	assert(not desk.pause_menu.visible, "book blocks background menu button")
-	await click(desk.tools_toggle.get_global_rect().get_center())
-	assert(not desk.tool_drawer.visible, "book blocks background input")
+	await click(desk.tool_buttons[0].get_global_rect().get_center())
+	assert(desk.shift.observations.is_empty(), "book blocks background input")
 	await click(desk.rules_close.get_global_rect().get_center())
 	assert(not desk.rules_overlay.visible and desk.rules_button.has_focus())
 	assert(desk.card_layer.position.y + desk.card_layer.size.y == 800)
@@ -89,8 +89,7 @@ func _run() -> void:
 	await drag(grab, grab + Vector2(100, 15))
 	assert(card.position == original, "target stays fixed")
 	assert(card.position == original)
-	await click(desk.tools_toggle.get_global_rect().get_center())
-	assert(desk.tool_drawer.visible)
+	assert(desk.tool_panel.visible)
 	var row: InformationToken = card.tokens[1]
 	await process_frame
 	# ホバーだけで対応する入力先が分かり、選択や調査は発生しない。
@@ -116,7 +115,7 @@ func _run() -> void:
 	assert(desk.shift.observations.is_empty())
 	await drag(row.get_global_rect().get_center(), desk.tool_buttons[0].get_global_rect().get_center())
 	assert(desk.shift.observations.size() == 1 and desk.shift.observations[0].ok)
-	assert(not desk.tool_drawer.visible)
+	assert(desk.tool_panel.visible)
 	assert(desk.cards.back().card_data.category == "analysis")
 	# 調査結果はグリップで移動でき、離すと持ち上げ表現が戻る。
 	var movable_card: DraggableCard = desk.cards.back()
@@ -167,7 +166,7 @@ func _run() -> void:
 	assert(desk.shift.finished() and desk.summary_overlay.visible)
 	desk.summary_restart.pressed.emit()
 	await process_frame
-	assert(not desk.tool_drawer.visible and not desk.rules_overlay.visible)
+	assert(desk.tool_panel.visible and not desk.rules_overlay.visible)
 	var stale: Dictionary = desk.get_stamp("allow").payload()
 	desk._start_shift()
 	assert(not desk.target_card._can_drop_data(Vector2.ZERO, stale))
@@ -175,5 +174,5 @@ func _run() -> void:
 	assert(not desk.target_card._can_drop_data(Vector2.ZERO, desk.get_stamp("allow").payload()))
 	desk.queue_free()
 	await process_frame
-	print("実操作テスト: ツール開閉・情報D&D・スタンプ移動・誤ドロップ拒否・押印・規則集の開閉に成功")
+	print("実操作テスト: 調査パネル・情報D&D・スタンプ移動・誤ドロップ拒否・押印・規則集の開閉に成功")
 	quit()

@@ -124,7 +124,7 @@ func _run() -> void:
 	assert(desk.pause_menu.visible)
 	await _escape()
 	assert(not desk.pause_menu.visible and desk.workspace.visible)
-	assert(desk.tools_toggle.has_focus() and desk.shift.observations == paused_log)
+	assert(desk.menu_button.has_focus() and desk.shift.observations == paused_log)
 	desk._process(1)
 	assert(desk.shift.remaining_seconds == paused_time - 1)
 	desk._toggle_menu()

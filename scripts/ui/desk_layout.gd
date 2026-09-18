@@ -18,17 +18,14 @@ static func build_workspace(desk) -> void:
 	desk.menu_button.add_theme_font_size_override("font_size", 23)
 	desk.menu_button.tooltip_text = "メニューを開く [ESC]"
 	desk.menu_button.pressed.connect(desk._toggle_menu)
-	desk.tools_toggle = icon_button(desk, Rect2(1128, 12, 136, 46), "file", "ツール", "解析ツールを開く / 閉じる")
-	desk.tools_toggle.toggle_mode = true
-	desk.tools_toggle.pressed.connect(desk._toggle_tools)
-	desk.rules_button = icon_button(desk, Rect2(968, 12, 144, 46), "book", "規則集", "セキュリティ運用規則を開く")
+	desk.rules_button = icon_button(desk, Rect2(1120, 12, 144, 46), "book", "規則集", "セキュリティ運用規則を開く")
 	desk.rules_button.pressed.connect(desk._open_rules)
 	desk.countdown = Chrome.label(desk.workspace, Rect2(580, 13, 132, 46), "--:--", PAPER, 30)
 	desk.countdown_state = Chrome.label(desk.workspace, Rect2(718, 29, 72, 22), "", MUTED, 12)
 	desk.status = Chrome.label(desk.workspace, Rect2(776, 25, 185, 28), "準備中", PAPER, 15)
 	desk.card_layer = Control.new()
 	desk.card_layer.position = Vector2(0, 74)
-	desk.card_layer.size = Vector2(1280, 726)
+	desk.card_layer.size = Vector2(984, 726)
 	desk.card_layer.clip_contents = true
 	desk.card_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	desk.workspace.add_child(desk.card_layer)
@@ -136,26 +133,26 @@ static func build_start_screen(desk) -> void:
 	desk.license_button.pressed.connect(desk._show_licenses)
 
 static func build_tools(desk) -> void:
-	desk.tool_drawer = Chrome.panel(desk.workspace, Rect2(1016, 74, 248, 536), Color("101e32"), Color("34556f"))
-	desk.tool_drawer.mouse_filter = Control.MOUSE_FILTER_STOP
-	Chrome.label(desk.tool_drawer, Rect2(16, 12, 180, 28), "解析キット", PAPER, 18)
-	var close := Chrome.button(desk.tool_drawer, Rect2(204, 8, 32, 32), "×", MUTED)
-	close.pressed.connect(desk._hide_tools)
+	desk.tool_panel = Chrome.panel(desk.workspace, Rect2(996, 74, 268, 624), Color("101e32"), Color("34556f"))
+	desk.tool_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	Chrome.label(desk.tool_panel, Rect2(16, 12, 180, 28), "調査", PAPER, 18)
 	var scroll := ScrollContainer.new()
 	scroll.position = Vector2(14, 50)
-	scroll.size = Vector2(224, 408)
+	scroll.size = Vector2(240, 500)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	desk.tool_drawer.add_child(scroll)
+	desk.tool_panel.add_child(scroll)
 	var rack := VBoxContainer.new()
 	rack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rack.add_theme_constant_override("separation", 8)
 	scroll.add_child(rack)
-	desk.tool_message = Chrome.label(desk.tool_drawer, Rect2(14, 468, 220, 60), "", PAPER, 12)
+	desk.tool_message = Chrome.label(desk.tool_panel, Rect2(14, 560, 240, 52), "", PAPER, 12)
+	desk.tool_message.max_lines_visible = 4
+	desk.tool_message.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	desk.tool_scroll = scroll
 	desk.tool_rack = rack
 	desk.tool_message.minimum_size_changed.connect(desk._queue_tools_fit)
 	desk.tool_rack.minimum_size_changed.connect(desk._queue_tools_fit)
-	desk.tool_drawer.visibility_changed.connect(desk._queue_tools_fit)
+	desk.tool_panel.visibility_changed.connect(desk._queue_tools_fit)
 	desk.workspace.resized.connect(desk._queue_tools_fit)
 
 static func build_actions(desk) -> void:
@@ -301,25 +298,25 @@ static func build_external_preview(desk) -> void:
 	desk.external_preview.hide()
 
 static func build_case_tools(desk, available: Array[Dictionary]) -> void:
+	if available.is_empty():
+		var empty := Label.new()
+		empty.text = "この案件は基本情報のみで判定できます。"
+		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		empty.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		desk.tool_rack.add_child(empty)
 	for group in desk.catalog.resource_groups:
 		var entries := available.filter(func(tool): return tool.get("group", "tools") == group)
 		if entries.is_empty():
 			continue
 		var heading := Label.new()
-		heading.text = desk.catalog.resource_groups[group].label
+		heading.text = "外部照会" if desk.catalog.resource_groups[group].kind == "external_references" else desk.catalog.resource_groups[group].label
 		heading.add_theme_font_size_override("font_size", 14)
 		desk.tool_rack.add_child(heading)
-		var grid := GridContainer.new()
-		grid.columns = 2
-		grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		grid.add_theme_constant_override("h_separation", 8)
-		grid.add_theme_constant_override("v_separation", 8)
-		desk.tool_rack.add_child(grid)
 		for tool in entries:
-			var button := Chrome.button(grid, Rect2(0, 0, 100, 92), tool.label, PAPER)
+			var button := Chrome.button(desk.tool_rack, Rect2(0, 0, 240, 78), tool.label, PAPER)
 			button.set_script(preload("res://scripts/ui/tool_input.gd"))
 			button.tool = tool
-			button.custom_minimum_size = Vector2(100, 112)
+			button.custom_minimum_size = Vector2(0, 78)
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			button.tooltip_text = tool.description
 			if desk.catalog.resource_groups[group].kind == "external_references":
@@ -332,10 +329,9 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 static func fit_tools(desk) -> void:
 	var message_height: float = desk.tool_message.get_minimum_size().y if not desk.tool_message.text.is_empty() else 0.0
 	var footer := 12.0 + (message_height + 10.0 if message_height > 0 else 0.0)
-	var maximum: float = desk.workspace.size.y - desk.tool_drawer.position.y - 12.0
-	var content_height: float = desk.tool_rack.get_combined_minimum_size().y
-	desk.tool_drawer.size.y = minf(50.0 + content_height + footer, maximum)
-	desk.tool_scroll.size.y = maxf(0.0, desk.tool_drawer.size.y - 50.0 - footer)
+	desk.tool_panel.size.y = desk.stamp_rack.position.y - desk.tool_panel.position.y - 12.0
+	desk.tool_scroll.size.y = maxf(0.0, desk.tool_panel.size.y - 50.0 - footer)
+	desk.tool_message.tooltip_text = desk.tool_message.text
 	desk.tool_message.position.y = 50.0 + desk.tool_scroll.size.y + 10.0
 	desk.tool_message.size.y = message_height
 

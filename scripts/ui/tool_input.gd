@@ -1,6 +1,5 @@
 class_name ToolInput
 extends Button
-const Chrome = preload("res://scripts/ui/cyber_theme.gd")
 
 signal information_dropped(tool: Dictionary, information: Dictionary)
 var tool: Dictionary
@@ -17,34 +16,38 @@ var hover_drop_ready := false:
 		if hover_drop_ready != value:
 			hover_drop_ready = value
 			queue_redraw()
-var tool_icon: TextureRect
+var reviewed := false
 
 func setup_presentation() -> void:
 	base_tooltip = tooltip_text
 	text = ""
 	heading = Label.new()
-	tool_icon = Chrome.icon(self, Rect2(28, 12, 44, 44), "res://assets/icons/ui/file.svg")
-	heading.position = Vector2(4, 62)
-	heading.add_theme_font_size_override("font_size", 12)
-	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.position = Vector2(12, 6)
+	heading.add_theme_font_size_override("font_size", 15)
+	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	heading.max_lines_visible = 2
 	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	heading.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	heading.text = tool.get("short_label", tool.label.split("（")[0].strip_edges())
+	heading.text = tool.label
 	add_child(heading)
 	hint = Label.new()
-	hint.position = Vector2(4, 86)
-	hint.add_theme_font_size_override("font_size", 10)
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.position = Vector2(12, 53)
+	hint.add_theme_font_size_override("font_size", 12)
 	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	add_child(hint)
-	resized.connect(func():
-		tool_icon.position.x = (size.x - 44) / 2
-		heading.size = Vector2(size.x - 8, 23)
-		hint.size = Vector2(size.x - 8, 20))
+	resized.connect(_layout_labels)
+	heading.minimum_size_changed.connect(_layout_labels)
+	_layout_labels()
 	mouse_entered.connect(queue_redraw)
 	mouse_exited.connect(queue_redraw)
 	update_input({})
+
+func _layout_labels() -> void:
+	heading.size = Vector2(size.x - 30, 44)
+	hint.size = Vector2(size.x - 24, 20)
+	hint.position.y = maxf(53.0, heading.get_rect().end.y + 4.0)
+	custom_minimum_size.y = maxf(78.0, hint.get_rect().end.y + 6.0)
 
 func update_input(input: Dictionary) -> void:
 	selected = input.duplicate(true)
@@ -53,11 +56,14 @@ func update_input(input: Dictionary) -> void:
 	var compatible: bool = not input.is_empty() and input.get("case_id") == case_id and Information.accepts(tool, input)
 	ready_for_input = compatible
 	var color := Color("e4f5ff")
-	if compatible:
+	if tool.get("resource_kind", "") == "references":
+		hint.text = "確認済み · クリックで再表示" if reviewed else "未読 · クリックで読む"
+		color = Color("57edc2") if reviewed else color
+	elif compatible:
 		hint.text = "この情報を調べる →"
 		color = Color("57edc2")
 	elif tool.accepted_information_types.is_empty():
-		hint.text = "クリックで読む" if tool.get("resource_kind", "") == "references" else "対象全体を調べる"
+		hint.text = "対象全体を調べる"
 	else:
 		hint.text = "入力：" + Information.input_hint(tool)
 	tooltip_text = tool.label + "\n" + base_tooltip + "\n" + hint.text + ("\n選択中: " + input.get("label", "") if compatible else "")
@@ -76,7 +82,7 @@ func update_input(input: Dictionary) -> void:
 	queue_redraw()
 
 func _draw() -> void:
-	if not is_instance_valid(tool_icon):
+	if not is_instance_valid(heading):
 		return
 	draw_circle(Vector2(size.x - 12, 12), 4, Color("57edc2") if ready_for_input or drop_ready or hover_drop_ready else Color("29495f"))
 	if drop_ready or hover_drop_ready:

@@ -10,6 +10,7 @@ signal activated(card: DraggableCard)
 var card_data: Dictionary
 var home_position := Vector2.ZERO
 var home_size := Vector2.ZERO
+var minimum_position := Vector2.ZERO
 var scroll: ScrollContainer
 var source_label: Label
 var scroll_hint: Label
@@ -300,7 +301,8 @@ func bring_to_front() -> void:
 	activated.emit(self)
 
 func clamp_to_desk() -> void:
-	position = position.clamp(Vector2.ZERO, (get_parent_control().size - size).max(Vector2.ZERO))
+	var maximum := (get_parent_control().size - size).max(Vector2.ZERO)
+	position = position.clamp(minimum_position.min(maximum), maximum)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:

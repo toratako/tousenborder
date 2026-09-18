@@ -182,15 +182,14 @@ func _run() -> void:
 	var linux_cases: Array[Dictionary] = [linux_web]
 	desk.shift.start(linux_cases)
 	check(desk.shift.current().platform == "common" and desk.shift.current().investigation_environment == "linux", "問題OSと調査OSを保持")
-	var win_button: ToolInput = desk.tool_buttons.filter(func(b): return b.tool.id == "resolve_dnsname")[0]
+	var windows_tool: Dictionary = linux_web.tools.filter(func(t): return t.id == "resolve_dnsname")[0]
 	var linux_button: ToolInput = desk.tool_buttons.filter(func(b): return b.tool.id == "dig")[0]
-	check(not win_button.visible and linux_button.visible, "共通Web問題でもOS別にToolを表示")
+	check(not desk.tool_buttons.any(func(b): return b.tool.id == "resolve_dnsname") and linux_button.visible, "共通Web問題でもOS別にToolを表示")
 	var parse: Dictionary = linux_web.tools.filter(func(t): return t.id == "url_parse")[0]
 	desk._inspect(parse, available_input(desk.shift, parse))
 	var host := available_input(desk.shift, linux_button.tool)
-	check(not win_button._can_drop_data(Vector2.ZERO, {"kind": "information", "information": host}), "非対応Toolへのドラッグ拒否")
 	var before_os: int = desk.shift.observations.size()
-	desk._inspect(win_button.tool, host)
+	desk._inspect(windows_tool, host)
 	check(desk.shift.observations.size() == before_os, "直接UI呼び出しもOSを検証")
 	check(not desk._can_stamp(desk.get_stamp(linux_web.ground_truth).payload()), "必要証拠が揃うまで押印不可")
 	desk._show_start_screen()

@@ -37,13 +37,13 @@ var displayed_observations := 0
 var stamp_pending := false
 var desk_generation := 0
 var action_stamps: Array[StampTool] = []
-var tool_drawer: Panel
-var tools_toggle: Button
+var tool_panel: Panel
 var rules_button: Button
 var tool_message: Label
 var tool_scroll: ScrollContainer
 var tool_rack: VBoxContainer
 var active_tools: Array[Dictionary] = []
+var reference_cards: Dictionary = {}
 var tools_fit_pending := false
 var stamp_rack: HBoxContainer
 var active_card: DraggableCard
@@ -170,7 +170,7 @@ func _close_menu() -> void:
 	if is_instance_valid(menu_previous_focus) and menu_previous_focus.is_visible_in_tree():
 		menu_previous_focus.grab_focus()
 	else:
-		tools_toggle.grab_focus()
+		menu_button.grab_focus()
 	menu_previous_focus = null
 
 func _refresh_countdown() -> void:
@@ -288,7 +288,7 @@ func _start_shift() -> void:
 	playing = true
 	_clear_desk()
 	shift.start(selected, catalog.time_limit_seconds)
-	tools_toggle.grab_focus()
+	menu_button.grab_focus()
 
 func _draw() -> void:
 	Layout.draw_background(self)
@@ -296,36 +296,19 @@ func _draw() -> void:
 func _build() -> void:
 	Layout.build_workspace(self)
 
-func _toggle_tools() -> void:
-	if not playing or shift.finished() or shift.judged or rules_overlay.visible:
-		tools_toggle.set_pressed_no_signal(false)
-		return
-	tool_drawer.visible = not tool_drawer.visible
-	tools_toggle.set_pressed_no_signal(tool_drawer.visible)
-	if tool_drawer.visible:
-		workspace.move_child(tool_drawer, -1)
-		tool_message.text = ""
-		_update_case_controls(shift.current())
-
-func _hide_tools() -> void:
-	tool_drawer.hide()
-	tools_toggle.set_pressed_no_signal(false)
-
 func _build_tools() -> void:
 	Layout.build_tools(self)
 	_queue_tools_fit()
-	_hide_tools()
 
 func _set_case_tools(item: Dictionary) -> void:
-	var available := catalog.tools_for(item)
-	if active_tools == available:
-		return
+	var available := catalog.tools_for(item).filter(func(tool): return ToolRunner.supports_target(tool, item))
 	active_tools = available
 	tool_buttons.clear()
 	for child in tool_rack.get_children():
 		tool_rack.remove_child(child)
 		child.queue_free()
 	Layout.build_case_tools(self, available)
+	tool_scroll.scroll_vertical = 0
 	_queue_tools_fit()
 
 func _queue_tools_fit() -> void:
@@ -355,13 +338,14 @@ func _clear_desk() -> void:
 		card_layer.remove_child(card)
 		card.queue_free()
 	cards.clear()
+	reference_cards.clear()
+	tool_message.text = ""
 	target_card = null
 	displayed_case = ""
 	displayed_observations = 0
 	selected_information.clear()
 	stamp_pending = false
 	active_card = null
-	_hide_tools()
 
 func add_information_card(data: Dictionary, origin := Vector2(524, 116)) -> DraggableCard:
 	var card := DraggableCard.new()
@@ -369,6 +353,8 @@ func add_information_card(data: Dictionary, origin := Vector2(524, 116)) -> Drag
 	var dimensions := Vector2(380, 478)
 	if data.get("category") == "target":
 		dimensions = Vector2(480, 672)
+	else:
+		card.minimum_position.x = 516
 	card.setup(data, origin, dimensions)
 	card.clamp_to_desk()
 	card.information_selected.connect(_select_information)
@@ -420,6 +406,12 @@ func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
 	if not ToolRunner.supports_target(tool, shift.current()):
 		tool_message.text = "この調査環境では利用できません。"
 		return
+	if tool.resource_kind == "references" and tool.get("case_id") == displayed_case and reference_cards.has(tool.id):
+		var card: DraggableCard = reference_cards[tool.id]
+		card.show()
+		card.bring_to_front()
+		_update_case_controls(shift.current())
+		return
 	var actual_input := input
 	if not input.is_empty() and not Information.accepts(tool, input) and tool.accepted_information_types.is_empty():
 		actual_input = {}
@@ -438,8 +430,6 @@ func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
 	var result := shift.inspect(tool, actual_input)
 	if not result.ok:
 		tool_message.text = result.output
-	else:
-		_hide_tools()
 
 func _clear_external() -> void:
 	pending_external.clear()
@@ -457,8 +447,10 @@ func _finish_external(submit: bool) -> void:
 		shift.inspect(pending.tool, pending.input)
 	else:
 		shift.decline_external(pending.tool, pending.input)
-	_hide_tools()
-	tools_toggle.grab_focus()
+	for button in tool_buttons:
+		if button.tool.id == pending.tool.id:
+			button.grab_focus()
+			break
 
 func _refresh() -> void:
 	_refresh_countdown()
@@ -475,7 +467,6 @@ func _refresh() -> void:
 	_update_case_controls(item)
 	next.visible = shift.judged and not stamp_pending
 	if shift.judged:
-		_hide_tools()
 		if not stamp_pending:
 			_show_audit(shift.records.back())
 
@@ -502,9 +493,11 @@ func _display_observations(item: Dictionary) -> void:
 		var info: Array = entry.get("information", [])
 		if info.is_empty():
 			info = [{"id": "status", "label": "調査の選択" if entry.get("skipped", false) else "取得不可", "value": entry.output, "tool_input": false}]
-		add_information_card({"id": "result_%d" % displayed_observations, "case_id": item.id,
+		var card := add_information_card({"id": "result_%d" % displayed_observations, "case_id": item.id,
 			"title": entry.tool + ("" if entry.ok else " · 取得不可"), "category": "analysis",
 			"source": entry.tool, "information": info}, Vector2(524 + (displayed_observations % 3) * 18, 116 + (displayed_observations % 3) * 24))
+		if entry.ok and active_tools.any(func(tool): return tool.id == entry.tool_id and tool.resource_kind == "references"):
+			reference_cards[entry.tool_id] = card
 		displayed_observations += 1
 
 func _update_case_controls(item: Dictionary) -> void:
@@ -515,6 +508,7 @@ func _update_case_controls(item: Dictionary) -> void:
 		button.case_id = item.id
 		button.visible = ToolRunner.supports_target(tool, item)
 		button.disabled = shift.judged
+		button.reviewed = reference_cards.has(tool.id)
 		button.update_input(selected_information)
 	for stamp in action_stamps:
 		stamp.visible = not shift.judged
@@ -529,8 +523,8 @@ func _update_case_controls(item: Dictionary) -> void:
 			var matching := catalog.tools_for(item).filter(func(t): return t.id == id)
 			labels.append(item.get("evidence_alternatives", {}).get(id, {}).get("label", matching[0].label if not matching.is_empty() else id))
 		tool_message.text = "未確認: " + "、".join(labels)
-	elif tool_message.text.begins_with("未確認:"):
-		tool_message.text = "調査完了。資料を照合して判定してください。"
+	else:
+		tool_message.text = "調査完了。資料を照合して判定してください。" if not active_tools.is_empty() else "基本情報を確認して判定してください。"
 
 func _can_stamp(data: Dictionary) -> bool:
 	return playing and not shift.finished() and not shift.judged and shift.missing_evidence().is_empty() and not pause_menu.visible and not rules_overlay.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
@@ -598,7 +592,6 @@ func _show_summary() -> void:
 	for stamp in action_stamps:
 		stamp.hide()
 		stamp.disabled = true
-	_hide_tools()
 	tool_message.text = "勤務終了。案件を振り返るか、新しい勤務を開始してください。"
 	summary_restart.grab_focus()
 
