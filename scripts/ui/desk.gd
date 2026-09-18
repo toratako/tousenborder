@@ -540,9 +540,29 @@ func _display_case(item: Dictionary) -> void:
 		information.append(displayed)
 	target_card = add_information_card({"id": item.id, "case_id": item.id, "title": "検査対象",
 		"category": "target", "source": _type_label(item.category) + " / " + item.id,
-		"icon": "res://assets/icons/document.svg",
+		"icon": _target_icon(item),
 		"information": information}, Vector2(20, 20))
 	_select_information({})
+
+func _target_icon(item: Dictionary) -> String:
+	var icon: String = {"web": "web", "email": "email", "network": "packet",
+		"process": "process", "account": "account", "package": "package"}.get(item.category, "document")
+	if item.category == "file":
+		# 初期情報だけを使い、解析後に判明する形式や判定結果は表示に含めない。
+		for fact in item.information:
+			if fact.data_type != "file" or not fact.value is String:
+				continue
+			match fact.value.get_extension().to_lower():
+				"exe", "dll", "com", "msi", "bat", "cmd", "ps1", "sh", "bin", "app", "elf":
+					icon = "executable"
+				"zip", "7z", "rar", "tar", "gz", "bz2", "xz", "tgz", "zst":
+					icon = "archive"
+				"png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "ico", "tif", "tiff":
+					icon = "image"
+				"deb", "rpm", "apk", "whl":
+					icon = "package"
+			break
+	return "res://assets/icons/%s.svg" % icon
 
 func _display_observations(item: Dictionary) -> void:
 	while displayed_observations < shift.observations.size():
