@@ -11,8 +11,7 @@ static func build_workspace(desk) -> void:
 	desk.workspace = Control.new()
 	desk.workspace.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.add_child(desk.workspace)
-	desk.menu_button = Chrome.button(desk.workspace, Rect2(12, 12, 190, 46), "電子入境管理", PAPER)
-	desk.menu_button.flat = true
+	desk.menu_button = Chrome.button(desk.workspace, Rect2(20, 12, 208, 46), "電子入境管理", PAPER)
 	desk.menu_button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	desk.menu_button.add_theme_color_override("font_focus_color", GREEN)
 	desk.menu_button.add_theme_font_size_override("font_size", 23)
@@ -20,15 +19,31 @@ static func build_workspace(desk) -> void:
 	desk.menu_button.pressed.connect(desk._toggle_menu)
 	desk.rules_button = icon_button(desk, Rect2(1120, 12, 144, 46), "book", "規則集", "セキュリティ運用規則を開く")
 	desk.rules_button.pressed.connect(desk._open_rules)
-	desk.countdown = Chrome.label(desk.workspace, Rect2(580, 13, 132, 46), "--:--", PAPER, 30)
-	desk.countdown_state = Chrome.label(desk.workspace, Rect2(718, 29, 72, 22), "", MUTED, 12)
-	desk.status = Chrome.label(desk.workspace, Rect2(776, 25, 185, 28), "準備中", PAPER, 15)
+	for button in [desk.menu_button, desk.rules_button]:
+		for state in ["normal", "hover", "pressed", "disabled"]:
+			button.add_theme_stylebox_override(state, header_pill_style(Color("19394d") if state in ["hover", "pressed"] else Color("101e32")))
+	var rules_focus := header_pill_style(Color.TRANSPARENT)
+	rules_focus.border_color = PAPER
+	desk.rules_button.add_theme_stylebox_override("focus", rules_focus)
+	for rect in [Rect2(568, 12, 184, 46), Rect2(768, 12, 224, 46)]:
+		var pill := Chrome.panel(desk.workspace, rect, Color.TRANSPARENT)
+		pill.add_theme_stylebox_override("panel", header_pill_style(Color("101e32")))
+	desk.countdown = Chrome.label(desk.workspace, Rect2(584, 12, 102, 46), "--:--", PAPER, 26)
+	desk.countdown_state = Chrome.label(desk.workspace, Rect2(690, 12, 50, 46), "", MUTED, 12)
+	desk.status = Chrome.label(desk.workspace, Rect2(784, 12, 192, 46), "準備中", PAPER, 15)
+	for label in [desk.countdown, desk.countdown_state, desk.status]:
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	desk.card_layer = Control.new()
 	desk.card_layer.position = Vector2(0, 74)
 	desk.card_layer.size = Vector2(984, 726)
 	desk.card_layer.clip_contents = true
 	desk.card_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	desk.workspace.add_child(desk.card_layer)
+
+static func header_pill_style(fill: Color) -> StyleBoxFlat:
+	var style := Chrome.box(fill, Color("34556f"), 16)
+	style.set_corner_radius_all(23)
+	return style
 
 static func build_pause_menu(desk) -> void:
 	desk.pause_menu = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.78))
@@ -355,9 +370,7 @@ static func fit_tools(desk) -> void:
 
 static func draw_background(desk) -> void:
 	desk.draw_rect(Rect2(0, 0, 1280, 800), Color("070e1b"))
-	for y in range(80, 800, 32):
+	for y in range(16, 800, 32):
 		desk.draw_line(Vector2(0, y), Vector2(1280, y), Color("112336"), 1)
 	for x in range(0, 1280, 32):
-		desk.draw_line(Vector2(x, 80), Vector2(x, 800), Color("112336"), 1)
-	desk.draw_rect(Rect2(0, 0, 1280, 72), Color("0c1829"))
-	desk.draw_line(Vector2(0, 72), Vector2(1280, 72), Color("29495f"), 1)
+		desk.draw_line(Vector2(x, 0), Vector2(x, 800), Color("112336"), 1)
