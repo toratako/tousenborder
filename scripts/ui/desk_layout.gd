@@ -157,7 +157,7 @@ static func build_tools(desk) -> void:
 
 static func build_actions(desk) -> void:
 	desk.stamp_rack = HBoxContainer.new()
-	desk.stamp_rack.position = Vector2(1280 - desk.catalog.actions.size() * 142, 710)
+	desk.stamp_rack.position = Vector2(20 + (480 - desk.catalog.actions.size() * 142) / 2.0, 710)
 	desk.stamp_rack.size = Vector2(desk.catalog.actions.size() * 142, 90)
 	desk.stamp_rack.add_theme_constant_override("separation", 0)
 	desk.workspace.add_child(desk.stamp_rack)

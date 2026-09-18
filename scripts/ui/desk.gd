@@ -352,7 +352,7 @@ func add_information_card(data: Dictionary, origin := Vector2(524, 116)) -> Drag
 	card_layer.add_child(card)
 	var dimensions := Vector2(380, 478)
 	if data.get("category") == "target":
-		dimensions = Vector2(480, 672)
+		dimensions = Vector2(480, 592)
 	else:
 		card.minimum_position.x = 516
 	card.setup(data, origin, dimensions)

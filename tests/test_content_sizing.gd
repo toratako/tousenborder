@@ -44,7 +44,10 @@ func _run() -> void:
 	var settled_height: float = long_card.size.y
 	await _settle()
 	assert(is_equal_approx(long_card.size.y, settled_height))
-	assert(desk.target_card.size == Vector2(480, 672))
+	assert(desk.target_card.size == Vector2(480, 592))
+	assert(desk.target_card.get_global_rect().end.y < desk.stamp_rack.global_position.y)
+	assert(desk.stamp_rack.get_global_rect().end.y <= desk.workspace.size.y)
+	assert(desk.stamp_rack.get_global_rect().end.x < desk.target_card.get_global_rect().end.x)
 	long_card.position = Vector2(2000, 20)
 	long_card.clamp_to_desk()
 	assert(long_card.get_global_rect().end.x < desk.tool_panel.global_position.x)
