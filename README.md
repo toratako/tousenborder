@@ -1,8 +1,6 @@
 # （仮）— セキュリティ審査ゲーム
 
-情報を集めてALLOW / BLOCKを判断するGodot 4の教育ゲームです。File・Process・Web・Network・Email・Account・Packageの24問（正常11・遮断13）を収録しています。調査はすべてローカルJSONの模擬資料です。
-
-File・PID・URL等を選択するかToolへドラッグし、得られた情報をReferenceと照合します。必要な証拠を集めたら右下のスタンプを対象へドラッグします。外部照会は送信内容を確認して実行／見送りを選べます。判定の正誤と調査手段の適否を別々に振り返ります。ESCでメニューを開きます。
+情報を集めてALLOW / BLOCKを判断するGodot 4の教育ゲームです。
 
 ## 起動
 
@@ -23,15 +21,15 @@ godot --path .
 
 ## 教材データ
 
-| 配置 | 役割 |
-| --- | --- |
-| `data/packs/` | 問題の出題順、カテゴリ、規則、表示設定 |
-| `data/problems/` | 問題ごとの初期情報、調査資料、正解、解説 |
-| `data/schemas/` | PackとProblemの構造・許容値の定義 |
-| `docs/problem-catalog.md` | 問題JSONから生成する一覧 |
-| `build/catalog/problems.json` | 自動生成する一覧JSON（Git管理外） |
+| 配置                          | 役割                                     |
+| ----------------------------- | ---------------------------------------- |
+| `data/packs/`                 | 問題の出題順、カテゴリ、規則、表示設定   |
+| `data/problems/`              | 問題ごとの初期情報、調査資料、正解、解説 |
+| `data/schemas/`               | PackとProblemの構造・許容値の定義        |
+| `docs/problem-catalog.md`     | 問題JSONから生成する一覧                 |
+| `build/catalog/problems.json` | 自動生成する一覧JSON（Git管理外）        |
 
-形式は1つです。旧 `fields / evidence / expected`、共通Toolファイル、旧教材・互換デモは廃止しました。入力条件と必要証拠の確認は常に有効です。JSON Schemaに加え、参照先や各OSでの調査経路を検証します。
+形式は1つです。入力条件と必要証拠の確認は常に有効です。JSON Schemaに加え、参照先や各OSでの調査経路を検証します。
 
 - [キーと値・作問手順](docs/problem-data.md)
 - [問題一覧](docs/problem-catalog.md)
