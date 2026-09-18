@@ -130,6 +130,21 @@ func _run() -> void:
 	assert(not movable_card.dragging)
 	assert(movable_card.get_theme_stylebox("panel").shadow_size == resting_shadow)
 	assert(movable_card.position != movable_card.home_position)
+	# 結果を検査対象の上に重ねても、対象の操作で前後関係は変わらない。
+	var result_position := movable_card.position
+	var overlap_position := Vector2(100, 300)
+	result_grab = movable_card.header.global_position + Vector2(15, 23)
+	await drag(result_grab, desk.card_layer.global_position + overlap_position + Vector2(15, 23))
+	assert(movable_card.position.is_equal_approx(overlap_position))
+	assert(movable_card.get_global_rect().intersects(card.get_global_rect()))
+	await click(card.header.global_position + Vector2(110, 22))
+	assert(card.get_index() == 0 and card.position == original and not card.dragging)
+	await click(row.get_global_rect().get_center())
+	assert(desk.active_card == card and card.get_index() == 0)
+	await motion(movable_card.header.global_position + Vector2(15, 23))
+	assert(root.gui_get_hovered_control() == movable_card.header)
+	result_grab = movable_card.header.global_position + Vector2(15, 23)
+	await drag(result_grab, desk.card_layer.global_position + result_position + Vector2(15, 23))
 	var reference: Dictionary = desk.catalog.tools_for(desk.shift.current()).filter(func(t): return t.resource_kind == "references")[0]
 	desk._inspect(reference)
 	var stamp: StampTool = desk.get_stamp("block")

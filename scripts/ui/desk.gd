@@ -359,8 +359,7 @@ func add_information_card(data: Dictionary, origin := Vector2(524, 116)) -> Drag
 	var dimensions := Vector2(380, 478)
 	if data.get("category") == "target":
 		dimensions = Vector2(480, 592)
-	else:
-		card.minimum_position.x = 516
+		card_layer.move_child(card, 0)
 	card.setup(data, origin, dimensions)
 	card.clamp_to_desk()
 	card.information_selected.connect(_select_information)

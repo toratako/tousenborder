@@ -10,7 +10,6 @@ signal activated(card: DraggableCard)
 var card_data: Dictionary
 var home_position := Vector2.ZERO
 var home_size := Vector2.ZERO
-var minimum_position := Vector2.ZERO
 var scroll: ScrollContainer
 var source_label: Label
 var scroll_hint: Label
@@ -297,12 +296,13 @@ func _draw_grip() -> void:
 			header.draw_circle(Vector2(x, y), 1.5, color, true, -1, true)
 
 func bring_to_front() -> void:
-	get_parent().move_child(self, -1)
+	# 検査対象は操作しても他の資料より背面に保つ。
+	get_parent().move_child(self, 0 if card_data.get("category") == "target" else -1)
 	activated.emit(self)
 
 func clamp_to_desk() -> void:
 	var maximum := (get_parent_control().size - size).max(Vector2.ZERO)
-	position = position.clamp(minimum_position.min(maximum), maximum)
+	position = position.clamp(Vector2.ZERO, maximum)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:

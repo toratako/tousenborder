@@ -57,6 +57,6 @@ func _run() -> void:
 	assert(long_card.get_global_rect().end.x < desk.tool_panel.global_position.x)
 	long_card.position = Vector2.ZERO
 	long_card.clamp_to_desk()
-	assert(long_card.position.x > desk.target_card.get_rect().end.x)
+	assert(long_card.position == Vector2.ZERO)
 	print("Content sizing tests passed")
 	quit()
