@@ -13,6 +13,8 @@ static func build_workspace(desk) -> void:
 	desk.add_child(desk.workspace)
 	desk.menu_button = Chrome.button(desk.workspace, Rect2(12, 12, 190, 46), "電子入境管理", PAPER)
 	desk.menu_button.flat = true
+	desk.menu_button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	desk.menu_button.add_theme_color_override("font_focus_color", GREEN)
 	desk.menu_button.add_theme_font_size_override("font_size", 23)
 	desk.menu_button.tooltip_text = "メニューを開く [ESC]"
 	desk.menu_button.pressed.connect(desk._toggle_menu)
