@@ -133,19 +133,22 @@ static func build_start_screen(desk) -> void:
 	desk.license_button.pressed.connect(desk._show_licenses)
 
 static func build_tools(desk) -> void:
-	desk.tool_panel = Chrome.panel(desk.workspace, Rect2(996, 74, 268, 710), Color("101e32"))
+	desk.tool_panel = Chrome.panel(desk.workspace, Rect2(996, 72, 284, 728), Color("0c1829"))
+	var surface := desk.tool_panel.get_theme_stylebox("panel") as StyleBoxFlat
+	surface.border_color = Color("29495f")
+	surface.border_width_left = 1
 	desk.tool_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	Chrome.label(desk.tool_panel, Rect2(16, 12, 180, 28), "調査", PAPER, 18)
 	var scroll := ScrollContainer.new()
 	scroll.position = Vector2(14, 50)
-	scroll.size = Vector2(240, 500)
+	scroll.size = Vector2(256, 500)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	desk.tool_panel.add_child(scroll)
 	var rack := VBoxContainer.new()
 	rack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rack.add_theme_constant_override("separation", 4)
 	scroll.add_child(rack)
-	desk.tool_message = Chrome.label(desk.tool_panel, Rect2(14, 560, 240, 52), "", PAPER, 12)
+	desk.tool_message = Chrome.label(desk.tool_panel, Rect2(14, 560, 256, 52), "", PAPER, 12)
 	desk.tool_message.max_lines_visible = 4
 	desk.tool_message.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	desk.tool_scroll = scroll
@@ -342,7 +345,9 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 static func fit_tools(desk) -> void:
 	var message_height: float = desk.tool_message.get_minimum_size().y if not desk.tool_message.text.is_empty() else 0.0
 	var footer := 12.0 + (message_height + 10.0 if message_height > 0 else 0.0)
-	desk.tool_panel.size.y = desk.workspace.size.y - desk.tool_panel.position.y - 16.0
+	desk.tool_panel.size = desk.workspace.size - desk.tool_panel.position
+	desk.tool_scroll.size.x = desk.tool_panel.size.x - 28.0
+	desk.tool_message.size.x = desk.tool_scroll.size.x
 	desk.tool_scroll.size.y = maxf(0.0, desk.tool_panel.size.y - 50.0 - footer)
 	desk.tool_message.tooltip_text = desk.tool_message.text
 	desk.tool_message.position.y = 50.0 + desk.tool_scroll.size.y + 10.0

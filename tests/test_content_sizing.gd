@@ -18,7 +18,8 @@ func _run() -> void:
 	await _settle()
 	var panel_height: float = desk.tool_panel.size.y
 	var scroll_height: float = desk.tool_scroll.size.y
-	assert(desk.tool_panel.get_rect().end.y <= desk.workspace.size.y)
+	assert(desk.tool_panel.position.y == 72)
+	assert(desk.tool_panel.get_rect().end == desk.workspace.size)
 	assert(not desk.tool_panel.get_global_rect().intersects(desk.stamp_rack.get_global_rect()))
 	assert(desk.tool_scroll.size.y >= desk.tool_rack.get_combined_minimum_size().y)
 	desk.tool_message.text = "Select a compatible information item. ".repeat(20)
