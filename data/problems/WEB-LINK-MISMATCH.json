@@ -4,15 +4,15 @@
   "category": "web",
   "platform": "common",
   "level": "very_beginner",
-  "ground_truth": "block",
-  "title": "表示文字とリンク先の相違",
+  "ground_truth": "allow",
+  "title": "表示とPathが異なる正規公開ページ",
   "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
-    "URL": "https://aster-helpdesk.example/login",
-    "URLのHost": "aster-helpdesk.example",
+    "URL": "https://helpdesk.aster.example/public/guide",
+    "URLのHost": "helpdesk.aster.example",
     "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。",
     "リンク表示": "https://helpdesk.aster.example/",
-    "目的": "社内Password変更"
+    "目的": "公開手順書の閲覧。Password入力やFile実行は求められていない。"
   },
   "initial_information_types": {
     "URL": "url",
@@ -23,9 +23,7 @@
     {
       "id": "official",
       "name": "Official Service / Domain",
-      "content": {
-        "正規Helpdesk Host": "helpdesk.aster.example"
-      }
+      "content": "公開手順書の閲覧を許可するURLはhttps://helpdesk.aster.example/public/guide。認証情報の入力やFile実行を伴わない公開ページ。"
     }
   ],
   "external_references": [],
@@ -33,11 +31,11 @@
     "initial_information",
     "official"
   ],
-  "explanation": "リンク表示は社内Helpdeskですが、実際のHostは明示された正規Hostと異なるため遮断します。",
-  "topic": "リンクの表示文字と実際のURLを区別する",
-  "summary": "リンクの表示文字と実際のURLを区別する",
+  "explanation": "リンク表示はHelpdeskのトップページですが、実際のURLは閲覧が許可された公開手順書のURLと完全一致するため許可します。表示Pathの違いだけでは不正と判断しません。",
+  "topic": "表示文字と実際のURLを区別し、実際のURLと閲覧目的を承認先に照合する",
+  "summary": "表示文字と実際のURLを区別し、実際のURLと閲覧目的を承認先に照合する",
   "learning_objectives": [
-    "リンクの表示文字と実際のURLを区別する"
+    "表示文字と実際のURLを区別し、実際のURLと閲覧目的を承認先に照合する"
   ],
   "decision_context": "before_access",
   "scenario_type": "standard",

@@ -19,30 +19,10 @@
   },
   "tools": [
     {
-      "id": "task",
-      "name": "Task Manager",
-      "description": "選択PIDのUser・CPU・Memory使用量を確認します。",
-      "output": "Name: AsterViewer.exe\nPID: 4200\nUser: ASTER\\mori\nCPU: 1%\nMemory: 64 MiB",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows標準",
-      "environments": [
-        "windows"
-      ]
-    },
-    {
       "id": "pe",
       "name": "Process Explorer",
       "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
-      "output": "Parent: explorer.exe (1800)\nPID: 4200\nImage: C:\\Users\\mori\\Downloads\\viewer\\AsterViewer.exe\nCommand line: AsterViewer.exe\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Users\\mori\\Downloads\\viewer\\render.dll",
+      "output": "Parent: explorer.exe (1800)\nPID: 4200\nImage: C:\\Program Files\\AsterViewer\\AsterViewer.exe\nCommand line: AsterViewer.exe\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nName: render.dll\nPath: C:\\Users\\mori\\Downloads\\viewer\\render.dll",
       "accepted_information_types": [
         "pid"
       ],
@@ -61,7 +41,7 @@
         {
           "id": "image",
           "label": "Backing Executable",
-          "value": "C:\\Users\\mori\\Downloads\\viewer\\AsterViewer.exe",
+          "value": "C:\\Program Files\\AsterViewer\\AsterViewer.exe",
           "data_type": "file"
         },
         {
@@ -75,76 +55,8 @@
     {
       "id": "sig",
       "name": "Sigcheck",
-      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
-      "output": "PID 4200 のBacking Executable: C:\\Users\\mori\\Downloads\\viewer\\AsterViewer.exe\nVerified: Signed\nPublisher: Aster Software Ltd.",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows / Microsoft Sysinternals・要導入",
-      "environments": [
-        "windows"
-      ]
-    },
-    {
-      "id": "hash",
-      "name": "Get-FileHash",
-      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
-      "output": "PID 4200 のBacking Executable: C:\\Users\\mori\\Downloads\\viewer\\AsterViewer.exe\nAlgorithm: SHA256\nHash: 7e909c06ede2a70d9c810c5699e58345ec00df5179991b24a311e112f14a5dcd",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows / PowerShell標準",
-      "environments": [
-        "windows"
-      ],
-      "output_information": [
-        {
-          "id": "sha256",
-          "label": "Backing ExecutableのSHA-256",
-          "value": "7e909c06ede2a70d9c810c5699e58345ec00df5179991b24a311e112f14a5dcd",
-          "data_type": "sha256"
-        }
-      ]
-    },
-    {
-      "id": "tcp",
-      "name": "TCPView",
-      "description": "選択PIDのSocketと相手IP・Portを確認します。",
-      "output": "PID 4200: TCP/UDP endpoints: 0 (採取時点)",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows / Microsoft Sysinternals・要導入",
-      "environments": [
-        "windows"
-      ]
-    },
-    {
-      "id": "autoruns",
-      "name": "Autoruns",
-      "description": "選択PIDのImageに対応する自動起動登録を検索します。PIDから対象Pathを選ぶ操作は教材のラッパーです。",
-      "output": "対象Image: C:\\Users\\mori\\Downloads\\viewer\\AsterViewer.exe\n一致するLogon / Scheduled Tasks / Servicesエントリ: 0",
+      "description": "署名の検証状態・Publisher・Version・SHA-256（-h）を確認します。PID入力ではBacking Executableが対象です。",
+      "output": "PID 4200 のBacking Executable: C:\\Program Files\\AsterViewer\\AsterViewer.exe\nVerified: Signed\nPublisher: Aster Software Ltd.\nFile version: 7.0\nSHA256: 8a485d0ef8b3d0a949d72631324a9c67515e1e80aa9920e47417f84c9bea981e",
       "accepted_information_types": [
         "pid"
       ],
@@ -187,7 +99,11 @@
       "name": "Approved Software",
       "content": {
         "製品": "AsterViewer 7.0",
-        "配置": "C:\\Program Files\\AsterViewer",
+        "Publisher": "Aster Software Ltd.",
+        "AsterViewer.exe Path": "C:\\Program Files\\AsterViewer\\AsterViewer.exe",
+        "AsterViewer.exe SHA256": "8a485d0ef8b3d0a949d72631324a9c67515e1e80aa9920e47417f84c9bea981e",
+        "AsterViewer.exeのロード対象DLL名": "render.dll",
+        "render.dll Path": "C:\\Program Files\\AsterViewer\\render.dll",
         "render.dll SHA256": "4d377710ebd81c302aa213167ef0417221add5d5d4557daf705246e42804ea2a",
         "条件": "Viewerとrender.dllを承認配置・Hashの組で管理。User配下の差替DLLは不可。"
       }
@@ -197,9 +113,10 @@
   "required_evidence": [
     "pe",
     "dll_hash",
-    "approved"
+    "approved",
+    "sig"
   ],
-  "explanation": "署名済みViewerがUserのDownloads配下から承認版とHashの異なるDLLをロードしているため停止します。実行本体の署名だけでは、読み込むDLLの正当性は確認できません。",
+  "explanation": "Viewer本体の署名・Publisher・Version・配置・Hashは承認記録と一致します。一方、実際にロードした同名のrender.dllは承認配置C:\\Program Files\\AsterViewer\\render.dllではなくUserのDownloads配下にあり、Hashも承認版と異なるため停止します。DLL Side-loadingを題材に、実行本体と読み込むDLLを別々に検証します。",
   "topic": "実行本体とロード済みDLLを別々に検証する",
   "summary": "実行本体とロード済みDLLを別々に検証する",
   "learning_objectives": [

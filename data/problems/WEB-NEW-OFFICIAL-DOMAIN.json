@@ -3,7 +3,7 @@
   "id": "WEB-NEW-OFFICIAL-DOMAIN",
   "category": "web",
   "platform": "linux",
-  "level": "advanced",
+  "level": "intermediate",
   "ground_truth": "allow",
   "title": "新規登録された公式Domain",
   "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",

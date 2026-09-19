@@ -31,18 +31,18 @@
       "decisive_evidence": "申請はPDFだが完全名は.shで、Shell Scriptを禁止する受入れ条件を満たさない。"
     },
     "PROC-WIN-SYSTEM-NAME": {
-      "overview": "svchost.exeを名乗る稼働Processの継続を、提示された実行Pathから判断する。",
+      "overview": "稼働中のsvchost.exeが、検証済みのOS管理対象として許可Pathから動作しているか確認する。",
       "flow": [
         {
           "resource_id": "initial_information",
-          "action": "ImageがUserのTemp配下であることを確認する"
+          "action": "Imageの完全PathとOS配布File・起動登録の検証済み記録を見る"
         },
         {
           "resource_id": "approved",
-          "action": "管理対象のSystem32またはSysWOW64だけを認める条件と比較する"
+          "action": "一つの許可Path規則と比較し、管理状態も一致することを確認する"
         }
       ],
-      "decisive_evidence": "実行ImageがUserのTemp配下であり、同名でもSystem32またはSysWOW64の管理対象に限る継続条件を満たさない。"
+      "decisive_evidence": "実行PathがC:\\Windows\\System32\\svchost.exeに一致し、OS配布FileとService起動登録も検証済みである。"
     },
     "WEB-MISLEADING-HOST": {
       "overview": "組織のアカウント確認をうたうURLが、正規Login先かをアクセス前に判断する。",
@@ -59,18 +59,18 @@
       "decisive_evidence": "実際のHostはlogin.aster.example.verify-account.exampleであり、組織Password用の正規Hostとは異なる。"
     },
     "WEB-LINK-MISMATCH": {
-      "overview": "社内Password変更のリンクについて、表示文字と実際の遷移先を比較する。",
+      "overview": "Helpdeskトップを表示するリンクが、実際には承認された公開手順書を指している案件を確認する。",
       "flow": [
         {
           "resource_id": "initial_information",
-          "action": "リンク表示のhelpdesk.aster.exampleと実URLのaster-helpdesk.exampleを比較する"
+          "action": "表示文字と実URLのPathの違い、公開手順書の閲覧という目的を確認する"
         },
         {
           "resource_id": "official",
-          "action": "正規Helpdesk Hostに一致するのは表示文字だけであることを確認する"
+          "action": "実URLが許可された公開手順書URLと完全一致することを確認する"
         }
       ],
-      "decisive_evidence": "実際のリンク先Hostが正規Helpdeskと異なり、社内Password変更先としての条件を満たさない。"
+      "decisive_evidence": "実際のURLは承認された公開手順書URLと完全一致し、認証情報入力やFile実行を伴わない閲覧という条件にも合う。"
     },
     "EMAIL-DISPLAY-NAME": {
       "overview": "代表者名を表示する至急振込メールについて、送信Addressと確認手順を比較する。",
@@ -105,19 +105,18 @@
       "decisive_evidence": "添付完全名が.exeであり、PDFという説明とPDF限定の受入れ条件に反する。"
     },
     "AUTH-WIN-FAILURE-BURST": {
-      "overview": "認証Gatewayで保留中の要求を、同一Source・Userの直前の失敗集計と一時遮断規則から判断する。",
+      "overview": "認証Gatewayが保留する新規要求を、直前5分の失敗回数と一つの一時遮断規則から判断する。",
       "flow": [
         {
           "resource_id": "initial_information",
-          "action": "今回09:10の要求と、09:05–09:09:59の同一Source・Userへの失敗400回を区別して確認する"
+          "action": "同一Source・Userへの直前5分の失敗20回と、今回は20回目の失敗直後の次の要求でSession未成立であることを確認する"
         },
         {
           "resource_id": "policy",
-          "action": "5分で20回以上なら15分遮断というGatewayの教材上の規則に照らす"
+          "action": "5分間に20回へ到達した場合、次の認証要求から15分間一時遮断する規則と直接比較する"
         }
       ],
-      "decisive_evidence": "直前5分の同一Source・Userへの失敗400回が20回の閾値を超え、今回09:10の要求は15分の遮断期間内に当たる。侵入成功は示されていない。",
-      "review_notes": "自動遮断を想定する場合、20回の閾値に対して400回が集計される理由が未説明。拒否済み要求を数えるのか、遮断前の集計なのかを明確にする必要がある。またSource・Userの組への規則は教材のGateway独自方針として明示するとよい。"
+      "decisive_evidence": "同一Source・Userへの直前5分の失敗数20回が閾値20回に達し、今回はその直後の次の要求なので一時遮断の対象となる。攻撃手法や侵害成功を断定する根拠ではない。"
     },
     "PKG-PYPI-OBVIOUS-TYPO": {
       "overview": "Install直前に解決されたPackage名が、申請したComponent名と一致するか確認する。",
@@ -305,7 +304,7 @@
           "action": "ENC-188の端末・User・時間帯と想定CPU 90–100%を照合する"
         }
       ],
-      "decisive_evidence": "CPU 96%が承認Jobの想定範囲内で、端末ENC-04・User・Process・実行時間帯も一致する。"
+      "decisive_evidence": "端末管理の記録がPID 4200をENC-188に対応付ける。端末ENC-04・User・Process・実行時間帯が承認内容に一致し、CPU 96%も想定90–100%の範囲内。"
     },
     "PROC-WIN-IMAGE-PATH": {
       "overview": "業務Agentらしい名前のProcessが、承認された配置と起動方法で動いているか確認する。",
@@ -390,10 +389,10 @@
         },
         {
           "resource_id": "job",
-          "action": "backup Userと登録された実行Commandを照合する"
+          "action": "起動記録のJob ID・起動元と、psのUser・完全CommandをJOB-501の条件に照合する"
         }
       ],
-      "decisive_evidence": "backup Userによる/opt/aster/backup-agentと--config /etc/aster/backup.tomlがJOB-501の指定に一致する。"
+      "decisive_evidence": "起動記録がPID 4200をsystemd起動のJOB-501に対応付ける。psのbackup User、/opt/aster/backup-agent、--config /etc/aster/backup.tomlも登録内容に一致する。"
     },
     "PROC-LINUX-WEB-CHILD": {
       "overview": "www-dataで動作するShellがどのProcessから起動されたか確認する。",
@@ -410,18 +409,18 @@
       "decisive_evidence": "静的File応答専用のweb-worker配下にshがあり、明示的な子Shell起動禁止に反する。"
     },
     "PROC-LINUX-OPEN-PRIVATE-KEY": {
-      "overview": "画像用Workerが開いているFileを調べ、業務範囲に収まっているか判断する。",
+      "overview": "画像処理Workerが、自身のUserには読めるが業務には不要な保守用秘密鍵を開いているか確認する。",
       "flow": [
         {
           "resource_id": "lsof",
-          "action": "対象PIDが/root/.ssh/id_ed25519を読取り用に開いていることを確認する"
+          "action": "PID 4200が/home/media/.ssh/id_ed25519を読取り用に開いていることを確認する"
         },
         {
           "resource_id": "service",
-          "action": "/srv/mediaの画像のみを扱い秘密鍵アクセスを禁止する仕様と比較する"
+          "action": "画像処理の許可範囲と保守用秘密鍵の用途を比較する"
         }
       ],
-      "decisive_evidence": "画像Workerが業務範囲外のrootのSSH秘密鍵を開いており、アクセス禁止条件に反する。外部送信の証拠ではない。"
+      "decisive_evidence": "media所有で読取り可能な保守用SSH秘密鍵を画像Workerが開き、画像処理だけという業務範囲に反している。"
     },
     "PROC-LINUX-SOCKET-REPUTATION": {
       "overview": "cache-workerの接続先をPIDに結び付け、外部評判で継続可否を判断する。",
@@ -456,26 +455,29 @@
       "decisive_evidence": "選択PIDがmetrics.serviceのMainPIDで、User・ExecStart・Unit配置がCHG-502に一致する。"
     },
     "PROC-LINUX-CRON-JOB": {
-      "overview": "09:10に動作する帳票整理Processについて、Userのcrontabと定例Jobを照合する。",
+      "overview": "端末監視で起動元が記録された帳票Processを、Userのcrontabと定例Jobに対応付ける。",
       "flow": [
         {
+          "resource_id": "initial_information",
+          "action": "PID・User・起動時刻・完全Commandと、cronからの起動Chainを確認する"
+        },
+        {
           "resource_id": "cron",
-          "action": "reportsのcrontabから毎日09:10のScriptと--days 30を確認する"
+          "action": "reportsのcrontabの毎日09:10・完全Path・--days 30と現在のProcessを比較する"
         },
         {
           "resource_id": "job",
-          "action": "JOB-503のUser・時刻・Path・引数と登録内容を比較する"
+          "action": "同じUser・時刻・CommandがJOB-503の承認内容に一致することを確認する"
         }
       ],
-      "decisive_evidence": "reportsのcrontabにある09:10・/opt/reports/rotate-reports --days 30がJOB-503と一致し、提示されたUser・Process名・採取時刻とも整合する。",
-      "review_notes": "crontabは登録内容の証拠であり、選択PIDがそのJobから起動された実績や完全な実行Commandはこの問題の資料にない。"
+      "decisive_evidence": "現在のPID 4200のcron起動記録、reports User、09:10の起動時刻、完全Commandがcrontabと承認Jobの双方に一致する。"
     },
     "WEB-WIN-DNS": {
       "overview": "Windows環境で公開研修サイトのHostとDNS解決先を確認する。",
       "flow": [
         {
-          "resource_id": "resolve",
-          "action": "URLのHostからAレコード198.51.100.20を取得する"
+          "resource_id": "nslookup",
+          "action": "Hostを入力してNameとAddressを確認する。Resolve-DnsNameのAレコード確認でも代替可能で、どちらか一方を使う"
         },
         {
           "resource_id": "official",
@@ -847,19 +849,18 @@
       "decisive_evidence": "svc_backupは対話SSH禁止のService専用Userで、今回の要求はその用途制限に反する。履歴の欠如だけを根拠にはしない。"
     },
     "AUTH-LINUX-FAILURE-THRESHOLD": {
-      "overview": "同じSourceから繰り返されたSSH Password失敗を調べ、保留中の要求を判断する。",
+      "overview": "SSHの保存Logから失敗回数を確認し、閾値到達直後の新規要求を審査する。",
       "flow": [
         {
           "resource_id": "journal",
-          "action": "09:00–09:09:40の同一Source・UserへのFailed password 120件を確認する"
+          "action": "同一Sourceへの直前10分の失敗が20件で、09:09:59の記録が20件目と確認する"
         },
         {
           "resource_id": "policy",
-          "action": "10分で20回以上なら15分遮断という条件を今回09:10の要求に適用する"
+          "action": "20回以上なら今回から15分拒否する条件に今回09:10の新規要求を照らす"
         }
       ],
-      "decisive_evidence": "直前10分の同一Sourceからの失敗120件が一時遮断閾値20回を超え、今回の要求はその遮断期間内である。",
-      "review_notes": "閾値到達時から自動遮断される運用を想定する場合、120件まで集計された経緯や失敗数に拒否済み要求を含むかが未説明。"
+      "decisive_evidence": "直前の失敗で同一Sourceの集計が20件となり、新規要求を一時遮断する条件に達している。"
     },
     "PKG-PYPI-REGISTRY-METADATA": {
       "overview": "PyPIで解決したHTTP Clientが、承認されたComponentの配布情報と一致するか確認する。",
@@ -940,7 +941,7 @@
         },
         {
           "resource_id": "vendor",
-          "action": "承認Hashと比較し不一致を確認する。署名表示があっても再梱包を認めない条件を適用する"
+          "action": "承認Hashと全桁を比較し、不一致を確認する。再梱包は承認対象に含まれない"
         }
       ],
       "decisive_evidence": "計算Hashが承認済み4.2の公開Hashと異なり、このHashの配布物だけを認める条件を満たさない。"
@@ -985,6 +986,10 @@
           "action": "親Processと外部check.ps1の取得・実行Commandを確認する"
         },
         {
+          "resource_id": "sig",
+          "action": "実行本体の署名とPublisherを確認し、Commandやロード対象の承認とは分けて判断する"
+        },
+        {
           "resource_id": "official",
           "action": "Browser内で完了しOS Commandを使わない公式認証手順と比較する"
         }
@@ -992,22 +997,26 @@
       "decisive_evidence": "CAPTCHA案内に続いてPowerShellが外部Scriptを取得・実行するCommandで起動されているが、公式会議サービスにその手順はない。"
     },
     "PROC-WIN-DLL-SIDELOAD": {
-      "overview": "署名付きViewerが実際にロードしたDLLの配置と同一性を確認する。",
+      "overview": "Viewer本体の同一性と、同名のrender.dllの実際のロード元を承認記録に照らして確認する。",
       "flow": [
         {
           "resource_id": "pe",
-          "action": "ViewerのImageと、Downloadsからロードされたrender.dllのPathを取得する"
+          "action": "Viewer本体のPathと、ロード済みrender.dllの実際のPathがDownloads配下であることを確認する"
         },
         {
           "resource_id": "dll_hash",
-          "action": "取得したDLLのPathを入力にしてDLL自体のSHA-256を計算する"
+          "action": "取得したロード済みDLLのPathを入力し、そのFileのSHA-256を計算する"
+        },
+        {
+          "resource_id": "sig",
+          "action": "Viewer本体の署名・Publisher・Version・SHA-256を確認する"
         },
         {
           "resource_id": "approved",
-          "action": "ViewerとDLLの承認配置・DLL Hashを照合する"
+          "action": "本体の配置・Hashが承認記録と一致する一方、同名render.dllの配置・Hashが異なることを比較する"
         }
       ],
-      "decisive_evidence": "ViewerがUserのDownloads配下から、承認Hashと異なるrender.dllをロードしている。実行本体の署名ではこのDLLを保証できない。"
+      "decisive_evidence": "Viewer本体の署名・Publisher・Version・配置・Hashは承認記録と一致する。しかし、ロード対象名render.dllに対して実際に読み込んだFileはDownloads配下にあり、承認配置C:\\Program Files\\AsterViewer\\render.dllとPath・Hashが異なる。"
     },
     "PROC-LINUX-WEB-SHELL-COMMAND": {
       "overview": "Web Userで動くShellのCommandと親子関係を組み合わせて継続を判断する。",
@@ -1282,14 +1291,14 @@
       "flow": [
         {
           "resource_id": "events",
-          "action": "同一Sourceから40 Userへ各2回、直前10分の4625集計を確認する"
+          "action": "同一Sourceから20 Userへ各1回、直前10分の4625集計を確認する"
         },
         {
           "resource_id": "policy",
           "action": "20 User以上への失敗でSourceを15分遮断する規則と比較する"
         }
       ],
-      "decisive_evidence": "今回のSourceは直前10分に40 Userへ失敗を起こし、20 Userの遮断閾値を超える。ログにPassword値はなく、同一Passwordの使用や侵入成功は断定できない。"
+      "decisive_evidence": "今回のSourceは直前10分に20 Userへ各1回失敗し、20 Userの遮断閾値に達している。ログからPasswordの同一性や侵入成功は断定できない。"
     },
     "AUTH-WIN-RETIRED-USER": {
       "overview": "退職者Accountの認証が通っていても、現在のLogin利用許可があるか確認する。",
@@ -1310,7 +1319,7 @@
       "flow": [
         {
           "resource_id": "journal",
-          "action": "直前10分に同一Sourceから35 Userへ各2件の失敗があることを確認する"
+          "action": "直前10分に同一Sourceから20 Userへ各1件の失敗があり、末尾で閾値に達したことを確認する"
         },
         {
           "resource_id": "policy",
@@ -1321,7 +1330,7 @@
           "action": "今回のSourceが承認踏み台192.0.2.150ではなく、試験登録もないことを確認する"
         }
       ],
-      "decisive_evidence": "同一Sourceの失敗対象35 Userが遮断閾値を超え、今回のPassword認証・直接Sourceも承認踏み台と鍵認証の条件に合わない。"
+      "decisive_evidence": "同一Sourceの失敗対象が20 Userとなり遮断閾値に達した。今回のPassword認証・直接Sourceも承認踏み台と鍵認証の条件に合わない。"
     },
     "PKG-NPM-SUBTLE-TYPO": {
       "overview": "Calendar UI更新として解決されたよく似た名前のPackageを、供給元と更新申請から確認する。",
@@ -1416,15 +1425,14 @@
         },
         {
           "resource_id": "approved",
-          "action": "Hash・Path・Versionと未署名例外承認CHG-433を照合する"
+          "action": "実際の配布記録、Hash・Path・Versionと未署名例外承認CHG-433を照合する"
         },
         {
           "resource_id": "disclosure",
           "action": "社外秘FileのUpload禁止を確認し、外部File照会は行わない"
         }
       ],
-      "decisive_evidence": "未署名だがHash・Pathが例外承認済みreport-builder 2.3に一致し、未署名を認める明示的な承認がある。",
-      "review_notes": "解説は配布経路も一致すると述べるが、対象の入手経路は初期情報に明示されていない。台帳の期待経路と対象の実績は区別が必要。"
+      "decisive_evidence": "実際のSoftware Center配布記録、Hash・Path・VersionがCHG-433に一致し、未署名も同承認の例外条件に含まれている。"
     },
     "FILE-WIN-SIGNED-UNAPPROVED": {
       "overview": "署名があるという理由で実行を求められた経理監査用ソフトを審査する。",
@@ -1467,18 +1475,22 @@
       "decisive_evidence": "Hash・標準Loader・libc依存・RUNPATHなしが台帳に一致し、strippedも承認Releaseの仕様として記録されている。"
     },
     "FILE-LINUX-ORDINARY-ELF": {
-      "overview": "監視Agent 5.0として受領した、形式上は普通のELFの導入可否を判断する。",
+      "overview": "形式上は普通のELFとして受け付けた公開変換プログラムについて、静的文字列に含まれるURLのDomainを調べる。",
       "flow": [
         {
-          "resource_id": "hash",
-          "action": "対象FileのSHA-256を計算する"
+          "resource_id": "strings",
+          "action": "対象Fileを入力して静的文字列からcompute-assets.exampleを取得する"
         },
         {
-          "resource_id": "approved",
-          "action": "社内成果物庫の承認Hashと比較し、不一致を確認する"
+          "resource_id": "disclosure",
+          "action": "公開Domainだけの照会が許可されることを確認する"
+        },
+        {
+          "resource_id": "domain_rep",
+          "action": "取得したDomainを入力し、分析日時とMalware配布先という複数報告を確認する"
         }
       ],
-      "decisive_evidence": "標準的なELF構成でも、対象Hashが導入条件である承認ReleaseのHashと一致しない。"
+      "decisive_evidence": "ELF中のURLのDomainと外部記録の対象が一致し、当日もMalware配布先として9/12 feedsに報告されている。文字列の存在は通信実行の証明にはならない。"
     },
     "PROC-WIN-ADMIN-POWERSHELL": {
       "overview": "管理Agentが起動したPowerShellについて、実行Scriptと通信先まで承認Jobに一致するか確認する。",
@@ -1508,6 +1520,10 @@
         {
           "resource_id": "pe",
           "action": "Word起動と外部view.htaを指定するCommandを確認する"
+        },
+        {
+          "resource_id": "sig",
+          "action": "実行本体の署名とPublisherを確認し、Commandやロード対象の承認とは分けて判断する"
         },
         {
           "resource_id": "admin",
@@ -1563,10 +1579,10 @@
         },
         {
           "resource_id": "job",
-          "action": "対象File・時刻・User・Command・保存先をJOB-504と照合する"
+          "action": "対象File・時刻・User・Command・保存先と、監視集計の送信量12.4 GiBをJOB-504の条件に照合する"
         }
       ],
-      "decisive_evidence": "観測された帳票読取り・接続先・実行User・Command・Serviceが、当該時間帯に承認されたBackup Jobに一致する。"
+      "decisive_evidence": "観測された帳票読取り・接続先・実行User・Command・Serviceが、当該時間帯に承認されたBackup Jobに一致する。累積送信量12.4 GiBも上限30 GiB以内。"
     },
     "PROC-LINUX-MONITORING-AGENT": {
       "overview": "60秒間隔を指定して動作する監視Agentの設定と通信先を確認する。",
@@ -1603,11 +1619,10 @@
         },
         {
           "resource_id": "official",
-          "action": "Host・Path・DNSとREQ-318の本人申請・発行通知を照合する"
+          "action": "Host・Path・DNS、REQ-318の本人申請と発行通知を照合し、判断時刻09:10が有効期限09:17より前と確認する"
         }
       ],
-      "decisive_evidence": "Host・Path・DNSが認証基盤の指定に合い、本人のREQ-318に対応する発行通知がある。完全URLの外部照会を必要としない。",
-      "review_notes": "Referenceに有効期限09:17はあるが、初期情報に現在の判定時刻がないため、有効期限内であること自体は明示的に照合できない。"
+      "decisive_evidence": "Host・Path・DNSと本人のREQ-318に対応する発行通知が一致し、09:10の判断時点では09:17の期限内である。完全URLの外部照会は不要。"
     },
     "WEB-NEW-OFFICIAL-DOMAIN": {
       "overview": "登録直後の公開教材Domainが、正式な移行先かを確認する。",

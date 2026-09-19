@@ -3,24 +3,25 @@
   "id": "FILE-LINUX-ORDINARY-ELF",
   "category": "file",
   "platform": "linux",
-  "level": "advanced",
+  "level": "beginner",
   "ground_truth": "block",
-  "title": "普通のELFでも配布物が異なる",
+  "title": "普通のELFに含まれる外部URL",
   "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
-    "File": "/opt/incoming/metrics-agent-5.0",
-    "申請内容": "社内監視Agent 5.0として取得したFile。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+    "File": "/tmp/report-converter",
+    "申請内容": "公開サイトで配布されたLinux用帳票変換プログラムを初回実行する。",
+    "受付時の形式情報": "ELF64 / x86-64",
+    "状態": "未実行。取得直後。"
   },
   "initial_information_types": {
     "File": "file"
   },
   "tools": [
     {
-      "id": "file",
-      "name": "file",
-      "description": "MagicなどからFile形式を識別します。",
-      "output": "/opt/incoming/metrics-agent-5.0: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped",
+      "id": "strings",
+      "name": "strings (GNU)",
+      "description": "File内の可読文字列を抽出します。実行時の動作は観測しません。",
+      "output": "対象: /tmp/report-converter\n静的文字列の抜粋:\nReport Converter 1.0\nhttps://compute-assets.example/bootstrap.bin\n--quiet",
       "accepted_information_types": [
         "file"
       ],
@@ -31,108 +32,71 @@
         }
       ],
       "input_hint": "File",
-      "platform_note": "Linux / fileパッケージ",
-      "environments": [
-        "linux"
-      ]
-    },
-    {
-      "id": "hash",
-      "name": "sha256sum",
-      "description": "選択したFileのSHA-256を計算します。",
-      "output": "094fdef791392452fac5a862c259ddfc541425404f8e22c6da586d149970563e  /opt/incoming/metrics-agent-5.0",
-      "accepted_information_types": [
-        "file"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "File"
-        }
-      ],
-      "input_hint": "File",
-      "platform_note": "Linux / GNU coreutils",
+      "platform_note": "Linux / GNU binutils",
       "environments": [
         "linux"
       ],
       "output_information": [
         {
-          "id": "sha256",
-          "label": "対象FileのSHA-256",
-          "value": "094fdef791392452fac5a862c259ddfc541425404f8e22c6da586d149970563e",
-          "data_type": "sha256"
+          "id": "domain",
+          "label": "文字列中の公開Domain",
+          "value": "compute-assets.example",
+          "data_type": "domain"
         }
-      ]
-    },
-    {
-      "id": "strings",
-      "name": "strings (GNU)",
-      "description": "File内の可読文字列を抽出します。実行時の動作は観測しません。",
-      "output": "対象: /opt/incoming/metrics-agent-5.0\n文字列の抜粋（実行結果ではありません）\nmetrics-agent 5.0\n/etc/aster/metrics.toml\n--interval",
-      "accepted_information_types": [
-        "file"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "File"
-        }
-      ],
-      "input_hint": "File",
-      "platform_note": "Linux / GNU binutils",
-      "environments": [
-        "linux"
-      ]
-    },
-    {
-      "id": "elf",
-      "name": "readelf",
-      "description": "ELF Header・Interpreter・依存ライブラリ・RUNPATHを静的に表示します。",
-      "output": "ELF Header: Class: ELF64; Machine: Advanced Micro Devices X86-64\nINTERP: /lib64/ld-linux-x86-64.so.2\nNEEDED: libc.so.6\nRUNPATH: (none)",
-      "accepted_information_types": [
-        "file"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "File"
-        }
-      ],
-      "input_hint": "File",
-      "platform_note": "Linux / GNU binutils",
-      "environments": [
-        "linux"
       ]
     }
   ],
   "references": [
     {
-      "id": "approved",
-      "name": "Approved Software",
+      "id": "disclosure",
+      "name": "外部照会方針",
       "content": {
-        "製品": "metrics-agent 5.0",
-        "SHA256": "a8caf2a8d553486c540581f52b95cb6514f1744f4ee4705b54bed96093b2a713",
-        "Interpreter": "/lib64/ld-linux-x86-64.so.2",
-        "条件": "社内成果物庫の承認Hashと一致する配布物のみ導入可。"
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
       }
     }
   ],
-  "external_references": [],
-  "required_evidence": [
-    "hash",
-    "approved"
+  "external_references": [
+    {
+      "id": "domain_rep",
+      "name": "Domain Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "Domain: compute-assets.example\nLast analysis: 2026-08-18 00:00Z\nReports: 9/12 feeds\nClassification: malware-distribution\nLast seen: 2026-08-18",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "strings",
+          "id": "domain"
+        }
+      ],
+      "input_hint": "domain",
+      "submission_type": "domain",
+      "submission_value": "compute-assets.example",
+      "confidentiality_warning": "Domain名のみを送信します。URLのPath・Queryは送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
   ],
-  "explanation": "ELF形式や標準Loaderに異常がなくても、承認されたReleaseのHashと一致しないため遮断します。不一致だけでMalwareとは断定しません。",
-  "topic": "通常のFile形式だけで正規配布物と判断しない",
-  "summary": "通常のFile形式だけで正規配布物と判断しない",
+  "required_evidence": [
+    "strings",
+    "domain_rep",
+    "disclosure"
+  ],
+  "explanation": "ELFであること自体には問題はありませんが、GNU stringsで抽出したURLのDomainが外部評判で現行のMalware配布先として報告されているため実行を遮断します。静的文字列だけから通信や実行が起きたとは断定しません。",
+  "topic": "GNU stringsで静的文字列から公開Domainを取得し、外部評判と照合する。文字列と実際の通信は区別する",
+  "summary": "GNU stringsで静的文字列から公開Domainを取得し、外部評判と照合する。文字列と実際の通信は区別する",
   "learning_objectives": [
-    "通常のFile形式だけで正規配布物と判断しない"
+    "GNU stringsで静的文字列から公開Domainを取得し、外部評判と照合する。文字列と実際の通信は区別する"
   ],
   "decision_context": "before_execution",
   "scenario_type": "standard",
   "sources": [
-    "https://sourceware.org/binutils/docs/binutils/readelf.html",
-    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+    "https://sourceware.org/binutils/docs/binutils/strings.html"
   ],
   "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
 }

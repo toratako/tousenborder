@@ -36,7 +36,7 @@ WSL・コンテナ・リモートで使えることと、Windows本体のProcess
 
 ### Tool
 
-表示名は33種類から36種類へ変更。用途別の別名を含み、製品数ではありません。旧表示名をすべて以下に対応付けます。
+表示名は旧33種類から現在35種類へ変更。用途別の別名を含み、製品数ではありません。旧表示名をすべて以下に対応付けます。
 
 | 旧Tool | 新Tool・扱い |
 | --- | --- |
@@ -44,7 +44,7 @@ WSL・コンテナ・リモートで使えることと、Windows本体のProcess
 | 7-Zip / 添付Hash | `7-Zip / SHA-256`へ整理。`7-Zip`によるArchive一覧も使用 |
 | Event Viewer | `Event Viewer / Windows Security Log`へ統一。独立した重複Toolにはしない |
 | Raw Header | `Raw Header / View Source`へ統一。MIME内のURL・添付を同じEmail案件で扱う |
-| ExifTool / 添付 | `ExifTool`。添付のMetadata確認を継続 |
+| ExifTool / 添付 | 現在の112問では未使用。`EMAIL-GENUINE-URGENT`の任意調査から削除。Tool実装・UIは変更なし |
 | Resolve-DnsName [Windows] | `Resolve-DnsName`。対応OSはenvironmentsで指定 |
 | dig [Linux] | `dig`。対応OSはenvironmentsで指定 |
 | Strings（Sysinternals）、strings（GNU） | `Strings (Sysinternals)`、`strings (GNU)`。表記整理のみ、別実装として維持 |

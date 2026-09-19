@@ -20,26 +20,6 @@
   },
   "tools": [
     {
-      "id": "task",
-      "name": "Task Manager",
-      "description": "選択PIDのUser・CPU・Memory使用量を確認します。",
-      "output": "Name: powershell.exe\nPID: 4200\nUser: ASTER\\mori\nCPU: 1%\nMemory: 64 MiB",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows標準",
-      "environments": [
-        "windows"
-      ]
-    },
-    {
       "id": "pe",
       "name": "Process Explorer",
       "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
@@ -86,82 +66,6 @@
       "environments": [
         "windows"
       ]
-    },
-    {
-      "id": "hash",
-      "name": "Get-FileHash",
-      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
-      "output": "PID 4200 のBacking Executable: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nAlgorithm: SHA256\nHash: 53dadc40bb276161fbb4864750877d9641ebe8a5dee5ce338d2554171eebc6d1",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows / PowerShell標準",
-      "environments": [
-        "windows"
-      ],
-      "output_information": [
-        {
-          "id": "sha256",
-          "label": "Backing ExecutableのSHA-256",
-          "value": "53dadc40bb276161fbb4864750877d9641ebe8a5dee5ce338d2554171eebc6d1",
-          "data_type": "sha256"
-        }
-      ]
-    },
-    {
-      "id": "tcp",
-      "name": "TCPView",
-      "description": "選択PIDのSocketと相手IP・Portを確認します。",
-      "output": "powershell.exe 4200 TCP 192.0.2.25:52200 203.0.113.66:443 ESTABLISHED",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows / Microsoft Sysinternals・要導入",
-      "environments": [
-        "windows"
-      ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "Remote IP",
-          "value": "203.0.113.66",
-          "data_type": "ip"
-        }
-      ]
-    },
-    {
-      "id": "autoruns",
-      "name": "Autoruns",
-      "description": "選択PIDのImageに対応する自動起動登録を検索します。PIDから対象Pathを選ぶ操作は教材のラッパーです。",
-      "output": "対象Image: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\n一致するLogon / Scheduled Tasks / Servicesエントリ: 0",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows / Microsoft Sysinternals・要導入",
-      "environments": [
-        "windows"
-      ]
     }
   ],
   "references": [
@@ -174,7 +78,8 @@
   "external_references": [],
   "required_evidence": [
     "pe",
-    "official"
+    "official",
+    "sig"
   ],
   "explanation": "CAPTCHAの案内で貼り付けたCommandは、PowerShellによる外部Scriptの取得・実行でした。人間確認にOS Commandを使わない公式手順と矛盾するため停止します。",
   "topic": "利用者の操作経緯と実行中Commandを照合する",

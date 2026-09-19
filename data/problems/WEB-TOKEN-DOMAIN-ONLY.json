@@ -3,7 +3,7 @@
   "id": "WEB-TOKEN-DOMAIN-ONLY",
   "category": "web",
   "platform": "common",
-  "level": "beginner",
+  "level": "advanced",
   "ground_truth": "block",
   "title": "Tokenを送らないDomain照会",
   "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",

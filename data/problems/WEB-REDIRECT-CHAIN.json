@@ -77,18 +77,6 @@
   ],
   "references": [
     {
-      "id": "rdap",
-      "name": "RDAP",
-      "content": {
-        "照会対象Domain": "conference-entry.example",
-        "登録日": "2018-04-03",
-        "Registrar": "Example Registrar 1",
-        "Status": "client transfer prohibited",
-        "Registrant Organization": "非公開（redacted）。この応答から所有組織は特定できない。",
-        "注記": "登録日・登録者情報はサイト内容や安全性を保証しない。"
-      }
-    },
-    {
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {

@@ -27,34 +27,6 @@
   },
   "tools": [
     {
-      "id": "nettcp",
-      "name": "Get-NetTCPConnection",
-      "description": "選択PIDの既存TCP接続を表示します。今回の保留中要求とは別です。",
-      "output": "LocalAddress: 192.0.2.25\nLocalPort: 52400\nRemoteAddress: 198.51.100.90\nRemotePort: 443\nState: Established\nOwningProcess: 5100",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows / PowerShell NetTCPIP",
-      "environments": [
-        "windows"
-      ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "既存接続のRemote IP",
-          "value": "198.51.100.90",
-          "data_type": "ip"
-        }
-      ]
-    },
-    {
       "id": "tcp",
       "name": "TCPView",
       "description": "選択PIDのSocketと相手IP・Portを確認します。",

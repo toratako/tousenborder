@@ -3,7 +3,7 @@
   "id": "NET-LINUX-BACKUP-TRANSFER",
   "category": "network",
   "platform": "linux",
-  "level": "advanced",
+  "level": "intermediate",
   "ground_truth": "allow",
   "title": "大量送信する定例Backup",
   "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
@@ -55,34 +55,6 @@
       ]
     },
     {
-      "id": "lsof_i",
-      "name": "lsof -i",
-      "description": "選択PIDが所有するInternet Socketを確認します。",
-      "output": "COMMAND PID USER FD TYPE NAME\nbackup-agent 5100 agent 5u IPv4 192.0.2.30:52400->198.51.100.40:443 (ESTABLISHED)",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Linux / lsof",
-      "environments": [
-        "linux"
-      ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "既存接続のRemote IP",
-          "value": "198.51.100.40",
-          "data_type": "ip"
-        }
-      ]
-    },
-    {
       "id": "ps",
       "name": "ps",
       "description": "選択PIDのUser・親PID・Command Lineを確認します。",
@@ -118,26 +90,6 @@
       ],
       "input_hint": "保存PCAP",
       "platform_note": "Windows / Linux版Wiresharkを導入済み",
-      "environments": [
-        "linux"
-      ]
-    },
-    {
-      "id": "tcpdump",
-      "name": "tcpdump",
-      "description": "保存済みPCAPのPacketを読みます。所有PIDや暗号化本文は分かりません。",
-      "output": "tcpdump -nn -tttt -r flow-before-0910.pcap\n2026-08-18 09:09:59.000000 IP 192.0.2.30.52400 > 198.51.100.40.443: Flags [P.], seq 1:1449, ack 1, win 501, length 1448\n2026-08-18 09:09:59.000001 IP 192.0.2.30.52400 > 198.51.100.40.443: Flags [P.], seq 1449:2897, ack 1, win 501, length 1448\n2026-08-18 09:09:59.000002 IP 192.0.2.30.52400 > 198.51.100.40.443: Flags [P.], seq 2897:4345, ack 1, win 501, length 1448\n（保存PCAPの末尾抜粋。暗号化された本文の解析は含まない。）",
-      "accepted_information_types": [
-        "pcap"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "保存PCAP"
-        }
-      ],
-      "input_hint": "保存PCAP",
-      "platform_note": "Linux / tcpdump",
       "environments": [
         "linux"
       ]

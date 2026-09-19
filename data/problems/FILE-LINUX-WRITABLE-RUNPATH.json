@@ -37,34 +37,6 @@
       ]
     },
     {
-      "id": "hash",
-      "name": "sha256sum",
-      "description": "選択したFileのSHA-256を計算します。",
-      "output": "c4309a9570b6efdcb771e79325d8a8019e7d2a5f642d49f0addaab599d6ef9a2  /opt/incoming/report-agent",
-      "accepted_information_types": [
-        "file"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "File"
-        }
-      ],
-      "input_hint": "File",
-      "platform_note": "Linux / GNU coreutils",
-      "environments": [
-        "linux"
-      ],
-      "output_information": [
-        {
-          "id": "sha256",
-          "label": "対象FileのSHA-256",
-          "value": "c4309a9570b6efdcb771e79325d8a8019e7d2a5f642d49f0addaab599d6ef9a2",
-          "data_type": "sha256"
-        }
-      ]
-    },
-    {
       "id": "strings",
       "name": "strings (GNU)",
       "description": "File内の可読文字列を抽出します。実行時の動作は観測しません。",

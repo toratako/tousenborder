@@ -3,7 +3,7 @@
   "id": "FILE-WIN-MODIFIED-INSTALLER",
   "category": "file",
   "platform": "windows",
-  "level": "intermediate",
+  "level": "beginner",
   "ground_truth": "block",
   "title": "承認配布物とのHash不一致",
   "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
@@ -43,46 +43,6 @@
           "data_type": "sha256"
         }
       ]
-    },
-    {
-      "id": "sig",
-      "name": "Sigcheck",
-      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
-      "output": "C:\\Downloads\\AsterEditor-4.2-repack.exe:\n  Verified: Signed\n  Publisher: Aster Software Ltd.",
-      "accepted_information_types": [
-        "file"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "File"
-        }
-      ],
-      "input_hint": "File",
-      "platform_note": "Windows / Microsoft Sysinternals・要導入",
-      "environments": [
-        "windows"
-      ]
-    },
-    {
-      "id": "strings",
-      "name": "Strings (Sysinternals)",
-      "description": "File内の可読文字列を抽出します。実行時の通信や動作の証明ではありません。",
-      "output": "対象: C:\\Downloads\\AsterEditor-4.2-repack.exe\n文字列の抜粋（実行結果ではありません）\nAsterEditor\nVersion 4.2\nhttps://updates.aster.example/editor",
-      "accepted_information_types": [
-        "file"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "File"
-        }
-      ],
-      "input_hint": "File",
-      "platform_note": "Windows / Microsoft Sysinternals・要導入",
-      "environments": [
-        "windows"
-      ]
     }
   ],
   "references": [
@@ -101,7 +61,7 @@
     "hash",
     "vendor"
   ],
-  "explanation": "Publisher表示が同じでも、計算Hashは承認された4.2の公開Hashと異なるためこの配布物は遮断します。不一致だけから改ざん原因やMalwareを断定しません。",
+  "explanation": "計算したSHA-256が承認されたEditor 4.2の公開Hashと一致しないため、この配布物の実行を遮断します。Hash不一致だけから改ざん原因やMalware性を断定しません。",
   "topic": "署名の一致と配布物の同一性を区別する",
   "summary": "署名の一致と配布物の同一性を区別する",
   "learning_objectives": [

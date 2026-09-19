@@ -3,7 +3,7 @@
   "id": "AUTH-WIN-RETIRED-USER",
   "category": "account",
   "platform": "windows",
-  "level": "intermediate",
+  "level": "beginner",
   "ground_truth": "block",
   "title": "退職済みUserへのLogin要求",
   "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",

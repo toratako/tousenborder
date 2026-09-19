@@ -3,7 +3,7 @@
   "id": "PROC-WIN-LEGIT-UPDATER",
   "category": "process",
   "platform": "windows",
-  "level": "advanced",
+  "level": "intermediate",
   "ground_truth": "allow",
   "title": "正規Updaterの外部接続",
   "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
@@ -18,26 +18,6 @@
     "User": "username"
   },
   "tools": [
-    {
-      "id": "task",
-      "name": "Task Manager",
-      "description": "選択PIDのUser・CPU・Memory使用量を確認します。",
-      "output": "Name: AsterUpdate.exe\nPID: 4200\nUser: NT AUTHORITY\\SYSTEM\nCPU: 1%\nMemory: 64 MiB",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows標準",
-      "environments": [
-        "windows"
-      ]
-    },
     {
       "id": "pe",
       "name": "Process Explorer",

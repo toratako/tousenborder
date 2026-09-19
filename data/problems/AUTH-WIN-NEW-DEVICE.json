@@ -3,7 +3,7 @@
   "id": "AUTH-WIN-NEW-DEVICE",
   "category": "account",
   "platform": "windows",
-  "level": "advanced",
+  "level": "intermediate",
   "ground_truth": "allow",
   "title": "交換済み新端末の初回Login",
   "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",

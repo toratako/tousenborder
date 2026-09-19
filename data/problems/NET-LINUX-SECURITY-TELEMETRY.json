@@ -3,7 +3,7 @@
   "id": "NET-LINUX-SECURITY-TELEMETRY",
   "category": "network",
   "platform": "linux",
-  "level": "advanced",
+  "level": "intermediate",
   "ground_truth": "allow",
   "title": "定期送信するSecurity Agent",
   "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
@@ -26,34 +26,6 @@
     "保存PCAP": "pcap"
   },
   "tools": [
-    {
-      "id": "ss",
-      "name": "ss",
-      "description": "選択PIDのSocket・相手IP・Portを確認します。",
-      "output": "ESTAB 0 0 192.0.2.30:52400 192.0.2.80:443 users:((\"agent\",pid=5100,fd=5))",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Linux / iproute2",
-      "environments": [
-        "linux"
-      ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "既存接続のRemote IP",
-          "value": "192.0.2.80",
-          "data_type": "ip"
-        }
-      ]
-    },
     {
       "id": "lsof_i",
       "name": "lsof -i",

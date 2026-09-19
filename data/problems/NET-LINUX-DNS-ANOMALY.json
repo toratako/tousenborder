@@ -27,34 +27,6 @@
   },
   "tools": [
     {
-      "id": "ss",
-      "name": "ss",
-      "description": "選択PIDのSocket・相手IP・Portを確認します。",
-      "output": "ESTAB 0 0 192.0.2.30:52400 203.0.113.53:53 users:((\"dns-helper\",pid=5100,fd=5))",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Linux / iproute2",
-      "environments": [
-        "linux"
-      ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "既存接続のRemote IP",
-          "value": "203.0.113.53",
-          "data_type": "ip"
-        }
-      ]
-    },
-    {
       "id": "lsof_i",
       "name": "lsof -i",
       "description": "選択PIDが所有するInternet Socketを確認します。",

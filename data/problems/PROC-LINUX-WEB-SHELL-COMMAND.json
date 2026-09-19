@@ -59,54 +59,6 @@
       ]
     },
     {
-      "id": "lsof",
-      "name": "lsof",
-      "description": "選択PIDが開いているFile・FDを確認します。",
-      "output": "COMMAND PID USER FD TYPE NAME\nsh 4200 www-data txt REG /bin/sh\nsh 4200 www-data 1w CHR /dev/null",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Linux / lsof",
-      "environments": [
-        "linux"
-      ]
-    },
-    {
-      "id": "ss",
-      "name": "ss",
-      "description": "選択PIDのSocket・相手IP・Portを確認します。",
-      "output": "ESTAB 0 0 192.0.2.30:52400 203.0.113.90:443 users:((\"sh\",pid=4200,fd=5))",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Linux / iproute2",
-      "environments": [
-        "linux"
-      ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "Peer IP",
-          "value": "203.0.113.90",
-          "data_type": "ip"
-        }
-      ]
-    },
-    {
       "id": "systemctl",
       "name": "systemctl",
       "description": "選択PIDの所属Unit・状態・構成を表示します。",
@@ -122,26 +74,6 @@
       ],
       "input_hint": "PID",
       "platform_note": "Linux / systemd",
-      "environments": [
-        "linux"
-      ]
-    },
-    {
-      "id": "cron",
-      "name": "crontab",
-      "description": "選択PIDの実効Userのcrontabを表示します。User選択は教材のラッパーで、起動原因の断定には別の観測も必要です。",
-      "output": "crontab -u www-data -l\nno crontab for www-data",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Linux / cron・cronie等のcrontab実装",
       "environments": [
         "linux"
       ]

@@ -141,6 +141,7 @@ class CatalogTests(unittest.TestCase):
         item["initial_information"]["Render check"] = value
         reviews = copy.deepcopy(read_json(review_path))
         reviews["reviews"][item["id"]]["overview"] = "Changed review overview"
+        reviews["reviews"][item["id"]]["review_notes"] = "Review note for rendering test"
         def reader(path):
             if path == source_path:
                 return item
@@ -152,7 +153,9 @@ class CatalogTests(unittest.TestCase):
         row = json.loads(generated)["problems"][0]
         self.assertEqual(row["initial_information"]["Render check"], value)
         self.assertEqual(row["overview"], "Changed review overview")
+        self.assertEqual(row["review_notes"], "Review note for rendering test")
         self.assertIn("Changed review overview", markdown)
+        self.assertIn("Review note for rendering test", markdown)
         self.assertIn("&lt;TRAINING-PLACEHOLDER&gt;<br>", markdown)
         self.assertIn("C:&#92;Temp&#92;&#95;literal&#95; &#124;", markdown)
         self.assertIn("&#42;&#42;text&#42;&#42; &#91;link&#93;(target)", markdown)

@@ -4,15 +4,16 @@
   "category": "process",
   "platform": "windows",
   "level": "very_beginner",
-  "ground_truth": "block",
-  "title": "System Processを名乗る別配置のFile",
+  "ground_truth": "allow",
+  "title": "System Processの管理Path照合",
   "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "svchost.exe",
     "PID": 4200,
-    "User": "ASTER\\mori",
+    "User": "NT AUTHORITY\\SYSTEM",
     "採取時点": "2026-08-18 09:10 / 起動済み",
-    "Image": "C:\\Users\\mori\\AppData\\Local\\Temp\\svchost.exe"
+    "Image": "C:\\Windows\\System32\\svchost.exe",
+    "端末管理の確認": "OS配布Fileとの同一性とService起動登録は検証済み。"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -23,9 +24,7 @@
     {
       "id": "approved",
       "name": "Approved Software",
-      "content": {
-        "svchost.exeの実行許可条件": "svchost.exeはC:\\Windows\\System32またはSysWOW64の管理対象だけ継続可。Temp配下での同名実行は不可。"
-      }
+      "content": "この端末のsvchost.exeは、OS管理対象として検証済みで、ImageがC:\\Windows\\System32\\svchost.exeのものを継続可とする。"
     }
   ],
   "external_references": [],
@@ -33,11 +32,11 @@
     "initial_information",
     "approved"
   ],
-  "explanation": "svchost.exeの完全PathがUserのTemp配下で、Approved Softwareの実行許可条件を満たさないため停止します。名前だけでSystem Processとは判断しません。",
-  "topic": "System風の名前と完全Pathを比較する",
-  "summary": "System風の名前と完全Pathを比較する",
+  "explanation": "Imageの完全Pathが許可Pathと一致し、OS配布Fileと起動登録の検証済み記録もあるため継続を許可します。svchost.exeという名前だけを根拠にしていません。",
+  "topic": "Process名だけでなく、管理状態と完全Pathを単純な許可規則に照合する",
+  "summary": "Process名だけでなく、管理状態と完全Pathを単純な許可規則に照合する",
   "learning_objectives": [
-    "System風の名前と完全Pathを比較する"
+    "Process名だけでなく、管理状態と完全Pathを単純な許可規則に照合する"
   ],
   "decision_context": "running_process",
   "scenario_type": "standard",

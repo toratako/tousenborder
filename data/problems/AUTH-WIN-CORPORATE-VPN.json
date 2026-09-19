@@ -3,7 +3,7 @@
   "id": "AUTH-WIN-CORPORATE-VPN",
   "category": "account",
   "platform": "windows",
-  "level": "advanced",
+  "level": "intermediate",
   "ground_truth": "allow",
   "title": "遠方に見える企業VPN出口",
   "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",

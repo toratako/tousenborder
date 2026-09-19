@@ -3,7 +3,7 @@
   "id": "PROC-LINUX-MONITORING-AGENT",
   "category": "process",
   "platform": "linux",
-  "level": "advanced",
+  "level": "intermediate",
   "ground_truth": "allow",
   "title": "周期接続する監視Agent",
   "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
@@ -34,46 +34,6 @@
       ],
       "input_hint": "PID",
       "platform_note": "Linux / procps-ng",
-      "environments": [
-        "linux"
-      ]
-    },
-    {
-      "id": "pstree",
-      "name": "pstree",
-      "description": "選択PIDの祖先ProcessのChainを確認します。",
-      "output": "systemd(1)---metrics-agent(4200)\n表示: 選択PIDの祖先Chain",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Linux / psmisc",
-      "environments": [
-        "linux"
-      ]
-    },
-    {
-      "id": "lsof",
-      "name": "lsof",
-      "description": "選択PIDが開いているFile・FDを確認します。",
-      "output": "COMMAND PID USER FD TYPE NAME\nmetrics-agent 4200 metrics txt REG /opt/aster/metrics-agent\nmetrics-agent 4200 metrics 1w CHR /dev/null",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Linux / lsof",
       "environments": [
         "linux"
       ]
@@ -122,26 +82,6 @@
       ],
       "input_hint": "PID",
       "platform_note": "Linux / systemd",
-      "environments": [
-        "linux"
-      ]
-    },
-    {
-      "id": "cron",
-      "name": "crontab",
-      "description": "選択PIDの実効Userのcrontabを表示します。User選択は教材のラッパーで、起動原因の断定には別の観測も必要です。",
-      "output": "crontab -u metrics -l\nno crontab for metrics",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Linux / cron・cronie等のcrontab実装",
       "environments": [
         "linux"
       ]

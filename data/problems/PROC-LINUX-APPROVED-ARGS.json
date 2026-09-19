@@ -11,7 +11,8 @@
     "Process": "backup-agent",
     "PID": 4200,
     "User": "backup",
-    "採取時点": "2026-08-18 09:10 / 起動済み"
+    "採取時点": "2026-08-18 09:10 / 起動済み",
+    "端末監視の起動記録": "systemd(PID 1)がJOB-501のbackup-agentをPID 4200として起動。User=backup。管理配布Imageとの同一性は検証済み。"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -51,7 +52,7 @@
     "ps",
     "job"
   ],
-  "explanation": "実行User・Path・引数が登録されたBackup Jobに一致するため継続を許可します。",
+  "explanation": "端末監視の起動記録がPID 4200をsystemd起動のJOB-501に対応付けており、psで確認した実行User・Path・引数も登録内容に一致するため継続を許可します。PPIDが1であることだけを起動元の証明にはしません。",
   "topic": "psのUser・Path・引数をJob定義と比較する",
   "summary": "psのUser・Path・引数をJob定義と比較する",
   "learning_objectives": [

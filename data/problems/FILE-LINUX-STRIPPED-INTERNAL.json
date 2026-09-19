@@ -3,7 +3,7 @@
   "id": "FILE-LINUX-STRIPPED-INTERNAL",
   "category": "file",
   "platform": "linux",
-  "level": "advanced",
+  "level": "intermediate",
   "ground_truth": "allow",
   "title": "strippedされた正規社内Binary",
   "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
@@ -62,26 +62,6 @@
           "value": "a8caf2a8d553486c540581f52b95cb6514f1744f4ee4705b54bed96093b2a713",
           "data_type": "sha256"
         }
-      ]
-    },
-    {
-      "id": "strings",
-      "name": "strings (GNU)",
-      "description": "File内の可読文字列を抽出します。実行時の動作は観測しません。",
-      "output": "対象: /opt/incoming/metrics-agent\n文字列の抜粋（実行結果ではありません）\nmetrics-agent 5.0\n/etc/aster/metrics.toml\n--interval",
-      "accepted_information_types": [
-        "file"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "File"
-        }
-      ],
-      "input_hint": "File",
-      "platform_note": "Linux / GNU binutils",
-      "environments": [
-        "linux"
       ]
     },
     {

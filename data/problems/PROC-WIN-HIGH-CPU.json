@@ -13,7 +13,8 @@
     "User": "ASTER\\mori",
     "採取時点": "2026-08-18 09:10 / 起動済み",
     "端末": "ENC-04",
-    "起動依頼": "動画課から08:50に登録されたジョブ ENC-188"
+    "起動依頼": "動画課から08:50に登録されたジョブ ENC-188",
+    "端末管理の実行記録": "ENC-188をENC-04で08:50にPID 4200として起動。User=ASTER\\mori。video-encoder.exeは管理配布Imageとの同一性を検証済み。"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -53,7 +54,7 @@
     "task",
     "job"
   ],
-  "explanation": "高CPU使用率は申請済みの動画変換時間帯・専用端末・Processに一致するため継続を許可します。CPU使用率だけは悪性根拠になりません。",
+  "explanation": "端末管理の記録がPID 4200をENC-188に対応付けており、端末・User・Process・実行時間帯が承認内容と一致し、CPU 96%も想定範囲内のため継続を許可します。CPU使用率だけは悪性根拠になりません。",
   "topic": "Resource使用量を業務の予定と照合する",
   "summary": "Resource使用量を業務の予定と照合する",
   "learning_objectives": [

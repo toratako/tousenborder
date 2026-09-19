@@ -10,7 +10,8 @@
   "initial_information": {
     "File": "C:\\Company\\report-builder.exe",
     "申請内容": "社外秘の帳票Templateを内蔵した社内版2.3。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+    "状態": "未実行。ダウンロードまたは受領直後。",
+    "配布記録": "社内Software Center / 配布ID CHG-433 / report-builder 2.3 / 2026-08-18 08:55に取得。"
   },
   "initial_information_types": {
     "File": "file"

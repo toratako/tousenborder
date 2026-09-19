@@ -22,7 +22,7 @@
       "id": "lsof",
       "name": "lsof",
       "description": "選択PIDが開いているFile・FDを確認します。",
-      "output": "COMMAND PID USER FD TYPE NAME\nthumbnail-worker 4200 media txt REG /opt/media/thumbnail-worker\nthumbnail-worker 4200 media 7r REG /root/.ssh/id_ed25519",
+      "output": "COMMAND PID USER FD TYPE NAME\nthumbnail-worker 4200 media txt REG /opt/media/thumbnail-worker\nthumbnail-worker 4200 media 7r REG /home/media/.ssh/id_ed25519",
       "accepted_information_types": [
         "pid"
       ],
@@ -43,7 +43,7 @@
     {
       "id": "service",
       "name": "Service構成台帳",
-      "content": "thumbnail-workerは/srv/media以下の画像だけを扱う。秘密鍵へのアクセスは業務上不要で、管理設定でも禁止。"
+      "content": "thumbnail-workerは/srv/media以下の画像を処理するService。User=media。/home/media/.ssh/id_ed25519はmedia所有・0600の保守用秘密鍵で、画像処理でのアクセスは業務上認められていない。"
     }
   ],
   "external_references": [],
@@ -51,7 +51,7 @@
     "lsof",
     "service"
   ],
-  "explanation": "thumbnail-workerがrootのSSH秘密鍵を開いており、画像ディレクトリだけを扱う仕様から外れるため停止します。lsofで分かるのはFileを開いている事実で、送信の証明ではありません。",
+  "explanation": "thumbnail-workerがmedia Userの保守用SSH秘密鍵を開いており、画像処理だけを認める業務範囲から外れるため停止します。鍵は同じUserが読めるFileであり、権限昇格は仮定していません。lsofが示すのはFileを開いた事実で、送信の証拠ではありません。",
   "topic": "lsofのOpen Fileを処理権限・用途と比較する",
   "summary": "lsofのOpen Fileを処理権限・用途と比較する",
   "learning_objectives": [

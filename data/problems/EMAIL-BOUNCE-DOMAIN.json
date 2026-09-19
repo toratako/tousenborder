@@ -3,7 +3,7 @@
   "id": "EMAIL-BOUNCE-DOMAIN",
   "category": "email",
   "platform": "common",
-  "level": "beginner",
+  "level": "intermediate",
   "ground_truth": "allow",
   "title": "正規配信ServiceのReturn-Path",
   "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",

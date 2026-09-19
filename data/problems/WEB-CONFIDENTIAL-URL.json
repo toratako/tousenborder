@@ -11,7 +11,8 @@
     "URL": "https://reset.aster.example/recover?token=DEMO-RESET-318&user=mori",
     "URLのHost": "reset.aster.example",
     "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。",
-    "申請記録": "本人が09:02にPassword再設定を申請。REQ-318。"
+    "申請記録": "本人が09:02にPassword再設定を申請。REQ-318。",
+    "判断時刻": "2026-08-18 09:10:00"
   },
   "initial_information_types": {
     "URL": "url",
@@ -175,7 +176,7 @@
     "official",
     "disclosure"
   ],
-  "explanation": "申請に対応する正規再設定URLで、Host・DNS・受付記録が一致するためアクセスを許可します。TokenとUser IDを含む完全URLは外部解析へ送りません。",
+  "explanation": "本人のREQ-318に対応する発行通知があり、Host・Path・DNSが正規再設定先に一致し、判断時刻09:10も有効期限09:17より前なのでアクセスを許可します。TokenとUser IDを含む完全URLは外部解析へ送りません。",
   "topic": "機密URLを内部申請とDomain・DNSで確認する",
   "summary": "機密URLを内部申請とDomain・DNSで確認する",
   "learning_objectives": [

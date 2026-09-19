@@ -26,7 +26,7 @@
       "id": "journal",
       "name": "journalctl",
       "description": "今回の要求より前のsshd記録を確認します。集計は保存Logからの抽出表示です。",
-      "output": "2026-08-18T09:00:00+09:00 server sshd[3100]: Failed password for ops-mori from 203.0.113.151 port 53000 ssh2\n2026-08-18T09:09:40+09:00 server sshd[3220]: Failed password for ops-mori from 203.0.113.151 port 53120 ssh2\n上記区間の同一Source・UserのFailed password行: 120件（保存Logの集計）。",
+      "output": "2026-08-18T09:09:00+09:00 server sshd[3100]: Failed password for ops-mori from 203.0.113.151 port 53000 ssh2\n2026-08-18T09:09:59+09:00 server sshd[3119]: Failed password for ops-mori from 203.0.113.151 port 53019 ssh2\n09:00–09:09:59の同一Source・UserのFailed password行: 20件（保存Logの集計）。上記末尾の記録が20件目。今回の09:10要求は含まない。",
       "accepted_information_types": [
         "username"
       ],
@@ -47,7 +47,7 @@
     {
       "id": "policy",
       "name": "User / Account Policy",
-      "content": "10分で同一Sourceから20回以上の認証失敗があれば15分間一時遮断。再認証方法の変更だけでは解除しない。"
+      "content": "直前10分に同一Sourceから20回以上の認証失敗があれば、今回から15分間そのSourceの新規認証要求を拒否する。認証方法の変更だけでは解除しない。"
     }
   ],
   "external_references": [],
@@ -55,7 +55,7 @@
     "journal",
     "policy"
   ],
-  "explanation": "直前の同一SourceからのSSH認証失敗が一時遮断の閾値を超えているため今回の要求を遮断します。今回のSessionが成立したとは扱いません。",
+  "explanation": "直前10分の同一SourceからのSSH認証失敗が20回の閾値に達したため、今回の新規要求を遮断します。20件目の後に追加のPassword検証を続けた記録ではありません。",
   "topic": "journalctlの直前履歴を認証方針と比較する",
   "summary": "journalctlの直前履歴を認証方針と比較する",
   "learning_objectives": [

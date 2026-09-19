@@ -132,26 +132,6 @@
         "environments": [
           "linux"
         ]
-      },
-      {
-        "id": "metadata",
-        "name": "ExifTool",
-        "description": "File形式やDocument Metadataを表示します。",
-        "output": "File Name: training-guide.pdf\nFile Type: PDF\nPDF Version: 1.7\nPage Count: 8\nTitle: 研修案内",
-        "accepted_information_types": [
-          "file"
-        ],
-        "input_bindings": [
-          {
-            "source": "header",
-            "id": "attachment"
-          }
-        ],
-        "input_hint": "attachment",
-        "platform_note": "Linux / ExifToolを導入済み",
-        "environments": [
-          "linux"
-        ]
       }
     ],
     "url_tools": [

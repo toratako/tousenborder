@@ -3,7 +3,7 @@
   "id": "PROC-WIN-LOLBIN",
   "category": "process",
   "platform": "windows",
-  "level": "advanced",
+  "level": "intermediate",
   "ground_truth": "block",
   "title": "LOLBinによる外部HTA実行",
   "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
@@ -18,26 +18,6 @@
     "User": "username"
   },
   "tools": [
-    {
-      "id": "task",
-      "name": "Task Manager",
-      "description": "選択PIDのUser・CPU・Memory使用量を確認します。",
-      "output": "Name: mshta.exe\nPID: 4200\nUser: ASTER\\mori\nCPU: 1%\nMemory: 64 MiB",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows標準",
-      "environments": [
-        "windows"
-      ]
-    },
     {
       "id": "pe",
       "name": "Process Explorer",
@@ -87,34 +67,6 @@
       ]
     },
     {
-      "id": "hash",
-      "name": "Get-FileHash",
-      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
-      "output": "PID 4200 のBacking Executable: C:\\Windows\\System32\\mshta.exe\nAlgorithm: SHA256\nHash: fcd5b4a59d012a786c4db64f2472147b96f39333f6207543147823e573fc1761",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows / PowerShell標準",
-      "environments": [
-        "windows"
-      ],
-      "output_information": [
-        {
-          "id": "sha256",
-          "label": "Backing ExecutableのSHA-256",
-          "value": "fcd5b4a59d012a786c4db64f2472147b96f39333f6207543147823e573fc1761",
-          "data_type": "sha256"
-        }
-      ]
-    },
-    {
       "id": "tcp",
       "name": "TCPView",
       "description": "選択PIDのSocketと相手IP・Portを確認します。",
@@ -141,26 +93,6 @@
           "data_type": "ip"
         }
       ]
-    },
-    {
-      "id": "autoruns",
-      "name": "Autoruns",
-      "description": "選択PIDのImageに対応する自動起動登録を検索します。PIDから対象Pathを選ぶ操作は教材のラッパーです。",
-      "output": "対象Image: C:\\Windows\\System32\\mshta.exe\n一致するLogon / Scheduled Tasks / Servicesエントリ: 0",
-      "accepted_information_types": [
-        "pid"
-      ],
-      "input_bindings": [
-        {
-          "source": "initial_information",
-          "id": "PID"
-        }
-      ],
-      "input_hint": "PID",
-      "platform_note": "Windows / Microsoft Sysinternals・要導入",
-      "environments": [
-        "windows"
-      ]
     }
   ],
   "references": [
@@ -173,7 +105,8 @@
   "external_references": [],
   "required_evidence": [
     "pe",
-    "admin"
+    "admin",
+    "sig"
   ],
   "explanation": "Microsoft署名のmshta.exeでも、Wordが起動し承認外HostのHTAを実行する引数は業務手順に反するため停止します。正規Binaryの悪用を実行文脈から判断します。",
   "topic": "正規署名のSystem Binaryでも呼出し内容を確認する",
