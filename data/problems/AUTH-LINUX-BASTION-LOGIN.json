@@ -103,6 +103,8 @@
     "bastion",
     "admin"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "踏み台経路・個人Account・鍵・今回のMFA・保守時間が承認記録と一致するため許可します。共有の出口IPでもGatewayの本人確認と紐付けを確認しています。",
   "topic": "踏み台の共有IPと個人認証を組み合わせる",
   "summary": "踏み台の共有IPと個人認証を組み合わせる",

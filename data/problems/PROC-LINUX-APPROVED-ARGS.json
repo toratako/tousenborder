@@ -52,6 +52,8 @@
     "ps",
     "job"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "端末監視の起動記録がPID 4200をsystemd起動のJOB-501に対応付けており、psで確認した実行User・Path・引数も登録内容に一致するため継続を許可します。PPIDが1であることだけを起動元の証明にはしません。",
   "topic": "psのUser・Path・引数をJob定義と比較する",
   "summary": "psのUser・Path・引数をJob定義と比較する",

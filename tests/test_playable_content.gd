@@ -19,6 +19,7 @@ func available_input(desk, tool: Dictionary) -> Dictionary:
 
 func _run() -> void:
 	var desk = load("res://scenes/main.tscn").instantiate()
+	desk.history_store = preload("res://tests/fixtures.gd").history_store()
 	root.add_child(desk)
 	await process_frame
 	check(desk.catalog.errors.is_empty(), "出題用Packの読込: " + str(desk.catalog.errors))
@@ -33,6 +34,7 @@ func _run() -> void:
 		check(desk.shift.current().id == item.id, "登録順に出題")
 		check(desk.target_card.title_label.text == "検査対象", "回答前は問題Titleを隠す")
 		check(not desk.target_card.card_data.has("ground_truth"), "判定情報を対象カードに渡さない")
+		check(not desk.target_card.card_data.has("review_steps"), "回答前に手順を漏らさない")
 		if item.level == "very_beginner":
 			check(desk.active_tools.all(func(resource): return resource.resource_kind == "references" and resource.accepted_information_types.is_empty()), "超初級は入力不要のReferenceだけを調査できる")
 			for id in item.required_evidence:
@@ -72,6 +74,8 @@ func _run() -> void:
 		await process_frame
 	check(desk.shift.finished() and desk.shift.score() == pack.problems.size(), "全問題を完了")
 	check(desk.shift.unsafe_investigations() == 0, "禁止された外部送信をせずに完了")
+	check(desk.summary_save_notice.text.is_empty(), "全問題の履歴保存: " + desk.history_store.error)
+	check(desk.history_store.load_entry(desk.shift.session_id).get("records", []).size() == pack.problems.size(), "全問の結果をディスクから再読込")
 	desk.queue_free()
 	await process_frame
 	print("Playable content tests: %d failures" % failures)

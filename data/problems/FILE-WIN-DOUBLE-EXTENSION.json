@@ -28,6 +28,8 @@
     "initial_information",
     "format"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "完全なFile名は.exeで、PDFだけを受け入れる申請と矛盾するため遮断します。拡張子だけでMalwareと断定する判断ではありません。",
   "topic": "表示名と完全な拡張子を比較する",
   "summary": "表示名と完全な拡張子を比較する",

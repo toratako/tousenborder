@@ -62,6 +62,8 @@
     "admin",
     "device"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "管理Accountには専用Deviceと管理Gateway経由が必須ですが、今回のDevice・Source・接続経路はいずれも一致しないため遮断します。MFAだけで経路制約を代替できません。",
   "topic": "特権Accountの経路とDeviceの条件を確認する",
   "summary": "特権Accountの経路とDeviceの条件を確認する",

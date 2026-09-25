@@ -49,6 +49,8 @@
     "sig",
     "publisher"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "署名の検証結果とPublisher・Versionが承認された配布条件に一致するため、この導入を許可します。署名一般が安全性を保証するという意味ではありません。",
   "topic": "署名を承認Publisher・Versionと照合する",
   "summary": "署名を承認Publisher・Versionと照合する",

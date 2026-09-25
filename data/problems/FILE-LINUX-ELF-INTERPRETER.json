@@ -49,6 +49,8 @@
     "elf",
     "service"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "ELFのInterpreterが承認構成の標準Loaderではなく/tmp配下を指すため、導入条件を満たさず遮断します。",
   "topic": "readelfで静的なLoader指定を照合する",
   "summary": "readelfで静的なLoader指定を照合する",

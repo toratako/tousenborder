@@ -55,6 +55,8 @@
     "lastlog",
     "policy"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "svc_backupはService専用で対話SSHを禁止しているため遮断します。lastlogに履歴がないことだけではなく、Accountの用途を根拠にしています。",
   "topic": "lastlogの履歴とAccountの対話利用許可を区別する",
   "summary": "lastlogの履歴とAccountの対話利用許可を区別する",

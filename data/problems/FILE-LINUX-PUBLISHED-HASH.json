@@ -67,6 +67,8 @@
     "vendor",
     "approved"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "SHA-256がVendor公開値と一致し、導入対象も承認済みVersionなので許可します。",
   "topic": "Linuxで公開Hashと導入承認を照合する",
   "summary": "Linuxで公開Hashと導入承認を照合する",

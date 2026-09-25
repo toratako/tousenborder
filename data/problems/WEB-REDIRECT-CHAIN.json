@@ -151,6 +151,8 @@
     "official",
     "disclosure"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "最終ページはAsterのPasswordを求める承認外Hostで、Domain評判にもPhishing報告があるため遮断します。入口のDomainやDNSだけでは遷移先の正当性を判断できません。",
   "topic": "外部解析で得たHostを次の照会へ引き継ぐ",
   "summary": "外部解析で得たHostを次の照会へ引き継ぐ",

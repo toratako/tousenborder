@@ -32,6 +32,8 @@
     "initial_information",
     "approved"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "Imageの完全Pathが許可Pathと一致し、OS配布Fileと起動登録の検証済み記録もあるため継続を許可します。svchost.exeという名前だけを根拠にしていません。",
   "topic": "Process名だけでなく、管理状態と完全Pathを単純な許可規則に照合する",
   "summary": "Process名だけでなく、管理状態と完全Pathを単純な許可規則に照合する",

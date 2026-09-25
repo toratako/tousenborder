@@ -94,6 +94,8 @@
     "domain_rep",
     "disclosure"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "Wordが起動したPowerShellに外部取得・実行の引数があり、取得先Domainも既知の配布先として検出されているため停止します。PowerShellの存在そのものを根拠にはしません。",
   "topic": "親Process・Command LineとDomain評判を組み合わせる",
   "summary": "親Process・Command LineとDomain評判を組み合わせる",

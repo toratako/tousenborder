@@ -123,6 +123,8 @@
     "systemctl",
     "job"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "観測された業務Fileの読取りと外部接続は、承認されたBackupの対象・時刻・保存先・Service構成に一致し、累積送信量12.4 GiBも上限30 GiB以内のため継続を許可します。",
   "topic": "業務Fileの読取りと外部通信をBackupの対象・時間帯・保存先・送信量の条件と照合する",
   "summary": "業務Fileの読取りと外部通信をBackupの対象・時間帯・保存先・送信量の条件と照合する",

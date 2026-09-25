@@ -101,6 +101,8 @@
     "systemctl",
     "service"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "Service設定・実行引数・接続先が承認済み監視Agentに一致するため継続を許可します。Background動作や周期通信だけを根拠に遮断しません。",
   "topic": "監視Agentの構成と通信先を照合する",
   "summary": "監視Agentの構成と通信先を照合する",

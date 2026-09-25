@@ -83,6 +83,8 @@
     "hash",
     "approved"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "有効な署名は存在しますが、Publisher・製品・Hashが承認台帳の監査ツールと異なるため遮断します。署名の有無だけでは用途の正当性を確認できません。",
   "topic": "有効な署名と組織の導入承認を分ける",
   "summary": "有効な署名と組織の導入承認を分ける",

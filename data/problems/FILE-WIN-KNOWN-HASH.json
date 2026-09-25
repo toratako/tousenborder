@@ -107,6 +107,8 @@
     "disclosure",
     "hash_rep"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "対象のSHA-256に既知の悪性検出が多数報告され、照会時点でも有効なため実行を遮断します。File本体を送る必要はありません。",
   "topic": "Hashだけを外部照会して検出履歴を得る",
   "summary": "Hashだけを外部照会して検出履歴を得る",

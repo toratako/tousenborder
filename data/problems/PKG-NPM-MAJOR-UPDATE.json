@@ -79,6 +79,8 @@
     "lock",
     "vuln"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "Native Buildや依存追加は大きな変更ですが、配布Hash・Source・Release説明・更新Lockが承認記録に一致するため導入を許可します。",
   "topic": "大規模更新を複数の供給情報で検証する",
   "summary": "大規模更新を複数の供給情報で検証する",

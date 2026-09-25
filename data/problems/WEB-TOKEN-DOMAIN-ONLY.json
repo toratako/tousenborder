@@ -78,6 +78,8 @@
     "domain_rep",
     "disclosure"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "Domainのみの照会で現行のPhishing報告が得られるためアクセスを遮断します。招待Tokenを含む完全URLを外部へ送る必要はありません。",
   "topic": "Token付きURLから公開Domainだけを外部照会する",
   "summary": "Token付きURLから公開Domainだけを外部照会する",

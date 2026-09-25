@@ -63,6 +63,8 @@
     "hash",
     "approved"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "PIDから選んだ実行ImageのHashが承認版と異なるため停止します。Process Explorerを経由しなくても実行本体を特定して比較できます。",
   "topic": "Process本体のHashを承認版と直接照合する",
   "summary": "Process本体のHashを承認版と直接照合する",

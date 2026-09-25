@@ -67,6 +67,8 @@
     "vendor",
     "approved"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "計算したSHA-256がVendor公開値と一致し、承認台帳のVersion・用途にも一致するため許可します。",
   "topic": "配布物の同一性と利用承認を分けて確認する",
   "summary": "配布物の同一性と利用承認を分けて確認する",

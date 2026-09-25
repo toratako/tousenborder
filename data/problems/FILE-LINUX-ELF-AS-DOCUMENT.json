@@ -49,6 +49,8 @@
     "file",
     "format"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "fileの結果はPDFではなくELF実行Fileで、伝票の受入れ形式に合わないため遮断します。",
   "topic": "File名ではなく実際の形式を確認する",
   "summary": "File名ではなく実際の形式を確認する",

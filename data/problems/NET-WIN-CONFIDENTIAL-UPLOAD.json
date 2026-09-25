@@ -125,6 +125,8 @@
     "tcp",
     "policy"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "Processの引数は機密資料を個人Cloudへ転送する指定で、宛先・利用Toolとも送信方針に反するため遮断します。大量のTLS通信だけからFile内容を読み取った判断ではありません。",
   "topic": "転送対象・宛先・用途を送信方針と照合する",
   "summary": "転送対象・宛先・用途を送信方針と照合する",

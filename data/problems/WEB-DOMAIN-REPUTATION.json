@@ -57,6 +57,8 @@
     "domain_rep",
     "disclosure"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "照会先Domainに現行のPhishing報告が複数確認できるためアクセスを遮断します。未知Domainだからという判断ではありません。",
   "topic": "Domainだけを送って既知の評判を確認する",
   "summary": "Domainだけを送って既知の評判を確認する",

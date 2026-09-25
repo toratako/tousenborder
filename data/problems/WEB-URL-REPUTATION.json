@@ -58,6 +58,8 @@
     "url_rep",
     "disclosure"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "公開URLの該当Pathに現行のPhishing報告があり、そのURLへのアクセスを遮断します。Domain全体の評判だけでは個別Pathを評価できない場合があります。",
   "topic": "機密情報のない完全URLを照会する",
   "summary": "機密情報のない完全URLを照会する",

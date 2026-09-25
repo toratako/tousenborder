@@ -10,8 +10,12 @@ var observations: Array[Dictionary] = []
 var judged := false
 var runner := ToolRunner.new()
 var elapsed_seconds := 0.0
+var session_id := ""
+var started_at := 0.0
 
 func start(items: Array[Dictionary]) -> void:
+	session_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	started_at = Time.get_unix_time_from_system()
 	cases = items.duplicate(true)
 	for item in cases:
 		item.investigation_environment = ToolRunner.investigation_environment(item)
@@ -62,11 +66,19 @@ func decide(verdict: String) -> bool:
 	if finished() or judged or verdict not in ["allow", "block"]:
 		return false
 	judged = true
+	var missing := missing_evidence()
+	# 初期情報は調査なしで得られるため、審査スタイルの証拠数には含めない。
+	var required_count: int = current().get("required_evidence", []).filter(func(id): return id != "initial_information").size()
 	records.append({"id": current().id, "title": current().title, "verdict": verdict,
+		"request": current().request, "information": current().information.duplicate(true),
+		"category": current().category, "level": current().level, "platform": current().platform,
+		"review_steps": current().get("review_steps", []).duplicate(true),
 		"investigation_environment": ToolRunner.investigation_environment(current()),
 		"correct": verdict == current().ground_truth, "ground_truth": current().ground_truth,
 		"explanation": current().explanation, "observations": observations.duplicate(true),
-		"missing_evidence": missing_evidence()})
+		"missing_evidence": missing,
+		"required_evidence_count": required_count,
+		"confirmed_evidence_count": required_count - missing.size()})
 	changed.emit()
 	return true
 
@@ -90,6 +102,18 @@ static func investigation_feedback(record: Dictionary) -> String:
 		elif observation.has("correct_usage"):
 			lines.append(observation.tool + "：" + ("適切な利用" if observation.correct_usage else "不適切な利用") + "\n" + observation.reason)
 	return "\n\n".join(lines)
+
+static func review_text(record: Dictionary) -> String:
+	var result: String = record.explanation
+	var steps: Array = record.get("review_steps", [])
+	if not steps.is_empty():
+		result += "\n\n監査手順（例）"
+		for i in steps.size():
+			result += "\n%d. %s" % [i + 1, steps[i]]
+	var investigation := investigation_feedback(record)
+	if not investigation.is_empty():
+		result += "\n\n調査手段の振り返り\n" + investigation
+	return result
 
 func unsafe_investigations() -> int:
 	var count := 0

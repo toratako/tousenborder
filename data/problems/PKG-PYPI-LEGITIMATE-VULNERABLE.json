@@ -83,6 +83,8 @@
     "vuln",
     "policy"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "配布元とHashは正規Releaseに一致しますが、今回の外部Templateを扱う用途では脆弱性の影響を受け、導入禁止方針に該当するため遮断します。正規PackageをMalwareと呼ぶ判断ではありません。",
   "topic": "真正な配布物でも脆弱性と利用条件を評価する",
   "summary": "真正な配布物でも脆弱性と利用条件を評価する",

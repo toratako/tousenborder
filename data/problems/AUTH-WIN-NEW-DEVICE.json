@@ -66,6 +66,8 @@
     "change",
     "policy"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "新しいDeviceですが、交換申請・登録状態・利用者・今回のMFA確認が整合するため許可します。過去Logに端末がないことだけを理由に遮断しません。",
   "topic": "新端末を交換記録と認証結果で検証する",
   "summary": "新端末を交換記録と認証結果で検証する",

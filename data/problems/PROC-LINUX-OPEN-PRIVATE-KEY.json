@@ -51,6 +51,8 @@
     "lsof",
     "service"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "thumbnail-workerがmedia Userの保守用SSH秘密鍵を開いており、画像処理だけを認める業務範囲から外れるため停止します。鍵は同じUserが読めるFileであり、権限昇格は仮定していません。lsofが示すのはFileを開いた事実で、送信の証拠ではありません。",
   "topic": "lsofのOpen Fileを処理権限・用途と比較する",
   "summary": "lsofのOpen Fileを処理権限・用途と比較する",

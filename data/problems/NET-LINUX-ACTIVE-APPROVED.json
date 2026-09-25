@@ -74,6 +74,8 @@
     "ss",
     "server"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "現在のPIDと既存接続の宛先が、管理台帳のAgent・承認Serverと一致するため同じ宛先への新しい接続を許可します。",
   "topic": "所有PIDと送信先を独立した台帳に照合する",
   "summary": "所有PIDと送信先を独立した台帳に照合する",

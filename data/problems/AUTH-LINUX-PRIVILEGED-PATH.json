@@ -95,6 +95,8 @@
     "journal",
     "admin"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "rootへの直接SSHは現行方針で禁止され、個人Accountと踏み台経由で昇格する管理経路にも一致しないため遮断します。鍵が検証できても利用許可とは別です。",
   "topic": "特権Loginの本人確認と経路制約を区別する",
   "summary": "特権Loginの本人確認と経路制約を区別する",

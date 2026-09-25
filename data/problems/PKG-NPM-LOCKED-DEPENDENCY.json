@@ -43,6 +43,8 @@
     "lock",
     "official"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "Name・Version・解決元・Integrityが承認済みLockと一致するため導入を許可します。名前とVersionだけの照合ではありません。",
   "topic": "Lock Fileで取得元と配布物の同一性を確認する",
   "summary": "Lock Fileで取得元と配布物の同一性を確認する",

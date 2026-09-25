@@ -61,6 +61,8 @@
     "device",
     "policy"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "過去のLoginとUser・Device・Sourceが整合し、今回のGateway確認もMFAを含め要件を満たすためSession成立を許可します。過去の4624を今回の成功記録とは扱いません。",
   "topic": "過去Loginと今回の認証途中情報を区別する",
   "summary": "過去Loginと今回の認証途中情報を区別する",

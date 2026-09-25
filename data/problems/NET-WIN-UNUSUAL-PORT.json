@@ -114,6 +114,8 @@
     "pe",
     "server"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "8443番PortでもProcess・引数・宛先が承認済み収集Serviceの仕様に一致するため許可します。一般的でないPort番号だけでは遮断しません。",
   "topic": "非標準PortをService仕様で判断する",
   "summary": "非標準PortをService仕様で判断する",

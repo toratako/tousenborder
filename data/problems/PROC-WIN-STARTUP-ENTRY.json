@@ -51,6 +51,8 @@
     "autoruns",
     "startup"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "AutorunsでTemp配下のhelper.exeを起動するRunエントリが確認され、端末の自動起動許可条件に反するため停止します。",
   "topic": "Autorunsの登録先を組織の自動起動規則と比較する",
   "summary": "Autorunsの登録先を組織の自動起動規則と比較する",

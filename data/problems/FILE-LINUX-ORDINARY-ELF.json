@@ -87,6 +87,8 @@
     "domain_rep",
     "disclosure"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "ELFであること自体には問題はありませんが、GNU stringsで抽出したURLのDomainが外部評判で現行のMalware配布先として報告されているため実行を遮断します。静的文字列だけから通信や実行が起きたとは断定しません。",
   "topic": "GNU stringsで静的文字列から公開Domainを取得し、外部評判と照合する。文字列と実際の通信は区別する",
   "summary": "GNU stringsで静的文字列から公開Domainを取得し、外部評判と照合する。文字列と実際の通信は区別する",

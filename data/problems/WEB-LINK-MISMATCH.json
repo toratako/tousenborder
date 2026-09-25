@@ -31,6 +31,8 @@
     "initial_information",
     "official"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "リンク表示はHelpdeskのトップページですが、実際のURLは閲覧が許可された公開手順書のURLと完全一致するため許可します。表示Pathの違いだけでは不正と判断しません。",
   "topic": "表示文字と実際のURLを区別し、実際のURLと閲覧目的を承認先に照合する",
   "summary": "表示文字と実際のURLを区別し、実際のURLと閲覧目的を承認先に照合する",

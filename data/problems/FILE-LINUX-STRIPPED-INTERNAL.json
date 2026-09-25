@@ -107,6 +107,8 @@
     "elf",
     "approved"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "strippedは承認済みRelease仕様であり、Hash・Loader・依存ライブラリも台帳に一致するため許可します。シンボルがないこと自体は悪性根拠ではありません。",
   "topic": "stripped Binaryを承認されたBuild情報で検証する",
   "summary": "stripped Binaryを承認されたBuild情報で検証する",

@@ -49,6 +49,8 @@
     "archive",
     "format"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "一覧には手順書以外にsetup.shが含まれ、PDFのみという配布条件に反するため遮断します。",
   "topic": "tarの一覧を受入れ仕様と比較する",
   "summary": "tarの一覧を受入れ仕様と比較する",

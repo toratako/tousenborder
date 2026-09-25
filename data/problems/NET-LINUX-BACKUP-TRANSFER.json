@@ -116,6 +116,8 @@
     "capture",
     "server"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "大量送信は承認されたBackupの時間帯・Process・送信先・予定量に一致するため許可します。送信量だけから情報漏洩と判断しません。",
   "topic": "大容量通信をBackup Scheduleと照合する",
   "summary": "大容量通信をBackup Scheduleと照合する",

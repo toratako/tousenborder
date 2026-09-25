@@ -62,6 +62,8 @@
     "release",
     "lock"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "配布Metadataには新しいPublic依存がある一方、公式Sourceと変更記録はその追加を含まないため導入を遮断します。依存が増えたこと自体ではなく同Versionの不一致が根拠です。",
   "topic": "依存の変化を公式Source・変更記録・Lockで比較する",
   "summary": "依存の変化を公式Source・変更記録・Lockで比較する",

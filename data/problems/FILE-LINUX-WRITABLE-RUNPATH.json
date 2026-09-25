@@ -93,6 +93,8 @@
     "elf",
     "service"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "RUNPATHが一般Userの書込み可能な共有ディレクトリを優先し、承認構成と不一致のため遮断します。ライブラリが実際に読み込まれたとは扱いません。",
   "topic": "静的なRUNPATHと配置権限を照合する",
   "summary": "静的なRUNPATHと配置権限を照合する",

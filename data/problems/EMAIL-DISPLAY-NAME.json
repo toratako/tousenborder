@@ -40,6 +40,8 @@
     "directory",
     "payment"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "表示名は社内役員ですが、FromがCompany Directoryの正規連絡先と異なり、独立確認を省く振込要求でもあるため受入れを遮断します。",
   "topic": "表示名ではなく送信Addressと業務手順を見る",
   "summary": "表示名ではなく送信Addressと業務手順を見る",

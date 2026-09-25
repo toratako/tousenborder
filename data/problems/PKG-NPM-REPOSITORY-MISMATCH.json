@@ -42,6 +42,8 @@
     "metadata",
     "official"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "MetadataのRepositoryとMaintainerが現在の公式Component台帳と一致せず、移管の承認もないため導入を遮断します。Repository変更自体を一律に不正とは扱いません。",
   "topic": "Repositoryを現在の公式情報と照合する",
   "summary": "Repositoryを現在の公式情報と照合する",

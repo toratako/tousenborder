@@ -92,6 +92,8 @@
     "cron",
     "service"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "稼働Imageが/tmp配下にあり、www-dataのcrontabで毎分再起動する登録があるため、承認された静的Web Serviceの運用から外れています。この継続・再起動を許可しません。",
   "topic": "稼働Processとcron登録を同一Pathで結び付ける",
   "summary": "稼働Processとcron登録を同一Pathで結び付ける",

@@ -81,6 +81,8 @@
     "official",
     "sig"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "CAPTCHAの案内で貼り付けたCommandは、PowerShellによる外部Scriptの取得・実行でした。人間確認にOS Commandを使わない公式手順と矛盾するため停止します。",
   "topic": "利用者の操作経緯と実行中Commandを照合する",
   "summary": "利用者の操作経緯と実行中Commandを照合する",

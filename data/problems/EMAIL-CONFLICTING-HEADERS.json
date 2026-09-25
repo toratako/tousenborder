@@ -59,6 +59,8 @@
     "gateway",
     "directory"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "本文側に書かれた認証Passは信頼するGatewayの結果ではなく、実際の配送元・認証結果は社内配信仕様と不一致のため遮断します。HeaderにあるPassという文字だけを信用しません。",
   "topic": "認証Headerの信頼境界を確認する",
   "summary": "認証Headerの信頼境界を確認する",

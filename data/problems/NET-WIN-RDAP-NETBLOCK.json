@@ -79,6 +79,8 @@
     "rdap",
     "server"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "RDAPの割当先と委託先が一致し、個別IP・Port・用途も承認Server台帳に一致するため許可します。Netblockの所属だけでTenantや安全性を判断していません。",
   "topic": "IPの割当組織と個別Service承認を区別する",
   "summary": "IPの割当組織と個別Service承認を区別する",

@@ -59,6 +59,8 @@
     "tcpdump",
     "policy"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "直前の同一宛先へのFlowには平文HTTPの認証情報が含まれ、送信先・暗号化の規則にも反するため新しい接続を遮断します。今回の保留中接続で送信済みとは扱いません。",
   "topic": "Packet本文を送信方針と比較する",
   "summary": "Packet本文を送信方針と比較する",

@@ -55,6 +55,8 @@
     "events",
     "policy"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "今回のType 2は対話Login禁止のService Accountに対する要求で、過去のService用Type 5とも用途が異なるため遮断します。",
   "topic": "今回のLogon TypeとAccountの用途を比較する",
   "summary": "今回のLogon TypeとAccountの用途を比較する",

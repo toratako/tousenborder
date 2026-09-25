@@ -50,6 +50,8 @@
     "metadata",
     "official"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "Package名・Version・Project URL・Hashが承認済みComponentの情報に一致するため導入を許可します。Registry掲載だけを安全性の根拠にはしません。",
   "topic": "PyPI Metadataを承認Component情報と照合する",
   "summary": "PyPI Metadataを承認Component情報と照合する",

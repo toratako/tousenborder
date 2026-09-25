@@ -32,6 +32,8 @@
     "initial_information",
     "official"
   ],
+  "glossary": [],
+  "review_steps": [],
   "explanation": "実際のHostはverify-account.example側で、Official Service / Domainの正規Login Hostと一致しないため遮断します。正規名を先頭に含むだけでは正規サイトになりません。",
   "topic": "Host全体と正規Login先を比較する",
   "summary": "Host全体と正規Login先を比較する",

@@ -49,4 +49,6 @@ static func normalize(item: Dictionary, catalog: ContentCatalog, schema: Diction
 			if not ids.has(option): return "代替証拠の資料が存在しません: " + option
 	for id in item.required_evidence:
 		if not ids.has(id) and not alternatives.has(id): return "必要証拠が存在しません: " + id
+	var glossary_error := LearningGlossary.validate(item, catalog.glossary_terms, catalog.tools_for(item))
+	if not glossary_error.is_empty(): return glossary_error
 	return InvestigationInputs.validate_graph(item, catalog.tools_for(item))
