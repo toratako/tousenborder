@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "PKG-NPM-REGISTRY-METADATA",
+  "category": "package",
+  "platform": "common",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "npmの正規配布情報",
+  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Package": "@aster-ui/calendar",
+    "Version": "2.4.0",
+    "Ecosystem": "npm",
+    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。"
+  },
+  "initial_information_types": {
+    "Package": "package"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "metadata",
+      "name": "npm Registry / Package Metadata",
+      "content": {
+        "Name": "@aster-ui/calendar",
+        "Version": "2.4.0",
+        "Registry": "https://registry.npmjs.org",
+        "Project URL / Repository": "https://git.aster.example/components/calendar",
+        "Maintainer": "aster-release",
+        "dependencies": {},
+        "SHA256": "5ddb93fc1a8cdcf0e23e25cdad155f0fcd00149cf5c7fa2d214b7c5948f5e87c"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Repository / Approved Component",
+      "content": {
+        "Name": "@aster-ui/calendar",
+        "Version": "2.4.0",
+        "Repository": "https://git.aster.example/components/calendar",
+        "Maintainer": "aster-release",
+        "Registry": "https://registry.npmjs.org",
+        "SHA256": "5ddb93fc1a8cdcf0e23e25cdad155f0fcd00149cf5c7fa2d214b7c5948f5e87c",
+        "用途": "社内Calendar UI / CHG-1002"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "metadata",
+    "official"
+  ],
+  "explanation": "Package名・Version・Maintainer・Repository・Hashが承認Componentと一致するため導入を許可します。",
+  "topic": "npm Metadataを承認Component情報と照合する",
+  "summary": "npm Metadataを承認Component情報と照合する",
+  "learning_objectives": [
+    "npm Metadataを承認Component情報と照合する"
+  ],
+  "decision_context": "before_install",
+  "scenario_type": "standard",
+  "sources": [
+    "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "ecosystem": "npm"
+}

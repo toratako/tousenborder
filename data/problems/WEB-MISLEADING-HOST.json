@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "WEB-MISLEADING-HOST",
+  "category": "web",
+  "platform": "common",
+  "level": "very_beginner",
+  "ground_truth": "block",
+  "title": "正規Domainに見せた別Host",
+  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "URL": "https://login.aster.example.verify-account.example/signin",
+    "URLのHost": "login.aster.example.verify-account.example",
+    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。",
+    "案内文": "Asterのアカウント確認"
+  },
+  "initial_information_types": {
+    "URL": "url",
+    "URLのHost": "domain"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "official",
+      "name": "Official Service / Domain",
+      "content": {
+        "正規Login Host": "login.aster.example"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "initial_information",
+    "official"
+  ],
+  "explanation": "実際のHostはverify-account.example側で、Official Service / Domainの正規Login Hostと一致しないため遮断します。正規名を先頭に含むだけでは正規サイトになりません。",
+  "topic": "Host全体と正規Login先を比較する",
+  "summary": "Host全体と正規Login先を比較する",
+  "learning_objectives": [
+    "Host全体と正規Login先を比較する"
+  ],
+  "decision_context": "before_access",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.icann.org/rdap"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

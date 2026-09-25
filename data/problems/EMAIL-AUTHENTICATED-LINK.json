@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "id": "EMAIL-AUTHENTICATED-LINK",
+  "category": "email",
+  "platform": "common",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "認証Passでも正規企業のURLではない",
+  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Email": "quarantine/message-1082.eml",
+    "From": "Asterサポート <support@aster-support.example>",
+    "To": "mori@aster.example",
+    "Subject": "Passwordの有効期限",
+    "本文": "リンクから組織アカウントを確認してください。",
+    "受信時刻": "2026-08-18 09:10",
+    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。"
+  },
+  "initial_information_types": {
+    "Email": "email"
+  },
+  "tools": [
+    {
+      "id": "header",
+      "name": "Raw Header / View Source",
+      "description": "信頼する受信GatewayのHeaderと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "output": "Received: from outbound.aster-support.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=aster-support.example; dkim=pass header.d=aster-support.example; dmarc=pass header.from=aster-support.example\nFrom: Asterサポート <support@aster-support.example>\nTo: mori@aster.example\nReply-To: Asterサポート <support@aster-support.example>\nReturn-Path: <bounce@aster-support.example>\nSubject: Passwordの有効期限\n\nMIME本文の抜粋:\n<a href=\"https://aster-support.example/verify\">確認</a>",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Email"
+        }
+      ],
+      "input_hint": "Email",
+      "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "url",
+          "label": "本文内URL",
+          "value": "https://aster-support.example/verify",
+          "data_type": "url"
+        },
+        {
+          "id": "host",
+          "label": "本文内URLのHost",
+          "value": "aster-support.example",
+          "data_type": "domain"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "gateway",
+      "name": "Mail Gateway構成",
+      "content": "信頼する受信Gatewayはmx.aster.example。自Gatewayが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+    },
+    {
+      "id": "rdap",
+      "name": "RDAP",
+      "content": {
+        "照会対象Domain": "aster-support.example",
+        "登録日": "2018-04-03",
+        "Registrar": "Example Registrar 1",
+        "Status": "client transfer prohibited",
+        "Registrant Organization": "非公開（redacted）。この応答から所有組織は特定できない。",
+        "注記": "登録日・登録者情報はサイト内容や安全性を保証しない。"
+      }
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Service / Domain",
+      "content": "組織アカウントのPassword入力先はlogin.aster.exampleのみ。サポート通知はsupport@aster.exampleから送る。"
+    }
+  ],
+  "external_references": [
+    {
+      "id": "isolated",
+      "name": "Isolated URL Analysis",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "URL: https://aster-support.example/verify\nHTTP 200\nForm labels: Aster email / password\nForm action: https://aster-support.example/session",
+      "accepted_information_types": [
+        "url"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "url"
+        }
+      ],
+      "input_hint": "url",
+      "submission_type": "full_url",
+      "submission_value": "https://aster-support.example/verify",
+      "confidentiality_warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
+  ],
+  "required_evidence": [
+    "header",
+    "isolated",
+    "official",
+    "disclosure"
+  ],
+  "explanation": "SPF/DKIM/DMARCのPassは送信者自身のDomainについての結果です。隔離解析先は組織のPasswordを求める承認外Hostなのでメールの受入れを遮断します。",
+  "topic": "Emailの認証とリンク先の正当性を別々に調べる",
+  "summary": "Emailの認証とリンク先の正当性を別々に調べる",
+  "learning_objectives": [
+    "Emailの認証とリンク先の正当性を別々に調べる"
+  ],
+  "decision_context": "before_delivery",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc8601"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "resources": {
+    "url_tools": [
+      {
+        "id": "dig",
+        "name": "dig",
+        "description": "選択したHostのDNSレコードとTTLを表示します。",
+        "output": ";; ANSWER SECTION:\naster-support.example. 300 IN A 203.0.113.122",
+        "accepted_information_types": [
+          "domain"
+        ],
+        "input_bindings": [
+          {
+            "source": "header",
+            "id": "host"
+          }
+        ],
+        "input_hint": "host",
+        "platform_note": "Linux / BIND dnsutils等",
+        "environments": [
+          "linux"
+        ],
+        "output_information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "203.0.113.122",
+            "data_type": "ip"
+          }
+        ]
+      },
+      {
+        "id": "nslookup",
+        "name": "nslookup",
+        "description": "選択したHostのDNS応答を表示します。",
+        "output": "Server: 192.0.2.53\nName: aster-support.example\nAddress: 203.0.113.122\n",
+        "accepted_information_types": [
+          "domain"
+        ],
+        "input_bindings": [
+          {
+            "source": "header",
+            "id": "host"
+          }
+        ],
+        "input_hint": "host",
+        "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
+        "environments": [
+          "linux"
+        ],
+        "output_information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "203.0.113.122",
+            "data_type": "ip"
+          }
+        ]
+      }
+    ]
+  }
+}

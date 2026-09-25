@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "id": "EMAIL-AUTH-FAILURE",
+  "category": "email",
+  "platform": "common",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "自社Domainを名乗る直接配送",
+  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Email": "quarantine/message-1079.eml",
+    "From": "IT管理 <it@aster.example>",
+    "To": "mori@aster.example",
+    "Subject": "設定更新",
+    "本文": "端末の設定変更用手順を返信で受け取ってください。",
+    "受信時刻": "2026-08-18 09:10",
+    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。"
+  },
+  "initial_information_types": {
+    "Email": "email"
+  },
+  "tools": [
+    {
+      "id": "header",
+      "name": "Raw Header / View Source",
+      "description": "信頼する受信GatewayのHeaderと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "output": "Received: from outbound.aster.example ([203.0.113.120]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=fail smtp.mailfrom=aster.example; dkim=fail header.d=aster.example; dmarc=fail header.from=aster.example\nFrom: IT管理 <it@aster.example>\nTo: mori@aster.example\nReply-To: IT管理 <it@aster.example>\nReturn-Path: <bounce@aster.example>\nSubject: 設定更新\n\nMIME本文の抜粋:\n端末の設定変更用手順を返信で受け取ってください。",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Email"
+        }
+      ],
+      "input_hint": "Email",
+      "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "gateway",
+      "name": "Mail Gateway構成",
+      "content": "信頼する受信Gatewayはmx.aster.example。自Gatewayが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+    },
+    {
+      "id": "directory",
+      "name": "Company Directory",
+      "content": "IT通知it@aster.exampleは社内配信基盤192.0.2.110から送信し、DKIM d=aster.exampleで署名する。203.0.113.120の配信・転送登録なし。自社Domainの直接配送はDMARC整合必須。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "header",
+    "gateway",
+    "directory"
+  ],
+  "explanation": "直接配送されたメールは自社Domainの認証に失敗し、承認された転送経路にも一致しないため受入れを遮断します。正規の転送による認証変化とは区別しています。",
+  "topic": "信頼するGatewayの認証結果を配送構成と比較する",
+  "summary": "信頼するGatewayの認証結果を配送構成と比較する",
+  "learning_objectives": [
+    "信頼するGatewayの認証結果を配送構成と比較する"
+  ],
+  "decision_context": "before_delivery",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc8601"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

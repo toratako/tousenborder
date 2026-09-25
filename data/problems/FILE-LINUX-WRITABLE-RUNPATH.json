@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "id": "FILE-LINUX-WRITABLE-RUNPATH",
+  "category": "file",
+  "platform": "linux",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "共有ライブラリ探索先の相違",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "/opt/incoming/report-agent",
+    "申請内容": "標準構成のReport AgentをInstallする。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "file",
+      "name": "file",
+      "description": "MagicなどからFile形式を識別します。",
+      "output": "/opt/incoming/report-agent: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / fileパッケージ",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "strings",
+      "name": "strings (GNU)",
+      "description": "File内の可読文字列を抽出します。実行時の動作は観測しません。",
+      "output": "対象: /opt/incoming/report-agent\n文字列の抜粋（実行結果ではありません）\nreport-agent\n/var/tmp/shared\n/opt/report/lib\nlibreport.so",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / GNU binutils",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "elf",
+      "name": "readelf",
+      "description": "ELF Header・Interpreter・依存ライブラリ・RUNPATHを静的に表示します。",
+      "output": "ELF64 / x86-64\nINTERP: /lib64/ld-linux-x86-64.so.2\nNEEDED: libreport.so\nRUNPATH: /var/tmp/shared:/opt/report/lib",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / GNU binutils",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "service",
+      "name": "Service構成台帳",
+      "content": {
+        "期待RUNPATH": "/opt/report/lib",
+        "配置権限": "/var/tmp/shared = mode 1777; /opt/report/lib = root:root 0755",
+        "条件": "Report Agentはroot管理の専用libのみを探索する。"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "elf",
+    "service"
+  ],
+  "explanation": "RUNPATHが一般Userの書込み可能な共有ディレクトリを優先し、承認構成と不一致のため遮断します。ライブラリが実際に読み込まれたとは扱いません。",
+  "topic": "静的なRUNPATHと配置権限を照合する",
+  "summary": "静的なRUNPATHと配置権限を照合する",
+  "learning_objectives": [
+    "静的なRUNPATHと配置権限を照合する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://sourceware.org/binutils/docs/binutils/readelf.html",
+    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

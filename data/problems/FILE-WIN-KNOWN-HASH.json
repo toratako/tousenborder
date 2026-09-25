@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "id": "FILE-WIN-KNOWN-HASH",
+  "category": "file",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "Hash照会で見つかる検出履歴",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "C:\\Downloads\\viewer-addon.exe",
+    "申請内容": "公開サイト配布の閲覧用追加ソフト。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "output": "Algorithm : SHA256\nHash : 41AA3B8BD929B4943BB587E387819AAD347A29A12946F49129CF1AC2C761B524\nPath : C:\\Downloads\\viewer-addon.exe",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "対象FileのSHA-256",
+          "value": "41aa3b8bd929b4943bb587e387819aad347a29a12946f49129cf1ac2c761b524",
+          "data_type": "sha256"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    }
+  ],
+  "external_references": [
+    {
+      "id": "hash_rep",
+      "name": "External Hash Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "SHA256: 41aa3b8bd929b4943bb587e387819aad347a29a12946f49129cf1ac2c761b524\nLast analysis: 2026-08-18 00:00Z\nMalicious: 48/70; first submission: 2026-08-01\n分類: downloader",
+      "accepted_information_types": [
+        "sha256"
+      ],
+      "input_bindings": [
+        {
+          "source": "hash",
+          "id": "sha256"
+        }
+      ],
+      "input_hint": "sha256",
+      "submission_type": "hash",
+      "submission_value": "41aa3b8bd929b4943bb587e387819aad347a29a12946f49129cf1ac2c761b524",
+      "confidentiality_warning": "SHA-256のみをサービスへ送信します。File本体は送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    },
+    {
+      "id": "file_rep",
+      "name": "External File Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "SHA256: 41aa3b8bd929b4943bb587e387819aad347a29a12946f49129cf1ac2c761b524\n2026-08-18: malicious 48/70; classification: downloader",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "submission_type": "file",
+      "submission_value": "C:\\Downloads\\viewer-addon.exe",
+      "confidentiality_warning": "File本体を送信します。内容や埋め込み情報がサービスに渡り、共有される場合があります。",
+      "correct_usage": true,
+      "reason": "公開配布Fileで機密情報がなく、本体の送信も方針上可能です。Hash検索だけでもこの案件の検出履歴は確認できます。"
+    }
+  ],
+  "required_evidence": [
+    "hash",
+    "disclosure",
+    "hash_rep"
+  ],
+  "explanation": "対象のSHA-256に既知の悪性検出が多数報告され、照会時点でも有効なため実行を遮断します。File本体を送る必要はありません。",
+  "topic": "Hashだけを外部照会して検出履歴を得る",
+  "summary": "Hashだけを外部照会して検出履歴を得る",
+  "learning_objectives": [
+    "Hashだけを外部照会して検出履歴を得る"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

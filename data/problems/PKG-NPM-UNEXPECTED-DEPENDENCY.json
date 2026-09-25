@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "PKG-NPM-UNEXPECTED-DEPENDENCY",
+  "category": "package",
+  "platform": "common",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "変更記録にない依存の追加",
+  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Package": "@aster-ui/chart",
+    "Version": "2.5.0",
+    "Ecosystem": "npm",
+    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。"
+  },
+  "initial_information_types": {
+    "Package": "package"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "metadata",
+      "name": "npm Registry / Package Metadata",
+      "content": {
+        "Name": "@aster-ui/chart",
+        "Version": "2.5.0",
+        "Registry": "https://registry.npmjs.org",
+        "Project URL / Repository": "https://git.aster.example/components/chart",
+        "Maintainer": "aster-release",
+        "dependencies": {
+          "@aster-ui/core": "2.5.0",
+          "aster-chart-telemetry": "^1.0.0"
+        },
+        "SHA256": "10ee55d7036ef6708b67c7309763050bdae58e538dacee899827070b38f6975c"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Repository / Approved Component",
+      "content": "承認Commitの@aster-ui/chart 2.5.0 package.json: dependencies={\"@aster-ui/core\":\"2.5.0\"}。Public telemetry依存は含まれない。"
+    },
+    {
+      "id": "release",
+      "name": "Release / Change Reference",
+      "content": "2.5.0: グラフのアクセシビリティ修正。依存はcoreのVersion更新のみ。"
+    },
+    {
+      "id": "lock",
+      "name": "Lock File",
+      "content": "現行2.4.0は@aster-ui/coreのみ。2.5.0更新申請もcore以外の追加を含まない。"
+    },
+    {
+      "id": "vuln",
+      "name": "Vulnerability Database",
+      "content": "aster-chart-telemetry 1.0.0: 登録なし。登録の有無から今回の依存追加が承認されているとは判断できない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "metadata",
+    "official",
+    "release",
+    "lock"
+  ],
+  "explanation": "配布Metadataには新しいPublic依存がある一方、公式Sourceと変更記録はその追加を含まないため導入を遮断します。依存が増えたこと自体ではなく同Versionの不一致が根拠です。",
+  "topic": "依存の変化を公式Source・変更記録・Lockで比較する",
+  "summary": "依存の変化を公式Source・変更記録・Lockで比較する",
+  "learning_objectives": [
+    "依存の変化を公式Source・変更記録・Lockで比較する"
+  ],
+  "decision_context": "before_install",
+  "scenario_type": "standard",
+  "sources": [
+    "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "ecosystem": "npm"
+}

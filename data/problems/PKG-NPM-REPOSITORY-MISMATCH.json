@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "id": "PKG-NPM-REPOSITORY-MISMATCH",
+  "category": "package",
+  "platform": "common",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "Repositoryの相違",
+  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Package": "@aster-ui/table",
+    "Version": "3.1.0",
+    "Ecosystem": "npm",
+    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。"
+  },
+  "initial_information_types": {
+    "Package": "package"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "metadata",
+      "name": "npm Registry / Package Metadata",
+      "content": {
+        "Name": "@aster-ui/table",
+        "Version": "3.1.0",
+        "Registry": "https://registry.npmjs.org",
+        "Project URL / Repository": "https://git.table-extras.example/aster/table",
+        "Maintainer": "table-extras",
+        "dependencies": {},
+        "SHA256": "5d77dac9e583ef75ae7c06486aac8ac2ba0c0054487980e205400e7069ed179e"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Repository / Approved Component",
+      "content": "@aster-ui/table 3.1.0 / https://git.aster.example/components/table / Maintainer=aster-release / 当日までRepository移管・Maintainer変更の承認なし。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "metadata",
+    "official"
+  ],
+  "explanation": "MetadataのRepositoryとMaintainerが現在の公式Component台帳と一致せず、移管の承認もないため導入を遮断します。Repository変更自体を一律に不正とは扱いません。",
+  "topic": "Repositoryを現在の公式情報と照合する",
+  "summary": "Repositoryを現在の公式情報と照合する",
+  "learning_objectives": [
+    "Repositoryを現在の公式情報と照合する"
+  ],
+  "decision_context": "before_install",
+  "scenario_type": "standard",
+  "sources": [
+    "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "ecosystem": "npm"
+}

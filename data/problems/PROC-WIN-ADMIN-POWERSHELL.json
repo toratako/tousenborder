@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "id": "PROC-WIN-ADMIN-POWERSHELL",
+  "category": "process",
+  "platform": "windows",
+  "level": "intermediate",
+  "ground_truth": "allow",
+  "title": "承認済み管理PowerShell",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "powershell.exe",
+    "PID": 4200,
+    "User": "ASTER\\svc_inventory",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "output": "Parent: InventoryAgent.exe (1800)\nPID: 4200\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -File C:\\Company\\Inventory.ps1\nUser: ASTER\\svc_inventory\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "image",
+          "label": "Backing Executable",
+          "value": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+          "data_type": "file"
+        },
+        {
+          "id": "script",
+          "label": "実行Script",
+          "value": "C:\\Company\\Inventory.ps1",
+          "data_type": "file"
+        }
+      ]
+    },
+    {
+      "id": "sig",
+      "name": "Sigcheck",
+      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "output": "PID 4200 のBacking Executable: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nVerified: Signed\nPublisher: Microsoft Windows",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "output": "PID 4200 のBacking Executable: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nAlgorithm: SHA256\nHash: 53dadc40bb276161fbb4864750877d9641ebe8a5dee5ce338d2554171eebc6d1",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "Backing ExecutableのSHA-256",
+          "value": "53dadc40bb276161fbb4864750877d9641ebe8a5dee5ce338d2554171eebc6d1",
+          "data_type": "sha256"
+        }
+      ]
+    },
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのSocketと相手IP・Portを確認します。",
+      "output": "powershell.exe 4200 TCP 192.0.2.25:52200 192.0.2.80:443 ESTABLISHED",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "Remote IP",
+          "value": "192.0.2.80",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "script_hash",
+      "name": "Get-FileHash / Script",
+      "description": "Process Explorerで取得したPathのSHA-256を計算します。Process本体のHashとは別です。",
+      "output": "Path: C:\\Company\\Inventory.ps1\nAlgorithm: SHA256\nHash: 5b941718bd08c55a019ad9f87d1f77673b4f06aa755f62da3b4b559bd1dfd50e",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "pe",
+          "id": "script"
+        }
+      ],
+      "input_hint": "script",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "job",
+      "name": "管理Script台帳",
+      "content": {
+        "起動元": "InventoryAgent.exe",
+        "User": "ASTER\\svc_inventory",
+        "Script": "C:\\Company\\Inventory.ps1",
+        "SHA256": "5b941718bd08c55a019ad9f87d1f77673b4f06aa755f62da3b4b559bd1dfd50e",
+        "送信先": "192.0.2.80:443",
+        "頻度": "15分ごと",
+        "承認": "CHG-442"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "pe",
+    "script_hash",
+    "tcp",
+    "job"
+  ],
+  "explanation": "親Agent・ScriptのHash・User・接続先が承認された棚卸しJobと一致するため継続を許可します。PowerShell本体の署名だけでScriptの正当性を判断していません。",
+  "topic": "管理Scriptの内容同一性と実行文脈を検証する",
+  "summary": "管理Scriptの内容同一性と実行文脈を検証する",
+  "learning_objectives": [
+    "管理Scriptの内容同一性と実行文脈を検証する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

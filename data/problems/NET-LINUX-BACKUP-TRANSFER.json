@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "id": "NET-LINUX-BACKUP-TRANSFER",
+  "category": "network",
+  "platform": "linux",
+  "level": "intermediate",
+  "ground_truth": "allow",
+  "title": "大量送信する定例Backup",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "接続ID": "CONNECT-701",
+    "PID": 5100,
+    "Process表示名": "backup-agent",
+    "Remote IP": "198.51.100.40",
+    "Remote Port": 443,
+    "Protocol": "TCP",
+    "端末": "192.0.2.30",
+    "保留中のLocal Port": 52410,
+    "要求時刻": "2026-08-18 09:10:00",
+    "保存PCAP": "flow-before-0910.pcap",
+    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "Remote IP": "ip",
+    "保存PCAP": "pcap"
+  },
+  "tools": [
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのSocket・相手IP・Portを確認します。",
+      "output": "ESTAB 0 0 192.0.2.30:52400 198.51.100.40:443 users:((\"backup-agent\",pid=5100,fd=5))",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "既存接続のRemote IP",
+          "value": "198.51.100.40",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "output": "PID PPID USER COMMAND\n5100 1 agent /opt/aster/backup-agent --job daily-finance",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのPacketやConversation統計を表示します。所有ProcessはSocket Toolで照合します。",
+      "output": "File: flow-before-0910.pcap\n09:00–09:09 192.0.2.30:52400 -> 198.51.100.40:443\nTCP conversation: sent 4 GiB; received 12 MiB\nTLS Application Data; 本文は暗号化",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "server",
+      "name": "Approved Servers",
+      "content": {
+        "Job": "daily-finance",
+        "Image": "/opt/aster/backup-agent",
+        "宛先": "198.51.100.40:443 / 契約済Backup Storage",
+        "Schedule": "09:00–10:00",
+        "送信量": "最大30 GiB",
+        "承認": "NET-710"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "ss",
+    "ps",
+    "capture",
+    "server"
+  ],
+  "explanation": "大量送信は承認されたBackupの時間帯・Process・送信先・予定量に一致するため許可します。送信量だけから情報漏洩と判断しません。",
+  "topic": "大容量通信をBackup Scheduleと照合する",
+  "summary": "大容量通信をBackup Scheduleと照合する",
+  "learning_objectives": [
+    "大容量通信をBackup Scheduleと照合する"
+  ],
+  "decision_context": "before_connection",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

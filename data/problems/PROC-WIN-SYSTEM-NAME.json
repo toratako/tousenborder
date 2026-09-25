@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "PROC-WIN-SYSTEM-NAME",
+  "category": "process",
+  "platform": "windows",
+  "level": "very_beginner",
+  "ground_truth": "allow",
+  "title": "System Processの管理Path照合",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "svchost.exe",
+    "PID": 4200,
+    "User": "NT AUTHORITY\\SYSTEM",
+    "採取時点": "2026-08-18 09:10 / 起動済み",
+    "Image": "C:\\Windows\\System32\\svchost.exe",
+    "端末管理の確認": "OS配布Fileとの同一性とService起動登録は検証済み。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "approved",
+      "name": "Approved Software",
+      "content": "この端末のsvchost.exeは、OS管理対象として検証済みで、ImageがC:\\Windows\\System32\\svchost.exeのものを継続可とする。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "initial_information",
+    "approved"
+  ],
+  "explanation": "Imageの完全Pathが許可Pathと一致し、OS配布Fileと起動登録の検証済み記録もあるため継続を許可します。svchost.exeという名前だけを根拠にしていません。",
+  "topic": "Process名だけでなく、管理状態と完全Pathを単純な許可規則に照合する",
+  "summary": "Process名だけでなく、管理状態と完全Pathを単純な許可規則に照合する",
+  "learning_objectives": [
+    "Process名だけでなく、管理状態と完全Pathを単純な許可規則に照合する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

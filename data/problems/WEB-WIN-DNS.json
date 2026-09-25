@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "id": "WEB-WIN-DNS",
+  "category": "web",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "Windowsで解決先を確認する",
+  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "URL": "https://training.aster.example/",
+    "URLのHost": "training.aster.example",
+    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。"
+  },
+  "initial_information_types": {
+    "URL": "url",
+    "URLのHost": "domain"
+  },
+  "tools": [
+    {
+      "id": "resolve",
+      "name": "Resolve-DnsName",
+      "description": "選択したHostのDNSレコードを問い合わせます。",
+      "output": "Name: training.aster.example\nType: A; IPAddress: 198.51.100.20; TTL: 300",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのHost",
+      "platform_note": "Windows / PowerShell DnsClient",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "解決先IP",
+          "value": "198.51.100.20",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "nslookup",
+      "name": "nslookup",
+      "description": "選択したHostのDNS応答を表示します。",
+      "output": "Server: 192.0.2.53\nName: training.aster.example\nAddress: 198.51.100.20",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのHost",
+      "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "解決先IP",
+          "value": "198.51.100.20",
+          "data_type": "ip"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "official",
+      "name": "Official Service / Domain",
+      "content": {
+        "Host": "training.aster.example",
+        "IP": "198.51.100.20",
+        "用途": "公開研修トップページ",
+        "状態": "2026-08-18現在、変更承認済み"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "dns",
+    "official"
+  ],
+  "explanation": "HostとDNSの解決先が研修サイトの承認記録に一致し、公開トップページの閲覧条件を満たすため許可します。",
+  "topic": "Resolve-DnsNameまたはnslookupでHostの解決先を取得し、承認Host・IP・用途と照合する",
+  "summary": "Resolve-DnsNameまたはnslookupでHostの解決先を取得し、承認Host・IP・用途と照合する",
+  "learning_objectives": [
+    "Resolve-DnsNameまたはnslookupでHostの解決先を取得し、承認Host・IP・用途と照合する"
+  ],
+  "decision_context": "before_access",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname?view=windowsserver2025-ps",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "evidence_alternatives": {
+    "dns": {
+      "label": "DNSの解決先",
+      "any_of": [
+        "resolve",
+        "nslookup"
+      ]
+    }
+  }
+}

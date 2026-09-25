@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-WIN-REVOKED-DEVICE",
+  "category": "account",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "登録解除されたDevice",
+  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "要求ID": "AUTH-901",
+    "User": "mori",
+    "Source IP": "192.0.2.41",
+    "要求時刻": "2026-08-18 09:10:00",
+    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "要求Logon Type": "10 / RemoteInteractive",
+    "Gatewayの認証確認": "Password確認済み / MFA確認済み",
+    "Device ID": "WIN-017"
+  },
+  "initial_information_types": {
+    "User": "username",
+    "Source IP": "ip"
+  },
+  "tools": [
+    {
+      "id": "events",
+      "name": "Event Viewer / Windows Security Log",
+      "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
+      "output": "対象: 過去のSecurity Log（今回の要求は含まない）\n2026-08-17 09:01 Event ID 4624\nTargetUserName: mori\nLogonType: 10\nIpAddress: 192.0.2.41\nWorkstationName: WIN-017\n2026-08-17 18:02 Event ID 4634 / TargetUserName: mori",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "User",
+      "platform_note": "Windows標準 / Event Viewer",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "device",
+      "name": "Device Reference",
+      "content": "WIN-017 / 所有者mori / 2026-08-18 08:00に紛失届によりRevoked。Active Device以外からのLoginは禁止。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "events",
+    "device"
+  ],
+  "explanation": "過去のLoginが通常でも、今回提示されたDeviceは既に失効しているためSession成立を遮断します。履歴の成功は現在の利用許可を保証しません。",
+  "topic": "Deviceの現行状態を過去履歴より優先する",
+  "summary": "Deviceの現行状態を過去履歴より優先する",
+  "learning_objectives": [
+    "Deviceの現行状態を過去履歴より優先する"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

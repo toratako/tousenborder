@@ -8,11 +8,13 @@
 - カテゴリ・資料グループはPackで追加可能。判定種別・難易度・OSの追加にはSchemaと実装の変更が必要です。
 - 標準の `tools / references / external_references` は問題のトップレベル、追加グループだけを `resources` に置きます。標準グループのkindは変更できません。
 - `initial_information_types` は初期情報のキーと型名の対応。未指定は `text` で、値から型を推測しません。型名は追加できます。
-- 超初級は資料なし、`required_evidence: ["initial_information"]`。`required_evidence` は調査充足の定義で、進行条件ではありません（[判定・履歴](runtime-flow.md#調査から判定まで)）。
+- 超初級はReferenceを調査欄で閲覧できます。Tool・External Referenceは追加グループを含め使用不可。`required_evidence` には初期情報と必要なReference（代替証拠も可）を指定します。Referenceは閲覧後に証拠へ加わります。調査充足は進行条件ではありません（[判定・履歴](runtime-flow.md#調査から判定まで)）。
 
 ## 資料と情報の接続
 
 Referenceは入力不要の `content` を表示します。Tool・External Referenceは `accepted_information_types` と `input_bindings` で入力を指定し、型・取得元・情報IDを照合します。複数のbindingはいずれか1つを使う代替入力です。
+
+辞書・配列の値は項目名と箇条書きで表示します。JSONやCommandの抜粋をそのまま見せる場合は文字列で記述してください。表示だけを整形し、Toolへ渡す元の値・型は保持します。
 
 以下は資料定義の抜粋です。初期情報に数値のPID、型マップに `"PID": "pid"` を用意します。
 
@@ -37,12 +39,12 @@ Referenceは入力不要の `content` を表示します。Tool・External Refer
 
 | 作りたい調査経路 | 動く例 |
 | --- | --- |
-| File → SHA-256 → 外部Hash検索、Vendor公開値との照合 | [FILE-LINUX-BEGINNER-002](../data/problems/FILE-LINUX-BEGINNER-002.json) |
-| PID → 実行ScriptのPath → Hash（Process本体と区別） | [PROC-WIN-ADVANCED-001](../data/problems/PROC-WIN-ADVANCED-001.json) |
-| URL → Host → DNS、登録Domain → RDAP | [WEB-BEGINNER-001](../data/problems/WEB-BEGINNER-001.json) |
-| Email内でHeader・添付・URLを調査する追加グループ | [EMAIL-INTERMEDIATE-001](../data/problems/EMAIL-INTERMEDIATE-001.json) |
+| File → SHA-256 → 外部Hash検索 | [FILE-LINUX-KNOWN-HASH](../data/problems/FILE-LINUX-KNOWN-HASH.json) |
+| PID → 実行ScriptのPath → Hash（Process本体と区別） | [PROC-WIN-ADMIN-POWERSHELL](../data/problems/PROC-WIN-ADMIN-POWERSHELL.json) |
+| 受付済みHost → DNS、登録DomainのRDAP資料を照合 | [WEB-UNKNOWN-CAMPAIGN](../data/problems/WEB-UNKNOWN-CAMPAIGN.json) |
+| Email内でHeader・添付・URLを調査する追加グループ | [EMAIL-GENUINE-URGENT](../data/problems/EMAIL-GENUINE-URGENT.json) |
 
-入力は値・案件・適切な調査で取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも区別します。新教材のRDAPはReferenceの固定資料とし、照会対象をcontentに明記します（既存教材の分類整理は別途）。
+入力は値・案件・適切な調査で取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも区別します。RDAPはReferenceの固定資料とし、照会対象をcontentに明記します。
 
 ProcessのBacking Executableを直接調査する場合は、初期情報のPIDを入力にし、対象Pathと結果をoutputに明記できます。ScriptのHashとは別資料にします。Windows用DNS Toolを使う問題はplatformをwindowsにし、commonの調査OSはLinuxのままとします。
 
@@ -57,7 +59,11 @@ python3 scripts/build_problem_catalog.py
 just test
 ```
 
-依存の準備は [README](../README.md#開発教材編集)。生成先は `docs/problem-catalog.md` と `build/catalog/problems.json`（Git管理外）。生成処理の `--check` はMarkdownを常に、JSONは存在する場合だけ比較します。Main Evidenceはrequired_evidence、Main Toolはその入力元を含む適切な調査経路から導出します。代替Toolは併記し、教材に新Fieldを要求しません。別Packの検証は `godot --headless --path . --script scripts/validate_content.gd -- res://data/packs/別名.json`（成功0・失敗1）。
+依存の準備は [README](../README.md#開発教材編集)。生成先は `docs/problem-catalog.md` と `build/catalog/problems.json`（Git管理外）。生成処理の `--check` はMarkdownを常に、JSONは存在する場合だけ比較します。別Packの検証は `godot --headless --path . --script scripts/validate_content.gd -- res://data/packs/別名.json`（成功0・失敗1）。
+
+レビュー用の説明は [data/catalog/learning.json](../data/catalog/learning.json)。Packと同じFile名で `data/catalog/` に置き、[Review Schema](../data/schemas/catalog-review.schema.json) に従って全登録IDの `overview / flow / decisive_evidence` を記述します。`flow` は資料IDと確認内容の順序付き配列で、初期情報は常に取得済みとし、必要な入力を先に取得する代表経路を記載します。代替証拠は利用可能な経路を一つ選びます。機密Uploadなど不適切な調査は実行手順にせず、方針を読む手順に見送りを記述してください。問題JSONの変更時には説明も再確認し、未解決の不足がある場合だけ `review_notes` に記載し、問題側で解消したら削除します。これらはゲームUIへ読み込みません。
+
+初期情報・全調査候補・正解・理由・学習目標は問題JSONから直接転記します。Main Evidenceはrequired_evidence、Main Toolはその入力元も含む経路から導出し、代替候補を併記します。レビューJSONがあるPackでは登録IDの過不足、手順の入力順序・OS適合・適切な利用・必須証拠の充足も検証します。レビューJSONがない別Packは想定手順・決定的証拠を「未レビュー」と表示し、自動推測しません。
 
 検証の分担:
 

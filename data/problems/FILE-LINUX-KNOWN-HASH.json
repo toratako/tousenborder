@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "id": "FILE-LINUX-KNOWN-HASH",
+  "category": "file",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "Linux実行Fileの外部Hash照会",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "/tmp/preview-helper",
+    "申請内容": "公開配布のプレビュー補助プログラム。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "hash",
+      "name": "sha256sum",
+      "description": "選択したFileのSHA-256を計算します。",
+      "output": "2344cd6310e9e63754e1ac1b1d4e4c48f8817e805aebfb32be9c440a1bf501e4  /tmp/preview-helper",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / GNU coreutils",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "対象FileのSHA-256",
+          "value": "2344cd6310e9e63754e1ac1b1d4e4c48f8817e805aebfb32be9c440a1bf501e4",
+          "data_type": "sha256"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    }
+  ],
+  "external_references": [
+    {
+      "id": "hash_rep",
+      "name": "External Hash Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "SHA256: 2344cd6310e9e63754e1ac1b1d4e4c48f8817e805aebfb32be9c440a1bf501e4\n2026-08-18: malicious 35/62; classification: downloader",
+      "accepted_information_types": [
+        "sha256"
+      ],
+      "input_bindings": [
+        {
+          "source": "hash",
+          "id": "sha256"
+        }
+      ],
+      "input_hint": "sha256",
+      "submission_type": "hash",
+      "submission_value": "2344cd6310e9e63754e1ac1b1d4e4c48f8817e805aebfb32be9c440a1bf501e4",
+      "confidentiality_warning": "SHA-256のみをサービスへ送信します。File本体は送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
+  ],
+  "required_evidence": [
+    "hash",
+    "disclosure",
+    "hash_rep"
+  ],
+  "explanation": "対象Hashには現在有効なMalware検出が複数登録されているため実行を遮断します。未知のHashという理由で遮断しているのではありません。",
+  "topic": "sha256sumの結果を外部評判と照合する",
+  "summary": "sha256sumの結果を外部評判と照合する",
+  "learning_objectives": [
+    "sha256sumの結果を外部評判と照合する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://sourceware.org/binutils/docs/binutils/readelf.html",
+    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

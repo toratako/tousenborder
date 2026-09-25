@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "id": "FILE-WIN-FAKE-UPDATE",
+  "category": "file",
+  "platform": "windows",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "Fake Software Update",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "C:\\Downloads\\browser-update.js",
+    "申請内容": "閲覧中のサイトに「再生にはBrowser更新が必要」と表示され取得。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "output": "Algorithm : SHA256\nHash : BD7FDDD0736762793800C187077AA656BE58DD09C67097D35C6A43B80306DDA7\nPath : C:\\Downloads\\browser-update.js",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "対象FileのSHA-256",
+          "value": "bd7fddd0736762793800c187077aa656be58dd09c67097d35c6a43b80306dda7",
+          "data_type": "sha256"
+        }
+      ]
+    },
+    {
+      "id": "sig",
+      "name": "Sigcheck",
+      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "output": "C:\\Downloads\\browser-update.js:\n  Verified: Unsigned\n  Publisher: n/a",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    },
+    {
+      "id": "strings",
+      "name": "Strings (Sysinternals)",
+      "description": "File内の可読文字列を抽出します。実行時の通信や動作の証明ではありません。",
+      "output": "対象: C:\\Downloads\\browser-update.js\n文字列の抜粋（実行結果ではありません）\nvar u=\"https://update-gate.example/payload\";\nWScript.CreateObject(\"WScript.Shell\");\n// 取得内容の実行部分: <TRAINING-PLACEHOLDER>",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "official",
+      "name": "Official Service / Domain",
+      "content": "AsterBrowserの更新は組織のSoftware Center経由。Webページから配布する.jsの実行は更新手順に含まれない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "strings",
+    "official"
+  ],
+  "explanation": "配布Fileは更新プログラムではなく外部Scriptを取得・実行するJavaScriptで、正規更新経路とも一致しないため遮断します。偽の更新案内による実行誘導を題材にしています。",
+  "topic": "更新の主張をFile内容と公式更新経路で検証する",
+  "summary": "更新の主張をFile内容と公式更新経路で検証する",
+  "learning_objectives": [
+    "更新の主張をFile内容と公式更新経路で検証する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "real_world_inspired",
+  "sources": [
+    "https://www.cisecurity.org/insights/blog/ctas-leveraging-fake-browser-updates-in-malware-campaigns"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "inspired_by": "Fake Software Update"
+}

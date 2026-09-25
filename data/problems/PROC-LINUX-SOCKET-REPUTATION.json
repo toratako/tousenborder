@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "id": "PROC-LINUX-SOCKET-REPUTATION",
+  "category": "process",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "稼働Processの通信先照会",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "cache-worker",
+    "PID": 4200,
+    "User": "web",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのSocket・相手IP・Portを確認します。",
+      "output": "ESTAB 0 0 192.0.2.30:52400 203.0.113.88:443 users:((\"cache-worker\",pid=4200,fd=5))",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "Peer IP",
+          "value": "203.0.113.88",
+          "data_type": "ip"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "content": {
+        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+      }
+    }
+  ],
+  "external_references": [
+    {
+      "id": "ip_rep",
+      "name": "IP Reputation",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "output": "IP: 203.0.113.88\nDedicated endpoint; malware-distribution 8/10 feeds\nLast confirmed: 2026-08-18 08:50",
+      "accepted_information_types": [
+        "ip"
+      ],
+      "input_bindings": [
+        {
+          "source": "ss",
+          "id": "ip"
+        }
+      ],
+      "input_hint": "ip",
+      "submission_type": "ip",
+      "submission_value": "203.0.113.88",
+      "confidentiality_warning": "IP Addressをサービスへ送信します。PCAPや通信本文は送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+    }
+  ],
+  "required_evidence": [
+    "ss",
+    "ip_rep",
+    "disclosure"
+  ],
+  "explanation": "Processの接続先IPに現行のMalware配布基盤としての報告があるため停止します。Port番号だけを根拠にしていません。",
+  "topic": "ssから得たIPを外部評判に照会する",
+  "summary": "ssから得たIPを外部評判に照会する",
+  "learning_objectives": [
+    "ssから得たIPを外部評判に照会する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

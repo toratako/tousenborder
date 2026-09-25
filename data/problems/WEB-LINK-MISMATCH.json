@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "WEB-LINK-MISMATCH",
+  "category": "web",
+  "platform": "common",
+  "level": "very_beginner",
+  "ground_truth": "allow",
+  "title": "表示とPathが異なる正規公開ページ",
+  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "URL": "https://helpdesk.aster.example/public/guide",
+    "URLのHost": "helpdesk.aster.example",
+    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。",
+    "リンク表示": "https://helpdesk.aster.example/",
+    "目的": "公開手順書の閲覧。Password入力やFile実行は求められていない。"
+  },
+  "initial_information_types": {
+    "URL": "url",
+    "URLのHost": "domain"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "official",
+      "name": "Official Service / Domain",
+      "content": "公開手順書の閲覧を許可するURLはhttps://helpdesk.aster.example/public/guide。認証情報の入力やFile実行を伴わない公開ページ。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "initial_information",
+    "official"
+  ],
+  "explanation": "リンク表示はHelpdeskのトップページですが、実際のURLは閲覧が許可された公開手順書のURLと完全一致するため許可します。表示Pathの違いだけでは不正と判断しません。",
+  "topic": "表示文字と実際のURLを区別し、実際のURLと閲覧目的を承認先に照合する",
+  "summary": "表示文字と実際のURLを区別し、実際のURLと閲覧目的を承認先に照合する",
+  "learning_objectives": [
+    "表示文字と実際のURLを区別し、実際のURLと閲覧目的を承認先に照合する"
+  ],
+  "decision_context": "before_access",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.icann.org/rdap"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

@@ -17,6 +17,8 @@ from build_problem_catalog import (
     resource_path,
     validate_authoring,
     validate_pack,
+    validate_review,
+    validate_schema,
 )
 
 
@@ -37,14 +39,167 @@ class CatalogTests(unittest.TestCase):
         problems = json.loads(result)["problems"]
         self.assertEqual([p["path"] for p in problems], pack["problems"])
         for p in problems:
-            self.assertEqual(p["title"], read_json(resource_path(p["path"]))["title"])
+            source = read_json(resource_path(p["path"]))
+            self.assertEqual(p["title"], source["title"])
+            self.assertEqual(p["initial_information"], source["initial_information"])
+            self.assertEqual(p["reason"], source["explanation"])
+            self.assertEqual(p["learning_objectives"], source["learning_objectives"])
             self.assertTrue(p["main_evidence"])
+            self.assertTrue(p["overview"])
+            self.assertTrue(p["expected_investigation_flow"])
+            self.assertNotEqual(p["decisive_evidence"], "未レビュー")
+            self.assertEqual(
+                len(p["available_investigation"]),
+                len(validate_authoring(source, pack)),
+            )
+        table_rows = [line for line in markdown.splitlines() if line.startswith("| [")]
+        self.assertEqual(len(table_rows), len(problems))
+        self.assertTrue(all(len(line.split("|")) == 17 for line in table_rows))
+        for heading in ["Overview", "Initial Information", "Available Investigation",
+                        "Expected Investigation Flow", "Decisive Evidence", "Correct Answer",
+                        "Reason", "Learning Objective", "Real-world Inspiration"]:
+            self.assertIn(heading, markdown)
+
+    def test_review_flow_requires_inputs_before_dependent_investigation(self):
+        item = read_json(ROOT / "data/problems/PROC-WIN-DLL-SIDELOAD.json")
+        pack = read_json(ROOT / "data/packs/learning.json")
+        entries = validate_authoring(item, pack)
+        review = copy.deepcopy(read_json(ROOT / "data/catalog/learning.json")["reviews"][item["id"]])
+        validate_review(item, entries, review)
+        review["flow"][0], review["flow"][1] = review["flow"][1], review["flow"][0]
+        with self.assertRaisesRegex(ValueError, "before its input is available"):
+            validate_review(item, entries, review)
+
+    def test_review_flow_accepts_alternatives_but_requires_all_evidence(self):
+        item = read_json(ROOT / "data/problems/WEB-UNKNOWN-CAMPAIGN.json")
+        pack = read_json(ROOT / "data/packs/learning.json")
+        entries = validate_authoring(item, pack)
+        review = copy.deepcopy(read_json(ROOT / "data/catalog/learning.json")["reviews"][item["id"]])
+        review["flow"][0]["resource_id"] = "nslookup"
+        validate_review(item, entries, review)
+        review["flow"] = [step for step in review["flow"] if step["resource_id"] != "official"]
+        with self.assertRaisesRegex(ValueError, "omits required evidence official"):
+            validate_review(item, entries, review)
+
+    def test_review_flow_rejects_unsafe_or_unavailable_investigation(self):
+        pack = read_json(ROOT / "data/packs/learning.json")
+        reviews = read_json(ROOT / "data/catalog/learning.json")["reviews"]
+        for problem_id, resource in [("FILE-WIN-UNSIGNED-INTERNAL", "file_rep"),
+                                     ("WEB-LINUX-DNS", "dig")]:
+            with self.subTest(problem=problem_id):
+                item = read_json(ROOT / f"data/problems/{problem_id}.json")
+                entries = validate_authoring(item, pack)
+                review = copy.deepcopy(reviews[problem_id])
+                if resource == "dig":
+                    next(entry for _, entry in entries if entry["id"] == resource)["environments"] = ["windows"]
+                else:
+                    review["flow"].append({"resource_id": resource, "action": "Unsafe test"})
+                with self.assertRaisesRegex(ValueError, "unsafe or unavailable"):
+                    validate_review(item, entries, review)
+
+    def test_review_flow_rejects_unknown_resources(self):
+        item = self.cases[0]
+        with self.assertRaisesRegex(ValueError, "missing resource"):
+            validate_review(item, validate_authoring(item, self.pack), {
+                "flow": [{"resource_id": "missing", "action": "Inspect missing resource"}],
+            })
+
+    def test_review_schema_rejects_incomplete_or_unknown_fields(self):
+        original = read_json(ROOT / "data/catalog/learning.json")
+        for field, value in [("overview", " "), ("flow", []), ("decisive_evidence", ""),
+                             ("unexpected", "test"), ("flow", [{"resource_id": "initial_information"}])]:
+            with self.subTest(field=field, value=value):
+                data = copy.deepcopy(original)
+                next(iter(data["reviews"].values()))[field] = value
+                with self.assertRaisesRegex(ValueError, "catalog-review schema"):
+                    validate_schema(data, "catalog-review")
+
+    def test_review_ids_and_pack_must_match_registration(self):
+        path = ROOT / "data/catalog/learning.json"
+        for change, message in [("missing", "Missing catalog review"),
+                                ("extra", "unregistered problems"),
+                                ("pack", "content_pack mismatch")]:
+            with self.subTest(change=change):
+                data = copy.deepcopy(read_json(path))
+                if change == "missing":
+                    data["reviews"].pop(next(iter(data["reviews"])))
+                elif change == "extra":
+                    data["reviews"]["NOT-IN-PACK"] = copy.deepcopy(next(iter(data["reviews"].values())))
+                else:
+                    data["content_pack"] = "res://data/packs/other.json"
+                def reader(candidate):
+                    return data if candidate == path else read_json(candidate)
+                with patch("build_problem_catalog.read_json", side_effect=reader):
+                    with self.assertRaisesRegex(ValueError, message):
+                        build(ROOT / "data/packs/learning.json")
+
+    def test_review_text_regenerates_and_markdown_preserves_literal_content(self):
+        source_path = ROOT / "data/problems/FILE-WIN-DOUBLE-EXTENSION.json"
+        review_path = ROOT / "data/catalog/learning.json"
+        item = copy.deepcopy(read_json(source_path))
+        value = 'C:\\Temp\\_literal_ | <TRAINING-PLACEHOLDER>\n**text** [link](target)'
+        item["initial_information"]["Render check"] = value
+        reviews = copy.deepcopy(read_json(review_path))
+        reviews["reviews"][item["id"]]["overview"] = "Changed review overview"
+        reviews["reviews"][item["id"]]["review_notes"] = "Review note for rendering test"
+        def reader(path):
+            if path == source_path:
+                return item
+            if path == review_path:
+                return reviews
+            return read_json(path)
+        with patch("build_problem_catalog.read_json", side_effect=reader):
+            generated, markdown = build(ROOT / "data/packs/learning.json")
+        row = json.loads(generated)["problems"][0]
+        self.assertEqual(row["initial_information"]["Render check"], value)
+        self.assertEqual(row["overview"], "Changed review overview")
+        self.assertEqual(row["review_notes"], "Review note for rendering test")
+        self.assertIn("Changed review overview", markdown)
+        self.assertIn("Review note for rendering test", markdown)
+        self.assertIn("&lt;TRAINING-PLACEHOLDER&gt;<br>", markdown)
+        self.assertIn("C:&#92;Temp&#92;&#95;literal&#95; &#124;", markdown)
+        self.assertIn("&#42;&#42;text&#42;&#42; &#91;link&#93;(target)", markdown)
+        self.assertIn("利用不適切", markdown)
+        self.assertIn("設計レビュー注記", markdown)
 
     def test_missing_evidence_is_rejected(self):
         item = copy.deepcopy(self.cases[0])
         item["required_evidence"] = ["nonexistent_vendor_hash"]
         with self.assertRaisesRegex(ValueError, "missing resources"):
             validate_authoring(item, self.pack)
+
+    def test_very_beginner_allows_reference_evidence_in_any_reference_group(self):
+        item = copy.deepcopy(self.cases[0])
+        reference = {"id": "policy", "name": "Policy", "content": "Accept PDF documents only."}
+        item["references"] = [reference]
+        item["required_evidence"] = ["initial_information", "policy"]
+        validate_authoring(item, self.pack)
+        item["evidence_alternatives"] = {"format_policy": {"label": "Format policy", "any_of": ["policy"]}}
+        item["required_evidence"] = ["format_policy"]
+        validate_authoring(item, self.pack)
+        pack = copy.deepcopy(self.pack)
+        pack["resource_groups"].append({"id": "policy_documents", "label": "Policy documents", "kind": "references"})
+        item["references"] = []
+        item["resources"] = {"policy_documents": [reference]}
+        validate_authoring(item, pack)
+
+    def test_very_beginner_rejects_tools_and_external_references_in_any_group(self):
+        tool = copy.deepcopy(next(c for c in self.cases if c["id"] == "FIX-FILE")["tools"][0])
+        external = copy.deepcopy(next(c for c in self.cases if c["id"] == "FIX-PRIVATE-FILE")["external_references"][0])
+        external["accepted_information_types"] = ["file"]
+        external["input_bindings"] = [{"source": "initial_information", "id": "File名"}]
+        for kind, resource in [("tools", tool), ("external_references", external)]:
+            for custom in [False, True]:
+                with self.subTest(kind=kind, custom=custom):
+                    item = copy.deepcopy(self.cases[0])
+                    pack = copy.deepcopy(self.pack)
+                    if custom:
+                        pack["resource_groups"].append({"id": "extra", "label": "Extra", "kind": kind})
+                        item["resources"] = {"extra": [resource]}
+                    else:
+                        item[kind] = [resource]
+                    with self.assertRaisesRegex(ValueError, "very_beginner investigations allow only Reference"):
+                        validate_authoring(item, pack)
 
     def test_external_submission_needs_actual_value_and_boolean_usage(self):
         original = next(c for c in self.cases if c["external_references"])

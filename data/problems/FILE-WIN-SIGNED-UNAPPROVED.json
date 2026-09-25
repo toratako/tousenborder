@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "id": "FILE-WIN-SIGNED-UNAPPROVED",
+  "category": "file",
+  "platform": "windows",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "署名済みでも未承認の実行File",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "C:\\Downloads\\audit-helper.exe",
+    "申請内容": "経理監査用として受領。署名があるので実行してよいという依頼。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "output": "Algorithm : SHA256\nHash : 3658AE82AEE6259CBAE1ACA25DD22B7AC0E873A2A74FA90084A2DF18F12F8797\nPath : C:\\Downloads\\audit-helper.exe",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "対象FileのSHA-256",
+          "value": "3658ae82aee6259cbae1aca25dd22b7ac0e873a2a74fa90084a2df18f12f8797",
+          "data_type": "sha256"
+        }
+      ]
+    },
+    {
+      "id": "sig",
+      "name": "Sigcheck",
+      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "output": "C:\\Downloads\\audit-helper.exe:\n  Verified: Signed\n  Publisher: Cedar Utilities Ltd.",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "approved",
+      "name": "Approved Software",
+      "content": {
+        "監査用途の製品": "AsterAudit 8.0",
+        "Publisher": "Aster Software Ltd.",
+        "SHA256": "651af06c8ffcb7b3aae91d737426efd7fc3bc6d96f20525dd9798c4fcc868edd",
+        "方針": "監査端末では登録済み配布物だけ実行可。Cedar Utilitiesの登録なし。"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "sig",
+    "hash",
+    "approved"
+  ],
+  "explanation": "有効な署名は存在しますが、Publisher・製品・Hashが承認台帳の監査ツールと異なるため遮断します。署名の有無だけでは用途の正当性を確認できません。",
+  "topic": "有効な署名と組織の導入承認を分ける",
+  "summary": "有効な署名と組織の導入承認を分ける",
+  "learning_objectives": [
+    "有効な署名と組織の導入承認を分ける"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

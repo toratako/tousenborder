@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "id": "AUTH-WIN-NEW-DEVICE",
+  "category": "account",
+  "platform": "windows",
+  "level": "intermediate",
+  "ground_truth": "allow",
+  "title": "交換済み新端末の初回Login",
+  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "要求ID": "AUTH-901",
+    "User": "mori",
+    "Source IP": "192.0.2.43",
+    "要求時刻": "2026-08-18 09:10:00",
+    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "要求Logon Type": "10 / RemoteInteractive",
+    "Gatewayの認証確認": "Password確認済み / MFA確認済み",
+    "Device ID": "WIN-044"
+  },
+  "initial_information_types": {
+    "User": "username",
+    "Source IP": "ip"
+  },
+  "tools": [
+    {
+      "id": "events",
+      "name": "Event Viewer / Windows Security Log",
+      "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
+      "output": "2026-08-17 09:01 Event ID 4624 / TargetUserName: mori / LogonType: 10 / WorkstationName: WIN-017 / IpAddress: 192.0.2.41\n過去ログにWIN-044での成立Sessionなし。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "User",
+      "platform_note": "Windows標準 / Event Viewer",
+      "environments": [
+        "windows"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "device",
+      "name": "Device Reference",
+      "content": "WIN-044 / mori / Active / 管理登録09:00 / IP192.0.2.43 / WIN-017からの交換 CHG-904。"
+    },
+    {
+      "id": "change",
+      "name": "Release / Change Reference",
+      "content": "CHG-904 / moriの端末交換 / 実施08:50–09:05 / 受領を社内Ticketで本人確認済み。"
+    },
+    {
+      "id": "policy",
+      "name": "User / Account Policy",
+      "content": "管理Deviceかつ交換申請と一致し、今回のGatewayのMFA確認済みなら初回Loginを許可。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "device",
+    "change",
+    "policy"
+  ],
+  "explanation": "新しいDeviceですが、交換申請・登録状態・利用者・今回のMFA確認が整合するため許可します。過去Logに端末がないことだけを理由に遮断しません。",
+  "topic": "新端末を交換記録と認証結果で検証する",
+  "summary": "新端末を交換記録と認証結果で検証する",
+  "learning_objectives": [
+    "新端末を交換記録と認証結果で検証する"
+  ],
+  "decision_context": "before_session",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

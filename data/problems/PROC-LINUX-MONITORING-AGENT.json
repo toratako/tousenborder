@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "id": "PROC-LINUX-MONITORING-AGENT",
+  "category": "process",
+  "platform": "linux",
+  "level": "intermediate",
+  "ground_truth": "allow",
+  "title": "周期接続する監視Agent",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "metrics-agent",
+    "PID": 4200,
+    "User": "metrics",
+    "採取時点": "2026-08-18 09:10 / 起動済み"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "output": "USER PID PPID ELAPSED COMMAND\nmetrics 4200 1 00:10 /opt/aster/metrics-agent --interval 60 --server 192.0.2.80",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのSocket・相手IP・Portを確認します。",
+      "output": "ESTAB 0 0 192.0.2.30:52400 192.0.2.80:443 users:((\"metrics-agent\",pid=4200,fd=5))",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "Peer IP",
+          "value": "192.0.2.80",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "systemctl",
+      "name": "systemctl",
+      "description": "選択PIDの所属Unit・状態・構成を表示します。",
+      "output": "metrics.service\nActive: active (running)\nUser: metrics\nMainPID: 4200\nExecStart=/opt/aster/metrics-agent --interval 60 --server 192.0.2.80",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / systemd",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "service",
+      "name": "Service構成台帳",
+      "content": "metrics.service / metrics / /opt/aster/metrics-agent --interval 60 --server 192.0.2.80 / TLS 443 / 60秒間隔 / CHG-505。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "ps",
+    "ss",
+    "systemctl",
+    "service"
+  ],
+  "explanation": "Service設定・実行引数・接続先が承認済み監視Agentに一致するため継続を許可します。Background動作や周期通信だけを根拠に遮断しません。",
+  "topic": "監視Agentの構成と通信先を照合する",
+  "summary": "監視Agentの構成と通信先を照合する",
+  "learning_objectives": [
+    "監視Agentの構成と通信先を照合する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

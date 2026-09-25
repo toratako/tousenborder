@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "id": "PROC-LINUX-BACKUP-JOB",
+  "category": "process",
+  "platform": "linux",
+  "level": "advanced",
+  "ground_truth": "allow",
+  "title": "業務Fileを読み取るBackup Job",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "backup-agent",
+    "PID": 4200,
+    "User": "backup",
+    "採取時点": "2026-08-18 09:10 / 起動済み",
+    "端末監視の通信集計": "PID 4200の今回の起動から採取時点までの送信量: 12.4 GiB。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "output": "USER PID PPID ELAPSED COMMAND\nbackup 4200 1 10:00 /opt/aster/backup-agent --config /etc/aster/backup.toml",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "lsof",
+      "name": "lsof",
+      "description": "選択PIDが開いているFile・FDを確認します。",
+      "output": "COMMAND PID USER FD TYPE NAME\nbackup-agent 4200 backup txt REG /opt/aster/backup-agent\nbackup-agent 4200 backup 6r REG /srv/reports/2026-08.csv\nbackup-agent 4200 backup 7r REG /srv/reports/2026-07.csv",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / lsof",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのSocket・相手IP・Portを確認します。",
+      "output": "ESTAB 0 0 192.0.2.30:52400 198.51.100.40:443 users:((\"backup-agent\",pid=4200,fd=5))",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "ip",
+          "label": "Peer IP",
+          "value": "198.51.100.40",
+          "data_type": "ip"
+        }
+      ]
+    },
+    {
+      "id": "systemctl",
+      "name": "systemctl",
+      "description": "選択PIDの所属Unit・状態・構成を表示します。",
+      "output": "backup.service\nActive: active (running)\nUser: backup\nMainPID: 4200\nExecStart=/opt/aster/backup-agent --config /etc/aster/backup.toml",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / systemd",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "job",
+      "name": "承認済みJob",
+      "content": "JOB-504 / 09:00–10:00 / backup.service / User=backup / /opt/aster/backup-agent --config /etc/aster/backup.toml / 対象=/srv/reports / 宛先=198.51.100.40:443 / 最大30 GiB。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "ps",
+    "lsof",
+    "ss",
+    "systemctl",
+    "job"
+  ],
+  "explanation": "観測された業務Fileの読取りと外部接続は、承認されたBackupの対象・時刻・保存先・Service構成に一致し、累積送信量12.4 GiBも上限30 GiB以内のため継続を許可します。",
+  "topic": "業務Fileの読取りと外部通信をBackupの対象・時間帯・保存先・送信量の条件と照合する",
+  "summary": "業務Fileの読取りと外部通信をBackupの対象・時間帯・保存先・送信量の条件と照合する",
+  "learning_objectives": [
+    "業務Fileの読取りと外部通信をBackupの対象・時間帯・保存先・送信量の条件と照合する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

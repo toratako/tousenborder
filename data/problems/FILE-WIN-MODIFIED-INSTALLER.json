@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "id": "FILE-WIN-MODIFIED-INSTALLER",
+  "category": "file",
+  "platform": "windows",
+  "level": "beginner",
+  "ground_truth": "block",
+  "title": "承認配布物とのHash不一致",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "C:\\Downloads\\AsterEditor-4.2-repack.exe",
+    "申請内容": "Editor 4.2の同一配布物として申請。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "output": "Algorithm : SHA256\nHash : 5CB2E74CC760F375F824970F0783FDBB610E6BE7E5971D7809C1376008FDDAF1\nPath : C:\\Downloads\\AsterEditor-4.2-repack.exe",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "対象FileのSHA-256",
+          "value": "5cb2e74cc760f375f824970f0783fdbb610e6be7e5971d7809c1376008fddaf1",
+          "data_type": "sha256"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "vendor",
+      "name": "Vendor Published Hash",
+      "content": {
+        "製品": "AsterEditor 4.2",
+        "SHA256": "6c802508e44474d13e2f5df5c7555cb76580b77325f70f4b4bd8326ca62fd609",
+        "条件": "このHashの配布物のみ承認。再梱包は未承認。"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "hash",
+    "vendor"
+  ],
+  "explanation": "計算したSHA-256が承認されたEditor 4.2の公開Hashと一致しないため、この配布物の実行を遮断します。Hash不一致だけから改ざん原因やMalware性を断定しません。",
+  "topic": "署名の一致と配布物の同一性を区別する",
+  "summary": "署名の一致と配布物の同一性を区別する",
+  "learning_objectives": [
+    "署名の一致と配布物の同一性を区別する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

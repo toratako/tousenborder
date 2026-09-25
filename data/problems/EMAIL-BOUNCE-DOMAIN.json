@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "EMAIL-BOUNCE-DOMAIN",
+  "category": "email",
+  "platform": "common",
+  "level": "intermediate",
+  "ground_truth": "allow",
+  "title": "正規配信ServiceのReturn-Path",
+  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Email": "quarantine/message-1078.eml",
+    "From": "Cedar配送 <notice@cedar.example>",
+    "To": "mori@aster.example",
+    "Subject": "配送予定の通知",
+    "本文": "注文PO-821は本日発送予定です。リンク・添付・返信依頼はありません。",
+    "受信時刻": "2026-08-18 09:10",
+    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。",
+    "発注記録": "PO-821 / Cedar商事 / 本日発送予定"
+  },
+  "initial_information_types": {
+    "Email": "email"
+  },
+  "tools": [
+    {
+      "id": "header",
+      "name": "Raw Header / View Source",
+      "description": "信頼する受信GatewayのHeaderと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "output": "Received: from outbound.cedar.example ([198.51.100.111]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=bounce.mailrelay.example; dkim=pass header.d=cedar.example; dmarc=pass header.from=cedar.example\nFrom: Cedar配送 <notice@cedar.example>\nTo: mori@aster.example\nReply-To: Cedar配送 <notice@cedar.example>\nReturn-Path: <bounce@bounce.mailrelay.example>\nSubject: 配送予定の通知\n\nMIME本文の抜粋:\n注文PO-821は本日発送予定です。リンク・添付・返信依頼はありません。",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Email"
+        }
+      ],
+      "input_hint": "Email",
+      "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "gateway",
+      "name": "Mail Gateway構成",
+      "content": "信頼する受信Gatewayはmx.aster.example。自Gatewayが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+    },
+    {
+      "id": "vendor",
+      "name": "Vendor Directory",
+      "content": "Cedar配送通知: notice@cedar.example / 委託配信元198.51.100.111 / Return-Path Domain=bounce.mailrelay.example / DKIM d=cedar.example / PO-821の配送通知。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "header",
+    "gateway",
+    "vendor"
+  ],
+  "explanation": "Return-PathはFromと異なりますが契約配信ServiceのBounce Domainで、整合したDKIMと注文内容も確認できるため受け入れます。",
+  "topic": "正当なEnvelope Senderの違いを理解する",
+  "summary": "正当なEnvelope Senderの違いを理解する",
+  "learning_objectives": [
+    "正当なEnvelope Senderの違いを理解する"
+  ],
+  "decision_context": "before_delivery",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc8601"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

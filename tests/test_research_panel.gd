@@ -9,6 +9,12 @@ func _run() -> void:
 	root.add_child(desk)
 	desk._start_shift()
 	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-REFERENCES")
+	var approved := {"製品": "帳票Tool", "Path": "C:\\Company\\report.exe",
+		"承認条件": {"Version": "2.3", "署名": "未署名の社内版"},
+		"接続先": ["192.0.2.80:443", "192.0.2.81:443"], "追加依存": {}, "例外": []}
+	var literal_json := "package.json抜粋:\n{\"dependencies\": {\"core\": \"2.5.0\"}}"
+	cases[0].references[0].content = approved.duplicate(true)
+	cases[0].references[1].content = literal_json
 	desk.shift.start(cases)
 	await process_frame
 	assert(desk.tool_panel.is_visible_in_tree())
@@ -28,11 +34,17 @@ func _run() -> void:
 	assert(desk.tool_panel.visible)
 	assert(button.hint.text.begins_with("確認済み"))
 	var reference: DraggableCard = desk.active_card
+	var value_label: Label = reference.tokens[0].get_child(0).get_child(1)
+	assert(value_label.text == "製品: 帳票Tool\nPath: C:\\Company\\report.exe\n承認条件:\n  Version: 2.3\n  署名: 未署名の社内版\n接続先:\n  • 192.0.2.80:443\n  • 192.0.2.81:443\n追加依存: なし\n例外: なし", "資料はJSONの括弧・引用符・Pathのエスケープを付けずに表示")
+	assert(reference.tokens[0].payload().value == approved, "表示の整形で元の情報値・型を変更しない")
+	assert(desk.shift.observations.back().output == "照合用情報: " + value_label.text, "調査記録もカードと同じ項目表示")
 	var observations: Array = desk.shift.observations.duplicate(true)
 	var card_count: int = desk.cards.size()
 	# 別の資料を開いた後でも同じカードを手前に戻す。
 	desk.tool_buttons[1].pressed.emit()
 	assert(desk.active_card != reference)
+	var literal_label: Label = desk.active_card.tokens[0].get_child(0).get_child(1)
+	assert(literal_label.text == literal_json, "JSONそのものの抜粋は括弧を含めて保持")
 	button.pressed.emit()
 	assert(desk.active_card == reference and reference.get_index() == desk.card_layer.get_child_count() - 1)
 	assert(desk.shift.observations.size() == observations.size() + 1)

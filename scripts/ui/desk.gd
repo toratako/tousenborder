@@ -622,7 +622,7 @@ func _build_audit() -> void:
 func _show_audit(record: Dictionary) -> void:
 	audit_heading.text = catalog.feedback.get("correct_heading", "監査結果：規則に適合") if record.correct else catalog.feedback.get("incorrect_heading", "SECURITY VIOLATION · 誤判定")
 	audit_heading.add_theme_color_override("font_color", Color("57edc2") if record.correct else Color("ff718b"))
-	audit_body.text = "案件番号：%s / %s\nあなたの判定：%s\n調査記録：%d件" % [record.id, record.title, _verdict_label(record.verdict), record.observations.size()]
+	audit_body.text = "案件番号：%s / %s\nあなたの判定：%s\n調査操作数：%d件" % [record.id, record.title, _verdict_label(record.verdict), record.observations.size()]
 	if catalog.feedback.get("show_expected", true):
 		audit_body.text += "\n正しい判定：" + _verdict_label(record.ground_truth)
 	if catalog.feedback.get("show_reason", true):

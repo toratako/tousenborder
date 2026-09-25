@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "PROC-LINUX-APPROVED-ARGS",
+  "category": "process",
+  "platform": "linux",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "承認済みServiceの引数",
+  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Process": "backup-agent",
+    "PID": 4200,
+    "User": "backup",
+    "採取時点": "2026-08-18 09:10 / 起動済み",
+    "端末監視の起動記録": "systemd(PID 1)がJOB-501のbackup-agentをPID 4200として起動。User=backup。管理配布Imageとの同一性は検証済み。"
+  },
+  "initial_information_types": {
+    "PID": "pid",
+    "User": "username"
+  },
+  "tools": [
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "output": "USER PID PPID ELAPSED COMMAND\nbackup 4200 1 00:10 /opt/aster/backup-agent --config /etc/aster/backup.toml",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "job",
+      "name": "承認済みJob",
+      "content": "backup User / /opt/aster/backup-agent --config /etc/aster/backup.toml / systemdから起動 / JOB-501。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "ps",
+    "job"
+  ],
+  "explanation": "端末監視の起動記録がPID 4200をsystemd起動のJOB-501に対応付けており、psで確認した実行User・Path・引数も登録内容に一致するため継続を許可します。PPIDが1であることだけを起動元の証明にはしません。",
+  "topic": "psのUser・Path・引数をJob定義と比較する",
+  "summary": "psのUser・Path・引数をJob定義と比較する",
+  "learning_objectives": [
+    "psのUser・Path・引数をJob定義と比較する"
+  ],
+  "decision_context": "running_process",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

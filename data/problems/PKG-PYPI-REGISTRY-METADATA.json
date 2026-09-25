@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "PKG-PYPI-REGISTRY-METADATA",
+  "category": "package",
+  "platform": "common",
+  "level": "beginner",
+  "ground_truth": "allow",
+  "title": "PyPIの正規配布情報",
+  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Package": "aster-http-client",
+    "Version": "2.4.0",
+    "Ecosystem": "pypi",
+    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。"
+  },
+  "initial_information_types": {
+    "Package": "package"
+  },
+  "tools": [],
+  "references": [
+    {
+      "id": "metadata",
+      "name": "PyPI Registry / Package Metadata",
+      "content": {
+        "Name": "aster-http-client",
+        "Version": "2.4.0",
+        "Registry": "https://pypi.org",
+        "Project URL / Repository": "https://git.aster.example/components/aster-http-client",
+        "Maintainer": "aster-release",
+        "Requires-Dist": {},
+        "SHA256": "ef3259ed09d8bd214031bae39208e8ae905c8c6f67b3c193a4a54604fe784857"
+      }
+    },
+    {
+      "id": "official",
+      "name": "Official Repository / Approved Component",
+      "content": {
+        "Name": "aster-http-client",
+        "Version": "2.4.0",
+        "Repository": "https://git.aster.example/components/aster-http-client",
+        "Maintainer": "aster-release",
+        "Registry": "https://pypi.org",
+        "SHA256": "ef3259ed09d8bd214031bae39208e8ae905c8c6f67b3c193a4a54604fe784857",
+        "用途": "HTTP Client / CHG-1001"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "metadata",
+    "official"
+  ],
+  "explanation": "Package名・Version・Project URL・Hashが承認済みComponentの情報に一致するため導入を許可します。Registry掲載だけを安全性の根拠にはしません。",
+  "topic": "PyPI Metadataを承認Component情報と照合する",
+  "summary": "PyPI Metadataを承認Component情報と照合する",
+  "learning_objectives": [
+    "PyPI Metadataを承認Component情報と照合する"
+  ],
+  "decision_context": "before_install",
+  "scenario_type": "standard",
+  "sources": [
+    "https://packaging.python.org/en/latest/guides/index-mirrors-and-caches/"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "ecosystem": "pypi"
+}

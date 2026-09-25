@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "id": "FILE-LINUX-STRIPPED-INTERNAL",
+  "category": "file",
+  "platform": "linux",
+  "level": "intermediate",
+  "ground_truth": "allow",
+  "title": "strippedされた正規社内Binary",
+  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "File": "/opt/incoming/metrics-agent",
+    "申請内容": "社内監視Agent 5.0を更新する。",
+    "状態": "未実行。ダウンロードまたは受領直後。"
+  },
+  "initial_information_types": {
+    "File": "file"
+  },
+  "tools": [
+    {
+      "id": "file",
+      "name": "file",
+      "description": "MagicなどからFile形式を識別します。",
+      "output": "/opt/incoming/metrics-agent: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / fileパッケージ",
+      "environments": [
+        "linux"
+      ]
+    },
+    {
+      "id": "hash",
+      "name": "sha256sum",
+      "description": "選択したFileのSHA-256を計算します。",
+      "output": "a8caf2a8d553486c540581f52b95cb6514f1744f4ee4705b54bed96093b2a713  /opt/incoming/metrics-agent",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / GNU coreutils",
+      "environments": [
+        "linux"
+      ],
+      "output_information": [
+        {
+          "id": "sha256",
+          "label": "対象FileのSHA-256",
+          "value": "a8caf2a8d553486c540581f52b95cb6514f1744f4ee4705b54bed96093b2a713",
+          "data_type": "sha256"
+        }
+      ]
+    },
+    {
+      "id": "elf",
+      "name": "readelf",
+      "description": "ELF Header・Interpreter・依存ライブラリ・RUNPATHを静的に表示します。",
+      "output": "ELF Header: Class: ELF64; Machine: Advanced Micro Devices X86-64\nINTERP: /lib64/ld-linux-x86-64.so.2\nNEEDED: libc.so.6\nRUNPATH: (none)",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "File",
+      "platform_note": "Linux / GNU binutils",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "approved",
+      "name": "Approved Software",
+      "content": {
+        "製品": "metrics-agent 5.0",
+        "SHA256": "a8caf2a8d553486c540581f52b95cb6514f1744f4ee4705b54bed96093b2a713",
+        "Build": "strip --strip-unneeded適用",
+        "Interpreter": "/lib64/ld-linux-x86-64.so.2",
+        "NEEDED": "libc.so.6",
+        "RUNPATH": "なし",
+        "配布": "社内成果物庫"
+      }
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "file",
+    "hash",
+    "elf",
+    "approved"
+  ],
+  "explanation": "strippedは承認済みRelease仕様であり、Hash・Loader・依存ライブラリも台帳に一致するため許可します。シンボルがないこと自体は悪性根拠ではありません。",
+  "topic": "stripped Binaryを承認されたBuild情報で検証する",
+  "summary": "stripped Binaryを承認されたBuild情報で検証する",
+  "learning_objectives": [
+    "stripped Binaryを承認されたBuild情報で検証する"
+  ],
+  "decision_context": "before_execution",
+  "scenario_type": "standard",
+  "sources": [
+    "https://sourceware.org/binutils/docs/binutils/readelf.html",
+    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}

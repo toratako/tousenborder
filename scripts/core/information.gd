@@ -19,8 +19,21 @@ static func from_initial(item: Dictionary) -> Array[Dictionary]:
 	return normalize(items, "initial_information")
 
 static func display(value: Variant) -> String:
-	if value is Dictionary or value is Array:
-		return JSON.stringify(value, "  ")
+	# 構造化された資料は項目として読む。JSON・Commandの文字列はそのまま表示する。
+	if value is Dictionary:
+		if value.is_empty(): return "なし"
+		var lines: PackedStringArray = []
+		for key in value:
+			var text := display(value[key]).replace("\n", "\n  ")
+			var nested: bool = (value[key] is Dictionary or value[key] is Array) and not value[key].is_empty()
+			lines.append(str(key) + (":\n  " if nested else ": ") + text)
+		return "\n".join(lines)
+	if value is Array:
+		if value.is_empty(): return "なし"
+		var lines: PackedStringArray = []
+		for item in value:
+			lines.append("• " + display(item).replace("\n", "\n  "))
+		return "\n".join(lines)
 	return str(value)
 
 static func accepts(tool: Dictionary, item: Dictionary) -> bool:

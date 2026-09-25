@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "id": "EMAIL-CONFLICTING-HEADERS",
+  "category": "email",
+  "platform": "common",
+  "level": "intermediate",
+  "ground_truth": "block",
+  "title": "自己申告の認証結果とGatewayの相違",
+  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "initial_information": {
+    "Email": "quarantine/message-1080.eml",
+    "From": "経理 <finance@aster.example>",
+    "To": "mori@aster.example",
+    "Subject": "確認事項",
+    "本文": "このメールは認証済みです。社内の口座一覧を返信してください。",
+    "受信時刻": "2026-08-18 09:10",
+    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。"
+  },
+  "initial_information_types": {
+    "Email": "email"
+  },
+  "tools": [
+    {
+      "id": "header",
+      "name": "Raw Header / View Source",
+      "description": "信頼する受信GatewayのHeaderと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "output": "Received: from outbound.aster.example ([203.0.113.121]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=fail smtp.mailfrom=aster.example; dkim=fail header.d=aster.example; dmarc=fail header.from=aster.example\nFrom: 経理 <finance@aster.example>\nTo: mori@aster.example\nReply-To: finance@aster-confirm.example\nReturn-Path: <bounce@aster.example>\nSubject: 確認事項\nX-Original-Authentication-Results: external-node.example; dmarc=pass header.from=aster.example\nMIME本文の抜粋:\nこのメールは認証済みです。社内の口座一覧を返信してください。",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Email"
+        }
+      ],
+      "input_hint": "Email",
+      "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
+      "environments": [
+        "linux"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "gateway",
+      "name": "Mail Gateway構成",
+      "content": "信頼する受信Gatewayはmx.aster.example。自Gatewayが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+    },
+    {
+      "id": "directory",
+      "name": "Company Directory",
+      "content": "経理finance@aster.exampleの配信元は192.0.2.111、署名Domainはaster.example。返信先は同Addressのみ。外部に口座一覧を送る業務はない。"
+    }
+  ],
+  "external_references": [],
+  "required_evidence": [
+    "header",
+    "gateway",
+    "directory"
+  ],
+  "explanation": "本文側に書かれた認証Passは信頼するGatewayの結果ではなく、実際の配送元・認証結果は社内配信仕様と不一致のため遮断します。HeaderにあるPassという文字だけを信用しません。",
+  "topic": "認証Headerの信頼境界を確認する",
+  "summary": "認証Headerの信頼境界を確認する",
+  "learning_objectives": [
+    "認証Headerの信頼境界を確認する"
+  ],
+  "decision_context": "before_delivery",
+  "scenario_type": "standard",
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc8601"
+  ],
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+}
