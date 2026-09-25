@@ -316,9 +316,7 @@ static func build_summary(desk) -> void:
 	desk.summary_stats.text += "  /  不適切な調査 %d件" % stats.unsafe
 	desk.summary_stats.add_theme_font_size_override("font_size", 16)
 	Chrome.panel(desk.summary, Rect2(30, 119, 740, 2), Color("34556f"))
-	desk.summary_style = Chrome.label(desk.summary, Rect2(30, 137, 740, 30), "", GREEN, 20)
-	desk.summary_style_message = Chrome.label(desk.summary, Rect2(30, 173, 740, 54), "", INK, 16)
-	desk.summary_review = Chrome.rich(desk.summary, Rect2(30, 241, 740, 270), INK, 15)
+	desk.summary_review = Chrome.rich(desk.summary, Rect2(30, 137, 740, 374), INK, 15)
 	desk.summary_save_notice = Chrome.label(desk.summary, Rect2(30, 520, 500, 27), "", RED, 15)
 	desk.summary_retry = Chrome.button(desk.summary, Rect2(550, 517, 220, 30), "保存を再試行", PAPER)
 	desk.summary_retry.pressed.connect(desk._save_summary)

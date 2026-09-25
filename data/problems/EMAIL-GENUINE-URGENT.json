@@ -100,7 +100,6 @@
     "approved"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "緊急の連絡ですが、送信経路・既存Thread・会場変更の承認・添付Hash・URLが一致するため受け入れます。急ぎという表現だけで不正と判断しません。",
   "topic": "緊急メールをHeader・添付・URL・業務記録で検証する",
   "summary": "緊急メールをHeader・添付・URL・業務記録で検証する",

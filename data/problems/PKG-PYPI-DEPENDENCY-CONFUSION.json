@@ -73,7 +73,6 @@
     "lock"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "社内Packageと同名ですが、Resolverは承認された社内IndexではなくPublic Registryの別Versionを選んでいるため導入を遮断します。名前が同じでも供給元の同一性は保証されません。",
   "topic": "Internal Packageの名前・Version・取得元を確認する",
   "summary": "Internal Packageの名前・Version・取得元を確認する",

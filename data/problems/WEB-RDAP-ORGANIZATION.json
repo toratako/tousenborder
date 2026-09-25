@@ -42,7 +42,6 @@
     "official"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "公開された登録組織情報と、別途管理された公式Service記録のHostが一致するため公開ページへのアクセスを許可します。RDAPだけからサイトの安全性は判断していません。",
   "topic": "取得可能なRDAP情報を公式資料の補助に使う",
   "summary": "取得可能なRDAP情報を公式資料の補助に使う",

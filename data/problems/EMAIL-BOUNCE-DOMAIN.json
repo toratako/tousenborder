@@ -61,7 +61,6 @@
     "vendor"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "Return-PathはFromと異なりますが契約配信ServiceのBounce Domainで、整合したDKIMと注文内容も確認できるため受け入れます。",
   "topic": "正当なEnvelope Senderの違いを理解する",
   "summary": "正当なEnvelope Senderの違いを理解する",

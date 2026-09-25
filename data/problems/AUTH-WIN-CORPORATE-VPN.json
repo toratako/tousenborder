@@ -69,7 +69,6 @@
     "policy"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "接続元IPは契約済み企業VPN出口で、Tunnelの本人・管理Device・今回のMFAが一致するため許可します。IPの地理表示だけを移動や侵害の証拠にはしません。",
   "topic": "VPN出口のIPと利用者の実際の経路を区別する",
   "summary": "VPN出口のIPと利用者の実際の経路を区別する",

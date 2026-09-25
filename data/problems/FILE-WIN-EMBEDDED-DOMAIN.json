@@ -87,7 +87,6 @@
     "disclosure"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "静的文字列にある取得先Domainが、外部照会で現行のMalware配布先として報告されているため遮断します。文字列だけで通信が発生したとは扱いません。",
   "topic": "静的文字列から得たDomainを外部照会する",
   "summary": "静的文字列から得たDomainを外部照会する",

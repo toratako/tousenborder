@@ -60,7 +60,6 @@
     "directory"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "直接配送されたメールは自社Domainの認証に失敗し、承認された転送経路にも一致しないため受入れを遮断します。正規の転送による認証変化とは区別しています。",
   "topic": "信頼するGatewayの認証結果を配送構成と比較する",
   "summary": "信頼するGatewayの認証結果を配送構成と比較する",

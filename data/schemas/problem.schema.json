@@ -125,14 +125,6 @@
       },
       "uniqueItems": true
     },
-    "review_steps": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1,
-        "pattern": "\\S"
-      }
-    },
     "glossary": {
       "type": "array",
       "items": {

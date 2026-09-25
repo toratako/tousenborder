@@ -52,7 +52,6 @@
     "service"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "UnitのUser・ExecStart・配置が承認された監視Service定義と一致するため継続を許可します。",
   "topic": "systemctlのUnit構成を台帳と比較する",
   "summary": "systemctlのUnit構成を台帳と比較する",

@@ -92,7 +92,6 @@
     "official"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "HostとDNSの解決先が研修サイトの承認記録に一致し、公開トップページの閲覧条件を満たすため許可します。",
   "topic": "Resolve-DnsNameまたはnslookupでHostの解決先を取得し、承認Host・IP・用途と照合する",
   "summary": "Resolve-DnsNameまたはnslookupでHostの解決先を取得し、承認Host・IP・用途と照合する",

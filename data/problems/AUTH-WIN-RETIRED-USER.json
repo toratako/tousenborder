@@ -56,7 +56,6 @@
     "policy"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "Account台帳では退職によりLogin権限を失っているため、Passwordが検証できてもSession成立を遮断します。長期間未使用というだけの判断ではありません。",
   "topic": "未使用期間と現行のAccount権限を区別する",
   "summary": "未使用期間と現行のAccount権限を区別する",

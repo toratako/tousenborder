@@ -47,7 +47,7 @@ func _run() -> void:
 	check(desk.catalog.errors.is_empty(), "標準教材と用語辞書を読込")
 	var schema: Dictionary = ContentSchema.read_schema(ContentSchema.PROBLEM)
 	var sample: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/learning-support/problem.json"))
-	for invalid in ["unknown_term", "wrong_source", "wrong_submission", "duplicate_term", "duplicate_occurrence", "blank_step"]:
+	for invalid in ["unknown_term", "wrong_source", "wrong_submission", "duplicate_term", "duplicate_occurrence"]:
 		var candidate := sample.duplicate(true)
 		match invalid:
 			"unknown_term": candidate.glossary[0].term_id = "missing"
@@ -55,7 +55,6 @@ func _run() -> void:
 			"wrong_submission": candidate.glossary[0].occurrences = [{"source_id": "vendor_hash", "section": "submission"}]
 			"duplicate_term": candidate.glossary.append(candidate.glossary[0].duplicate(true))
 			"duplicate_occurrence": candidate.glossary[0].occurrences.append(candidate.glossary[0].occurrences[0].duplicate(true))
-			"blank_step": candidate.review_steps = ["  "]
 		var structural := ContentSchema.check(candidate, schema)
 		check(not structural.is_empty() or not ProblemData.normalize(candidate, desk.catalog, schema).is_empty(), "Godot側でも教材の不備を拒否: " + invalid)
 	desk._start_shift()
@@ -64,7 +63,6 @@ func _run() -> void:
 	var hash_tool: Dictionary = desk.shift.current().tools[0]
 	var sha: Dictionary = terms(desk).filter(func(t): return t.id == "sha256")[0]
 	check(not sha.tags.any(func(tag): return "実行結果" in tag), "未調査のタグを表示しない")
-	check(not desk.target_card.card_data.has("review_steps"), "判定前の対象カードに手順を渡さない")
 	desk.glossary_button.pressed.emit()
 	check(desk.glossary_overlay.visible, "用語集を開く")
 	var column: VBoxContainer = desk.glossary_list.get_child(0)
@@ -108,7 +106,6 @@ func _run() -> void:
 	check(desk.shift.unsafe_investigations() == 1, "用語の閲覧と不適切な調査の集計は独立")
 	check(store.list_entries().is_empty(), "途中の勤務は保存しない")
 	check(desk.shift.decide(desk.shift.current().ground_truth), "調査後に判定")
-	check(desk.audit_body.text.contains("監査手順（例）"), "監査所見に続けて手順を表示")
 	desk.next.pressed.emit()
 	await process_frame
 	check(not desk.summary_retry.visible and desk.summary_save_notice.text.is_empty(), "勤務終了時の保存に成功: " + store.error)
@@ -122,11 +119,7 @@ func _run() -> void:
 	var invalid_snapshot := saved.duplicate(true)
 	invalid_snapshot.stats.correct += 1
 	check(not HistoryStore.validate(invalid_snapshot).is_empty(), "集計の改変を検出")
-	invalid_snapshot = saved.duplicate(true)
-	invalid_snapshot.records[0].confirmed_evidence_count += 1
-	check(not HistoryStore.validate(invalid_snapshot).is_empty(), "証拠数の不整合を検出")
-	check(saved.records[0].review_steps.size() == cases[0].review_steps.size(), "監査手順を保存")
-	check(saved.records[0].confirmed_evidence_count == 1 and saved.stats.unsafe == 1, "当時の証拠数と不適切な利用を保存")
+	check(saved.stats.unsafe == 1, "不適切な利用を保存")
 	desk._show_summary()
 	check(store.save_completed(saved) and store.list_entries().size() == 1, "再表示・再保存でも重複しない")
 	var conflicting := saved.duplicate(true)
@@ -140,14 +133,12 @@ func _run() -> void:
 	check(desk.history_overlay.visible, "タイトルから勤務履歴へ")
 	desk._open_history_entry(saved.session_id)
 	check(desk.summary_from_history and desk.summary_review.get_parsed_text().contains(saved.records[0].explanation), "教材がなくても当時の監査所見を表示")
-	check(desk.summary_style.text.contains(saved.review_style.label), "保存された審査タイプを表示")
 	var hidden := saved.duplicate(true)
 	hidden.feedback = {"show_reason": false, "show_expected": false}
 	desk._display_summary(hidden, true)
-	check(not desk.summary_review.get_parsed_text().contains("監査手順（例）") and not desk.summary_review.get_parsed_text().contains("正しい判定"), "履歴でも当時の表示設定を尊重")
+	check(not desk.summary_review.get_parsed_text().contains("正しい判定"), "履歴でも当時の表示設定を尊重")
 	desk._display_summary(saved, true)
-	desk._toggle_summary_details(0)
-	check(desk.summary_review.get_parsed_text().contains(saved.records[0].request), "初期情報・調査記録を展開")
+	check(not desk.summary_review.get_parsed_text().contains("初期情報・調査記録を"), "履歴に追加の展開リンクを表示しない")
 	check(desk.shift.records == old_records, "履歴閲覧で現在の勤務記録を変更しない")
 	desk.summary_home.pressed.emit()
 	check(desk.history_overlay.visible, "詳細から履歴一覧へ戻る")
@@ -203,7 +194,7 @@ func _run() -> void:
 	check(desk.start_screen.visible and desk.start_button.disabled, "教材エラー時は新規勤務だけ無効")
 	desk.history_button.pressed.emit()
 	desk._open_history_entry(saved.session_id)
-	check(desk.summary_review.get_parsed_text().contains("監査手順（例）"), "教材エラー時も履歴を閲覧")
+	check(desk.summary_review.get_parsed_text().contains(saved.records[0].explanation), "教材エラー時も履歴を閲覧")
 	desk.queue_free()
 	await process_frame
 	# 保存失敗時にも結果を表示し、同じIDで再試行する。

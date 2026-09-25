@@ -65,7 +65,6 @@
     "lock"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "見た目が似ていてもPackage名・Maintainer・Repositoryが公式Calendar Componentと異なるため導入を遮断します。ダウンロード数や似た説明文は公式性の根拠になりません。",
   "topic": "似たPackageのMetadataを公式Componentと比較する",
   "summary": "似たPackageのMetadataを公式Componentと比較する",

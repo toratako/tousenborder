@@ -89,7 +89,6 @@
     "disclosure"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "Processの接続先IPに現行のMalware配布基盤としての報告があるため停止します。Port番号だけを根拠にしていません。",
   "topic": "ssから得たIPを外部評判に照会する",
   "summary": "ssから得たIPを外部評判に照会する",

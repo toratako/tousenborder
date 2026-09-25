@@ -149,7 +149,6 @@
     "ip_rep"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "未承認PathのProcessが台帳外の宛先へ周期的に通信し、そのIPにも現行の悪性報告があるため新しい接続を遮断します。周期性だけでC2とは断定しません。",
   "topic": "周期・Process・宛先・評判を組み合わせる",
   "summary": "周期・Process・宛先・評判を組み合わせる",

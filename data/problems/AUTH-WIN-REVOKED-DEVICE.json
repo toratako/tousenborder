@@ -56,7 +56,6 @@
     "device"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "過去のLoginが通常でも、今回提示されたDeviceは既に失効しているためSession成立を遮断します。履歴の成功は現在の利用許可を保証しません。",
   "topic": "Deviceの現行状態を過去履歴より優先する",
   "summary": "Deviceの現行状態を過去履歴より優先する",

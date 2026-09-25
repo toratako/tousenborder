@@ -51,13 +51,9 @@ class LearningSupportTests(unittest.TestCase):
             validate_authoring(self.item, pack)
         item = copy.deepcopy(self.item)
         del item['glossary']
-        del item['review_steps']
         validate_authoring(item, pack)
 
-    def test_blank_steps_and_unknown_dictionary_fields_rejected(self):
-        self.item['review_steps'] = ['  ']
-        with self.assertRaises(ValueError):
-            validate_authoring(self.item, self.pack)
+    def test_unknown_dictionary_fields_rejected(self):
         with self.assertRaises(ValueError):
             validate_schema({'schema_version': 1, 'terms': {'x': {'label': 'X', 'description': 'Y', 'answer': 'block'}}}, 'glossary')
 

@@ -61,7 +61,6 @@
     "directory"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "送信者・Gatewayが確認した認証・配送経路が申請済み研修サービスの登録と一致するため受け入れます。認証Passだけを根拠にはしません。",
   "topic": "Headerの経路とSenderをService記録と照合する",
   "summary": "Headerの経路とSenderをService記録と照合する",

@@ -62,7 +62,6 @@
     "vendor"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "計算したSHA-256が承認されたEditor 4.2の公開Hashと一致しないため、この配布物の実行を遮断します。Hash不一致だけから改ざん原因やMalware性を断定しません。",
   "topic": "署名の一致と配布物の同一性を区別する",
   "summary": "署名の一致と配布物の同一性を区別する",

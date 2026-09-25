@@ -34,7 +34,6 @@
     "format"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "添付の完全名は.exeで、PDFという説明と受入れ条件に反するため遮断します。",
   "topic": "Emailでも添付の完全名を確認する",
   "summary": "Emailでも添付の完全名を確認する",

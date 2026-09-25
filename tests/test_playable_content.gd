@@ -34,7 +34,6 @@ func _run() -> void:
 		check(desk.shift.current().id == item.id, "登録順に出題")
 		check(desk.target_card.title_label.text == "検査対象", "回答前は問題Titleを隠す")
 		check(not desk.target_card.card_data.has("ground_truth"), "判定情報を対象カードに渡さない")
-		check(not desk.target_card.card_data.has("review_steps"), "回答前に手順を漏らさない")
 		if item.level == "very_beginner":
 			check(desk.active_tools.all(func(resource): return resource.resource_kind == "references" and resource.accepted_information_types.is_empty()), "超初級は入力不要のReferenceだけを調査できる")
 			for id in item.required_evidence:

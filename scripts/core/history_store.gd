@@ -13,13 +13,11 @@ static func snapshot(shift: InspectionShift, pack: Dictionary, selection: Dictio
 	if not shift.finished() or shift.records.is_empty(): return {}
 	var labels := {}
 	for action in actions: labels[action.id] = action.label
-	var style := ReviewStyle.classify(shift.records)
-	style.version = 1
-	return {"schema_version": 1, "session_id": shift.session_id, "started_at": shift.started_at,
+	return {"schema_version": 2, "session_id": shift.session_id, "started_at": shift.started_at,
 		"completed_at": Time.get_unix_time_from_system(), "pack": pack.duplicate(true),
 		"selection": selection.duplicate(true), "elapsed_seconds": shift.elapsed_seconds,
 		"stats": {"answered": shift.records.size(), "correct": shift.score(), "unsafe": shift.unsafe_investigations()},
-		"review_style": style, "feedback": {"show_reason": feedback.get("show_reason", true), "show_expected": feedback.get("show_expected", true)},
+		"feedback": {"show_reason": feedback.get("show_reason", true), "show_expected": feedback.get("show_expected", true)},
 		"action_labels": labels, "records": shift.records.duplicate(true)}
 
 static func valid_id(id: String) -> bool:
@@ -36,8 +34,6 @@ static func validate(data: Variant) -> String:
 	for record in data.records:
 		if record.correct != (record.verdict == record.ground_truth): return "判定の整合性エラー"
 		if record.correct: correct += 1
-		if record.confirmed_evidence_count > record.required_evidence_count or record.missing_evidence.size() != record.required_evidence_count - record.confirmed_evidence_count:
-			return "証拠数の整合性エラー"
 		for observation in record.observations:
 			if (observation.has("correct_usage") or observation.get("skipped", false)) and not observation.has("reason"):
 				return "調査理由がありません"

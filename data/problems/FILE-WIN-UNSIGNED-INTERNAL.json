@@ -141,7 +141,6 @@
     "disclosure"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "未署名でも、Hash・Version・配布経路が例外承認済みの社内版と一致するため許可します。社外秘FileのUploadは不要で、外部送信方針にも反します。",
   "topic": "未署名と機密性を承認台帳で判断する",
   "summary": "未署名と機密性を承認台帳で判断する",

@@ -120,7 +120,6 @@
     "disclosure"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "SPF/DKIM/DMARCのPassは送信者自身のDomainについての結果です。隔離解析先は組織のPasswordを求める承認外Hostなのでメールの受入れを遮断します。",
   "topic": "Emailの認証とリンク先の正当性を別々に調べる",
   "summary": "Emailの認証とリンク先の正当性を別々に調べる",

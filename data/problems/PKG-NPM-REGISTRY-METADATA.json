@@ -51,7 +51,6 @@
     "official"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "Package名・Version・Maintainer・Repository・Hashが承認Componentと一致するため導入を許可します。",
   "topic": "npm Metadataを承認Component情報と照合する",
   "summary": "npm Metadataを承認Component情報と照合する",

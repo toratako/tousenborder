@@ -110,7 +110,6 @@
     "server"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "台帳にないProcessが指定外Resolverへ特徴的なDNS Queryを繰り返し、組織のDNS利用方針に反するため遮断します。長い名前だけから情報漏洩を断定しません。",
   "topic": "Queryの内容とProcess・Resolver方針を照合する",
   "summary": "Queryの内容とProcess・Resolver方針を照合する",

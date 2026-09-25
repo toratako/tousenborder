@@ -83,7 +83,6 @@
     "procedure"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "登録Mailboxで認証もPassしていますが、口座変更の必須手続と過去の取引先口座に一致しないため受入れを遮断します。この証拠だけではMailbox侵害の有無までは断定できません。",
   "topic": "正規Accountの認証と業務依頼の妥当性を区別する",
   "summary": "正規Accountの認証と業務依頼の妥当性を区別する",

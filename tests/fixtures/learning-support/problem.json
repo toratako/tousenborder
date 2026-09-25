@@ -161,12 +161,6 @@
     "Size": "file_size",
     "保存場所": "directory"
   },
-  "review_steps": [
-    "File名をsha256sumに渡し、配布ArchiveのSHA-256を取得する。",
-    "Vendor公開Hashを開き、別経路のRelease台帳の値と取得した値を照合する。",
-    "Approved Softwareで製品・Version・導入承認CHG-204を確認する。",
-    "同一性と導入承認が揃うためALLOWと判断する。外部解析の検出数だけを根拠にしない。"
-  ],
   "glossary": [
     {
       "term_id": "file",

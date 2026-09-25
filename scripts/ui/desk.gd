@@ -68,8 +68,6 @@ var summary: Panel
 var summary_overlay: Panel
 var summary_title: Label
 var summary_stats: Label
-var summary_style: Label
-var summary_style_message: Label
 var summary_review: RichTextLabel
 var summary_restart: Button
 var summary_home: Button
@@ -119,7 +117,6 @@ var summary_retry: Button
 var summary_snapshot: Dictionary = {}
 var completed_snapshot: Dictionary = {}
 var summary_from_history := false
-var summary_details: Dictionary = {}
 
 func _selected_cases() -> Array[Dictionary]:
 	return catalog.select_cases(difficulty_select.get_item_metadata(difficulty_select.selected), category_select.get_item_metadata(category_select.selected), platform_select.get_item_metadata(platform_select.selected))
@@ -726,16 +723,8 @@ func _display_summary(snapshot: Dictionary, from_history: bool) -> void:
 	_close_summary()
 	summary_snapshot = snapshot.duplicate(true)
 	summary_from_history = from_history
-	summary_details.clear()
 	Layout.build_summary(self)
-	var review_style: Dictionary = snapshot.review_style
-	summary_style.visible = not review_style.is_empty()
-	summary_style_message.visible = not review_style.is_empty()
-	if not review_style.is_empty():
-		summary_style.text = "今回の審査スタイル：" + review_style.label
-		summary_style_message.text = review_style.message
 	_render_summary_records()
-	summary_review.meta_clicked.connect(_toggle_summary_details)
 	Layout.build_summary_actions(self)
 	if from_history:
 		summary_title.text = "勤務履歴 · " + HistoryStore.date_label(snapshot.completed_at)
@@ -746,32 +735,12 @@ func _render_summary_records() -> void:
 	summary_review.clear()
 	var feedback: Dictionary = summary_snapshot.feedback
 	var labels: Dictionary = summary_snapshot.action_labels
-	for index in summary_snapshot.records.size():
-		var record: Dictionary = summary_snapshot.records[index]
+	for record in summary_snapshot.records:
 		_summary_item(record.title, record.id, "正解" if record.correct else "誤判定",
 			"あなたの判定：" + labels[record.verdict]
 			+ (" / 正しい判定：" + labels[record.ground_truth] if feedback.show_expected else "")
-			+ ("\n監査所見\n" + InspectionShift.review_text(record) if feedback.show_reason else ""),
+			+ ("\n" + record.explanation + "\n" + InspectionShift.investigation_feedback(record) if feedback.show_reason else ""),
 			Color("57edc2") if record.correct else Color("ff718b"))
-		summary_review.push_meta(index)
-		summary_review.add_text("初期情報・調査記録を" + ("閉じる" if summary_details.has(index) else "開く"))
-		summary_review.pop()
-		summary_review.add_text("\n")
-		if summary_details.has(index):
-			summary_review.add_text("申請内容：" + record.request + "\n")
-			for info in record.information:
-				summary_review.add_text(info.label + "：" + Information.display(info.value) + "\n")
-			for observation in record.observations:
-				summary_review.add_text("\n" + observation.tool + "\n" + observation.output + "\n")
-		summary_review.add_text("\n")
-
-func _toggle_summary_details(index: Variant) -> void:
-	if not index is int or index < 0 or index >= summary_snapshot.records.size(): return
-	var scroll := summary_review.get_v_scroll_bar().value
-	if summary_details.has(index): summary_details.erase(index)
-	else: summary_details[index] = true
-	_render_summary_records()
-	summary_review.get_v_scroll_bar().set_deferred("value", scroll)
 
 func _save_summary() -> void:
 	if summary_from_history or completed_snapshot.is_empty(): return
@@ -852,7 +821,7 @@ func _refresh_history() -> void:
 	history_notice.tooltip_text = "\n".join(history_store.warnings)
 	if entries.is_empty(): Layout.list_label(history_list, "保存された勤務履歴はありません。")
 	for entry in entries:
-		var caption := "%s  ·  %d / %d 正解\n%s / %s / %s\n%s" % [HistoryStore.date_label(entry.completed_at), entry.stats.correct, entry.stats.answered, entry.selection.level.label, entry.selection.category.label, entry.selection.platform.label, entry.review_style.label]
+		var caption := "%s  ·  %d / %d 正解\n%s / %s / %s" % [HistoryStore.date_label(entry.completed_at), entry.stats.correct, entry.stats.answered, entry.selection.level.label, entry.selection.category.label, entry.selection.platform.label]
 		var button := Chrome.button(history_list, Rect2(0, 0, 860, 90), caption, PAPER)
 		button.custom_minimum_size.y = 90
 		button.clip_text = true

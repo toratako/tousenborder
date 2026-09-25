@@ -71,7 +71,6 @@
     "release"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "配布物のpostinstallは承認Sourceにない外部実行Fileの取得・起動を含むため、Install前に遮断します。Scriptの静的内容を比較しており、実行済みとは扱いません。",
   "topic": "Install Scriptを公式Repositoryの同Versionと比較する",
   "summary": "Install Scriptを公式Repositoryの同Versionと比較する",

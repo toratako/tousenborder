@@ -98,7 +98,6 @@
     "official"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "配布Fileは更新プログラムではなく外部Scriptを取得・実行するJavaScriptで、正規更新経路とも一致しないため遮断します。偽の更新案内による実行誘導を題材にしています。",
   "topic": "更新の主張をFile内容と公式更新経路で検証する",
   "summary": "更新の主張をFile内容と公式更新経路で検証する",

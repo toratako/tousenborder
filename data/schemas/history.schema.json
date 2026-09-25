@@ -4,7 +4,7 @@
   "properties": {
     "schema_version": {
       "type": "integer",
-      "const": 1
+      "const": 2
     },
     "session_id": {
       "type": "string",
@@ -133,37 +133,6 @@
         "answered",
         "correct",
         "unsafe"
-      ],
-      "additionalProperties": false
-    },
-    "review_style": {
-      "type": "object",
-      "properties": {
-        "version": {
-          "type": "integer",
-          "const": 1
-        },
-        "id": {
-          "type": "string",
-          "minLength": 1,
-          "pattern": "\\S"
-        },
-        "label": {
-          "type": "string",
-          "minLength": 1,
-          "pattern": "\\S"
-        },
-        "message": {
-          "type": "string",
-          "minLength": 1,
-          "pattern": "\\S"
-        }
-      },
-      "required": [
-        "version",
-        "id",
-        "label",
-        "message"
       ],
       "additionalProperties": false
     },
@@ -316,14 +285,6 @@
             "minLength": 1,
             "pattern": "\\S"
           },
-          "review_steps": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "minLength": 1,
-              "pattern": "\\S"
-            }
-          },
           "observations": {
             "type": "array",
             "items": {
@@ -429,14 +390,6 @@
               "minLength": 1,
               "pattern": "\\S"
             }
-          },
-          "required_evidence_count": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "confirmed_evidence_count": {
-            "type": "integer",
-            "minimum": 0
           }
         },
         "required": [
@@ -452,11 +405,8 @@
           "ground_truth",
           "correct",
           "explanation",
-          "review_steps",
           "observations",
-          "missing_evidence",
-          "required_evidence_count",
-          "confirmed_evidence_count"
+          "missing_evidence"
         ],
         "additionalProperties": false
       },
@@ -472,7 +422,6 @@
     "selection",
     "elapsed_seconds",
     "stats",
-    "review_style",
     "feedback",
     "action_labels",
     "records"

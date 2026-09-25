@@ -50,7 +50,6 @@
     "format"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "ArchiveにはPDFに加えてVBSとLNKが含まれ、PDFのみという受入れ条件を満たさないため遮断します。中のScriptは実行していません。",
   "topic": "Archiveを展開・実行せず内容一覧を確認する",
   "summary": "Archiveを展開・実行せず内容一覧を確認する",

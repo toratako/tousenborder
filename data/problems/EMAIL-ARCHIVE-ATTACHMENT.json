@@ -68,7 +68,6 @@
     "format"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "配送認証がPassでも、ArchiveにはScriptとShortcutが含まれ、PDFだけという受入れ条件に反するため遮断します。添付調査はこのメール内で完結します。",
   "topic": "メール認証と添付の受入れ形式を分ける",
   "summary": "メール認証と添付の受入れ形式を分ける",

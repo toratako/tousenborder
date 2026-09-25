@@ -66,7 +66,6 @@
     "disclosure"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "隔離解析では組織のPasswordを要求する別Hostへ遷移し、公式の認証先と一致しないため遮断します。通常Browserを開かずに得た解析結果を使います。",
   "topic": "外部隔離解析のRedirectと公式認証先を比較する",
   "summary": "外部隔離解析のRedirectと公式認証先を比較する",

@@ -87,7 +87,6 @@
     "hash_rep"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "対象Hashには現在有効なMalware検出が複数登録されているため実行を遮断します。未知のHashという理由で遮断しているのではありません。",
   "topic": "sha256sumの結果を外部評判と照合する",
   "summary": "sha256sumの結果を外部評判と照合する",

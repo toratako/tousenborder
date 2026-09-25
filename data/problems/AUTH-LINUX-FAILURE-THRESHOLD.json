@@ -56,7 +56,6 @@
     "policy"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "直前10分の同一SourceからのSSH認証失敗が20回の閾値に達したため、今回の新規要求を遮断します。20件目の後に追加のPassword検証を続けた記録ではありません。",
   "topic": "journalctlの直前履歴を認証方針と比較する",
   "summary": "journalctlの直前履歴を認証方針と比較する",

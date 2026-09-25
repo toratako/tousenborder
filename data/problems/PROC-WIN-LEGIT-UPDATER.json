@@ -167,7 +167,6 @@
     "approved"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "署名・実行Hash・Service起動元・更新先が承認仕様に一致するため継続を許可します。外部接続や自動起動だけで不正とは判断しません。",
   "topic": "Updaterの自動起動と通信を承認仕様で評価する",
   "summary": "Updaterの自動起動と通信を承認仕様で評価する",

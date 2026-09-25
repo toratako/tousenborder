@@ -97,7 +97,6 @@
     "disclosure"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "対象Processの接続先IPには、現在も有効な悪性インフラとしての報告があるため新しい接続を遮断します。",
   "topic": "Socket所有ProcessとIP評判を確認する",
   "summary": "Socket所有ProcessとIP評判を確認する",

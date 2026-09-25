@@ -62,7 +62,6 @@
     "policy"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "過去の保守LoginとUser・踏み台・時間帯が整合し、今回の鍵とMFAも要件を満たすためSession成立を許可します。",
   "topic": "lastを今回の認証情報と保守予定に照合する",
   "summary": "lastを今回の認証情報と保守予定に照合する",

@@ -33,7 +33,6 @@
     "policy"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "申請したaster-requestsに対して導入対象はaster-reqestsであり、名前が一致しないため遮断します。この差だけで配布物のMalware性までは断定しません。",
   "topic": "依存解決結果を申請Package名と比較する",
   "summary": "依存解決結果を申請Package名と比較する",

@@ -29,7 +29,6 @@
     "format"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "完全名は.shであり、PDFだけを受け入れる条件と矛盾するため遮断します。",
   "topic": "Linuxでも完全なFile名と申請形式を比較する",
   "summary": "Linuxでも完全なFile名と申請形式を比較する",

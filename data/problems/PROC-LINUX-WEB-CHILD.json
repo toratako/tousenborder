@@ -52,7 +52,6 @@
     "service"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "Web Workerの子としてshが動作し、Shell起動を含まない承認構成に反するため停止します。親子関係だけからWebshellの侵入原因までは断定しません。",
   "topic": "pstreeの祖先関係をService仕様と照合する",
   "summary": "pstreeの祖先関係をService仕様と照合する",

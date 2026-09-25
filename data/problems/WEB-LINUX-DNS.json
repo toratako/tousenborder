@@ -59,7 +59,6 @@
     "official"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "HostとAレコードが承認済みの公開マニュアルServerに一致するため許可します。DNSで得たIPだけが安全性を保証するわけではありません。",
   "topic": "digの結果をService台帳と照合する",
   "summary": "digの結果をService台帳と照合する",

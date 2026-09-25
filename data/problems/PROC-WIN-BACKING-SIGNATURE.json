@@ -53,7 +53,6 @@
     "publisher"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "PIDに対応する実行Imageの署名・Publisher・配置が台帳と一致し、管理されたPrint Agentの継続条件を満たすため許可します。",
   "topic": "PIDからBacking Executableの署名を直接確認する",
   "summary": "PIDからBacking Executableの署名を直接確認する",

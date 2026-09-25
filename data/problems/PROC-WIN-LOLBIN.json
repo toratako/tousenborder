@@ -109,7 +109,6 @@
     "sig"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "Microsoft署名のmshta.exeでも、Wordが起動し承認外HostのHTAを実行する引数は業務手順に反するため停止します。正規Binaryの悪用を実行文脈から判断します。",
   "topic": "正規署名のSystem Binaryでも呼出し内容を確認する",
   "summary": "正規署名のSystem Binaryでも呼出し内容を確認する",

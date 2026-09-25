@@ -55,7 +55,6 @@
     "job"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "端末管理の記録がPID 4200をENC-188に対応付けており、端末・User・Process・実行時間帯が承認内容と一致し、CPU 96%も想定範囲内のため継続を許可します。CPU使用率だけは悪性根拠になりません。",
   "topic": "Resource使用量を業務の予定と照合する",
   "summary": "Resource使用量を業務の予定と照合する",

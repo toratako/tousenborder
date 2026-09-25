@@ -177,7 +177,6 @@
     "disclosure"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "本人のREQ-318に対応する発行通知があり、Host・Path・DNSが正規再設定先に一致し、判断時刻09:10も有効期限09:17より前なのでアクセスを許可します。TokenとUser IDを含む完全URLは外部解析へ送りません。",
   "topic": "機密URLを内部申請とDomain・DNSで確認する",
   "summary": "機密URLを内部申請とDomain・DNSで確認する",

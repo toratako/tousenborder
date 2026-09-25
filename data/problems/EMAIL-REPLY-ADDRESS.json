@@ -54,7 +54,6 @@
     "vendor"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "Reply-Toは取引先の承認Addressではなく外部Domainを指し、口座資料の返信先として許可されていないため遮断します。Reply-Toの差だけでなく依頼内容と照合しています。",
   "topic": "返信先と情報の送付先の正当性を確認する",
   "summary": "返信先と情報の送付先の正当性を確認する",

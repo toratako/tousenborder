@@ -172,7 +172,6 @@
     "job"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "親Agent・ScriptのHash・User・接続先が承認された棚卸しJobと一致するため継続を許可します。PowerShell本体の署名だけでScriptの正当性を判断していません。",
   "topic": "管理Scriptの内容同一性と実行文脈を検証する",
   "summary": "管理Scriptの内容同一性と実行文脈を検証する",

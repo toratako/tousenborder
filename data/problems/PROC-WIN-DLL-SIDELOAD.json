@@ -117,7 +117,6 @@
     "sig"
   ],
   "glossary": [],
-  "review_steps": [],
   "explanation": "Viewer本体の署名・Publisher・Version・配置・Hashは承認記録と一致します。一方、実際にロードした同名のrender.dllは承認配置C:\\Program Files\\AsterViewer\\render.dllではなくUserのDownloads配下にあり、Hashも承認版と異なるため停止します。DLL Side-loadingを題材に、実行本体と読み込むDLLを別々に検証します。",
   "topic": "実行本体とロード済みDLLを別々に検証する",
   "summary": "実行本体とロード済みDLLを別々に検証する",
