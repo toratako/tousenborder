@@ -59,7 +59,208 @@
     "pe",
     "approved"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dll",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_pe",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "approved",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "service_account",
+      "occurrences": [
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "実行ImageはDownloads配下で、Service Accountが管理Pathから起動する承認構成と一致しないため停止します。",
   "topic": "実行Path・User・起動元をSoftware台帳と照合する",
   "summary": "実行Path・User・起動元をSoftware台帳と照合する",

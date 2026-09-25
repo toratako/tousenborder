@@ -95,7 +95,358 @@
     "journal",
     "admin"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "admin",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "overview"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "last",
+          "section": "overview"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "overview"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "last",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "mfa",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "ssh",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "overview"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "public_key",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "key_fingerprint",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "root",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "last",
+          "section": "result"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "log",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_journal",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "auth_result",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "wtmp",
+      "occurrences": [
+        {
+          "source_id": "last",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_last",
+      "occurrences": [
+        {
+          "source_id": "last",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "terminal",
+      "occurrences": [
+        {
+          "source_id": "last",
+          "section": "result"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "lastlog",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_lastlog",
+      "occurrences": [
+        {
+          "source_id": "lastlog",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "bastion",
+      "occurrences": [
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "privilege",
+      "occurrences": [
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "rootへの直接SSHは現行方針で禁止され、個人Accountと踏み台経由で昇格する管理経路にも一致しないため遮断します。鍵が検証できても利用許可とは別です。",
   "topic": "特権Loginの本人確認と経路制約を区別する",
   "summary": "特権Loginの本人確認と経路制約を区別する",

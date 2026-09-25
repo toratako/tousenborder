@@ -61,7 +61,142 @@
     "hash",
     "vendor"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "vendor",
+          "section": "overview"
+        },
+        {
+          "source_id": "vendor",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "vendor",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_hash_win",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "vendor",
+      "occurrences": [
+        {
+          "source_id": "vendor",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "計算したSHA-256が承認されたEditor 4.2の公開Hashと一致しないため、この配布物の実行を遮断します。Hash不一致だけから改ざん原因やMalware性を断定しません。",
   "topic": "署名の一致と配布物の同一性を区別する",
   "summary": "署名の一致と配布物の同一性を区別する",

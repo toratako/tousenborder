@@ -108,7 +108,363 @@
     "admin",
     "sig"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "mshta",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dll",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_pe",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "signature",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "vendor",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_sigcheck",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "socket",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tcp",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_tcpview",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "admin",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "Microsoft署名のmshta.exeでも、Wordが起動し承認外HostのHTAを実行する引数は業務手順に反するため停止します。正規Binaryの悪用を実行文脈から判断します。",
   "topic": "正規署名のSystem Binaryでも呼出し内容を確認する",
   "summary": "正規署名のSystem Binaryでも呼出し内容を確認する",

@@ -62,7 +62,297 @@
     "release",
     "lock"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "package",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "registry",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "install_script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "version",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "release",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ecosystem",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "dependency",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "release",
+          "section": "result"
+        },
+        {
+          "source_id": "vuln",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "package_resolver",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "install",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "metadata",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "repository",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "maintainer",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "telemetry",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "vuln",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "release",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "release",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "commit",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reference",
+      "occurrences": [
+        {
+          "source_id": "release",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "lock",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "lock_file",
+      "occurrences": [
+        {
+          "source_id": "lock",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "vulnerability",
+      "occurrences": [
+        {
+          "source_id": "vuln",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "配布Metadataには新しいPublic依存がある一方、公式Sourceと変更記録はその追加を含まないため導入を遮断します。依存が増えたこと自体ではなく同Versionの不一致が根拠です。",
   "topic": "依存の変化を公式Source・変更記録・Lockで比較する",
   "summary": "依存の変化を公式Source・変更記録・Lockで比較する",

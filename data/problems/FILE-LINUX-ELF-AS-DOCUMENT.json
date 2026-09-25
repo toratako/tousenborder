@@ -49,7 +49,148 @@
     "file",
     "format"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "overview"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pdf",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "magic",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_file",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elf",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "stripped",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "architecture",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elf_flags",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "fileの結果はPDFではなくELF実行Fileで、伝票の受入れ形式に合わないため遮断します。",
   "topic": "File名ではなく実際の形式を確認する",
   "summary": "File名ではなく実際の形式を確認する",

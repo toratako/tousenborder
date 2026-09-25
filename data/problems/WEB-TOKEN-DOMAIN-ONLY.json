@@ -78,7 +78,283 @@
     "domain_rep",
     "disclosure"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        },
+        {
+          "source_id": "isolated",
+          "section": "overview"
+        },
+        {
+          "source_id": "isolated",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "browser",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reputation",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "detection",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "phishing",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "isolated",
+      "occurrences": [
+        {
+          "source_id": "isolated",
+          "section": "overview"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "no_record",
+      "occurrences": [
+        {
+          "source_id": "isolated",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "Domainのみの照会で現行のPhishing報告が得られるためアクセスを遮断します。招待Tokenを含む完全URLを外部へ送る必要はありません。",
   "topic": "Token付きURLから公開Domainだけを外部照会する",
   "summary": "Token付きURLから公開Domainだけを外部照会する",

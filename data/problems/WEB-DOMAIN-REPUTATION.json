@@ -57,7 +57,251 @@
     "domain_rep",
     "disclosure"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "browser",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reputation",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "detection",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "phishing",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "照会先Domainに現行のPhishing報告が複数確認できるためアクセスを遮断します。未知Domainだからという判断ではありません。",
   "topic": "Domainだけを送って既知の評判を確認する",
   "summary": "Domainだけを送って既知の評判を確認する",

@@ -171,7 +171,518 @@
     "tcp",
     "job"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "powershell",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "service_account",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dll",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_pe",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "overview"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "signature",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "vendor",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_sigcheck",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_hash_win",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "script_hash",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "socket",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tcp",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_tcpview",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "親Agent・ScriptのHash・User・接続先が承認された棚卸しJobと一致するため継続を許可します。PowerShell本体の署名だけでScriptの正当性を判断していません。",
   "topic": "管理Scriptの内容同一性と実行文脈を検証する",
   "summary": "管理Scriptの内容同一性と実行文脈を検証する",

@@ -102,6 +102,9 @@ var glossary_overlay: Panel
 var glossary_scroll: ScrollContainer
 var glossary_list: VBoxContainer
 var glossary_close: Button
+var glossary_search: LineEdit
+var glossary_count: Label
+var glossary_empty: Label
 var glossary_previous_focus: Control
 var glossary_viewed: Dictionary = {}
 var glossary_expanded: Dictionary = {}
@@ -316,6 +319,7 @@ func _show_start_screen() -> void:
 	_close_glossary(false)
 	glossary_viewed.clear()
 	glossary_expanded.clear()
+	glossary_search.set_text("")
 	glossary_scroll_position = 0
 	history_overlay.hide()
 	_close_how_to(false)
@@ -397,6 +401,7 @@ func _clear_desk() -> void:
 	_close_glossary(false)
 	glossary_viewed.clear()
 	glossary_expanded.clear()
+	glossary_search.set_text("")
 	glossary_scroll_position = 0
 	_close_how_to(false)
 	_close_rules(false)
@@ -778,7 +783,6 @@ func _open_glossary() -> void:
 	for child in glossary_list.get_children():
 		glossary_list.remove_child(child)
 		child.queue_free()
-	var buttons: Array[Button] = [glossary_close]
 	var terms := LearningGlossary.visible_terms(shift.current(), catalog.glossary_terms, active_tools, glossary_viewed)
 	for term in terms:
 		var entry := Layout.glossary_entry(glossary_list, term, glossary_expanded.has(term.id))
@@ -787,14 +791,27 @@ func _open_glossary() -> void:
 			entry.body.visible = open
 			if open: glossary_expanded[term.id] = true
 			else: glossary_expanded.erase(term.id))
-		buttons.append(button)
-	if terms.is_empty(): Layout.list_label(glossary_list, "表示できる用語はありません。")
-	Layout.focus_cycle(buttons)
+	_filter_glossary(glossary_search.text)
 	move_child(glossary_overlay, -1)
 	glossary_overlay.show()
 	_update_case_controls(shift.current())
 	glossary_scroll.set_deferred("scroll_vertical", glossary_scroll_position)
-	glossary_close.grab_focus()
+	glossary_search.grab_focus()
+
+func _filter_glossary(query: String) -> void:
+	var needle := query.strip_edges().to_lower()
+	var controls: Array[Control] = [glossary_close, glossary_search]
+	var count := 0
+	for entry in glossary_list.get_children():
+		entry.visible = needle.is_empty() or str(entry.get_meta("search_text", "")).contains(needle)
+		if entry.visible:
+			count += 1
+			controls.append(entry.get_child(0))
+	glossary_count.text = "%d / %d 語" % [count, glossary_list.get_child_count()] if not needle.is_empty() else "%d 語" % count
+	glossary_empty.text = "表示できる用語はありません。" if glossary_list.get_child_count() == 0 else "該当する用語はありません。"
+	glossary_empty.visible = count == 0
+	glossary_scroll.scroll_vertical = 0
+	Layout.focus_cycle(controls)
 
 func _close_glossary(restore_focus := true) -> void:
 	if not is_instance_valid(glossary_overlay) or not glossary_overlay.visible: return

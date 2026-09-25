@@ -54,7 +54,160 @@
     "task",
     "job"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "task",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "task",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "task",
+          "section": "overview"
+        },
+        {
+          "source_id": "task",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "task",
+          "section": "overview"
+        },
+        {
+          "source_id": "task",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "job",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "job",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "resource_usage",
+      "occurrences": [
+        {
+          "source_id": "task",
+          "section": "overview"
+        },
+        {
+          "source_id": "task",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_task",
+      "occurrences": [
+        {
+          "source_id": "task",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "size",
+      "occurrences": [
+        {
+          "source_id": "task",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "job",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "端末管理の記録がPID 4200をENC-188に対応付けており、端末・User・Process・実行時間帯が承認内容と一致し、CPU 96%も想定範囲内のため継続を許可します。CPU使用率だけは悪性根拠になりません。",
   "topic": "Resource使用量を業務の予定と照合する",
   "summary": "Resource使用量を業務の予定と照合する",

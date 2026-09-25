@@ -83,7 +83,227 @@
     "hash",
     "approved"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "signature",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_hash_win",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "vendor",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_sigcheck",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "approved",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "有効な署名は存在しますが、Publisher・製品・Hashが承認台帳の監査ツールと異なるため遮断します。署名の有無だけでは用途の正当性を確認できません。",
   "topic": "有効な署名と組織の導入承認を分ける",
   "summary": "有効な署名と組織の導入承認を分ける",

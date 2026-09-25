@@ -109,7 +109,432 @@
     "flow",
     "server"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "capture",
+          "section": "overview"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tcp",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        },
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "flow",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "capture",
+          "section": "overview"
+        },
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "capture",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "capture",
+          "section": "overview"
+        },
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "protocol",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "socket",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        },
+        {
+          "source_id": "capture",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_tcpview",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "temp",
+      "occurrences": [
+        {
+          "source_id": "tcp",
+          "section": "result"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dll",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_pe",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_capture",
+      "occurrences": [
+        {
+          "source_id": "capture",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_records",
+      "occurrences": [
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_query",
+      "occurrences": [
+        {
+          "source_id": "capture",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_resolver",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "台帳にないProcessが指定外Resolverへ特徴的なDNS Queryを繰り返し、組織のDNS利用方針に反するため遮断します。長い名前だけから情報漏洩を断定しません。",
   "topic": "Queryの内容とProcess・Resolver方針を照合する",
   "summary": "Queryの内容とProcess・Resolver方針を照合する",

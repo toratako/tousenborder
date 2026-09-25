@@ -28,7 +28,83 @@
     "initial_information",
     "format"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pdf",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "shell",
+      "occurrences": [
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "完全なFile名は.exeで、PDFだけを受け入れる申請と矛盾するため遮断します。拡張子だけでMalwareと断定する判断ではありません。",
   "topic": "表示名と完全な拡張子を比較する",
   "summary": "表示名と完全な拡張子を比較する",

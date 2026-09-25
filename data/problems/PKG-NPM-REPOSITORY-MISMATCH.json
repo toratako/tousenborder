@@ -42,7 +42,231 @@
     "metadata",
     "official"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "package",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "registry",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "install_script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "version",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ecosystem",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "dependency",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "package_resolver",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "install",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "metadata",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "repository",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "maintainer",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "release",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "MetadataのRepositoryとMaintainerが現在の公式Component台帳と一致せず、移管の承認もないため導入を遮断します。Repository変更自体を一律に不正とは扱いません。",
   "topic": "Repositoryを現在の公式情報と照合する",
   "summary": "Repositoryを現在の公式情報と照合する",

@@ -92,7 +92,245 @@
     "cron",
     "service"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pstree",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "pstree",
+          "section": "overview"
+        },
+        {
+          "source_id": "pstree",
+          "section": "result"
+        },
+        {
+          "source_id": "cron",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "cron",
+          "section": "overview"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "pstree",
+          "section": "overview"
+        },
+        {
+          "source_id": "pstree",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "cron",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_ps",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "cron",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "temp",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "cron",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elapsed",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_pstree",
+      "occurrences": [
+        {
+          "source_id": "pstree",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "pstree",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "shell",
+      "occurrences": [
+        {
+          "source_id": "pstree",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "cron",
+      "occurrences": [
+        {
+          "source_id": "pstree",
+          "section": "result"
+        },
+        {
+          "source_id": "cron",
+          "section": "overview"
+        },
+        {
+          "source_id": "cron",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "static_analysis",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ci",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "稼働Imageが/tmp配下にあり、www-dataのcrontabで毎分再起動する登録があるため、承認された静的Web Serviceの運用から外れています。この継続・再起動を許可しません。",
   "topic": "稼働Processとcron登録を同一Pathで結び付ける",
   "summary": "稼働Processとcron登録を同一Pathで結び付ける",

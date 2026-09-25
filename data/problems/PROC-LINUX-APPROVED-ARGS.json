@@ -52,7 +52,203 @@
     "ps",
     "job"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "job",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "job",
+          "section": "overview"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "storage",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_ps",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elapsed",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "job",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "端末監視の起動記録がPID 4200をsystemd起動のJOB-501に対応付けており、psで確認した実行User・Path・引数も登録内容に一致するため継続を許可します。PPIDが1であることだけを起動元の証明にはしません。",
   "topic": "psのUser・Path・引数をJob定義と比較する",
   "summary": "psのUser・Path・引数をJob定義と比較する",

@@ -86,7 +86,284 @@
     "domain_rep",
     "disclosure"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "strings",
+          "section": "overview"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "static_analysis",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "overview"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_strings",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reputation",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "detection",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "malware",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "静的文字列にある取得先Domainが、外部照会で現行のMalware配布先として報告されているため遮断します。文字列だけで通信が発生したとは扱いません。",
   "topic": "静的文字列から得たDomainを外部照会する",
   "summary": "静的文字列から得たDomainを外部照会する",

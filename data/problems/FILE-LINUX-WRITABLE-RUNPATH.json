@@ -93,7 +93,294 @@
     "elf",
     "service"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "overview"
+        },
+        {
+          "source_id": "strings",
+          "section": "overview"
+        },
+        {
+          "source_id": "elf",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "install",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "magic",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_file",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elf",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "overview"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "stripped",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "architecture",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elf_flags",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "static_analysis",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "overview"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_strings",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "temp",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "shared_library",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "overview"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elf_interpreter",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "runpath",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dependency",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_readelf",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "root",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "permissions",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "RUNPATHが一般Userの書込み可能な共有ディレクトリを優先し、承認構成と不一致のため遮断します。ライブラリが実際に読み込まれたとは扱いません。",
   "topic": "静的なRUNPATHと配置権限を照合する",
   "summary": "静的なRUNPATHと配置権限を照合する",

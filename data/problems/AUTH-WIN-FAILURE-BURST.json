@@ -31,7 +31,100 @@
     "initial_information",
     "policy"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "password",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "直前5分の同一Source・Userへの認証失敗がPolicyの閾値20回に達し、今回はその直後の次の要求なので、15分間の一時遮断条件に従ってBLOCKします。今回のSessionは未成立です。失敗回数だけから攻撃手法・攻撃者・Account侵害の成功を断定しません。",
   "topic": "提示された失敗回数をReferenceの閾値と比較する",
   "summary": "提示された失敗回数をReferenceの閾値と比較する",

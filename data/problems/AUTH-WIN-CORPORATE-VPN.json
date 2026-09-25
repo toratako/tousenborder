@@ -68,7 +68,251 @@
     "device",
     "policy"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "vpn",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "mfa",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "vpn",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "vpn",
+          "section": "overview"
+        },
+        {
+          "source_id": "vpn",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "device",
+          "section": "overview"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "password",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "logon_type",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "log",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_events",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "event_id",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "vpn",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "reference",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "active_revoked",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "接続元IPは契約済み企業VPN出口で、Tunnelの本人・管理Device・今回のMFAが一致するため許可します。IPの地理表示だけを移動や侵害の証拠にはしません。",
   "topic": "VPN出口のIPと利用者の実際の経路を区別する",
   "summary": "VPN出口のIPと利用者の実際の経路を区別する",

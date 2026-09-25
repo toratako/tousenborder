@@ -81,7 +81,334 @@
     "official",
     "sig"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "powershell",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "win_r",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dll",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        },
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_pe",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "training_placeholder",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "iwr_curl",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "pe",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "signature",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "vendor",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_sigcheck",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "terminal",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "browser",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "CAPTCHAの案内で貼り付けたCommandは、PowerShellによる外部Scriptの取得・実行でした。人間確認にOS Commandを使わない公式手順と矛盾するため停止します。",
   "topic": "利用者の操作経緯と実行中Commandを照合する",
   "summary": "利用者の操作経緯と実行中Commandを照合する",

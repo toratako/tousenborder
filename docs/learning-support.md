@@ -1,6 +1,6 @@
 # 学習支援の移植
 
-7fd014cを土台に、用語集・勤務履歴を移植。既存112問、教材レビュー、超初級のReference利用仕様を維持した。問題ごとの用語の執筆は今回の対象外。
+7fd014cを土台に、用語集・勤務履歴を移植。既存112問、教材レビュー、超初級のReference利用仕様を維持した。標準Packの全112問に用語を付与済み。
 
 ## 編集先
 
@@ -16,7 +16,13 @@
 
 ## 教材追加時
 
-標準Packにはglossary_pathをまだ指定していない。用語を付与する際はres://data/glossary/security.jsonを指定し、問題のglossaryへterm_idとoccurrencesを追加する。sectionはinitial／overview／result／submission。source_idはinitial_informationまたは問題内の資料ID。いずれかの箇所を閲覧すると用語を表示する。UIは用語名と開閉する説明のみで、登場箇所タグは表示しない。
+標準Packのglossary_pathはres://data/glossary/security.json。共通辞書は215語で、標準問題では206語を参照する。追加・修正は辞書のlabel／descriptionと問題のglossaryを編集する。未参照の既存語も残している。
+
+sectionはinitial／overview／result／submission。source_idはinitial_informationまたは問題内の資料ID。いずれかの箇所を閲覧すると用語を表示する。overviewは資料名・案内を指し、資料本文はresult。UIは用語名と開閉する説明のみで、登場箇所タグは表示しない。
+
+用語の対応はJSONで明示する。実行時の単語検索ではない。title・explanationから用語を先出ししない。Port（通信／lastlogの端末）、Resolver（DNS／パッケージ）、Source（接続元／取得元／コード）は文脈でIDを使い分ける。説明は短い平易な文とし、その問題の正解や未閲覧の事実を書かない。
+
+用語集UIは開閉マーク付きの見出しと背景・余白付き説明。検索は閲覧済み用語の名前・説明だけを絞る（大小文字を無視）。検索語・開閉状態は同じ問題では保持し、問題変更でリセットする。件数表示とTab移動も絞込後の一覧に合わせる。配置はdesk_layout.gd、検索と状態はdesk.gd。
 
 
 ## 保存・検証
@@ -28,13 +34,15 @@
 
 勤務終了時にuser://historyへスナップショットを保存。途中再開は対象外。解説・初期情報・調査記録を保存し、現在の教材から再計算しない。辞書の過去版は保存しない。保存形式変更時はschema_versionと移行を検討する。
 
-tests/fixtures/learning-supportは出題しない専用教材。test_learning_support.py／.gdで追加項目の検証、表示タイミング、保存・再読込・失敗時の再試行を確認する。test_playable_content.gdは最新版全問を未記入のまま通し、履歴保存まで検証する。
+tests/fixtures/learning-supportは出題しない専用教材。test_learning_support.py／.gdで追加項目の検証、表示タイミング、保存・再読込・失敗時の再試行を確認する。Python側では標準教材の紛らわしい用語・結果用語の先出しも検証する。test_playable_content.gdは標準全問の資料を辿り、履歴保存まで検証する。
 
 移植時の検証: Python 48テスト・カタログ照合成功。Godot 4.5.1で19/20テスト成功（112問の保存・再読込を含む）。test_content_sizing.gd:29は以前から確認されているサイズ検証の失敗が残る。最新版指定の4.7.2では未検証。
 
+用語執筆後の検証: Python 54テスト・カタログ照合成功。Godot 4.5.1のtest_learning_support.gdとtest_playable_content.gdも成功。
+
 ## 記入用ひな形
 
-全112問のexplanation直前にglossaryの空配列を追加済み。空のままなら何も表示しない。以下は形式例であり、問題の内容に合わせて配列の中身を記入する。
+各問題のexplanation直前にglossaryがある。以下は追加する際の形式例。空配列なら何も表示しない。
 
 ```json
 "glossary": [
@@ -47,7 +55,7 @@ tests/fixtures/learning-supportは出題しない専用教材。test_learning_su
 ]
 ```
 
-term_idは共通辞書のキーを指定する。実行後に表示する語は、その問題のツールIDとsection: resultを指定する。用語を記入する際は、Packにもglossary_path: res://data/glossary/security.jsonを設定する。
+term_idは共通辞書のキーを指定する。実行後に表示する語は、その問題のツールIDとsection: resultを指定する。新しいPackでも辞書を利用するならglossary_pathの指定が必要。
 
 
 診断・監査手順は撤去し、追加機能は用語集と勤務履歴のみを残した。履歴形式はschema_version=2。以前の形式は移行せず読み飛ばす（ファイルは削除しない）。

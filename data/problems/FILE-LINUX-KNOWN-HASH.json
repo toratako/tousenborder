@@ -86,7 +86,265 @@
     "disclosure",
     "hash_rep"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "hash_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "temp",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "hash_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "hash_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "hash_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "hash_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_hash_linux",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reputation",
+      "occurrences": [
+        {
+          "source_id": "hash_rep",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "detection",
+      "occurrences": [
+        {
+          "source_id": "hash_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "malware",
+      "occurrences": [
+        {
+          "source_id": "hash_rep",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "対象Hashには現在有効なMalware検出が複数登録されているため実行を遮断します。未知のHashという理由で遮断しているのではありません。",
   "topic": "sha256sumの結果を外部評判と照合する",
   "summary": "sha256sumの結果を外部評判と照合する",

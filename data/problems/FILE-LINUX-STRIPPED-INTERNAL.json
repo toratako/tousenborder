@@ -107,7 +107,319 @@
     "elf",
     "approved"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "magic",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_file",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elf",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "overview"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "stripped",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "architecture",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elf_flags",
+      "occurrences": [
+        {
+          "source_id": "file",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_hash_linux",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "elf_interpreter",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "shared_library",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "runpath",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        },
+        {
+          "source_id": "elf",
+          "section": "result"
+        },
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "static_analysis",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "dependency",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_readelf",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "n_a",
+      "occurrences": [
+        {
+          "source_id": "elf",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "approved",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "build",
+      "occurrences": [
+        {
+          "source_id": "approved",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "strippedは承認済みRelease仕様であり、Hash・Loader・依存ライブラリも台帳に一致するため許可します。シンボルがないこと自体は悪性根拠ではありません。",
   "topic": "stripped Binaryを承認されたBuild情報で検証する",
   "summary": "stripped Binaryを承認されたBuild情報で検証する",

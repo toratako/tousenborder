@@ -92,7 +92,208 @@
     "official",
     "contract"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "resolve",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "resolve",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        },
+        {
+          "source_id": "contract",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "browser",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "dns",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_dns",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "result"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        },
+        {
+          "source_id": "contract",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ttl",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_records",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "result"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        },
+        {
+          "source_id": "contract",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tenant",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "result"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        },
+        {
+          "source_id": "contract",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_resolver",
+      "occurrences": [
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reference",
+      "occurrences": [
+        {
+          "source_id": "contract",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "release",
+      "occurrences": [
+        {
+          "source_id": "contract",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "contract",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "通常のDomain一覧への反映は未完了ですが、変更承認と契約TenantへのCNAMEが一致するためアクセスを許可します。CNAMEだけで所有権を判断したわけではありません。",
   "topic": "Domain一覧の不足を契約・変更承認で補う",
   "summary": "Domain一覧の不足を契約・変更承認で補う",

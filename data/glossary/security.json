@@ -3,155 +3,155 @@
   "terms": {
     "file": {
       "label": "File（ファイル）",
-      "description": "文書やプログラムなど、名前を付けて保存したデータです。名前や拡張子だけで実際の内容は保証されません。"
+      "description": "文書やプログラムなど、名前を付けて保存したデータです。ファイル名だけでは、中身の形式や安全性は分かりません。"
     },
     "extension": {
-      "label": "拡張子",
-      "description": "ファイル名の末尾に付く .pdf や .exe などの部分です。形式の手掛かりですが、名前は変更できるため内容の確認も必要です。"
+      "label": "拡張子（.pdf・.exeなど）",
+      "description": "ファイル名の末尾に付く、形式の目印です。名前は変更できるため、拡張子と実際の中身が違う場合があります。"
     },
     "executable": {
-      "label": "実行ファイル",
-      "description": "開くとプログラムとして動くファイルです。文書として届いても、末尾が .exe なら文書と同じ扱いでは開けません。"
+      "label": "Executable / .exe（実行ファイル）",
+      "description": "開くとプログラムとして動くファイルです。.exeはWindowsの実行ファイルによく使われる拡張子です。"
     },
     "pdf": {
       "label": "PDF",
-      "description": "文書の見た目を保って配布するための形式です。PDFという名前や形式だけで、内容の安全性が保証されるわけではありません。"
+      "description": "文書の見た目を保って配布するための形式です。名前に.pdfが付いていることと、中身がPDFであることは別です。"
     },
     "size": {
-      "label": "Size / bytes",
-      "description": "ファイルや通信データの大きさです。byteは量の単位で、KiBは1,024 bytes、MiBは1,024 KiBです。大きさだけでは安全か判断できません。"
+      "label": "bytes / KiB / MiB / GiB（データ量）",
+      "description": "データの大きさの単位です。1 KiBは1,024 bytes、1 MiBは1,024 KiB、1 GiBは1,024 MiBです。"
     },
     "path": {
-      "label": "Path（パス）",
-      "description": "ファイルやフォルダの場所を表す文字列です。同じ名前でも保存先が異なる場合があるため、承認された場所と照合します。"
+      "label": "Path（ファイルの場所）",
+      "description": "ファイルやフォルダーの場所を表す文字列です。C:\\Company\\app.exeや/opt/appなどが例です。"
     },
     "archive": {
-      "label": "Archive（アーカイブ）",
-      "description": "複数のファイルを一つにまとめたものです。圧縮されている場合もあります。内容一覧を見ることと、中のプログラムを実行することは別です。"
+      "label": "Archive / ZIP / tar.gz（アーカイブ）",
+      "description": "複数のファイルを一つにまとめたものです。圧縮される場合もあります。中身の一覧を見る操作と、中のプログラムを実行する操作は別です。"
     },
     "elf": {
-      "label": "ELF",
-      "description": "Linuxなどで実行ファイルや共有ライブラリに使う形式です。ELFという結果は形式を示し、それだけで不正なプログラムと決まるわけではありません。"
+      "label": "ELF（Linuxなどのファイル形式）",
+      "description": "Linuxなどの実行ファイルやプログラム部品に使われる形式です。ELFという表示は形式を示し、安全性の判定ではありません。"
     },
     "hash": {
       "label": "Hash（ハッシュ値）",
-      "description": "データから計算した照合用の値です。別経路の信頼できる公開値と比較して、同じ内容か確認します。一致しても、そのプログラムの利用承認は別に確認します。"
+      "description": "データから計算する照合用の値です。同じ方式の値を比べて、内容が一致するかを確認できます。照合先の情報が信頼できることも必要です。"
     },
     "sha256": {
       "label": "SHA-256",
-      "description": "ハッシュ値を計算する方式の一つです。値は通常64文字の16進数で表示されます。同じ方式で計算した値同士を比較します。"
+      "description": "ハッシュ値を計算する方式の一つです。ファイルの値は通常64文字の16進数で表示されます。SSHの鍵では別の表記も使われます。"
     },
     "signature": {
-      "label": "電子署名 / Verified Signer",
-      "description": "署名者と、署名後にデータが変わっていないかを確認する仕組みです。署名の有無だけで安全性や社内での実行許可は決まりません。"
+      "label": "電子署名 / Signed / Verified",
+      "description": "署名者や、署名後に対象が改変されていないかを確認する仕組みです。署名が有効でも、利用目的や動作の安全性までは保証しません。"
     },
     "unsigned": {
       "label": "Unsigned（未署名）",
-      "description": "電子署名が付いていない状態です。未署名だけで悪意があるとは断定できません。承認記録や配布元のハッシュ値なども確認します。"
+      "description": "電子署名が付いていない状態です。これだけで悪意があるとは決まりません。"
     },
     "vendor": {
-      "label": "Vendor / Approved Software",
-      "description": "Vendorは製品の提供元、Approved Softwareは利用を承認されたソフトウェアです。提供元の情報と組織内の利用承認は分けて確認します。"
+      "label": "Vendor / Publisher（提供元）",
+      "description": "製品を提供する会社や開発者です。Publisherは発行元を表し、署名の検証結果などに表示されます。"
     },
     "upload": {
       "label": "Upload（アップロード）",
-      "description": "手元のデータを別の場所へ送る操作です。ファイル本体の送信とハッシュ値だけの照会では、渡る情報が異なります。"
+      "description": "手元のデータを別のコンピューターやサービスへ送ることです。外部解析へファイルを送る操作も含まれます。"
     },
     "confidential": {
-      "label": "社外秘",
-      "description": "組織の外へ出してはいけない情報の区分です。解析サービスへの送信も外部への提供に当たるため、組織の方針を確認します。"
+      "label": "社外秘 / 機密情報",
+      "description": "組織の外への提供を制限する情報です。調査のためであっても、外部サービスに送れるかは組織の規則に従います。"
     },
     "process": {
       "label": "Process（プロセス）",
-      "description": "実行中のプログラムです。このゲームでは、すでに動いているProcessを継続させるか停止するか判断します。"
+      "description": "実行中のプログラムです。同じプログラムを複数起動すると、別々のプロセスとして動くことがあります。"
     },
     "pid": {
       "label": "PID / PPID",
-      "description": "PIDは実行中のプロセスを区別する番号、PPIDはその親プロセスの番号です。名前が同じでも番号が違えば別の実行として調べます。"
+      "description": "PIDは実行中のプロセスを区別する番号、PPIDはその親プロセスの番号です。同じ名前のプログラムを区別する手掛かりになります。"
     },
     "parent": {
-      "label": "親子プロセス",
-      "description": "別のプログラムを起動した側が親、起動された側が子です。どのプログラムから起動されたかを、通常の業務手順と比較します。"
+      "label": "Parent / 親子プロセス",
+      "description": "プログラムを起動した側が親、起動された側が子です。親をたどると、どこから起動されたかが分かります。"
     },
     "command": {
       "label": "Command Line / 引数",
-      "description": "プログラムの起動時に渡す命令や設定です。同じプログラム名でも、引数によって行う処理や対象ファイルが変わります。"
+      "description": "Command Lineは実行するプログラムと、その後に付ける指定の並びです。引数は対象ファイルや設定などを渡す部分です。"
     },
     "powershell": {
       "label": "PowerShell",
-      "description": "Windowsの管理や作業の自動化などに使う実行環境です。正規の管理にも悪用にも使われるので、起動元・実行内容・承認を合わせて確認します。"
+      "description": "Windowsの管理や作業の自動化などに使う実行環境です。同じPowerShellでも、渡された命令によって動作が変わります。"
     },
     "encodedcommand": {
-      "label": "EncodedCommand",
-      "description": "PowerShellへ、文字列を符号化した形で命令を渡す指定です。指定の有無だけで結論を出さず、起動元や接続先も確認します。"
+      "label": "-EncodedCommand / Base64",
+      "description": "PowerShellへ、文字を別の表し方に変えた命令を渡す指定です。Base64はその表し方の一つで、暗号化ではありません。"
     },
     "script": {
-      "label": "Script（スクリプト）",
-      "description": "実行する処理を記述したファイルです。実行環境のプログラム本体と、その環境で動かすスクリプトは別のファイルです。"
+      "label": "Script / .sh / .ps1 / .js",
+      "description": "処理の手順を書いたプログラムです。.shは主にシェル、.ps1はPowerShell、.jsはJavaScriptで使う拡張子です。"
     },
     "service": {
-      "label": "Service / Unit",
-      "description": "バックグラウンドで動く機能です。LinuxのsystemdではUnitという単位で管理します。登録名・実行ユーザー・設定を台帳と照合します。"
+      "label": "Service / Unit（常駐処理）",
+      "description": "Serviceは裏側で動く機能です。Linuxのsystemdでは、サービスなどの設定や状態をUnitという単位で管理します。"
     },
     "user": {
-      "label": "User / Username",
-      "description": "操作や実行に使われる利用者の識別名です。プロセスの実行ユーザーや、認証対象のアカウントを確認するために使います。"
+      "label": "User / Account（利用者・アカウント）",
+      "description": "システムを利用する人やプログラムの識別情報です。ログインする本人や、処理を実行する権限の持ち主を表します。"
     },
     "resource_usage": {
-      "label": "CPU / Memory",
-      "description": "CPUは計算処理、Memoryは実行中のデータを置く領域です。使用量は動作の手掛かりですが、少ないから安全、多いから不正とは限りません。"
+      "label": "CPU / Memory（使用量）",
+      "description": "CPUは計算を行う部分、Memoryは処理中のデータを置く領域です。使用量の大小だけでは、正常な処理かどうかは決まりません。"
     },
     "shell": {
-      "label": "shell（シェル）",
-      "description": "文字で指定した命令を解釈して実行するプログラムです。業務上必要な起動かどうか、起動元や運用設計と照合します。"
+      "label": "Shell / sh（シェル）",
+      "description": "文字で書かれた命令を受け取り、実行するプログラムです。Linuxなどの/bin/shやbash、WindowsのPowerShellなどがあります。"
     },
     "cron": {
-      "label": "crontab",
-      "description": "指定した日時や間隔で処理を自動実行するための設定です。誰の設定か、何を実行するか、承認された作業かを確認します。"
+      "label": "cron / crontab（定期実行）",
+      "description": "決まった時刻に処理を動かす仕組みと、その設定です。時刻の5欄は分・時・日・月・曜日で、*はその欄のすべてを表します。"
     },
     "socket": {
       "label": "Socket（ソケット）",
-      "description": "プログラムが通信に使う窓口です。通信先だけでなく、そのソケットを持つプロセスも調べると実行内容との関係が分かります。"
+      "description": "プログラムが通信に使う窓口です。通信相手のアドレスや、その窓口を使っているプロセスを調べられます。"
     },
     "ip": {
-      "label": "IP Address",
-      "description": "ネットワーク上の通信先や送信元を識別するアドレスです。IPだけで利用者や組織を断定せず、端末台帳や接続記録と照合します。"
+      "label": "IP Address / IPv4",
+      "description": "ネットワーク上の送信元や宛先を表す番号です。IPv4では192.0.2.10のように書きます。番号だけで利用者や安全性は特定できません。"
     },
     "port": {
-      "label": "Port（ポート番号）",
-      "description": "同じ端末の中で通信の窓口を区別する番号です。443などよく使われる番号でも、その通信の正当性は別に確認します。"
+      "label": "Port（通信ポート番号）",
+      "description": "同じコンピューターの中で、通信先の機能を区別する番号です。よく使われる番号でも、その通信が安全とは限りません。"
     },
     "tcp": {
       "label": "TCP",
-      "description": "相手と接続を確立してデータをやり取りする通信方式です。接続先や状態だけで、通信内容の安全性は分かりません。"
+      "description": "データの順序や届いたかどうかを確認しながら通信する方式です。通常は接続を確立してからデータをやり取りします。"
     },
     "udp": {
       "label": "UDP",
-      "description": "TCPのような接続確立の手順を持たない通信方式です。通信方式だけで正当な利用かどうかは判断できません。"
+      "description": "TCPのような接続確立や再送の確認を行わずにデータを送る方式です。必要な確認は、利用するアプリ側などで行います。"
     },
     "syn": {
       "label": "SYN / SYN-SENT",
-      "description": "SYNはTCP接続を開始するための信号です。SYN-SENT（SynSent）は開始要求を送って応答を待つ状態で、接続成立後の状態とは異なります。"
+      "description": "SYNはTCP接続を始めるための信号です。SYN-SENTは開始要求を送り、相手の応答を待っている状態です。"
     },
     "established": {
-      "label": "ESTABLISHED",
-      "description": "TCP接続が成立している状態です。接続があることを示すだけで、その接続が承認されているとは限りません。"
+      "label": "ESTABLISHED / ESTAB",
+      "description": "TCP接続が成立した状態です。接続できたことを示し、その相手や利用が承認済みかは別です。"
     },
     "flow": {
-      "label": "Packet / Flow",
-      "description": "Packetは通信を分割した小さなデータの単位、Flowは関連する通信のまとまりです。過去の通信記録と現在の接続要求を混同しないようにします。"
+      "label": "Packet / Flow / Conversation",
+      "description": "Packetは通信を分割したデータの単位です。FlowやConversationは、関連する通信をまとめて扱うときの呼び方です。"
     },
     "outbound": {
       "label": "outbound（外向き通信）",
       "description": "端末やネットワークの内側から外側へ向かう通信です。外向きだから禁止とは限らず、業務上認められた接続先かを調べます。"
     },
     "endpoint": {
-      "label": "Endpoint",
-      "description": "通信の接続先や端点です。この教材の接続先では、IPアドレスとポート番号の組などを指します。"
+      "label": "Endpoint（通信の端点）",
+      "description": "通信を送受信する側を指します。この教材の通信資料では、接続先のIPアドレスとポート番号の組などを表します。"
     },
     "tls": {
       "label": "TLS",
-      "description": "通信経路の暗号化などに使う仕組みです。暗号化された通信でも相手が信頼できるとは限らず、パケット一覧だけで暗号化本文は読めません。"
+      "description": "通信内容を暗号化し、途中で読まれたり改変されたりすることを防ぐ仕組みです。暗号化されていても、相手が安全とは限りません。"
     },
     "edr": {
       "label": "EDR / Telemetry",
@@ -159,27 +159,27 @@
     },
     "url": {
       "label": "URL",
-      "description": "Web上の場所を示す文字列です。接続方式、Host、Path、追加パラメータなどに分かれます。リンクの表示文字列と実際のURLは別に確認します。"
+      "description": "Webページなどの場所を表す文字列です。例のhttps://site.example/helpでは、接続方式・接続先の名前・ページの場所が指定されています。"
     },
     "host": {
-      "label": "Host / Domain",
-      "description": "Hostは接続する相手の名前です。Domainは名前の区切りによる領域で、左側に名前を加えると下位の名前になります。URL内に有名な名前が含まれるだけでは正規の接続先とは限りません。"
+      "label": "Host / Domain（ホスト名・ドメイン）",
+      "description": "Hostは接続先の名前で、Domainは名前を管理する区切りです。login.example.comはexample.comの下位の名前です。"
     },
     "dns": {
       "label": "DNS / 名前解決",
-      "description": "Hostなどの名前からIPアドレスなどを調べる仕組みです。結果を承認済みの台帳と比較します。名前が引けること自体は安全性の保証ではありません。"
+      "description": "名前とIPアドレスなどの対応を調べる仕組みです。名前が引けることと、その接続先が安全なことは別です。"
     },
     "ttl": {
-      "label": "TTL",
-      "description": "DNSの結果などを再利用してよい期間を示す値です。この教材のDNS出力では秒数です。サイトが開設されてからの期間ではありません。"
+      "label": "TTL（DNSの有効時間）",
+      "description": "DNSの回答を保存し、再利用してよい時間です。この教材では秒数を表し、サイトの運営年数ではありません。"
     },
     "rdap": {
-      "label": "RDAP",
-      "description": "ドメインなどの登録情報を確認するための仕組みです。登録日とサイトの開設日は別であり、登録情報だけで安全性を決めません。"
+      "label": "RDAP（登録情報の照会）",
+      "description": "ドメインやIPアドレスの登録・割当情報を調べる仕組みです。登録者の情報だけで、サイトの内容や安全性は保証されません。"
     },
     "token": {
       "label": "Token（トークン）",
-      "description": "認証や操作の許可に使う情報です。URL内の再設定用Tokenなどを第三者に送ると、操作に必要な情報まで渡るおそれがあります。"
+      "description": "認証や操作の許可に使う情報です。URLに含まれる再設定用Tokenなどは、他人に渡すと操作を悪用されるおそれがあります。"
     },
     "private": {
       "label": "Public / Unlisted / Private",
@@ -190,72 +190,72 @@
       "description": "コピーした文字や画像を一時的に置く場所です。内容を確認せず実行画面へ貼り付けると、意図しない命令を実行する可能性があります。"
     },
     "isolated": {
-      "label": "隔離環境 / 隔離解析",
-      "description": "通常の業務環境から切り離して対象を調べる方法です。このゲームでは保存済みの解析資料を読み、実際のページやプログラムは実行しません。"
+      "label": "隔離環境 / Isolated Analysis",
+      "description": "通常の業務環境から切り離して対象を調べる環境です。外部の隔離サービスでも、送った情報はサービス側に渡ります。"
     },
     "header": {
-      "label": "Header / Raw Header",
-      "description": "メールの送信経路や認証結果などを記録した付随情報です。本文や表示名だけでは分からない送信元の整合を確認します。"
+      "label": "メールのHeader（ヘッダー）",
+      "description": "送信者・配送経路・認証結果などを記した付随情報です。本文や表示名だけでは分からない情報を確認できます。"
     },
     "reply_to": {
       "label": "From / Reply-To / Return-Path",
-      "description": "Fromは表示上の送信者、Reply-Toは返信先、Return-Pathは配送エラーなどの返送先です。役割が異なるので、同じアドレスと決めつけず照合します。"
+      "description": "メールのFromは差出人、Reply-Toは返信先、Return-Pathは配送エラーの返送先です。役割が違うため、必ず同じになるわけではありません。"
     },
     "spf": {
       "label": "SPF",
-      "description": "メールを配送したサーバーが、その送信用ドメインで許可されているかを確認する仕組みです。Passでも、画面に表示されるFromと同じドメインとは限りません。"
+      "description": "メールを送ったサーバーが、送信用ドメインで許可されているかを確認する仕組みです。表示上のFromのドメインとは別の場合があります。"
     },
     "dkim": {
       "label": "DKIM",
-      "description": "メールに付いたドメインの電子署名を検証する仕組みです。どのドメインの署名がPassしたか確認します。依頼内容の正当性まで保証するものではありません。"
+      "description": "メールに付いたドメインの電子署名を確認する仕組みです。署名が有効でも、本文の依頼が正当とは限りません。"
     },
     "dmarc": {
       "label": "DMARC",
-      "description": "表示上のFromのドメインと、SPFやDKIMで確認されたドメインの整合を確認する仕組みです。Passしても送信者の依頼が正当とは限りません。"
+      "description": "表示上のFromのドメインと、SPFまたはDKIMで確認したドメインの整合を確認します。認証成功でも依頼内容まで保証しません。"
     },
     "attachment": {
-      "label": "添付ファイル",
-      "description": "メールに付けて送られたファイルです。メールの送信元確認に加え、添付そのものの形式や配布元との一致も確認します。"
+      "label": "添付ファイル / attachment",
+      "description": "メールに付けて送られる文書や画像などのファイルです。メール本体とは別に、中身や形式を確認する対象です。"
     },
     "metadata": {
       "label": "Metadata（メタデータ）",
-      "description": "データについての付随情報です。ファイル形式・作成情報や、パッケージの名前・版・配布元などがあります。単独の項目だけで結論を出しません。"
+      "description": "データについての説明情報です。パッケージなら名前・版・配布元・依存先などが含まれます。"
     },
     "directory": {
-      "label": "Directory（台帳・一覧）",
-      "description": "この教材のCompany Directoryや取引先Directoryは、正規の連絡先などを記録した一覧です。ファイルの保存先を指すdirectory（フォルダ）とは文脈が異なります。"
+      "label": "Company / Vendor Directory（連絡先台帳）",
+      "description": "組織や取引先の正規の連絡先などをまとめた一覧です。この教材では、保存先のフォルダーという意味ではありません。"
     },
     "independent": {
-      "label": "別経路確認",
-      "description": "届いたメッセージの返信先などをそのまま使わず、既存の台帳などから得た連絡先で確認することです。偽の依頼者への問い合わせになることを避けます。"
+      "label": "別経路確認 / 独立確認",
+      "description": "受け取ったメールの返信先や電話番号をそのまま使わず、以前から知っている連絡先などで確認することです。"
     },
     "authentication": {
-      "label": "Authentication（認証）",
-      "description": "誰が利用しようとしているかを確認する手続きです。パスワード照合が成功しても、追加認証や端末条件を満たすまでは利用を許可できない場合があります。"
+      "label": "認証 / Authentication",
+      "description": "相手が名乗る本人・機器・組織などかを確かめることです。本人確認と、その操作を許可することは別です。"
     },
     "session": {
       "label": "Session（セッション）",
-      "description": "ログインなどによって成立する、利用者とサービスの一連のやり取りです。この教材の認証問題では今回のSession成立前に判断します。"
+      "description": "ログインなどによって始まる、一連の利用や通信のまとまりです。過去のセッションと、今回の接続要求は区別します。"
     },
     "mfa": {
       "label": "MFA（多要素認証）",
-      "description": "パスワードなどの知識に加え、持っている機器など別の種類の要素を組み合わせて本人確認する方式です。必要な追加認証が完了したか確認します。"
+      "description": "パスワードなどの知識と、持っている機器など、異なる種類の証拠を組み合わせて本人確認する方法です。"
     },
     "gateway": {
       "label": "Gateway（ゲートウェイ）",
-      "description": "通信や認証の経路上で中継・制御する仕組みです。この教材では、組織が指定した経路を通っているかも確認します。"
+      "description": "通信の出入口で中継や制御を行う仕組みです。この教材では、メールや認証要求を一時保留して審査する役割もあります。"
     },
     "ssh": {
-      "label": "SSH",
-      "description": "離れた端末へ暗号化された経路で接続して操作する仕組みです。接続元・利用者・認証・作業予定を合わせて確認します。"
+      "label": "SSH / sshd",
+      "description": "SSHは離れたコンピューターを暗号化された通信で操作する仕組みです。sshdは接続を受け付ける側のプログラムです。"
     },
     "log": {
       "label": "Log（ログ）",
-      "description": "いつ何が起きたかを残す記録です。今回の要求より前の記録か、成功・失敗のどちらかを区別して読みます。"
+      "description": "いつ、何が起きたかを残す記録です。時刻や対象を見て、過去の出来事と現在の要求を区別して読みます。"
     },
     "event_id": {
-      "label": "Event ID 4624 / 4625",
-      "description": "Windowsの認証記録で、4624はログオン成功、4625は失敗を示します。この教材では過去の記録であり、今回のMFA結果そのものではありません。"
+      "label": "Event ID 4624 / 4625 / 4634",
+      "description": "Windowsの記録の種類を表す番号です。4624はログオン成功、4625は失敗、4634はログオンした状態の終了を示します。"
     },
     "fido2": {
       "label": "FIDO2 / Security Key",
@@ -266,52 +266,600 @@
       "description": "MDMは組織の端末を管理する仕組みです。準拠とは、定められた設定などの条件を満たす状態です。登録・交換の記録も照合します。"
     },
     "vpn": {
-      "label": "VPN",
-      "description": "別のネットワークへ仮想的な通信経路を作る仕組みです。会社VPNを使う場合、接続元IPがその出口になることがあります。利用承認や他の認証条件も確認します。"
+      "label": "VPN / Tunnel",
+      "description": "離れたネットワークへ仮想的な通信経路を作る仕組みです。Tunnelはその経路です。接続元IPがVPNの出口のIPになることがあります。"
     },
     "package": {
-      "label": "Package（パッケージ）",
-      "description": "ソフトウェアやその部品を配布・導入する単位です。似た名前の別物を避けるため、名前・版・配布元を照合します。"
+      "label": "Package / Component（ソフトウェア部品）",
+      "description": "ソフトウェアやその部品を配布・導入する単位です。名前が似ていても別の部品の場合があります。"
     },
     "registry": {
       "label": "Registry / PyPI / npm",
-      "description": "ここでのRegistryはパッケージの配布サービスです。PyPIはPython、npmはJavaScriptなどのパッケージを扱います。Windowsの設定を保存するレジストリとは別です。"
+      "description": "パッケージを配布する場所です。PyPIは主にPython、npmは主にJavaScriptで使われます。Windowsの設定用レジストリとは別です。"
     },
     "repository": {
       "label": "Repository（リポジトリ）",
-      "description": "ソースコードと変更履歴などを管理する場所です。リポジトリの公開物と、配布サービスから届くファイルが同じ内容かは別に確認します。"
+      "description": "プログラムの元になるコードや変更履歴を管理する場所です。そこにあるコードと実際の配布物は、別々に確認できます。"
     },
     "lock_file": {
-      "label": "Lock file",
-      "description": "依存するパッケージの版や配布元などを記録するファイルです。承認済みの記録と、導入する対象を比較するために使います。"
+      "label": "Lock File（依存関係の固定記録）",
+      "description": "利用する部品の版や取得元などを記録したファイルです。同じ構成を再現したり、承認した構成と比べたりするために使います。"
     },
     "integrity": {
-      "label": "integrity",
-      "description": "配布物の内容を照合するためのハッシュ値などを記録した項目です。承認済みの記録と一致するかを確認します。"
+      "label": "integrity / SHA-512",
+      "description": "integrityは、取得した内容を照合するための値を記録した項目です。sha512-で始まる値はSHA-512という方式を使っています。"
     },
     "install_script": {
-      "label": "install / postinstall",
-      "description": "パッケージ導入時に自動実行される処理の指定です。正規のビルドにも使われるため、有無だけで判断せず何をするかを確認します。"
+      "label": "Install Script / install / postinstall",
+      "description": "パッケージの導入に伴って自動実行される処理です。必要な準備にも使われるので、あるかどうかと何をするかを区別します。"
     },
     "build": {
-      "label": "Build / Native Module",
-      "description": "Buildはソースコードなどから実行できる成果物を作る作業です。Native Moduleは実行環境に合わせて機械語などで用意する部品で、導入時にBuildする場合があります。"
+      "label": "Build / コンパイル",
+      "description": "プログラムの元のコードなどから、実行・配布できる成果物を作る作業です。コンパイルはコードを実行環境向けの形に変換する処理です。"
     },
     "maintainer": {
-      "label": "Maintainer",
-      "description": "パッケージなどを保守する人や組織です。公開物に疑いがある場合は、既存の連絡先など別経路で得た告知と照合します。"
+      "label": "Maintainer（保守担当者）",
+      "description": "パッケージなどを更新・管理する人や組織です。担当者の名前は、配布元を確かめる情報の一つになります。"
     },
     "osv": {
-      "label": "OSV / Vulnerability",
-      "description": "OSVは既知の脆弱性情報を照会するためのデータベースです。脆弱性は悪用され得る弱点を指します。結果が0件でも、その配布物が安全という証明にはなりません。"
+      "label": "OSV（脆弱性情報のデータベース）",
+      "description": "ソフトウェアの既知の弱点と、影響する版などを調べるためのデータベースです。該当情報がないことは、安全性の証明ではありません。"
     },
     "version": {
       "label": "Version（バージョン）",
-      "description": "製品やデータの版を区別する番号などです。同じ名前でも版によって内容が変わるため、承認された版と一致するか確認します。"
+      "description": "ソフトウェアなどの版を区別する番号や名前です。同じ製品名でも、版が違うと機能や不具合が異なる場合があります。"
     },
     "terminal": {
-      "label": "Terminal / pts",
-      "description": "文字で操作する端末です。lastやlastlogのpts/0などは操作端末の識別名です。lastlogのPort欄もこの端末を示し、TCPのポート番号とは異なります。"
+      "label": "Terminal / tty / pts（操作端末）",
+      "description": "文字で命令を入力する操作画面です。tty1やpts/0は端末の識別名です。lastlogのPort欄もこの意味で、通信ポート番号ではありません。"
+    },
+    "approved": {
+      "label": "Approved（承認済み）",
+      "description": "組織が利用や変更を認めた状態です。Approved Softwareは承認済みソフト、Approved Serversは承認済み接続先の資料です。"
+    },
+    "reference": {
+      "label": "Reference（参照資料）",
+      "description": "照合に使う台帳や規則などの資料です。名前を押すと、その資料の内容を確認できます。"
+    },
+    "policy": {
+      "label": "Policy（方針・規則）",
+      "description": "組織が決めた利用や運用のルールです。何を許可し、どの条件で制限するかを定めます。"
+    },
+    "ticket": {
+      "label": "Ticket / CHG（申請・変更の記録）",
+      "description": "作業の申請や承認を追跡するための記録です。CHGなどの番号は、その記録を区別するために使われます。"
+    },
+    "device": {
+      "label": "Device / Workstation（端末）",
+      "description": "PCなどの機器です。Device IDやWorkstationNameは、どの端末かを識別する名前や番号です。"
+    },
+    "password": {
+      "label": "Password（パスワード）",
+      "description": "本人確認に使う秘密の文字列です。ログに認証結果が記録されても、パスワードそのものが記録されるとは限りません。"
+    },
+    "login": {
+      "label": "Login / Logon（ログイン）",
+      "description": "アカウントを使ってシステムの利用を始めることです。ログイン要求と、本人確認を終えて利用できる状態は区別します。"
+    },
+    "logon_type": {
+      "label": "Logon Type（ログオンの種類）",
+      "description": "Windowsの利用開始の種類です。2は端末での対話操作、5はサービス、10はリモートでの対話操作を表します。"
+    },
+    "service_account": {
+      "label": "Service Account / svc_（サービス用アカウント）",
+      "description": "自動処理などのために用意したアカウントです。人が画面を操作する用途とは、許可される使い方が異なる場合があります。"
+    },
+    "active_revoked": {
+      "label": "Active / Revoked（登録状態）",
+      "description": "端末などの台帳では、Activeは有効、Revokedは利用資格を取り消した状態です。過去に使えたことと現在の状態は別です。"
+    },
+    "idp": {
+      "label": "IdP（認証基盤）",
+      "description": "利用者を認証し、その結果をサービスへ伝える仕組みです。アカウントの有効・無効なども管理します。"
+    },
+    "public_key": {
+      "label": "publickey / 公開鍵認証",
+      "description": "公開鍵と秘密鍵の組を使う本人確認です。接続先に登録した公開鍵に対応する秘密鍵を持っていることを確かめます。"
+    },
+    "private_key": {
+      "label": "秘密鍵 / id_ed25519",
+      "description": "鍵の持ち主だけが保持する認証用データです。id_ed25519はSSHで使う秘密鍵ファイルの名前の一例です。"
+    },
+    "key_fingerprint": {
+      "label": "鍵の指紋 / SHA256:",
+      "description": "鍵を区別するために計算した短い照合用の値です。SSHのSHA256:から始まる表示は、登録した鍵との一致確認に使えます。"
+    },
+    "ed25519": {
+      "label": "ED25519",
+      "description": "電子署名やSSHの鍵認証で使われる方式の名前です。方式名と、実際にどの鍵を使ったかは別の情報です。"
+    },
+    "bastion": {
+      "label": "Bastion（踏み台サーバー）",
+      "description": "管理対象へ直接接続せず、途中で経由する管理用のサーバーです。接続経路や操作を管理するために使います。"
+    },
+    "privilege": {
+      "label": "特権 / 管理権限",
+      "description": "設定変更など、通常の利用者より広い操作ができる権限です。持っていることと、その作業が承認されていることは別です。"
+    },
+    "root": {
+      "label": "root / sudo",
+      "description": "rootはLinuxなどの強い管理権限を持つアカウントです。sudoは、許可された利用者が別の権限でコマンドを実行する仕組みです。"
+    },
+    "system_account": {
+      "label": "SYSTEM / NT AUTHORITY",
+      "description": "SYSTEMはWindowsのOSやサービスが使う強い権限のアカウントです。NT AUTHORITYは、このような組込みアカウントの所属を表します。"
+    },
+    "paw": {
+      "label": "PAW（管理専用端末）",
+      "description": "強い管理権限を使う作業のために用意した専用端末です。通常のメールやWeb閲覧に使う端末と分けて管理します。"
+    },
+    "rdp": {
+      "label": "RDP",
+      "description": "離れたWindows端末などの画面を表示し、操作するための通信方式です。接続元や利用者の確認が必要です。"
+    },
+    "auth_result": {
+      "label": "Accepted / Failed（認証結果）",
+      "description": "認証ログではAcceptedは受け入れ、Failedは失敗を表します。どの時刻・利用者・接続元の結果なのかも合わせて読みます。"
+    },
+    "auth_status": {
+      "label": "Status / SubStatus（認証失敗コード）",
+      "description": "Windowsの認証失敗の理由を表すコードです。この教材の0xC000006Dはログオン失敗、0xC000006Aはパスワード不一致を示します。"
+    },
+    "wtmp": {
+      "label": "wtmp（ログイン履歴）",
+      "description": "ログインやログアウトなどを記録するデータです。lastはこの記録を表示します。記録の範囲外の出来事までは分かりません。"
+    },
+    "never_logged_in": {
+      "label": "Never logged in",
+      "description": "lastlogで、その利用者のログイン記録が見つからないことを示す表示です。自動処理で使われていないという意味ではありません。"
+    },
+    "pam": {
+      "label": "PAM / pam_unix",
+      "description": "Linuxなどの認証処理を部品としてまとめる仕組みです。pam_unixはその部品の一つで、ログにセッション開始・終了などを記録します。"
+    },
+    "timezone": {
+      "label": "Z / UTC / +0900（時刻の基準）",
+      "description": "時刻末尾のZはUTCという世界共通の基準、+0900や+09:00はUTCより9時間進んだ時刻です。日本標準時はUTC+9です。"
+    },
+    "image_process": {
+      "label": "Image / Backing Executable",
+      "description": "実行中のプロセスの元になった実行ファイルを指します。ここでのImageは写真などの画像ではありません。"
+    },
+    "dll": {
+      "label": "DLL / Loaded DLLs",
+      "description": "Windowsのプログラムが利用する部品です。Loaded DLLsは読み込み済みの部品一覧で、本体の実行ファイルとは別のファイルです。"
+    },
+    "temp": {
+      "label": "Temp / /tmp（一時保存先）",
+      "description": "作業中のファイルなどを一時的に置く場所です。配置されていることだけで安全・危険は決まりません。"
+    },
+    "permissions": {
+      "label": "mode / 0600・0755・1777（アクセス権）",
+      "description": "読み書き・実行の許可です。0600は所有者だけ読み書き、0755は全員が読取・実行でき、書込は所有者だけです。1777は全員が使える共有領域で、他人のファイルの削除などを制限します。"
+    },
+    "elf_interpreter": {
+      "label": "INTERP / Interpreter / Loader",
+      "description": "ELFの実行時に共有ライブラリなどを準備するプログラムと、その指定です。INTERP欄にはその場所が示されます。"
+    },
+    "shared_library": {
+      "label": "NEEDED / .so（共有ライブラリ）",
+      "description": "複数のプログラムから使える部品です。Linuxでは.soなどの名前が使われ、NEEDED欄は必要な部品名を示します。"
+    },
+    "runpath": {
+      "label": "RUNPATH",
+      "description": "Linuxなどで、プログラムが必要な部品を探す場所の指定です。探す先の場所や、そこを書き換えられる人が重要になります。"
+    },
+    "stripped": {
+      "label": "stripped / strip",
+      "description": "調査・デバッグ用の名前などを実行ファイルから取り除いた状態や、その処理です。配布時の容量削減にも使われます。"
+    },
+    "architecture": {
+      "label": "x86-64 / x64 / 64-bit",
+      "description": "対応するCPUの種類やデータの扱い方を表します。x86-64・x64は64ビットのCPU方式で、安全性の評価ではありません。"
+    },
+    "elf_flags": {
+      "label": "LSB / PIE / dynamically linked",
+      "description": "ELFの形式情報です。LSBはデータの並び方、PIEは読み込み位置を変えられる形式、dynamically linkedは実行時に共有部品を使うことを表します。"
+    },
+    "magic": {
+      "label": "Magic（形式を識別するデータ）",
+      "description": "ファイルの中にある、形式の手掛かりとなる特定の並びです。拡張子とは別に、中身から形式を見分けるために使います。"
+    },
+    "shortcut": {
+      "label": "Shortcut / .lnk（ショートカット）",
+      "description": "別のファイルやプログラムを開くための案内ファイルです。見た目の名前とは別に、開く先や実行時の指定を持ちます。"
+    },
+    "static_analysis": {
+      "label": "静的解析 / 可読文字列",
+      "description": "対象を実行せず、中身や設定を調べる方法です。可読文字列は人が読める文字の並びで、含まれていても実際に使われたとは限りません。"
+    },
+    "windows_registry": {
+      "label": "HKCU / Run（Windowsの設定）",
+      "description": "HKCUは現在の利用者の設定を保存する領域です。Runはログオン時に起動するプログラムを登録する場所の一つです。"
+    },
+    "autostart": {
+      "label": "自動起動 / Automatic",
+      "description": "起動やログインなどをきっかけに、プログラムが自動で動く設定です。登録されていることと、利用が承認されていることは別です。"
+    },
+    "fd": {
+      "label": "FD / txt / REG",
+      "description": "lsofなどの表示項目です。FDは開いた対象の識別情報で、7rは番号7・読取用、txtは実行コード、REGは通常のファイルを表します。"
+    },
+    "elapsed": {
+      "label": "ELAPSED（経過時間）",
+      "description": "プロセスが起動してから経過した時間です。時刻そのものや、CPUを使った時間とは区別します。"
+    },
+    "unit_fields": {
+      "label": "MainPID / ExecStart / FragmentPath",
+      "description": "systemdの表示項目です。MainPIDは主なプロセスの番号、ExecStartは起動する命令、FragmentPathはUnit設定ファイルの場所です。"
+    },
+    "cgroup": {
+      "label": "ControlGroup（プロセスの管理単位）",
+      "description": "Linuxで複数のプロセスをまとめて管理する仕組みです。同じグループに属することと、主なプロセスであることは別です。"
+    },
+    "job": {
+      "label": "Job / Schedule（作業と予定）",
+      "description": "Jobはまとめて実行する作業、Scheduleは実行予定です。誰が・何を・いつ動かすかを記録します。"
+    },
+    "agent": {
+      "label": "Agent（エージェント）",
+      "description": "端末で監視や収集などを行うプログラムです。Agentという名前だけでは、提供元や実際の役割は分かりません。"
+    },
+    "telemetry": {
+      "label": "Telemetry（状態の収集データ）",
+      "description": "機器やソフトウェアの動作状況を集めたデータです。監視や保守のため、一定間隔で送る場合があります。"
+    },
+    "training_placeholder": {
+      "label": "TRAINING-PLACEHOLDER",
+      "description": "教材で、実際の処理をそのまま載せずに置き換えた表示です。実行できるコマンドではありません。"
+    },
+    "mshta": {
+      "label": "mshta.exe / HTA",
+      "description": "HTAという形式のアプリを実行するWindowsのプログラムです。正規のプログラムでも、何を読み込ませるかで動作が変わります。"
+    },
+    "win_r": {
+      "label": "Win+R / CAPTCHA",
+      "description": "Win+RはWindowsの「ファイル名を指定して実行」を開く操作です。CAPTCHAは、人による操作かを確かめるための仕組みです。"
+    },
+    "iwr_curl": {
+      "label": "iwr / curl",
+      "description": "URLなどを指定してデータを取得・送信するコマンドです。iwrはPowerShellのInvoke-WebRequestの短い名前です。"
+    },
+    "pcap": {
+      "label": "PCAP（通信の記録ファイル）",
+      "description": "観測した通信を保存する形式です。保存した範囲の通信を調べられますが、暗号化された本文がそのまま読めるとは限りません。"
+    },
+    "local_remote": {
+      "label": "Local / Remote / Peer",
+      "description": "通信ではLocalが調べている端末側、RemoteやPeerが相手側です。アドレスとポートがどちら側のものかを区別します。"
+    },
+    "protocol": {
+      "label": "Protocol（プロトコル）",
+      "description": "通信する機器同士が守る手順やデータ形式の約束です。TCP、HTTPなど、役割の異なる種類があります。"
+    },
+    "http": {
+      "label": "HTTP / HTTPS",
+      "description": "Webのデータをやり取りする方式です。HTTPSはTLSで通信を暗号化します。HTTPSでも接続先の安全性までは保証されません。"
+    },
+    "http_method": {
+      "label": "GET / POST",
+      "description": "HTTPの要求の種類です。GETは主に情報の取得、POSTは主にデータの送信に使います。POST自体に暗号化の意味はありません。"
+    },
+    "plaintext": {
+      "label": "平文",
+      "description": "暗号化されていない、内容を読み取れる状態のデータです。パスワードなどが通信中に平文なら、観測した人に読まれるおそれがあります。"
+    },
+    "content_type": {
+      "label": "Content-Type",
+      "description": "送受信するデータの種類を示す項目です。application/zipはZIP、application/x-www-form-urlencodedはフォームの値を表す形式です。"
+    },
+    "form": {
+      "label": "Form / Form action（入力欄と送信先）",
+      "description": "FormはWebページの入力欄、actionは入力内容を送る先です。ページの表示名と実際の送信先は別の情報です。"
+    },
+    "redirect": {
+      "label": "Redirect / 302 / Location（転送）",
+      "description": "別のURLへ移動させる仕組みです。302は一時的な転送を表す応答で、Locationに移動先が示されます。"
+    },
+    "http_200": {
+      "label": "HTTP 200",
+      "description": "Webサーバーが要求を正常に処理したことを示す応答です。ページの安全性や依頼の正当性を示す番号ではありません。"
+    },
+    "url_path": {
+      "label": "URLのPath / Query",
+      "description": "Pathは接続先でのページなどの場所、Queryは?以降の追加情報です。Queryには利用者名やTokenが含まれることがあります。"
+    },
+    "dns_records": {
+      "label": "A / CNAME / Aliases（DNSレコード）",
+      "description": "Aは名前に対応するIPv4アドレス、CNAMEは別の名前への対応を表します。Aliasesは別名です。"
+    },
+    "dns_resolver": {
+      "label": "Resolver（DNSの問合せ先）",
+      "description": "名前とIPアドレスなどの対応を調べるサーバーです。nslookupのServer欄は問合せ先で、回答された接続先とは区別します。"
+    },
+    "dns_query": {
+      "label": "DNS Query / ANSWER SECTION",
+      "description": "QueryはDNSへの問合せ、ANSWER SECTIONは回答の部分です。問合せた名前・種類・回答された値を分けて読みます。"
+    },
+    "rdap_domain_fields": {
+      "label": "Registrar / Registrant / redacted",
+      "description": "Registrarはドメイン登録の窓口、Registrantは登録者です。redactedは情報が非公開などの理由で伏せられている表示です。"
+    },
+    "transfer_lock": {
+      "label": "client transfer prohibited",
+      "description": "ドメインを別の登録事業者へ移す操作が制限されている状態です。Webアクセス禁止や危険判定を意味するものではありません。"
+    },
+    "netblock": {
+      "label": "startAddress / endAddress（割当範囲）",
+      "description": "IPアドレスの割当範囲の先頭と末尾です。割当先の組織と、そのIP上のサービスを使う契約者が同じとは限りません。"
+    },
+    "tenant": {
+      "label": "Tenant（テナント）",
+      "description": "共通のサービスや設備を利用する、組織・契約者ごとの区画です。同じ設備を使う別の契約者とは区別します。"
+    },
+    "reputation": {
+      "label": "Reputation（外部の評価情報）",
+      "description": "IPやドメイン、ファイルなどについて集めた検出・観測情報です。情報がないことは、安全の証明ではありません。"
+    },
+    "indicator": {
+      "label": "Indicator（調査の手掛かり）",
+      "description": "IPアドレス・ドメイン・ハッシュ値など、照会や照合に使う情報です。ファイル本体や通信本文とは区別します。"
+    },
+    "detection": {
+      "label": "Malicious / flagged / feeds / engines",
+      "description": "Maliciousやflaggedは危険と判定・報告された表示です。feedsは情報提供元、enginesは検査機能を指し、件数の割合は危険度の確率ではありません。"
+    },
+    "no_record": {
+      "label": "No record / analysis queued",
+      "description": "No recordは照会先に記録がない状態、analysis queuedは解析待ちです。どちらも安全性の確認が完了したという意味ではありません。"
+    },
+    "phishing": {
+      "label": "phishing（フィッシング）",
+      "description": "本物らしいメールやWebページなどでだまし、パスワードなどを入力させる行為です。外部評価では分類名として表示されます。"
+    },
+    "malware": {
+      "label": "malware / downloader",
+      "description": "malwareは不正な動作をするプログラムの総称です。downloaderは別のプログラムなどを取得するものを指し、外部評価では不正プログラムの分類にも使われます。"
+    },
+    "tcp_flags": {
+      "label": "Flags / seq / ack / win",
+      "description": "TCPの表示項目です。Flagsは制御情報、seqはデータの順序、ackは受信確認、winは受信できる量を表します。[P.]はPSHとACKの指定です。"
+    },
+    "email": {
+      "label": "Email / .eml",
+      "description": "電子メールです。.emlはメール本文やヘッダーなどを保存するファイル形式で、保存されたメールを調べるときにも使います。"
+    },
+    "to_subject": {
+      "label": "To / Subject",
+      "description": "メールのToは宛先、Subjectは件名です。件名や表示名は送信者が付けられるため、それだけで本人確認はできません。"
+    },
+    "received": {
+      "label": "Received（メールの配送経路）",
+      "description": "メールを受け取ったサーバーが付ける記録です。fromは送り元、byは受け取った側です。どのサーバーが記録した行かが重要です。"
+    },
+    "authentication_results": {
+      "label": "Authentication-Results",
+      "description": "メールサーバーが付ける認証結果の欄です。SPF・DKIM・DMARCの結果に加え、どのサーバーが判定したかを確認できます。"
+    },
+    "auth_mail_fields": {
+      "label": "smtp.mailfrom / header.d / header.from",
+      "description": "認証で調べた対象を表します。smtp.mailfromは配送用の送信元ドメイン、header.dはDKIMの署名ドメイン、header.fromは表示上の差出人ドメインです。"
+    },
+    "pass_fail": {
+      "label": "pass / fail（検証結果）",
+      "description": "passはその検証に成功、failは失敗したことを表します。何の検証結果かを見て判断し、メール全体の安全性と混同しないようにします。"
+    },
+    "mime": {
+      "label": "MIME",
+      "description": "メールの本文・添付などの種類や区切りを表す仕組みです。文字の本文以外に、画像やファイルを含むメールでも使われます。"
+    },
+    "disposition": {
+      "label": "Content-Disposition / filename",
+      "description": "メールなどで、データを添付として扱うか、そのファイル名は何かを示す項目です。attachmentは添付、filenameは名前です。"
+    },
+    "esmtps": {
+      "label": "ESMTPS",
+      "description": "拡張されたメール配送の方式を、TLSで暗号化して使ったことを示す表示です。配送の暗号化と、差出人の正当性は別です。"
+    },
+    "thread": {
+      "label": "Thread / In-Reply-To（やり取りのつながり）",
+      "description": "Threadは関連するメールのまとまりです。In-Reply-Toは返信元メールを示す情報ですが、これだけで本物の返信とは確定できません。"
+    },
+    "quarantine": {
+      "label": "quarantine（隔離・保留）",
+      "description": "メールなどを通常の利用場所から分けて置くことです。確認が済むまで利用者へ渡さない運用などで使います。"
+    },
+    "href": {
+      "label": "href（リンク先）",
+      "description": "Webページやメールのリンクで、実際に開くURLを指定する部分です。画面に見えるリンクの文字とは別に設定できます。"
+    },
+    "ecosystem": {
+      "label": "Ecosystem（利用する仕組みの系統）",
+      "description": "パッケージが属する言語や配布の仕組みの区分です。この教材では、PyPIやnpmなどを表します。"
+    },
+    "dependency": {
+      "label": "dependencies / Requires-Dist（依存関係）",
+      "description": "そのパッケージを動かすために必要な別の部品です。dependenciesはnpm、Requires-DistはPythonの配布情報などで使う項目名です。"
+    },
+    "package_resolver": {
+      "label": "Resolver（パッケージの選択処理）",
+      "description": "指定した条件や依存関係を満たすよう、取得する部品と版を選ぶ処理です。実際に選ばれた取得元も確認できます。"
+    },
+    "package_index": {
+      "label": "index-url / extra-index-url",
+      "description": "Pythonの部品を探す配布先の指定です。extra-index-urlは追加の検索先で、社内の取得元を必ず優先する指定ではありません。"
+    },
+    "wheel": {
+      "label": "wheel / .whl",
+      "description": "Pythonのパッケージを配布・導入するための形式です。ファイル名には版や対応環境などの情報が含まれます。"
+    },
+    "tarball": {
+      "label": "tarball / .tgz",
+      "description": "ファイルをtar形式でまとめた配布物です。.tgzはさらにgzipで圧縮した形式で、npmの配布などにも使われます。"
+    },
+    "source_code": {
+      "label": "Source / Source Review（コードの確認）",
+      "description": "ソフトウェアの作り方や処理を書いた元のコードです。Source Reviewはその内容を読むことです。取得元を指すSource欄とは文脈が異なります。"
+    },
+    "commit": {
+      "label": "Commit（変更の記録）",
+      "description": "リポジトリに保存された、ある時点の変更内容です。承認したコードの版を特定する目印として使えます。"
+    },
+    "release": {
+      "label": "Release / Change（公開・変更）",
+      "description": "Releaseはソフトウェアの版を公開することです。Changeの資料には、更新内容や承認された変更範囲などが記録されます。"
+    },
+    "native_module": {
+      "label": "Native Module / node-gyp",
+      "description": "Native ModuleはCPUやOS向けのコードで動く部品です。node-gypは、Node.jsで使うそのような部品をビルドする道具です。"
+    },
+    "ci": {
+      "label": "CI / Deploy / Toolchain",
+      "description": "CIは変更のたびにビルドやテストを自動化する仕組み、Deployは利用環境への配置です。Toolchainはビルドなどに使う道具の組合せです。"
+    },
+    "vulnerability": {
+      "label": "Vulnerability（脆弱性）",
+      "description": "悪用されると不正な操作などにつながる弱点です。正規のソフトにも存在し、影響する版や利用条件によって対応が変わります。"
+    },
+    "affected_fixed": {
+      "label": "Affected / Fixed（影響範囲・修正版）",
+      "description": "Affectedは影響する版、Fixedは修正した版です。>=2.0.0は2.0.0以上、<2.2.5は2.2.5未満を表します。"
+    },
+    "path_traversal": {
+      "label": "Path traversal",
+      "description": "ファイルの場所の指定を悪用して、本来許可されていない場所へ読み書きする問題です。アーカイブの展開先などでも起こり得ます。"
+    },
+    "template": {
+      "label": "Template（テンプレート）",
+      "description": "文書や画面を作るためのひな形です。値を埋め込んだり式を処理したりする形式もあるため、誰が作ったものかが重要です。"
+    },
+    "install": {
+      "label": "Install（インストール）",
+      "description": "ソフトウェアを利用できるように導入することです。取得したファイルを保存するだけの操作とは異なり、処理が実行される場合があります。"
+    },
+    "server": {
+      "label": "Server / Client",
+      "description": "Serverは機能やデータを提供する側、Clientは要求して利用する側です。同じコンピューターが両方の役割を持つ場合もあります。"
+    },
+    "browser": {
+      "label": "Browser（ブラウザー）",
+      "description": "Webページを開くためのソフトウェアです。ページを見ることと、取得したプログラムを実行することは別の操作です。"
+    },
+    "storage": {
+      "label": "Storage / Backup",
+      "description": "Storageはデータを保存する場所や機器、Backupは復旧に備えたコピーです。保存先には端末内や外部サービスなどがあります。"
+    },
+    "driver": {
+      "label": "Driver（ドライバー）",
+      "description": "プリンターなどの機器をOSから利用するためのソフトウェアです。機器やOSに合ったものを導入します。"
+    },
+    "software_center": {
+      "label": "Software Center",
+      "description": "組織がソフトウェアを配布・管理するための窓口です。この教材では社内の配布記録や承認情報と結び付いています。"
+    },
+    "n_a": {
+      "label": "n/a / none",
+      "description": "n/aは該当する値がない、または取得できないことを表します。noneは対象がないという表示です。空欄の理由は項目ごとに異なります。"
+    },
+    "tool_hash_win": {
+      "label": "Get-FileHash",
+      "description": "Windowsでファイルのハッシュ値を計算するコマンドです。この教材ではSHA-256を使います。"
+    },
+    "tool_hash_linux": {
+      "label": "sha256sum",
+      "description": "ファイルのSHA-256を計算するコマンドです。出力にはハッシュ値と対象ファイル名が並びます。"
+    },
+    "tool_sigcheck": {
+      "label": "Sigcheck",
+      "description": "Windowsのファイルの署名や発行元、版などを調べるツールです。実行中のプロセスを調べる場合も、検査対象は元のファイルです。"
+    },
+    "tool_strings": {
+      "label": "Strings / strings",
+      "description": "ファイルから読める文字列を取り出すツールです。対象プログラムを実行して動作を観測するものではありません。"
+    },
+    "tool_file": {
+      "label": "fileコマンド",
+      "description": "ファイルの中身の特徴から形式を調べるLinuxなどのコマンドです。ファイルを指す一般的な単語のFileとは別です。"
+    },
+    "tool_archive": {
+      "label": "7-Zip / tar",
+      "description": "ファイルをまとめたり展開したりするツールです。この教材では、中のプログラムを実行せずに一覧を表示します。"
+    },
+    "tool_readelf": {
+      "label": "readelf",
+      "description": "ELF形式のファイルに記録された情報を読むコマンドです。必要な部品や読込先などを、対象を実行せずに確認できます。"
+    },
+    "tool_task": {
+      "label": "Task Manager（タスクマネージャー）",
+      "description": "Windowsで実行中のプログラムやCPU・メモリ使用量などを見るツールです。"
+    },
+    "tool_pe": {
+      "label": "Process Explorer",
+      "description": "Windowsの実行中のプロセスを詳しく見るツールです。親子関係・実行ファイルの場所・読込済みの部品などを調べられます。"
+    },
+    "tool_autoruns": {
+      "label": "Autoruns",
+      "description": "Windowsの自動起動設定を調べるツールです。ログオン時の起動登録や、サービスなどを確認できます。"
+    },
+    "tool_tcpview": {
+      "label": "TCPView / Get-NetTCPConnection",
+      "description": "Windowsで通信の接続先や状態を調べるツールです。接続を持つプロセスの番号との対応も確認できます。"
+    },
+    "tool_ps": {
+      "label": "ps",
+      "description": "Linuxなどで実行中のプロセスの情報を見るコマンドです。利用者・PID・親PID・実行時の指定などを表示できます。"
+    },
+    "tool_pstree": {
+      "label": "pstree",
+      "description": "プロセスの親子関係を木の形で表示するコマンドです。この教材では、選択したPIDから起動元をたどります。"
+    },
+    "tool_lsof": {
+      "label": "lsof / lsof -i",
+      "description": "プロセスが開いているファイルなどを表示するコマンドです。-iはネットワークの接続に絞る指定です。"
+    },
+    "tool_ss": {
+      "label": "ss",
+      "description": "Linuxで通信の窓口や接続状態を調べるコマンドです。指定によって、その接続を持つプロセスも表示します。"
+    },
+    "tool_systemctl": {
+      "label": "systemctl",
+      "description": "Linuxのsystemdでサービスなどの状態や設定を調べるコマンドです。この教材では保存済みの情報を表示します。"
+    },
+    "tool_capture": {
+      "label": "Wireshark / tcpdump",
+      "description": "通信の記録を調べるツールです。この教材では保存済みPCAPを読みます。通常、記録だけから通信したプロセスのPIDは分かりません。"
+    },
+    "tool_dns": {
+      "label": "Resolve-DnsName / nslookup / dig",
+      "description": "DNSに問合せ、名前に対応するIPなどを調べるコマンドです。表示形式は異なりますが、同じ名前の情報を照合できます。"
+    },
+    "tool_events": {
+      "label": "Event Viewer（イベントビューアー）",
+      "description": "Windowsの記録を見るツールです。Security Logには認証などの記録が入り、日時や利用者で調べられます。"
+    },
+    "tool_last": {
+      "label": "last",
+      "description": "Linuxなどで、過去のログイン・ログアウトの記録を表示するコマンドです。今回のログイン要求の成否を示すものではありません。"
+    },
+    "tool_lastlog": {
+      "label": "lastlog",
+      "description": "利用者ごとの最後のログイン記録を表示するコマンドです。すべての認証失敗を一覧にするツールではありません。"
+    },
+    "tool_journal": {
+      "label": "journalctl",
+      "description": "Linuxのsystemdが集めた記録を見るコマンドです。サービスや時刻などで絞り、この教材ではsshdの認証記録を確認します。"
+    },
+    "source_ip": {
+      "label": "Source / IpAddress（接続元）",
+      "description": "認証要求などを送った側のIPアドレスです。通信を中継する仕組みがあると、その出口のIPが記録される場合があります。"
+    },
+    "package_source": {
+      "label": "Source（取得元）",
+      "description": "導入するパッケージを入手した場所です。申請した名前や元のコードの保管先と、実際に取得した配布元は区別します。"
+    },
+    "certificate": {
+      "label": "証明書",
+      "description": "公開鍵と、その持ち主の名前などを結び付けた電子的な情報です。機器や接続先の本人確認などに使います。"
     }
   }
 }

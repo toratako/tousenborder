@@ -116,7 +116,381 @@
     "capture",
     "server"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "capture",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ss",
+          "section": "overview"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "capture",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tcp",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "flow",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "capture",
+          "section": "overview"
+        },
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "capture",
+          "section": "overview"
+        },
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "protocol",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "storage",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "socket",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        },
+        {
+          "source_id": "capture",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_ss",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "fd",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_ps",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "job",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_capture",
+      "occurrences": [
+        {
+          "source_id": "capture",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "size",
+      "occurrences": [
+        {
+          "source_id": "capture",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tls",
+      "occurrences": [
+        {
+          "source_id": "capture",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "大量送信は承認されたBackupの時間帯・Process・送信先・予定量に一致するため許可します。送信量だけから情報漏洩と判断しません。",
   "topic": "大容量通信をBackup Scheduleと照合する",
   "summary": "大容量通信をBackup Scheduleと照合する",

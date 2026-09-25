@@ -55,7 +55,205 @@
     "journal",
     "policy"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "overview"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "mfa",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "ssh",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "overview"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "password",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "key_fingerprint",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "log",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "overview"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_journal",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "auth_result",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "直前10分の同一SourceからのSSH認証失敗が20回の閾値に達したため、今回の新規要求を遮断します。20件目の後に追加のPassword検証を続けた記録ではありません。",
   "topic": "journalctlの直前履歴を認証方針と比較する",
   "summary": "journalctlの直前履歴を認証方針と比較する",

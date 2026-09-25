@@ -58,5 +58,54 @@ class LearningSupportTests(unittest.TestCase):
             validate_schema({'schema_version': 1, 'terms': {'x': {'label': 'X', 'description': 'Y', 'answer': 'block'}}}, 'glossary')
 
 
+class StandardGlossaryTests(unittest.TestCase):
+    """Content regressions: similar words must not reveal unrelated evidence."""
+
+    def glossary(self, problem_id):
+        item = read_json(ROOT / 'data/problems' / f'{problem_id}.json')
+        return {entry['term_id']: entry['occurrences'] for entry in item['glossary']}
+
+    def test_standard_pack_has_glossary_for_every_problem(self):
+        pack = read_json(ROOT / 'data/packs/learning.json')
+        self.assertEqual(pack['glossary_path'], 'res://data/glossary/security.json')
+        for path in pack['problems']:
+            with self.subTest(path=path):
+                item = read_json(resource_path(path))
+                self.assertTrue(item['glossary'])
+                validate_authoring(item, pack)
+
+    def test_revocation_and_log_events_require_their_evidence(self):
+        entries = self.glossary('AUTH-WIN-REVOKED-DEVICE')
+        self.assertEqual(entries['active_revoked'], [{'source_id': 'device', 'section': 'result'}])
+        self.assertEqual(entries['event_id'], [{'source_id': 'events', 'section': 'result'}])
+
+    def test_lastlog_port_is_a_terminal_not_a_network_port(self):
+        entries = self.glossary('AUTH-LINUX-BASTION-LOGIN')
+        self.assertIn({'source_id': 'lastlog', 'section': 'result'}, entries['terminal'])
+        self.assertNotIn({'source_id': 'lastlog', 'section': 'result'}, entries.get('port', []))
+        self.assertNotIn('reply_to', entries)
+
+    def test_package_resolver_is_not_dns(self):
+        entries = self.glossary('PKG-PYPI-DEPENDENCY-CONFUSION')
+        self.assertIn('package_resolver', entries)
+        self.assertNotIn('dns_resolver', entries)
+        self.assertNotIn('terminal', entries)  # scripts/ is not pts/.
+
+    def test_filenames_and_commands_do_not_add_unrelated_terms(self):
+        entries = self.glossary('FILE-WIN-PUBLISHED-HASH')
+        self.assertIn('tool_hash_win', entries)
+        self.assertNotIn('http_method', entries)  # Get-FileHash is not HTTP GET.
+        self.assertNotIn('lock_file', entries)  # BLOCK is not a Lock File.
+        entries = self.glossary('PROC-WIN-SYSTEM-NAME')
+        self.assertIn('system_account', entries)
+        self.assertNotIn('host', entries)  # svchost.exe is not a Host field.
+
+    def test_elf_details_are_available_only_after_reading_results(self):
+        entries = self.glossary('FILE-LINUX-STRIPPED-INTERNAL')
+        self.assertTrue(entries['stripped'])
+        self.assertTrue(all(o['section'] == 'result' for o in entries['stripped']))
+        self.assertNotIn('system_account', entries)
+
+
 if __name__ == '__main__':
     unittest.main()

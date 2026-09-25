@@ -82,7 +82,422 @@
     "thread",
     "procedure"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "reply_to",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "gateway",
+          "section": "overview"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "to_subject",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "quarantine",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "header",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "mime",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "spf",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dkim",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "vendor",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dmarc",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "received",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication_results",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "auth_mail_fields",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pass_fail",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "esmtps",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "thread",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "thread",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "vendor",
+      "occurrences": [
+        {
+          "source_id": "vendor",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "directory",
+      "occurrences": [
+        {
+          "source_id": "vendor",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "independent",
+      "occurrences": [
+        {
+          "source_id": "procedure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "procedure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "登録Mailboxで認証もPassしていますが、口座変更の必須手続と過去の取引先口座に一致しないため受入れを遮断します。この証拠だけではMailbox侵害の有無までは断定できません。",
   "topic": "正規Accountの認証と業務依頼の妥当性を区別する",
   "summary": "正規Accountの認証と業務依頼の妥当性を区別する",

@@ -81,13 +81,30 @@ func _run() -> void:
 	desk._open_rules()
 	desk._open_how_to()
 	check(not desk.rules_overlay.visible and not desk.how_to_overlay.visible, "モーダルの重ね開きを拒否")
-	check(desk.glossary_close.focus_next == desk.glossary_close.get_path_to(toggle), "用語集のTab移動")
+	check(desk.glossary_close.focus_next == desk.glossary_close.get_path_to(desk.glossary_search), "閉じるから検索へTab移動")
+	check(desk.glossary_search.focus_next == desk.glossary_search.get_path_to(toggle), "検索から用語へTab移動")
+	desk.glossary_search.text = "  fIlE  "
+	desk.glossary_search.text_changed.emit(desk.glossary_search.text)
+	check(column.visible and description.visible, "大小文字・前後空白を無視して検索し、開閉状態を維持")
+	desk.glossary_search.text = "文書やプログラム"
+	desk.glossary_search.text_changed.emit(desk.glossary_search.text)
+	check(column.visible, "説明文からも検索できる")
+	desk.glossary_search.text = "別経路確認"
+	desk.glossary_search.text_changed.emit(desk.glossary_search.text)
+	check(desk.glossary_empty.visible and desk.glossary_count.text.begins_with("0 /"), "未閲覧の結果用語は検索しても表示しない")
+	check(desk.glossary_search.focus_next == desk.glossary_search.get_path_to(desk.glossary_close), "検索結果なしでもTab移動を閉じた画面内に保つ")
+	desk.glossary_search.text = ""
+	desk.glossary_search.text_changed.emit("")
+	check(not desk.glossary_empty.visible and column.visible and description.visible, "検索解除で一覧と展開状態を復元")
+	desk.glossary_search.text = "file"
+	desk.glossary_search.text_changed.emit("file")
 	var cancel := InputEventAction.new()
 	cancel.action = "ui_cancel"
 	cancel.pressed = true
 	desk._input(cancel)
 	check(not desk.glossary_overlay.visible and not desk.pause_menu.visible, "ESCは用語集だけを閉じる")
 	desk._open_glossary()
+	check(desk.glossary_search.text == "file", "同じ問題の再表示では検索語を保持")
 	check(desk.glossary_list.get_child(0).get_child(1).visible, "同じ問題では展開状態を保持")
 	desk._close_glossary()
 	desk._inspect(hash_tool, input_for(desk, hash_tool))
@@ -214,6 +231,7 @@ func _run() -> void:
 	desk.summary_retry.pressed.emit()
 	check(not desk.summary_retry.visible and desk.history_store.load_entry(retry_id).session_id == retry_id, "同じ勤務IDで保存を再試行")
 	desk.summary_restart.pressed.emit()
+	check(desk.glossary_search.text.is_empty(), "勤務の再開始で検索語をリセット")
 	check(desk.glossary_viewed.size() > 0 and desk.glossary_expanded.is_empty() and desk.completed_snapshot.is_empty(), "再開始で展開状態と前回結果をリセット")
 	desk.queue_free()
 	await process_frame

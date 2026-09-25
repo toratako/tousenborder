@@ -49,7 +49,125 @@
     "archive",
     "format"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "archive",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "archive",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pdf",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "archive",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "archive",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "archive",
+          "section": "overview"
+        },
+        {
+          "source_id": "archive",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_archive",
+      "occurrences": [
+        {
+          "source_id": "archive",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "archive",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "shortcut",
+      "occurrences": [
+        {
+          "source_id": "archive",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "ArchiveにはPDFに加えてVBSとLNKが含まれ、PDFのみという受入れ条件を満たさないため遮断します。中のScriptは実行していません。",
   "topic": "Archiveを展開・実行せず内容一覧を確認する",
   "summary": "Archiveを展開・実行せず内容一覧を確認する",

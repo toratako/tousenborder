@@ -83,7 +83,416 @@
     "vuln",
     "policy"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "upload",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "package",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "vuln",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "registry",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "vuln",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "install_script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "version",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ecosystem",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "dependency",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "package_resolver",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "template",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        },
+        {
+          "source_id": "release",
+          "section": "result"
+        },
+        {
+          "source_id": "vuln",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "install",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "metadata",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "repository",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "maintainer",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "release",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "release",
+          "section": "overview"
+        },
+        {
+          "source_id": "release",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "lock",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "lock_file",
+      "occurrences": [
+        {
+          "source_id": "lock",
+          "section": "overview"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "lock",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "vulnerability",
+      "occurrences": [
+        {
+          "source_id": "lock",
+          "section": "result"
+        },
+        {
+          "source_id": "vuln",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "reference",
+      "occurrences": [
+        {
+          "source_id": "release",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "affected_fixed",
+      "occurrences": [
+        {
+          "source_id": "vuln",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "配布元とHashは正規Releaseに一致しますが、今回の外部Templateを扱う用途では脆弱性の影響を受け、導入禁止方針に該当するため遮断します。正規PackageをMalwareと呼ぶ判断ではありません。",
   "topic": "真正な配布物でも脆弱性と利用条件を評価する",
   "summary": "真正な配布物でも脆弱性と利用条件を評価する",

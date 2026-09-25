@@ -49,7 +49,99 @@
     "archive",
     "format"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "archive",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "pdf",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "archive",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "archive",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "archive",
+          "section": "overview"
+        },
+        {
+          "source_id": "archive",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_archive",
+      "occurrences": [
+        {
+          "source_id": "archive",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "archive",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "archive",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "一覧には手順書以外にsetup.shが含まれ、PDFのみという配布条件に反するため遮断します。",
   "topic": "tarの一覧を受入れ仕様と比較する",
   "summary": "tarの一覧を受入れ仕様と比較する",

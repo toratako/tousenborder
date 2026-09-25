@@ -441,6 +441,29 @@ static func build_glossary(desk) -> void:
 	desk.glossary_list = parts.list
 	desk.glossary_close = parts.close
 	desk.glossary_close.pressed.connect(desk._close_glossary)
+	var sheet: Control = parts.scroll.get_parent()
+	parts.notice.hide()
+	desk.glossary_search = LineEdit.new()
+	desk.glossary_search.position = Vector2(30, 80)
+	desk.glossary_search.size = Vector2(680, 44)
+	desk.glossary_search.placeholder_text = "用語を検索"
+	desk.glossary_search.clear_button_enabled = true
+	desk.glossary_search.add_theme_font_size_override("font_size", 18)
+	desk.glossary_search.add_theme_color_override("font_color", INK)
+	desk.glossary_search.add_theme_color_override("font_placeholder_color", MUTED)
+	desk.glossary_search.add_theme_color_override("caret_color", Chrome.CYAN)
+	desk.glossary_search.add_theme_stylebox_override("normal", Chrome.box(Chrome.BACKGROUND, Chrome.BORDER, 16))
+	desk.glossary_search.add_theme_stylebox_override("focus", Chrome.box(Color.TRANSPARENT, Chrome.CYAN, 16))
+	sheet.add_child(desk.glossary_search)
+	desk.glossary_search.text_changed.connect(desk._filter_glossary)
+	desk.glossary_count = Chrome.label(sheet, Rect2(730, 90, 160, 30), "", MUTED, 16)
+	desk.glossary_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	desk.glossary_scroll.position.y = 142
+	desk.glossary_scroll.size.y = 458
+	desk.glossary_list.add_theme_constant_override("separation", 12)
+	desk.glossary_empty = Chrome.label(sheet, Rect2(30, 175, 840, 45), "該当する用語はありません。", MUTED, 18)
+	desk.glossary_empty.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	desk.glossary_empty.hide()
 
 static func build_history(desk) -> void:
 	var parts := list_overlay(desk, "勤務履歴")
@@ -459,19 +482,36 @@ static func list_label(parent: Control, text: String) -> Label:
 static func glossary_entry(parent: Control, term: Dictionary, expanded: bool) -> Dictionary:
 	var column := VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.add_theme_constant_override("separation", 0)
+	column.set_meta("search_text", (str(term.label) + " " + str(term.description)).to_lower())
 	parent.add_child(column)
-	var button := Chrome.button(column, Rect2(0, 0, 820, 42), term.label, PAPER)
-	button.custom_minimum_size.y = 42
+	var button := Chrome.button(column, Rect2(0, 0, 820, 52), "", PAPER)
+	button.custom_minimum_size.y = 52
+	button.add_theme_font_size_override("font_size", 19)
+	for state in ["normal", "hover", "pressed", "focus"]:
+		var fill := Color("19394d") if state in ["hover", "pressed"] else Color("14263b")
+		var style := Chrome.box(Color.TRANSPARENT if state == "focus" else fill, Chrome.CYAN if state == "focus" else Chrome.BORDER, 18)
+		style.content_margin_top = 12
+		style.content_margin_bottom = 12
+		button.add_theme_stylebox_override(state, style)
 	button.toggle_mode = true
 	button.set_pressed_no_signal(expanded)
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	var body := list_label(column, term.description)
+	body.add_theme_font_size_override("font_size", 18)
+	body.add_theme_constant_override("line_spacing", 7)
+	var body_style := Chrome.box(Color("0c192b"), Chrome.BORDER, 24)
+	body_style.content_margin_top = 16
+	body_style.content_margin_bottom = 20
+	body.add_theme_stylebox_override("normal", body_style)
 	body.visible = expanded
+	button.text = ("▾   " if expanded else "▸   ") + str(term.label)
+	button.toggled.connect(func(open: bool): button.text = ("▾   " if open else "▸   ") + str(term.label))
 	return {"button": button, "body": body}
 
-static func focus_cycle(buttons: Array[Button]) -> void:
+static func focus_cycle(buttons: Array) -> void:
 	for i in buttons.size():
-		var button := buttons[i]
+		var button: Control = buttons[i]
 		button.focus_previous = button.get_path_to(buttons[(i - 1 + buttons.size()) % buttons.size()])
 		button.focus_next = button.get_path_to(buttons[(i + 1) % buttons.size()])
 		button.focus_neighbor_top = button.focus_previous

@@ -67,7 +67,354 @@
     "archive_listing",
     "format"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pdf",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "archive",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reply_to",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "overview"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "to_subject",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "quarantine",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "header",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "mime",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "spf",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dkim",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dmarc",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "content_type",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_records",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "received",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication_results",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "auth_mail_fields",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pass_fail",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "disposition",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "esmtps",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "shortcut",
+      "occurrences": [
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "配送認証がPassでも、ArchiveにはScriptとShortcutが含まれ、PDFだけという受入れ条件に反するため遮断します。添付調査はこのメール内で完結します。",
   "topic": "メール認証と添付の受入れ形式を分ける",
   "summary": "メール認証と添付の受入れ形式を分ける",

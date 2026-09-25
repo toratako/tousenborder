@@ -72,7 +72,366 @@
     "internal",
     "lock"
   ],
-  "glossary": [],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lock",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "internal",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "package",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        },
+        {
+          "source_id": "internal",
+          "section": "overview"
+        },
+        {
+          "source_id": "internal",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "registry",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "internal",
+          "section": "result"
+        },
+        {
+          "source_id": "release",
+          "section": "result"
+        },
+        {
+          "source_id": "vuln",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "install_script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "version",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "internal",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "internal",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "internal",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ecosystem",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "dependency",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "metadata",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "package_resolver",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "package_index",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "wheel",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "install",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "package_source",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "metadata",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "lock",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "repository",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "internal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "maintainer",
+      "occurrences": [
+        {
+          "source_id": "metadata",
+          "section": "result"
+        },
+        {
+          "source_id": "internal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reference",
+      "occurrences": [
+        {
+          "source_id": "internal",
+          "section": "overview"
+        },
+        {
+          "source_id": "release",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "lock_file",
+      "occurrences": [
+        {
+          "source_id": "lock",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "release",
+      "occurrences": [
+        {
+          "source_id": "release",
+          "section": "overview"
+        },
+        {
+          "source_id": "release",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "vulnerability",
+      "occurrences": [
+        {
+          "source_id": "vuln",
+          "section": "overview"
+        },
+        {
+          "source_id": "vuln",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "社内Packageと同名ですが、Resolverは承認された社内IndexではなくPublic Registryの別Versionを選んでいるため導入を遮断します。名前が同じでも供給元の同一性は保証されません。",
   "topic": "Internal Packageの名前・Version・取得元を確認する",
   "summary": "Internal Packageの名前・Version・取得元を確認する",
