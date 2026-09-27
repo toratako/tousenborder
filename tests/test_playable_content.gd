@@ -55,6 +55,7 @@ func _run() -> void:
 				if tool.resource_kind == "external_references":
 					check(desk.external_preview.visible, "送信前確認: " + item.id + "/" + tool.id)
 					check(desk.external_preview_body.text.contains(tool.submission_value), "送信内容を表示")
+					check(str(input.value) == tool.submission_value, "入力と送信対象が一致: " + item.id + "/" + tool.id)
 					if tool.correct_usage:
 						desk.external_send.pressed.emit()
 					else:

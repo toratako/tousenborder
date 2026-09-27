@@ -8,7 +8,7 @@
   "title": "Subtle Typosquatting",
   "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
-    "Package": "@aster-ui/calender",
+    "Package": "@aster-iu/calendar",
     "Version": "2.4.0",
     "Ecosystem": "npm",
     "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。",
@@ -24,10 +24,10 @@
       "id": "metadata",
       "name": "npm Registry / Package Metadata",
       "content": {
-        "Name": "@aster-ui/calender",
+        "Name": "@aster-iu/calendar",
         "Version": "2.4.0",
         "Registry": "https://registry.npmjs.org",
-        "Project URL / Repository": "https://git.calendar-widgets.example/ui/calender",
+        "Project URL / Repository": "https://git.calendar-widgets.example/ui/calendar",
         "Maintainer": "calendar-widget-team",
         "dependencies": {},
         "SHA256": "590864c35d2f9d7fb16d6e4b52099b24d834efa001467299f38da390cdf3df9f"
@@ -55,7 +55,7 @@
     {
       "id": "vuln",
       "name": "Vulnerability Database",
-      "content": "@aster-ui/calender 2.4.0: 該当する脆弱性登録なし。照会時点2026-08-18。公式性の情報は含まれない。"
+      "content": "@aster-iu/calendar 2.4.0: 該当する脆弱性登録なし。照会時点2026-08-18。公式性の情報は含まれない。"
     }
   ],
   "external_references": [],
@@ -64,7 +64,7 @@
     "official",
     "lock"
   ],
-  "explanation": "見た目が似ていてもPackage名・Maintainer・Repositoryが公式Calendar Componentと異なるため導入を遮断します。ダウンロード数や似た説明文は公式性の根拠になりません。",
+  "explanation": "スコープを含むPackage名・Maintainer・Repositoryが公式Calendar Componentと異なるため導入を遮断します。ダウンロード数や似た説明文は公式性の根拠になりません。",
   "topic": "似たPackageのMetadataを公式Componentと比較する",
   "summary": "似たPackageのMetadataを公式Componentと比較する",
   "learning_objectives": [

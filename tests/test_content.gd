@@ -27,6 +27,32 @@ func _initialize() -> void:
 		quit(1)
 		return
 	schema = ContentSchema.read_schema(ContentSchema.PROBLEM)
+	var beginner_examples := {
+		"beginner_reference": "PKG-NPM-LOCKED-DEPENDENCY",
+		"beginner": "FILE-LINUX-ELF-AS-DOCUMENT",
+		"beginner_external": "FILE-LINUX-KNOWN-HASH"
+	}
+	for expected in beginner_examples:
+		var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/problems/" + beginner_examples[expected] + ".json"))
+		for custom in [false, true]:
+			var level_catalog := ContentCatalog.new()
+			check(level_catalog.load_pack(), "初級分類の検証用Pack")
+			for level in beginner_examples:
+				var candidate := original.duplicate(true)
+				candidate.level = level
+				if custom:
+					candidate.resources = {}
+					for kind in ["tools", "references", "external_references"]:
+						var group: String = "extra_" + kind
+						level_catalog.resource_groups[group] = {"id": group, "label": group, "kind": kind}
+						candidate.resources[group] = candidate[kind]
+						candidate[kind] = []
+				check(ContentSchema.check(candidate, schema).is_empty(), "初級分類のSchema")
+				var error := ProblemData.normalize(candidate, level_catalog, schema)
+				check(error.is_empty() == (level == expected), "初級の資料種別を分類: " + level + "/" + expected + ": " + error)
+	var empty_reference := raw("FIX-VISIBLE-FILE")
+	empty_reference.level = "beginner_reference"
+	rejected(empty_reference, "Referenceのみの初級にはReferenceが必要")
 	for item in catalog.cases:
 		check(not item.has("fields") and not item.has("expected") and not item.has("type"), "実行時にも旧フィールドを持たない")
 	for tool in catalog.guide_tools():

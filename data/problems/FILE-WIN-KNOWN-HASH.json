@@ -3,7 +3,7 @@
   "id": "FILE-WIN-KNOWN-HASH",
   "category": "file",
   "platform": "windows",
-  "level": "beginner",
+  "level": "beginner_external",
   "ground_truth": "block",
   "title": "Hash照会で見つかる検出履歴",
   "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
@@ -50,11 +50,11 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
         "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
         "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
         "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+        "今回の資料区分": "照会対象のIndicatorは機密指定なし。File本体・完全URLは上記に従う。"
       }
     }
   ],

@@ -14,7 +14,8 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
 LEVEL_LABELS = {
-    "very_beginner": "超初級", "beginner": "初級", "intermediate": "中級", "advanced": "上級",
+    "very_beginner": "超初級", "beginner_reference": "初級：Referenceのみ", "beginner": "初級：Tool",
+    "beginner_external": "初級：External Referenceあり", "intermediate": "中級", "advanced": "上級",
 }
 GROUP_KINDS = {"tools": "tools", "references": "references", "external_references": "external_references"}
 
@@ -150,6 +151,16 @@ def validate_authoring(item: dict, pack: dict) -> list[tuple[str, dict]]:
         raise ValueError(f"{item['id']}: required_evidence refers to missing resources")
     if item["level"] == "very_beginner" and any(kind != "references" for kind, _ in entries):
         raise ValueError(f"{item['id']}: very_beginner investigations allow only Reference resources")
+    has_external = any(kind == "external_references" for kind, _ in entries)
+    has_tool = any(kind == "tools" for kind, _ in entries)
+    if item["level"] == "beginner" and has_external:
+        raise ValueError(f"{item['id']}: beginner with External Reference must use beginner_external")
+    if item["level"] == "beginner" and not has_tool:
+        raise ValueError(f"{item['id']}: beginner without Tool must use beginner_reference")
+    if item["level"] == "beginner_reference" and (not entries or has_tool or has_external):
+        raise ValueError(f"{item['id']}: beginner_reference requires Reference resources only")
+    if item["level"] == "beginner_external" and not has_external:
+        raise ValueError(f"{item['id']}: beginner_external requires External Reference")
     validate_inputs(item, entries)
     return entries
 
@@ -157,6 +168,11 @@ def validate_authoring(item: dict, pack: dict) -> list[tuple[str, dict]]:
 def validate_review(item: dict, entries: list[tuple[str, dict]], review: dict) -> None:
     """The authored walkthrough must be executable, safe and evidence-complete."""
     resources = {entry["id"]: entry for _, entry in entries}
+    if item["level"] == "beginner":
+        tool_ids = {entry["id"] for kind, entry in entries if kind == "tools"}
+        used_tools = {step["resource_id"] for step in review["flow"]} & tool_ids
+        if len(used_tools) != 1:
+            raise ValueError(f"{item['id']}: beginner walkthrough must use exactly one Tool")
     os = "linux" if item["platform"] == "common" else item["platform"]
     obtained = {("initial_information", key) for key in item["initial_information"]}
     visited = {"initial_information"}

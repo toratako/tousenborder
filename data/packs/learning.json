@@ -78,7 +78,7 @@
     {
       "id": "external",
       "label": "外部への送信",
-      "value": "送信内容と組織の方針を確認します。Hash検索とFile Uploadを区別し、Token付きURLや社外秘Fileの外部送信を避けます。"
+      "value": "RDAPを含む外部照会では、送信内容と組織の方針を確認します。Hash検索とFile Uploadを区別し、Token付きURLや社外秘Fileの外部送信を避けます。"
     },
     {
       "id": "web",

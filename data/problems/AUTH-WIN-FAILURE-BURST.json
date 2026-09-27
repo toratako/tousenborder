@@ -11,7 +11,7 @@
     "要求ID": "AUTH-901",
     "User": "mori",
     "Source IP": "203.0.113.130",
-    "状態": "20回目の失敗の直後に届いた次の要求を認証Gatewayで保留。Password検証前で、Sessionは未成立。",
+    "状態": "認証Gatewayで保留。Password検証前で、Sessionは未成立。",
     "直前5分の認証失敗": "同一Source・同一Userへの失敗20回。今回の要求は集計に含まない。"
   },
   "initial_information_types": {
@@ -31,7 +31,7 @@
     "initial_information",
     "policy"
   ],
-  "explanation": "直前5分の同一Source・Userへの認証失敗がPolicyの閾値20回に達し、今回はその直後の次の要求なので、15分間の一時遮断条件に従ってBLOCKします。今回のSessionは未成立です。失敗回数だけから攻撃手法・攻撃者・Account侵害の成功を断定しません。",
+  "explanation": "直前5分の同一Source・Userへの認証失敗がPolicyの閾値20回に達し、今回はその直後の次の要求なので、15分間の一時遮断条件に従ってBLOCKします。今回のSessionは未成立です。認証の失敗回数だけでは、攻撃の手法や実行者、アカウントが侵害されたかどうかは判断できません。",
   "topic": "提示された失敗回数をReferenceの閾値と比較する",
   "summary": "提示された失敗回数をReferenceの閾値と比較する",
   "learning_objectives": [

@@ -13,8 +13,7 @@
     "User": "ASTER\\mori",
     "採取時点": "2026-08-18 09:10 / 起動済み",
     "端末": "ENC-04",
-    "起動依頼": "動画課から08:50に登録されたジョブ ENC-188",
-    "端末管理の実行記録": "ENC-188をENC-04で08:50にPID 4200として起動。User=ASTER\\mori。video-encoder.exeは管理配布Imageとの同一性を検証済み。"
+    "起動依頼": "動画課から08:50に登録されたジョブ ENC-188"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -46,7 +45,7 @@
     {
       "id": "job",
       "name": "承認済みJob",
-      "content": "ENC-188 / ENC-04 / mori / video-encoder.exe / 08:50–10:00 / 動画変換中はCPU 90–100%を想定。管理配布済み。"
+      "content": "ENC-188 / ENC-04 / mori / video-encoder.exe / 08:50–10:00 / 動画変換中はCPU 90–100%を想定。管理配布済み。\n端末管理の実行記録: ENC-188をENC-04で08:50にPID 4200として起動。User=ASTER\\mori。video-encoder.exeは管理配布Imageとの同一性を検証済み。"
     }
   ],
   "external_references": [],

@@ -54,7 +54,9 @@
     "level": {
       "enum": [
         "very_beginner",
+        "beginner_reference",
         "beginner",
+        "beginner_external",
         "intermediate",
         "advanced"
       ]

@@ -40,7 +40,7 @@
       "id": "strings",
       "name": "strings (GNU)",
       "description": "File内の可読文字列を抽出します。実行時の動作は観測しません。",
-      "output": "対象: /opt/incoming/report-agent\n文字列の抜粋（実行結果ではありません）\nreport-agent\n/var/tmp/shared\n/opt/report/lib\nlibreport.so",
+      "output": "対象: /opt/incoming/report-agent\n抽出文字列:\nreport-agent\n/var/tmp/shared\n/opt/report/lib\nlibreport.so",
       "accepted_information_types": [
         "file"
       ],

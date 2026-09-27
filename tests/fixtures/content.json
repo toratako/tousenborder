@@ -84,7 +84,7 @@
       "id": "FIX-HASH",
       "category": "file",
       "platform": "linux",
-      "level": "beginner",
+      "level": "beginner_external",
       "title": "FIX-HASH",
       "request": "固定データで調査・照合・判定の操作を確認します。",
       "initial_information": {"File名": "northstar-cli-2.4.tar.gz", "拡張子": ".tar.gz", "Size": "245,760 bytes", "保存場所": "/home/aki/Downloads", "入手元": "https://downloads.vendor.example/northstar-cli-2.4.tar.gz"},

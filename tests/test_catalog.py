@@ -60,6 +60,34 @@ class CatalogTests(unittest.TestCase):
                         "Reason", "Learning Objective", "Real-world Inspiration"]:
             self.assertIn(heading, markdown)
 
+    def test_rdap_queries_bind_the_actual_ip_or_registered_domain(self):
+        pack = read_json(ROOT / "data/packs/learning.json")
+        reviews = read_json(ROOT / "data/catalog/learning.json")["reviews"]
+        found = []
+        for path in pack["problems"]:
+            item = read_json(resource_path(path))
+            entries = [(kind, r) for kind in ("tools", "references", "external_references") for r in item[kind]]
+            for kind, r in entries:
+                if r["id"] != "rdap":
+                    continue
+                found.append(item["id"])
+                with self.subTest(problem=item["id"]):
+                    self.assertEqual(kind, "external_references")
+                    self.assertIn(r["submission_type"], ("ip", "domain"))
+                    self.assertEqual(r["accepted_information_types"], [r["submission_type"]])
+                    facts = {("initial_information", key): value for key, value in item["initial_information"].items()}
+                    facts.update({(entry["id"], info["id"]): info["value"]
+                                  for _, entry in entries for info in entry.get("output_information", [])})
+                    for binding in r["input_bindings"]:
+                        self.assertEqual(facts[(binding["source"], binding["id"])], r["submission_value"])
+                    self.assertIn(r["submission_value"], r["output"])
+                    flow = [s["resource_id"] for s in reviews[item["id"]]["flow"]]
+                    if "rdap" in flow:
+                        self.assertLess(flow.index("disclosure"), flow.index("rdap"))
+                    if "rdap" in item["required_evidence"]:
+                        self.assertIn("disclosure", item["required_evidence"])
+        self.assertTrue(found)
+
     def test_review_flow_requires_inputs_before_dependent_investigation(self):
         item = read_json(ROOT / "data/problems/PROC-WIN-DLL-SIDELOAD.json")
         pack = read_json(ROOT / "data/packs/learning.json")
@@ -200,6 +228,53 @@ class CatalogTests(unittest.TestCase):
                         item[kind] = [resource]
                     with self.assertRaisesRegex(ValueError, "very_beginner investigations allow only Reference"):
                         validate_authoring(item, pack)
+
+    def test_beginner_classes_follow_resource_kinds_including_custom_groups(self):
+        examples = {
+            "beginner_reference": "PKG-NPM-LOCKED-DEPENDENCY",
+            "beginner": "FILE-LINUX-ELF-AS-DOCUMENT",
+            "beginner_external": "FILE-LINUX-KNOWN-HASH",
+        }
+        for expected, problem_id in examples.items():
+            for custom in (False, True):
+                item = read_json(ROOT / f"data/problems/{problem_id}.json")
+                pack = read_json(ROOT / "data/packs/learning.json")
+                if custom:
+                    item["resources"] = {}
+                    for kind in ("tools", "references", "external_references"):
+                        group = f"extra_{kind}"
+                        pack["resource_groups"].append({"id": group, "label": group, "kind": kind})
+                        item["resources"][group] = item[kind]
+                        item[kind] = []
+                for level in examples:
+                    with self.subTest(expected=expected, level=level, custom=custom):
+                        item["level"] = level
+                        if level == expected:
+                            validate_authoring(item, pack)
+                        else:
+                            with self.assertRaisesRegex(ValueError, "beginner"):
+                                validate_authoring(item, pack)
+        empty = copy.deepcopy(self.cases[0])
+        empty["level"] = "beginner_reference"
+        with self.assertRaisesRegex(ValueError, "Reference resources only"):
+            validate_authoring(empty, self.pack)
+
+    def test_beginner_walkthrough_uses_one_of_the_alternative_tools(self):
+        item = read_json(ROOT / "data/problems/WEB-WIN-DNS.json")
+        pack = read_json(ROOT / "data/packs/learning.json")
+        entries = validate_authoring(item, pack)
+        original = read_json(ROOT / "data/catalog/learning.json")["reviews"][item["id"]]
+        for tool in item["tools"]:
+            review = copy.deepcopy(original)
+            review["flow"][0]["resource_id"] = tool["id"]
+            validate_review(item, entries, review)
+        review = copy.deepcopy(original)
+        review["flow"].insert(0, {"resource_id": "resolve", "check": "追加のDNS照会"})
+        with self.assertRaisesRegex(ValueError, "exactly one Tool"):
+            validate_review(item, entries, review)
+        review["flow"] = [step for step in original["flow"] if step["resource_id"] == "official"]
+        with self.assertRaisesRegex(ValueError, "exactly one Tool"):
+            validate_review(item, entries, review)
 
     def test_external_submission_needs_actual_value_and_boolean_usage(self):
         original = next(c for c in self.cases if c["external_references"])

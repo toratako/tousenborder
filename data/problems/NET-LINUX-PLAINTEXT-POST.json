@@ -30,7 +30,7 @@
       "id": "tcpdump",
       "name": "tcpdump",
       "description": "保存済みPCAPのPacketを読みます。所有PIDや暗号化本文は分かりません。",
-      "output": "tcpdump -nn -A -r flow-before-0910.pcap\n09:09:30 IP 192.0.2.30.52400 > 203.0.113.101.80: Flags [P.], length 118\nPOST /session HTTP/1.1\nHost: sync-endpoint.example\nContent-Type: application/x-www-form-urlencoded\n\nusername=demo-user&password=DEMO-SECRET",
+      "output": "tcpdump -nn -A -r flow-before-0910.pcap\n09:09:30 IP 192.0.2.30.52400 > 203.0.113.101.80: Flags [P.], length 163\nPOST /session HTTP/1.1\r\nHost: sync-endpoint.example\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 39\r\n\r\nusername=demo-user&password=DEMO-SECRET",
       "accepted_information_types": [
         "pcap"
       ],

@@ -68,8 +68,8 @@
     {
       "id": "strings",
       "name": "Strings (Sysinternals)",
-      "description": "File内の可読文字列を抽出します。実行時の通信や動作の証明ではありません。",
-      "output": "対象: C:\\Company\\report-builder.exe\n文字列の抜粋（実行結果ではありません）\nReport Builder 2.3\nTemplateSet: Finance\nOutputFormat: PDF",
+      "description": "File内の可読文字列を抽出します。",
+      "output": "対象: C:\\Company\\report-builder.exe\n抽出文字列:\nReport Builder 2.3\nTemplateSet: Finance\nOutputFormat: PDF",
       "accepted_information_types": [
         "file"
       ],
@@ -103,7 +103,7 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
         "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
         "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
         "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",

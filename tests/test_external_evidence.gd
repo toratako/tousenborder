@@ -98,7 +98,11 @@ func test_ui(cases: Array[Dictionary]) -> void:
 	for tool in [external, followup]:
 		desk._inspect(tool, input_for(desk.shift, tool))
 		check(desk.external_preview.visible, "後続照会も送信前確認を表示")
+		check(desk.external_preview_body.text.contains(tool.confidentiality_warning), "注意事項は送信前確認に表示")
 		desk.external_send.pressed.emit()
+		var observation: Dictionary = desk.shift.observations.back()
+		check(not observation.output.contains(tool.confidentiality_warning), "照会結果には送信前の注意事項を繰り返さない")
+		check(observation.information.all(func(info): return info.id != "warning"), "結果の情報欄にも注意事項を追加しない")
 	check(desk.shift.missing_evidence().is_empty(), "UIから後続の外部証拠を取得")
 	desk.shift.decide(item.ground_truth)
 	check(desk.audit_body.text.contains(item.explanation), "回答後の解説")

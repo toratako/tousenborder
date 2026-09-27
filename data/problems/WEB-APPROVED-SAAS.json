@@ -92,7 +92,7 @@
     "official",
     "contract"
   ],
-  "explanation": "通常のDomain一覧への反映は未完了ですが、変更承認と契約TenantへのCNAMEが一致するためアクセスを許可します。CNAMEだけで所有権を判断したわけではありません。",
+  "explanation": "通常のDomain一覧への反映は未完了ですが、変更承認と契約TenantへのCNAMEが一致するためアクセスを許可します。",
   "topic": "Domain一覧の不足を契約・変更承認で補う",
   "summary": "Domain一覧の不足を契約・変更承認で補う",
   "learning_objectives": [
@@ -101,7 +101,7 @@
   "decision_context": "before_access",
   "scenario_type": "standard",
   "sources": [
-    "https://www.icann.org/rdap"
+    "https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname"
   ],
   "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
   "evidence_alternatives": {

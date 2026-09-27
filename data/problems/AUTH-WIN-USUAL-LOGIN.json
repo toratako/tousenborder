@@ -26,7 +26,7 @@
       "id": "events",
       "name": "Event Viewer / Windows Security Log",
       "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
-      "output": "対象: 過去のSecurity Log（今回の要求は含まない）\n2026-08-17 09:01 Event ID 4624\nTargetUserName: mori\nLogonType: 10\nIpAddress: 192.0.2.41\nWorkstationName: WIN-017\n2026-08-17 18:02 Event ID 4634 / TargetUserName: mori",
+      "output": "2026-08-17 09:01 Event ID 4624\nTargetUserName: mori\nLogonType: 10\nIpAddress: 192.0.2.41\nWorkstationName: WIN-017\n2026-08-17 18:02 Event ID 4634 / TargetUserName: mori",
       "accepted_information_types": [
         "username"
       ],
@@ -61,7 +61,7 @@
     "device",
     "policy"
   ],
-  "explanation": "過去のLoginとUser・Device・Sourceが整合し、今回のGateway確認もMFAを含め要件を満たすためSession成立を許可します。過去の4624を今回の成功記録とは扱いません。",
+  "explanation": "過去のLoginとUser・Device・Sourceが整合し、今回のGateway確認もMFAを含め要件を満たすためSession成立を許可します。過去のログオン成功記録（Event ID 4624）を今回の成功記録とは扱いません。",
   "topic": "過去Loginと今回の認証途中情報を区別する",
   "summary": "過去Loginと今回の認証途中情報を区別する",
   "learning_objectives": [

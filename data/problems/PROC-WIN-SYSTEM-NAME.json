@@ -12,8 +12,7 @@
     "PID": 4200,
     "User": "NT AUTHORITY\\SYSTEM",
     "採取時点": "2026-08-18 09:10 / 起動済み",
-    "Image": "C:\\Windows\\System32\\svchost.exe",
-    "端末管理の確認": "OS配布Fileとの同一性とService起動登録は検証済み。"
+    "Image": "C:\\Windows\\System32\\svchost.exe"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -24,7 +23,7 @@
     {
       "id": "approved",
       "name": "Approved Software",
-      "content": "この端末のsvchost.exeは、OS管理対象として検証済みで、ImageがC:\\Windows\\System32\\svchost.exeのものを継続可とする。"
+      "content": "この端末のsvchost.exeは、OS管理対象として検証済みで、ImageがC:\\Windows\\System32\\svchost.exeのものを継続可とする。\n端末管理の確認（PID 4200）: OS配布Fileとの同一性とService起動登録は検証済み。"
     }
   ],
   "external_references": [],

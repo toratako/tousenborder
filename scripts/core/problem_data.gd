@@ -42,6 +42,17 @@ static func normalize(item: Dictionary, catalog: ContentCatalog, schema: Diction
 			for info in resource.get("output_information", []):
 				if output_ids.has(info.id): return "出力情報IDの重複または予約語: " + info.id
 				output_ids[info.id] = true
+	var investigations := catalog.tools_for(item)
+	var has_external := investigations.any(func(resource): return resource.resource_kind == "external_references")
+	var has_tool := investigations.any(func(resource): return resource.resource_kind == "tools")
+	if item.level == "beginner" and has_external:
+		return "External Referenceがある初級はbeginner_externalに分類してください。"
+	if item.level == "beginner" and not has_tool:
+		return "Toolを使わない初級はbeginner_referenceに分類してください。"
+	if item.level == "beginner_reference" and (investigations.is_empty() or has_tool or has_external):
+		return "beginner_referenceにはReferenceのみを配置してください。"
+	if item.level == "beginner_external" and not has_external:
+		return "beginner_externalにはExternal Referenceが必要です。"
 	var alternatives: Dictionary = item.get("evidence_alternatives", {})
 	for id in alternatives:
 		if id.strip_edges().is_empty() or ids.has(id): return "代替証拠IDの重複または予約語: " + id

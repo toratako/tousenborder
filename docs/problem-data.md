@@ -6,6 +6,7 @@
 
 - 別Packは `scenes/main.tscn` の `InspectionDesk` → **Content Pack** に指定。`problems` の登録順が出題順です。
 - カテゴリ・資料グループはPackで追加可能。判定種別・難易度・OSの追加にはSchemaと実装の変更が必要です。
+- 初級の `level` は `beginner_reference`（Referenceのみ）、`beginner`（Tool）、`beginner_external`（External Referenceあり）。追加グループも含む資料種別で分類を検証し、`beginner` のレビュー手順ではToolをちょうど1つ使うことを確認します。代替Toolの選択肢は複数登録できます。
 - 標準の `tools / references / external_references` は問題のトップレベル、追加グループだけを `resources` に置きます。標準グループのkindは変更できません。
 - `initial_information_types` は初期情報のキーと型名の対応。未指定は `text` で、値から型を推測しません。型名は追加できます。
 - 超初級はReferenceを調査欄で閲覧できます。Tool・External Referenceは追加グループを含め使用不可。`required_evidence` には初期情報と必要なReference（代替証拠も可）を指定します。Referenceは閲覧後に証拠へ加わります。調査充足は進行条件ではありません（[判定・履歴](runtime-flow.md#調査から判定まで)）。
@@ -41,10 +42,10 @@ Referenceは入力不要の `content` を表示します。Tool・External Refer
 | --- | --- |
 | File → SHA-256 → 外部Hash検索 | [FILE-LINUX-KNOWN-HASH](../data/problems/FILE-LINUX-KNOWN-HASH.json) |
 | PID → 実行ScriptのPath → Hash（Process本体と区別） | [PROC-WIN-ADMIN-POWERSHELL](../data/problems/PROC-WIN-ADMIN-POWERSHELL.json) |
-| 受付済みHost → DNS、登録DomainのRDAP資料を照合 | [WEB-UNKNOWN-CAMPAIGN](../data/problems/WEB-UNKNOWN-CAMPAIGN.json) |
+| 受付済みHost → DNS、登録Domain → 外部RDAP照会 | [WEB-UNKNOWN-CAMPAIGN](../data/problems/WEB-UNKNOWN-CAMPAIGN.json) |
 | Email内でHeader・添付・URLを調査する追加グループ | [EMAIL-GENUINE-URGENT](../data/problems/EMAIL-GENUINE-URGENT.json) |
 
-入力は値・案件・適切な調査で取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも区別します。RDAPはReferenceの固定資料とし、照会対象をcontentに明記します。
+入力は値・案件・適切な調査で取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも区別します。RDAPはExternal Referenceとし、入力値・送信値・出力の照会対象を一致させます。登録DomainがHostと異なる場合は別の型付き情報を用意し、送信前に外部照会方針を確認する手順を記載します。
 
 ProcessのBacking Executableを直接調査する場合は、初期情報のPIDを入力にし、対象Pathと結果をoutputに明記できます。ScriptのHashとは別資料にします。Windows用DNS Toolを使う問題はplatformをwindowsにし、commonの調査OSはLinuxのままとします。
 

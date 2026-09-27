@@ -140,24 +140,20 @@ static func build_start_screen(desk) -> void:
 	Chrome.panel(desk.start_screen, Rect2(94, 135, 1092, 2), Color("29495f"))
 	Chrome.label(desk.start_screen, Rect2(94, 189, 550, 70), "電子入境管理", PAPER, 44)
 	Chrome.label(desk.start_screen, Rect2(98, 283, 530, 50), "そのアクセスを、許可しますか。", GREEN, 24)
-	Chrome.label(desk.start_screen, Rect2(98, 445, 165, 28), "難易度", PAPER, 16)
-	Chrome.label(desk.start_screen, Rect2(274, 445, 165, 28), "問題カテゴリ", PAPER, 16)
-	Chrome.label(desk.start_screen, Rect2(450, 445, 165, 28), "調査環境", PAPER, 16)
+	Chrome.label(desk.start_screen, Rect2(98, 385, 514, 28), "難易度", PAPER, 16)
+	Chrome.label(desk.start_screen, Rect2(98, 480, 250, 28), "問題カテゴリ", PAPER, 16)
+	Chrome.label(desk.start_screen, Rect2(362, 480, 250, 28), "調査環境", PAPER, 16)
 	var difficulties: Array = [{"id": "", "label": "すべて"}]
-	for id in ["very_beginner", "beginner", "intermediate", "advanced"]:
-		if desk.catalog.difficulties.has(id):
-			difficulties.append({"id": id, "label": desk.catalog.difficulties[id].label})
 	for id in desk.catalog.difficulties:
-		if id not in ["very_beginner", "beginner", "intermediate", "advanced"]:
-			difficulties.append({"id": id, "label": desk.catalog.difficulties[id].label})
-	desk.difficulty_select = selection_option(desk, Vector2(98, 480), difficulties, 162)
+		difficulties.append({"id": id, "label": desk.catalog.difficulties[id].label})
+	desk.difficulty_select = selection_option(desk, Vector2(98, 420), difficulties, 514)
 	var categories: Array = [{"id": "", "label": "すべて"}]
 	categories.append_array(desk.catalog.categories)
-	desk.category_select = selection_option(desk, Vector2(274, 480), categories, 162)
+	desk.category_select = selection_option(desk, Vector2(98, 518), categories, 250)
 	var platforms: Array = [{"id": "", "label": "すべて"}]
 	for id in desk.catalog.platforms:
 		platforms.append({"id": id, "label": desk.catalog.platforms[id].label})
-	desk.platform_select = selection_option(desk, Vector2(450, 480), platforms, 162)
+	desk.platform_select = selection_option(desk, Vector2(362, 518), platforms, 250)
 	desk.platform_select.tooltip_text = "OSを選ぶと、そのOSと環境共通の問題を出題します。"
 	var briefing := Chrome.panel(desk.start_screen, Rect2(711, 189, 439, 328), Color("101e32"), Color("34556f"))
 	Chrome.label(briefing, Rect2(26, 20, 387, 23), "勤務前の手引き", Color("b0c8da"), 13)
