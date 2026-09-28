@@ -3,6 +3,7 @@ const Analysis = preload("res://src/domain/result_analysis.gd")
 const Fixtures = preload("res://tests/fixtures.gd")
 const Radar = preload("res://src/ui/results/result_radar.gd")
 const View = preload("res://src/ui/results/result_analysis_view.gd")
+const Chrome = preload("res://src/ui/shared/game_theme.gd")
 var failures := 0
 
 
@@ -46,6 +47,41 @@ func radar_nodes(node: Node) -> Array[Control]:
 	for child in node.get_children():
 		result.append_array(radar_nodes(child))
 	return result
+
+
+func check_category_layout() -> void:
+	var snapshot := sample(true, "balanced")
+	snapshot.records[0].category = "account"
+	snapshot.records[1].category = "account"
+	snapshot.records[1].correct = false
+	var data := Analysis.analyze(snapshot)
+	check(
+		data.categories.account.label == "アカウント・認証"
+		and data.categories.account.correct == 1 and data.categories.account.answered == 2,
+		"アカウント・認証の正答数を記録から集計",
+	)
+	var list := VBoxContainer.new()
+	list.theme = Chrome.create(preload("res://assets/fonts/NotoSansCJK-Regular.ttc"))
+	list.size = Vector2(900, 120)
+	root.add_child(list)
+	var file_row := View.category_row(list, data.categories.file).get_child(0)
+	var account_button := View.category_row(list, data.categories.account)
+	var account_row := account_button.get_child(0)
+	for i in 2:
+		await process_frame
+	var name: Label = account_row.get_child(0)
+	var count: Label = account_row.get_child(2)
+	var font: Font = name.get_theme_font("font")
+	var font_size := name.get_theme_font_size("font_size")
+	var text_width := font.get_string_size(name.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	check(name.get_line_count() == 1 and name.size.x >= text_width, "アカウント・認証を1行で最後まで表示")
+	check(
+		count.text == "1 / 2問" and count.position.y == file_row.get_child(2).position.y
+		and account_row.get_child(1).position.y == file_row.get_child(1).position.y,
+		"アカウント・認証の正答数と棒を他分野と同じ高さに配置",
+	)
+	check(account_button.tooltip_text.contains("アカウント・認証"), "分野名をツールチップでも確認できる")
+	list.free()
 
 
 func _initialize() -> void:
@@ -225,6 +261,7 @@ func check_profiles() -> void:
 
 func run() -> void:
 	check_profiles()
+	await check_category_layout()
 	for complete in [true, false]:
 		for bias in ["allow", "balanced", "block"]:
 			var data := sample(complete, bias)

@@ -54,7 +54,7 @@ static func meter(parent: Node, numerator: int, denominator: int) -> ProgressBar
 
 static func category_row(parent: Node, category: Dictionary) -> Button:
 	var button := Chrome.button(parent, Rect2(), "", Chrome.TEXT)
-	button.custom_minimum_size.y = 30
+	button.custom_minimum_size.y = 36
 	button.disabled = category.answered == 0
 	var row := HBoxContainer.new()
 	button.add_child(row)
@@ -67,7 +67,10 @@ static func category_row(parent: Node, category: Dictionary) -> Button:
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var name := text(row, category.label, 16, MUTED if category.answered == 0 else Chrome.TEXT)
 	name.size_flags_horizontal = Control.SIZE_FILL
-	name.custom_minimum_size.x = 112
+	name.custom_minimum_size.x = 160
+	name.autowrap_mode = TextServer.AUTOWRAP_OFF
+	name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	name.clip_text = true
 	name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	name.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var bar := meter(row, category.correct, category.answered)
@@ -79,13 +82,18 @@ static func category_row(parent: Node, category: Dictionary) -> Button:
 		MUTED,
 	)
 	count.custom_minimum_size.x = 78
+	count.autowrap_mode = TextServer.AUTOWRAP_OFF
 	count.size_flags_horizontal = Control.SIZE_FILL if category.answered > 0 else Control.SIZE_EXPAND_FILL
 	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	count.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	count.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	button.tooltip_text = (
-		"正答率 %d％。クリックで問題を振り返る。" % roundi(Analysis.ratio(category.correct, category.answered) * 100)
-	) if category.answered > 0 else "この勤務では出題されていません。"
+	if category.answered > 0:
+		button.tooltip_text = "%s：正答率 %d％。クリックで問題を振り返る。" % [
+			category.label,
+			roundi(Analysis.ratio(category.correct, category.answered) * 100),
+		]
+	else:
+		button.tooltip_text = "%s：この勤務では出題されていません。" % category.label
 	return button
 
 
