@@ -51,7 +51,7 @@
     },
     "vendor": {
       "label": "Vendor / Publisher（提供元）",
-      "description": "製品を提供する会社や開発者です。Publisherは発行元を表し、署名の検証結果などに表示されます。"
+      "description": "製品を提供する会社や開発者です。発行元は署名の検証結果などに表示されます。"
     },
     "upload": {
       "label": "Upload（アップロード）",
@@ -75,7 +75,7 @@
     },
     "command": {
       "label": "Command Line / 引数",
-      "description": "Command Lineは実行するプログラムと、その後に付ける指定の並びです。引数は対象ファイルや設定などを渡す部分です。"
+      "description": "コマンドラインは実行するプログラムと、その後に付ける指定の並びです。引数は対象ファイルや設定などを渡す部分です。"
     },
     "powershell": {
       "label": "PowerShell",
@@ -91,7 +91,7 @@
     },
     "service": {
       "label": "Service / Unit（常駐処理）",
-      "description": "Serviceは裏側で動く機能です。Linuxのsystemdでは、サービスなどの設定や状態をUnitという単位で管理します。"
+      "description": "サービスは裏側で動く機能です。Linuxのsystemdでは、サービスなどの設定や状態をユニット単位で管理します。"
     },
     "user": {
       "label": "User / Account（利用者・アカウント）",
@@ -99,7 +99,7 @@
     },
     "resource_usage": {
       "label": "CPU / Memory（使用量）",
-      "description": "CPUは計算を行う部分、Memoryは処理中のデータを置く領域です。使用量の大小だけでは、正常な処理かどうかは決まりません。"
+      "description": "CPUは計算を行う部分、メモリは処理中のデータを置く領域です。使用量の大小だけでは、正常な処理かどうかは決まりません。"
     },
     "shell": {
       "label": "Shell / sh（シェル）",
@@ -163,7 +163,7 @@
     },
     "host": {
       "label": "Host / Domain（ホスト名・ドメイン）",
-      "description": "Hostは接続先の名前で、Domainは名前を管理する区切りです。login.example.comはexample.comの下位の名前です。"
+      "description": "ホスト名は接続先の名前で、ドメインは名前を管理する範囲です。login.example.comはexample.comの下位の名前です。"
     },
     "dns": {
       "label": "DNS / 名前解決",
@@ -179,7 +179,7 @@
     },
     "token": {
       "label": "Token（トークン）",
-      "description": "認証や操作の許可に使う情報です。URLに含まれる再設定用Tokenなどは、他人に渡すと操作を悪用されるおそれがあります。"
+      "description": "認証や操作の許可に使う情報です。URLに含まれる再設定用トークンなどは、他人に渡すと操作を悪用されるおそれがあります。"
     },
     "private": {
       "label": "Public / Unlisted / Private",
@@ -315,7 +315,7 @@
     },
     "approved": {
       "label": "Approved（承認済み）",
-      "description": "組織が利用や変更を認めた状態です。Approved Softwareは承認済みソフト、Approved Serversは承認済み接続先の資料です。"
+      "description": "組織が利用や変更を認めた状態です。承認済みソフトウェアや接続先の資料を指します。"
     },
     "reference": {
       "label": "Reference（参照資料）",
@@ -499,11 +499,11 @@
     },
     "job": {
       "label": "Job / Schedule（作業と予定）",
-      "description": "Jobはまとめて実行する作業、Scheduleは実行予定です。誰が・何を・いつ動かすかを記録します。"
+      "description": "ジョブはまとめて実行する作業、スケジュールは実行予定です。誰が・何を・いつ動かすかを記録します。"
     },
     "agent": {
       "label": "Agent（エージェント）",
-      "description": "端末で監視や収集などを行うプログラムです。Agentという名前だけでは、提供元や実際の役割は分かりません。"
+      "description": "端末で監視や収集などを行うプログラムです。名称だけでは、提供元や実際の役割は分かりません。"
     },
     "telemetry": {
       "label": "Telemetry（状態の収集データ）",
@@ -663,7 +663,7 @@
     },
     "thread": {
       "label": "Thread / In-Reply-To（やり取りのつながり）",
-      "description": "Threadは関連するメールのまとまりです。In-Reply-Toは返信元メールを示す情報ですが、これだけで本物の返信とは確定できません。"
+      "description": "スレッドは関連するメールのまとまりです。In-Reply-Toは返信元メールを示す情報ですが、これだけで本物の返信とは確定できません。"
     },
     "quarantine": {
       "label": "quarantine（隔離・保留）",
@@ -699,7 +699,7 @@
     },
     "source_code": {
       "label": "Source / Source Review（コードの確認）",
-      "description": "ソフトウェアの作り方や処理を書いた元のコードです。Source Reviewはその内容を読むことです。取得元を指すSource欄とは文脈が異なります。"
+      "description": "ソフトウェアの構造や処理を書いた元のコードです。ソースコードレビューではその内容を読みます。取得元を指すSource欄とは文脈が異なります。"
     },
     "commit": {
       "label": "Commit（変更の記録）",
@@ -707,7 +707,7 @@
     },
     "release": {
       "label": "Release / Change（公開・変更）",
-      "description": "Releaseはソフトウェアの版を公開することです。Changeの資料には、更新内容や承認された変更範囲などが記録されます。"
+      "description": "リリースはソフトウェアの版を公開することです。変更の資料には、更新内容や承認された変更範囲などが記録されます。"
     },
     "native_module": {
       "label": "Native Module / node-gyp",
@@ -739,7 +739,7 @@
     },
     "server": {
       "label": "Server / Client",
-      "description": "Serverは機能やデータを提供する側、Clientは要求して利用する側です。同じコンピューターが両方の役割を持つ場合もあります。"
+      "description": "サーバーは機能やデータを提供する側、クライアントは要求して利用する側です。同じコンピューターが両方の役割を持つ場合もあります。"
     },
     "browser": {
       "label": "Browser（ブラウザー）",
@@ -747,7 +747,7 @@
     },
     "storage": {
       "label": "Storage / Backup",
-      "description": "Storageはデータを保存する場所や機器、Backupは復旧に備えたコピーです。保存先には端末内や外部サービスなどがあります。"
+      "description": "ストレージはデータを保存する場所や機器、バックアップは復旧に備えたコピーです。保存先には端末内や外部サービスなどがあります。"
     },
     "driver": {
       "label": "Driver（ドライバー）",

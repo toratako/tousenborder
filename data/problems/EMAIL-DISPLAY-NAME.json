@@ -6,7 +6,7 @@
   "level": "beginner_reference",
   "ground_truth": "block",
   "title": "社内役員名の表示名偽装",
-  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Email": "quarantine/message-1074.eml",
     "From": "Aster代表 <chief-office@free-mail.example>",
@@ -14,7 +14,7 @@
     "Subject": "至急振込",
     "本文": "会議中なので電話せず、このメールへの返信だけで振込を進めてください。",
     "受信時刻": "2026-08-18 09:10",
-    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。"
+    "状態": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。"
   },
   "initial_information_types": {
     "Email": "email"
@@ -23,7 +23,7 @@
   "references": [
     {
       "id": "directory",
-      "name": "Company Directory",
+      "name": "社内連絡先台帳",
       "content": {
         "正規役員Address": "ceo@aster.example"
       }
@@ -31,7 +31,7 @@
     {
       "id": "payment",
       "name": "振込手順",
-      "content": "役員依頼でも社内承認Ticketと登録番号への確認が必要。"
+      "content": "役員依頼でも社内承認チケットと登録番号への確認が必要。"
     }
   ],
   "external_references": [],
@@ -132,16 +132,16 @@
       ]
     }
   ],
-  "explanation": "表示名は社内役員ですが、FromがCompany Directoryの正規連絡先と異なり、独立確認を省く振込要求でもあるため受入れを遮断します。",
-  "topic": "表示名ではなく送信Addressと業務手順を見る",
-  "summary": "表示名ではなく送信Addressと業務手順を見る",
+  "explanation": "表示名は社内役員ですが、Fromが社内連絡先台帳の正規連絡先と異なり、独立確認を省く振込要求でもあるため受入れを遮断します。",
+  "topic": "表示名ではなく送信アドレスと業務手順を見る",
+  "summary": "表示名ではなく送信アドレスと業務手順を見る",
   "learning_objectives": [
-    "表示名ではなく送信Addressと業務手順を見る"
+    "表示名ではなく送信アドレスと業務手順を見る"
   ],
   "decision_context": "before_delivery",
   "scenario_type": "standard",
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc8601"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

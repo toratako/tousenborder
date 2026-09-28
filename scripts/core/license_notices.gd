@@ -18,7 +18,7 @@ static func sections() -> Array[Dictionary]:
 		license_texts.append("%s\n\n%s" % [name, licenses[name]])
 	return [
 		{"title": "Godot Engine", "body": "Godot Engine %s\nhttps://godotengine.org/license/\n\n%s" % [Engine.get_version_info().string, Engine.get_license_text()]},
-		{"title": "フォント", "body": FileAccess.get_file_as_string("res://assets/fonts/LICENSE")},
+		{"title": "フォント", "body": FileAccess.get_file_as_string("res://assets/fonts/LICENSE") + "\n\nYusei Magic\nhttps://github.com/google/fonts/tree/main/ofl/yuseimagic\n\n" + FileAccess.get_file_as_string("res://assets/fonts/YuseiMagic-OFL.txt")},
 		{"title": "第三者の著作権", "body": "Godotに含まれるコンポーネントの著作権表記\n\n" + "\n".join(copyrights)},
 		{"title": "第三者のライセンス", "body": "Godotに含まれるコンポーネントのライセンス全文\n\n" + "\n\n".join(license_texts)},
 	]

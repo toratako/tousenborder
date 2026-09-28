@@ -5,8 +5,8 @@
   "platform": "linux",
   "level": "intermediate",
   "ground_truth": "block",
-  "title": "Cron Persistence",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "cronによる永続化",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "update-cache",
     "PID": 4200,
@@ -21,7 +21,7 @@
     {
       "id": "ps",
       "name": "ps",
-      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "description": "選択PIDのユーザー・親PID・コマンドラインを確認します。",
       "output": "USER PID PPID ELAPSED COMMAND\nwww-data 4200 3100 00:10 /tmp/.cache/update-cache --quiet",
       "accepted_information_types": [
         "pid"
@@ -41,7 +41,7 @@
     {
       "id": "pstree",
       "name": "pstree",
-      "description": "選択PIDの祖先ProcessのChainを確認します。",
+      "description": "選択PIDの祖先プロセスの連鎖を確認します。",
       "output": "systemd(1)---cron(800)---sh(3100)---update-cache(4200)\n表示: 選択PIDの祖先Chain",
       "accepted_information_types": [
         "pid"
@@ -61,7 +61,7 @@
     {
       "id": "cron",
       "name": "crontab",
-      "description": "選択PIDの実効Userのcrontabを表示します。User選択は教材のラッパーで、起動原因の断定には別の観測も必要です。",
+      "description": "選択PIDの実効ユーザーのcrontabを表示します。ユーザー選択は教材のラッパーで、起動原因の断定には別の観測も必要です。",
       "output": "crontab -u www-data -l\n* * * * * /tmp/.cache/update-cache --quiet",
       "accepted_information_types": [
         "pid"
@@ -82,8 +82,8 @@
   "references": [
     {
       "id": "service",
-      "name": "Service構成台帳",
-      "content": "www-dataの役割は静的Web配信のみ。crontab登録は空、実行Fileは/opt/web以下。更新は管理UserのCI Deployに限定。"
+      "name": "サービス構成台帳",
+      "content": "www-dataの役割は静的Web配信のみ。crontab登録は空、実行ファイルは/opt/web以下。更新は管理ユーザーのCI経由のデプロイに限定。"
     }
   ],
   "external_references": [],
@@ -331,17 +331,17 @@
       ]
     }
   ],
-  "explanation": "稼働Imageが/tmp配下にあり、www-dataのcrontabで毎分再起動する登録があるため、承認された静的Web Serviceの運用から外れています。この継続・再起動を許可しません。",
-  "topic": "稼働Processとcron登録を同一Pathで結び付ける",
-  "summary": "稼働Processとcron登録を同一Pathで結び付ける",
+  "explanation": "稼働イメージが/tmp配下にあり、www-dataのcrontabで毎分再起動する登録があるため、承認された静的Webサービスの運用から外れています。この継続・再起動を許可しません。",
+  "topic": "稼働プロセスとcron登録を同一パスで結び付ける",
+  "summary": "稼働プロセスとcron登録を同一パスで結び付ける",
   "learning_objectives": [
-    "稼働Processとcron登録を同一Pathで結び付ける"
+    "稼働プロセスとcron登録を同一パスで結び付ける"
   ],
   "decision_context": "running_process",
   "scenario_type": "real_world_inspired",
   "sources": [
     "https://attack.mitre.org/techniques/T1053/003/"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "Cron Persistence"
 }

@@ -6,7 +6,7 @@
   "level": "advanced",
   "ground_truth": "allow",
   "title": "未署名の社内帳票ツール",
-  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "File": "C:\\Company\\report-builder.exe",
     "申請内容": "社外秘の帳票Templateを内蔵した社内版2.3。",
@@ -20,7 +20,7 @@
     {
       "id": "hash",
       "name": "Get-FileHash",
-      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "description": "SHA-256を計算します。PID入力では対応する実体ファイルが対象です。",
       "output": "Algorithm : SHA256\nHash : FFAD92B5B3FB8618BA277D6F1FEE69571075657EA61351ED06C337230C083F92\nPath : C:\\Company\\report-builder.exe",
       "accepted_information_types": [
         "file"
@@ -31,7 +31,7 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "platform_note": "Windows / PowerShell標準",
       "environments": [
         "windows"
@@ -39,7 +39,7 @@
       "output_information": [
         {
           "id": "sha256",
-          "label": "対象FileのSHA-256",
+          "label": "対象ファイルのSHA-256",
           "value": "ffad92b5b3fb8618ba277d6f1fee69571075657ea61351ed06c337230c083f92",
           "data_type": "sha256"
         }
@@ -48,7 +48,7 @@
     {
       "id": "sig",
       "name": "Sigcheck",
-      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "description": "署名の検証状態・発行元を確認します。PID入力では実体ファイルが対象です。",
       "output": "C:\\Company\\report-builder.exe:\n  Verified: Unsigned\n  Publisher: n/a",
       "accepted_information_types": [
         "file"
@@ -59,7 +59,7 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "platform_note": "Windows / Microsoft Sysinternals・要導入",
       "environments": [
         "windows"
@@ -68,7 +68,7 @@
     {
       "id": "strings",
       "name": "Strings (Sysinternals)",
-      "description": "File内の可読文字列を抽出します。",
+      "description": "ファイル内の可読文字列を抽出します。",
       "output": "対象: C:\\Company\\report-builder.exe\n抽出文字列:\nReport Builder 2.3\nTemplateSet: Finance\nOutputFormat: PDF",
       "accepted_information_types": [
         "file"
@@ -79,7 +79,7 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "platform_note": "Windows / Microsoft Sysinternals・要導入",
       "environments": [
         "windows"
@@ -89,7 +89,7 @@
   "references": [
     {
       "id": "approved",
-      "name": "Approved Software",
+      "name": "承認済みソフトウェア",
       "content": {
         "製品": "report-builder 2.3",
         "Path": "C:\\Company\\report-builder.exe",
@@ -103,10 +103,10 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
-        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
-        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
-        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
         "今回の資料区分": "社外秘"
       }
     }
@@ -114,7 +114,7 @@
   "external_references": [
     {
       "id": "file_rep",
-      "name": "External File Reputation",
+      "name": "ファイルの評判照会",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
       "output": "File received; analysis queued.",
       "accepted_information_types": [
@@ -126,12 +126,12 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "submission_type": "file",
       "submission_value": "C:\\Company\\report-builder.exe",
-      "confidentiality_warning": "File本体を送信します。内容や埋め込み情報がサービスに渡り、共有される場合があります。",
+      "confidentiality_warning": "ファイル本体を送信します。内容や埋め込み情報がサービスに渡り、共有される場合があります。",
       "correct_usage": false,
-      "reason": "社外秘Templateを含むFile本体は外部送信禁止です。"
+      "reason": "社外秘Templateを含むファイル本体は外部送信禁止です。"
     }
   ],
   "required_evidence": [
@@ -646,7 +646,7 @@
       ]
     }
   ],
-  "explanation": "未署名でも、Hash・Version・配布経路が例外承認済みの社内版と一致するため許可します。社外秘FileのUploadは不要で、外部送信方針にも反します。",
+  "explanation": "未署名でも、ハッシュ・バージョン・配布経路が例外承認済みの社内版と一致するため許可します。社外秘ファイルのアップロードは不要で、外部送信方針にも反します。",
   "topic": "未署名と機密性を承認台帳で判断する",
   "summary": "未署名と機密性を承認台帳で判断する",
   "learning_objectives": [
@@ -657,5 +657,5 @@
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

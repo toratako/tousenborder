@@ -5,16 +5,16 @@
   "platform": "linux",
   "level": "beginner",
   "ground_truth": "block",
-  "title": "SSH失敗のSource閾値",
-  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "SSH認証失敗の接続元別しきい値",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "initial_information": {
     "要求ID": "AUTH-901",
     "User": "ops-mori",
     "Source IP": "203.0.113.151",
     "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
-    "認証方式": "SSH password",
-    "Gatewayの鍵検証": "対象外 / Password認証要求",
+    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+    "認証方式": "SSHパスワード認証",
+    "Gatewayの鍵検証": "対象外 / パスワード認証要求",
     "GatewayのMFA": "未実施"
   },
   "initial_information_types": {
@@ -25,8 +25,8 @@
     {
       "id": "journal",
       "name": "journalctl",
-      "description": "今回の要求より前のsshd記録を確認します。集計は保存Logからの抽出表示です。",
-      "output": "2026-08-18T09:09:00+09:00 server sshd[3100]: Failed password for ops-mori from 203.0.113.151 port 53000 ssh2\n2026-08-18T09:09:59+09:00 server sshd[3119]: Failed password for ops-mori from 203.0.113.151 port 53019 ssh2\n09:00–09:09:59の同一Source・UserのFailed password行: 20件（保存Logの集計）。上記末尾の記録が20件目。",
+      "description": "今回の要求より前のsshd記録を確認します。集計は保存ログからの抽出表示です。",
+      "output": "2026-08-18T09:09:00+09:00 server sshd[3100]: Failed password for ops-mori from 203.0.113.151 port 53000 ssh2\n2026-08-18T09:09:59+09:00 server sshd[3119]: Failed password for ops-mori from 203.0.113.151 port 53019 ssh2\n09:00–09:09:59の同一接続元・同一ユーザーによるパスワード認証失敗: 20件（保存ログの集計）。上記末尾の記録が20件目。",
       "accepted_information_types": [
         "username"
       ],
@@ -36,7 +36,7 @@
           "id": "User"
         }
       ],
-      "input_hint": "User",
+      "input_hint": "ユーザー",
       "platform_note": "Linux / systemd",
       "environments": [
         "linux"
@@ -46,8 +46,8 @@
   "references": [
     {
       "id": "policy",
-      "name": "User / Account Policy",
-      "content": "直前10分に同一Sourceから20回以上の認証失敗があれば、今回から15分間そのSourceの新規認証要求を拒否する。認証方法の変更だけでは解除しない。"
+      "name": "ユーザー／アカウント方針",
+      "content": "直前10分以内に同じ接続元から20回以上の認証失敗があった場合、今回の要求から15分間、その接続元からの新規認証要求を拒否する。認証方式を変更しても解除しない。"
     }
   ],
   "external_references": [],
@@ -254,16 +254,16 @@
       ]
     }
   ],
-  "explanation": "直前10分の同一SourceからのSSH認証失敗が20回の閾値に達したため、今回の新規要求を遮断します。",
-  "topic": "journalctlの直前履歴を認証方針と比較する",
-  "summary": "journalctlの直前履歴を認証方針と比較する",
+  "explanation": "直前10分以内に同じ接続元からのSSH認証失敗が20回に達したため、今回の新規要求を遮断します。",
+  "topic": "journalctlの直前の履歴を認証方針と照合する",
+  "summary": "journalctlの直前の履歴を認証方針と照合する",
   "learning_objectives": [
-    "journalctlの直前履歴を認証方針と比較する"
+    "journalctlの直前の履歴を認証方針と照合する"
   ],
   "decision_context": "before_session",
   "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

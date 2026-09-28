@@ -5,11 +5,11 @@
   "platform": "linux",
   "level": "beginner",
   "ground_truth": "block",
-  "title": "承認外のELF Interpreter",
-  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "承認されていないELFインタープリター",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "File": "/opt/incoming/stats-agent",
-    "申請内容": "統計Agent 2.0の導入。",
+    "申請内容": "統計エージェント 2.0の導入。",
     "状態": "未実行。ダウンロードまたは受領直後。"
   },
   "initial_information_types": {
@@ -19,7 +19,7 @@
     {
       "id": "elf",
       "name": "readelf",
-      "description": "ELF Header・Interpreter・依存ライブラリ・RUNPATHを静的に表示します。",
+      "description": "ELFヘッダー・インタープリター・依存ライブラリ・RUNPATHを静的に表示します。",
       "output": "ELF64 / x86-64\nINTERP: /tmp/ld-stats.so\nNEEDED: libc.so.6",
       "accepted_information_types": [
         "file"
@@ -30,7 +30,7 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "platform_note": "Linux / GNU binutils",
       "environments": [
         "linux"
@@ -40,8 +40,8 @@
   "references": [
     {
       "id": "service",
-      "name": "Service構成台帳",
-      "content": "stats-agent 2.0: Interpreter=/lib64/ld-linux-x86-64.so.2。Loaderを/tmpに配置する構成は未承認。"
+      "name": "サービス構成台帳",
+      "content": "stats-agent 2.0: Interpreter=/lib64/ld-linux-x86-64.so.2。ローダーを/tmpに配置する構成は未承認。"
     }
   ],
   "external_references": [],
@@ -217,11 +217,11 @@
       ]
     }
   ],
-  "explanation": "ELFのInterpreterが承認構成の標準Loaderではなく/tmp配下を指すため、導入条件を満たさず遮断します。",
-  "topic": "readelfで静的なLoader指定を照合する",
-  "summary": "readelfで静的なLoader指定を照合する",
+  "explanation": "ELFのインタープリターが承認構成の標準ローダーではなく/tmp配下を指すため、導入条件を満たさず遮断します。",
+  "topic": "readelfで静的なローダー指定を照合する",
+  "summary": "readelfで静的なローダー指定を照合する",
   "learning_objectives": [
-    "readelfで静的なLoader指定を照合する"
+    "readelfで静的なローダー指定を照合する"
   ],
   "decision_context": "before_execution",
   "scenario_type": "standard",
@@ -229,5 +229,5 @@
     "https://sourceware.org/binutils/docs/binutils/readelf.html",
     "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

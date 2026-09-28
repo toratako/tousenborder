@@ -6,13 +6,13 @@
   "level": "very_beginner",
   "ground_truth": "block",
   "title": "短時間の失敗と一時遮断規則",
-  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "initial_information": {
     "要求ID": "AUTH-901",
     "User": "mori",
     "Source IP": "203.0.113.130",
-    "状態": "認証Gatewayで保留。Password検証前で、Sessionは未成立。",
-    "直前5分の認証失敗": "同一Source・同一Userへの失敗20回。今回の要求は集計に含まない。"
+    "状態": "認証ゲートウェイで保留中。パスワードの検証前で、セッションはまだ確立していない。",
+    "直前5分の認証失敗": "同じ接続元から同じユーザーに対する認証失敗が20回。今回の要求は集計に含まない。"
   },
   "initial_information_types": {
     "User": "username",
@@ -22,8 +22,8 @@
   "references": [
     {
       "id": "policy",
-      "name": "User / Account Policy",
-      "content": "このGatewayでは、同一Source・同一Userへの認証失敗が5分間に20回へ到達した場合、次の認証要求から15分間、その組の新規認証要求を一時遮断する。"
+      "name": "アカウント利用方針",
+      "content": "このゲートウェイでは、同じ接続元から同じユーザーに対する認証失敗が5分間に20回に達した場合、次の認証要求から15分間、その組み合わせへの新規認証要求を一時的に遮断する。"
     }
   ],
   "external_references": [],
@@ -125,16 +125,16 @@
       ]
     }
   ],
-  "explanation": "直前5分の同一Source・Userへの認証失敗がPolicyの閾値20回に達し、今回はその直後の次の要求なので、15分間の一時遮断条件に従ってBLOCKします。今回のSessionは未成立です。認証の失敗回数だけでは、攻撃の手法や実行者、アカウントが侵害されたかどうかは判断できません。",
-  "topic": "提示された失敗回数をReferenceの閾値と比較する",
-  "summary": "提示された失敗回数をReferenceの閾値と比較する",
+  "explanation": "直前5分間に同じ接続元から同じユーザーに対する認証失敗が20回に達しており、今回の要求はその直後のため、15分間の一時遮断条件に従って遮断します。今回のセッションはまだ確立していません。失敗回数だけでは、攻撃の手法や実行者、アカウントが侵害されたかどうかまでは判断できません。",
+  "topic": "提示された失敗回数を遮断条件の閾値と比較する",
+  "summary": "提示された失敗回数を遮断条件の閾値と比較する",
   "learning_objectives": [
-    "提示された失敗回数をReferenceの閾値と比較する"
+    "提示された失敗回数を遮断条件の閾値と比較する"
   ],
   "decision_context": "before_session",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

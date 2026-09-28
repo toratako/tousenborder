@@ -6,7 +6,7 @@
   "level": "beginner",
   "ground_truth": "block",
   "title": "PDFとして届いたELF",
-  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "File": "/home/user/inbox/delivery.pdf",
     "申請内容": "配送伝票PDFを表示する。",
@@ -19,7 +19,7 @@
     {
       "id": "file",
       "name": "file",
-      "description": "MagicなどからFile形式を識別します。",
+      "description": "マジック値などからファイル形式を識別します。",
       "output": "/home/user/inbox/delivery.pdf: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped",
       "accepted_information_types": [
         "file"
@@ -30,7 +30,7 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "platform_note": "Linux / fileパッケージ",
       "environments": [
         "linux"
@@ -41,7 +41,7 @@
     {
       "id": "format",
       "name": "受入れ形式",
-      "content": "配送伝票はPDFのみ。実行Fileを伝票として開かない。"
+      "content": "配送伝票はPDFのみ。実行ファイルを伝票として開かない。"
     }
   ],
   "external_references": [],
@@ -191,11 +191,11 @@
       ]
     }
   ],
-  "explanation": "fileの結果はPDFではなくELF実行Fileで、伝票の受入れ形式に合わないため遮断します。",
-  "topic": "File名ではなく実際の形式を確認する",
-  "summary": "File名ではなく実際の形式を確認する",
+  "explanation": "fileの結果はPDFではなくELF実行ファイルで、伝票の受入れ形式に合わないため遮断します。",
+  "topic": "ファイル名ではなく実際の形式を確認する",
+  "summary": "ファイル名ではなく実際の形式を確認する",
   "learning_objectives": [
-    "File名ではなく実際の形式を確認する"
+    "ファイル名ではなく実際の形式を確認する"
   ],
   "decision_context": "before_execution",
   "scenario_type": "standard",
@@ -203,5 +203,5 @@
     "https://sourceware.org/binutils/docs/binutils/readelf.html",
     "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

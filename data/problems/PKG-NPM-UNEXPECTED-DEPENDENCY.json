@@ -6,12 +6,12 @@
   "level": "intermediate",
   "ground_truth": "block",
   "title": "変更記録にない依存の追加",
-  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Package": "@aster-ui/chart",
     "Version": "2.5.0",
     "Ecosystem": "npm",
-    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。"
+    "状態": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。"
   },
   "initial_information_types": {
     "Package": "package"
@@ -20,7 +20,7 @@
   "references": [
     {
       "id": "metadata",
-      "name": "npm Registry / Package Metadata",
+      "name": "npmレジストリのパッケージ情報",
       "content": {
         "Name": "@aster-ui/chart",
         "Version": "2.5.0",
@@ -36,22 +36,22 @@
     },
     {
       "id": "official",
-      "name": "Official Repository / Approved Component",
-      "content": "承認Commitの@aster-ui/chart 2.5.0 package.json: dependencies={\"@aster-ui/core\":\"2.5.0\"}。Public telemetry依存は含まれない。"
+      "name": "公式リポジトリ・承認済みコンポーネント",
+      "content": "承認済みコミットの@aster-ui/chart 2.5.0 package.json: dependencies={\"@aster-ui/core\":\"2.5.0\"}。公開 telemetry依存は含まれない。"
     },
     {
       "id": "release",
-      "name": "Release / Change Reference",
-      "content": "2.5.0: グラフのアクセシビリティ修正。依存はcoreのVersion更新のみ。"
+      "name": "リリース・変更承認記録",
+      "content": "2.5.0: グラフのアクセシビリティ修正。依存はcoreのバージョン更新のみ。"
     },
     {
       "id": "lock",
-      "name": "Lock File",
+      "name": "ロックファイル",
       "content": "現行2.4.0は@aster-ui/coreのみ。2.5.0更新申請もcore以外の追加を含まない。"
     },
     {
       "id": "vuln",
-      "name": "Vulnerability Database",
+      "name": "脆弱性データベース",
       "content": "aster-chart-telemetry 1.0.0: 登録なし。登録の有無から今回の依存追加が承認されているとは判断できない。"
     }
   ],
@@ -353,17 +353,17 @@
       ]
     }
   ],
-  "explanation": "配布Metadataには新しいPublic依存がある一方、公式Sourceと変更記録はその追加を含まないため導入を遮断します。依存が増えたこと自体ではなく同Versionの不一致が根拠です。",
-  "topic": "依存の変化を公式Source・変更記録・Lockで比較する",
-  "summary": "依存の変化を公式Source・変更記録・Lockで比較する",
+  "explanation": "配布メタデータには新しい公開依存がある一方、公式のソースコードと変更記録はその追加を含まないため導入を遮断します。依存が増えたこと自体ではなく同バージョンの不一致が根拠です。",
+  "topic": "依存の変化を公式のソースコード・変更記録・ロックファイルで比較する",
+  "summary": "依存の変化を公式のソースコード・変更記録・ロックファイルで比較する",
   "learning_objectives": [
-    "依存の変化を公式Source・変更記録・Lockで比較する"
+    "依存の変化を公式のソースコード・変更記録・ロックファイルで比較する"
   ],
   "decision_context": "before_install",
   "scenario_type": "standard",
   "sources": [
     "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "ecosystem": "npm"
 }

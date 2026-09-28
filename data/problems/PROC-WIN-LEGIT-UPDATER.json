@@ -5,8 +5,8 @@
   "platform": "windows",
   "level": "intermediate",
   "ground_truth": "allow",
-  "title": "正規Updaterの外部接続",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "正規更新プログラムの外部接続",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "AsterUpdate.exe",
     "PID": 4200,
@@ -21,7 +21,7 @@
     {
       "id": "pe",
       "name": "Process Explorer",
-      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
       "output": "Parent: services.exe (800)\nPID: 4200\nImage: C:\\Program Files\\Aster\\AsterUpdate.exe\nCommand line: AsterUpdate.exe --scheduled\nUser: NT AUTHORITY\\SYSTEM\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
       "accepted_information_types": [
         "pid"
@@ -40,7 +40,7 @@
       "output_information": [
         {
           "id": "image",
-          "label": "Backing Executable",
+          "label": "実体ファイル",
           "value": "C:\\Program Files\\Aster\\AsterUpdate.exe",
           "data_type": "file"
         }
@@ -49,7 +49,7 @@
     {
       "id": "sig",
       "name": "Sigcheck",
-      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "description": "署名の検証状態・発行元を確認します。PIDを入力した場合は対応する実体ファイルが対象です。",
       "output": "PID 4200 のBacking Executable: C:\\Program Files\\Aster\\AsterUpdate.exe\nVerified: Signed\nPublisher: Aster Software Ltd.",
       "accepted_information_types": [
         "pid"
@@ -88,7 +88,7 @@
       "output_information": [
         {
           "id": "sha256",
-          "label": "Backing ExecutableのSHA-256",
+          "label": "実体ファイルのSHA-256",
           "value": "3fb8b825981f585cff73b9e298d4c5eca3e3d958d4572edcfbc10facb2edc570",
           "data_type": "sha256"
         }
@@ -97,7 +97,7 @@
     {
       "id": "tcp",
       "name": "TCPView",
-      "description": "選択PIDのSocketと相手IP・Portを確認します。",
+      "description": "選択PIDのソケットと相手IP・ポートを確認します。",
       "output": "AsterUpdate.exe 4200 TCP 192.0.2.25:52200 198.51.100.20:443 ESTABLISHED",
       "accepted_information_types": [
         "pid"
@@ -116,7 +116,7 @@
       "output_information": [
         {
           "id": "ip",
-          "label": "Remote IP",
+          "label": "接続先IP",
           "value": "198.51.100.20",
           "data_type": "ip"
         }
@@ -125,7 +125,7 @@
     {
       "id": "autoruns",
       "name": "Autoruns",
-      "description": "選択PIDのImageに対応する自動起動登録を検索します。PIDから対象Pathを選ぶ操作は教材のラッパーです。",
+      "description": "選択PIDのイメージに対応する自動起動登録を検索します。PIDから対象パスを選ぶ操作は教材のラッパーです。",
       "output": "Services\nAsterUpdate / Automatic\nImage Path: C:\\Program Files\\Aster\\AsterUpdate.exe",
       "accepted_information_types": [
         "pid"
@@ -146,7 +146,7 @@
   "references": [
     {
       "id": "approved",
-      "name": "Approved Software",
+      "name": "承認済みソフトウェア",
       "content": {
         "Process": "AsterUpdate.exe",
         "Path": "C:\\Program Files\\Aster\\AsterUpdate.exe",
@@ -675,16 +675,16 @@
       ]
     }
   ],
-  "explanation": "署名・実行Hash・Service起動元・更新先が承認仕様に一致するため継続を許可します。外部接続や自動起動だけで不正とは判断しません。",
-  "topic": "Updaterの自動起動と通信を承認仕様で評価する",
-  "summary": "Updaterの自動起動と通信を承認仕様で評価する",
+  "explanation": "署名・実行ハッシュ・サービス起動元・更新先が承認仕様に一致するため継続を許可します。外部接続や自動起動だけで不正とは判断しません。",
+  "topic": "更新プログラムの自動起動と通信を承認仕様で評価する",
+  "summary": "更新プログラムの自動起動と通信を承認仕様で評価する",
   "learning_objectives": [
-    "Updaterの自動起動と通信を承認仕様で評価する"
+    "更新プログラムの自動起動と通信を承認仕様で評価する"
   ],
   "decision_context": "running_process",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

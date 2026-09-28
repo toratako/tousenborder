@@ -6,12 +6,12 @@
   "level": "advanced",
   "ground_truth": "allow",
   "title": "正規の大規模依存更新",
-  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Package": "@aster-ui/native-render",
     "Version": "4.0.0",
     "Ecosystem": "npm",
-    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。"
+    "状態": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。"
   },
   "initial_information_types": {
     "Package": "package"
@@ -20,7 +20,7 @@
   "references": [
     {
       "id": "metadata",
-      "name": "npm Registry / Package Metadata",
+      "name": "npmレジストリのパッケージ情報",
       "content": {
         "Name": "@aster-ui/native-render",
         "Version": "4.0.0",
@@ -39,7 +39,7 @@
     },
     {
       "id": "official",
-      "name": "Official Repository / Approved Component",
+      "name": "公式リポジトリ・承認済みコンポーネント",
       "content": {
         "承認Commit": "release-4.0.0 / CHG-1011",
         "Source Review": "同梱C++をnode-gypでコンパイル。任意の外部Executable取得処理なし。",
@@ -50,12 +50,12 @@
     },
     {
       "id": "release",
-      "name": "Release / Change Reference",
-      "content": "4.0.0: Native Module化しnode-addon-api 8.0.0を追加。core 4.0.0へ更新。Build環境をCIの固定Toolchainに統一。"
+      "name": "リリース・変更承認記録",
+      "content": "4.0.0: ネイティブモジュール化しnode-addon-api 8.0.0を追加。core 4.0.0へ更新。ビルド環境をCIの固定Toolchainに統一。"
     },
     {
       "id": "lock",
-      "name": "Lock File",
+      "name": "ロックファイル",
       "content": {
         "更新承認": "CHG-1011",
         "Name": "@aster-ui/native-render",
@@ -67,7 +67,7 @@
     },
     {
       "id": "vuln",
-      "name": "Vulnerability Database",
+      "name": "脆弱性データベース",
       "content": "2026-08-18時点: この固定構成に組織の禁止対象に該当する登録なし。未知の欠陥がないことを保証する情報ではない。"
     }
   ],
@@ -509,7 +509,7 @@
       ]
     }
   ],
-  "explanation": "Native Buildや依存追加は大きな変更ですが、配布Hash・Source・Release説明・更新Lockが承認記録に一致するため導入を許可します。",
+  "explanation": "ネイティブビルドや依存追加は大きな変更ですが、配布ハッシュ・ソースコード・リリース説明・更新されたロックファイルが承認記録に一致するため導入を許可します。",
   "topic": "大規模更新を複数の供給情報で検証する",
   "summary": "大規模更新を複数の供給情報で検証する",
   "learning_objectives": [
@@ -520,6 +520,6 @@
   "sources": [
     "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "ecosystem": "npm"
 }

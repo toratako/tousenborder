@@ -684,7 +684,7 @@ func _update_case_controls(item: Dictionary) -> void:
 		stamp.tooltip_text = ""
 		stamp.case_id = item.id
 		stamp.generation = desk_generation
-	tool_message.text = "必要に応じて調査し、判定してください。" if not active_tools.is_empty() else "基本情報を確認して判定してください。"
+	tool_message.text = "必要に応じて調査し、判定してください。" if not active_tools.is_empty() else ""
 
 func _can_stamp(data: Dictionary) -> bool:
 	return playing and not shift.finished() and not shift.judged and not _investigation_paused() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
@@ -720,7 +720,7 @@ func _show_audit(record: Dictionary) -> void:
 		audit_body.text += "\n\n監査所見\n" + InspectionShift.review_text(record)
 	next.show()
 	audit_body.scroll_to_line(0)
-	next.text = "確認して勤務を終了  >" if shift.index == shift.cases.size() - 1 else "確認して次の案件へ  >"
+	next.text = "勤務を終了  >" if shift.index == shift.cases.size() - 1 else "次の案件へ  >"
 	audit_overlay.show()
 	next.grab_focus()
 

@@ -120,9 +120,9 @@ func _build_scroll(data: Dictionary) -> void:
 	source_label.add_theme_font_size_override("font_size", 13)
 	source_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(source_label)
-	source_label.visible = data.get("category") not in ["target", "rule"]
+	source_label.visible = data.get("category") == "log"
 	scroll = ScrollContainer.new()
-	scroll.position = Vector2(10, 82)
+	scroll.position = Vector2(10, 82 if source_label.visible else 58)
 	scroll.size = Vector2(size.x - 20, size.y - 146 if data.get("category") == "target" else size.y - 94)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.gui_input.connect(_gui_input)
@@ -140,7 +140,7 @@ func _build_information(data: Dictionary) -> void:
 	if data.get("category") == "target":
 		rows.add_theme_constant_override("separation", 16)
 		request_section = _section("申請内容")
-		basic_section = _section("基本情報", "項目をツールへドラッグ")
+		basic_section = _section("基本情報")
 	for item in Information.normalize(data.get("information", []), data.get("source", "")):
 		var token := InformationToken.new()
 		var is_request: bool = data.get("category") == "target" and item.category == "request"
@@ -148,7 +148,8 @@ func _build_information(data: Dictionary) -> void:
 		if data.get("category") == "target":
 			destination = request_section if is_request else basic_section
 		destination.add_child(token)
-		token.setup(item, {"case_id": data.get("case_id", ""), "card_id": data.get("id", ""), "card_category": data.get("category", "")}, not is_request)
+		var show_label: bool = not is_request and not (data.get("category") == "analysis" and item.get("id", "") in ["content", "output"])
+		token.setup(item, {"case_id": data.get("case_id", ""), "card_id": data.get("id", ""), "card_category": data.get("category", "")}, show_label)
 		token.touched.connect(bring_to_front)
 		token.selected.connect(func(value): information_selected.emit(value))
 		token.set_drag_forwarding(token._get_drag_data, _can_drop_data, _drop_data)
@@ -183,12 +184,12 @@ func _fit_content() -> void:
 		return
 	var content_height := rows.get_combined_minimum_size().y
 	var maximum := get_parent_control().size.y - 24.0
-	analysis_overflow = content_height + 94.0 > maximum
-	size.y = minf(maxf(140.0, content_height + (116.0 if analysis_overflow else 94.0)), maximum)
+	analysis_overflow = content_height + 70.0 > maximum
+	size.y = minf(maxf(140.0, content_height + (92.0 if analysis_overflow else 70.0)), maximum)
 	_layout()
 	clamp_to_desk()
 
-func _section(caption: String, hint: String = "") -> VBoxContainer:
+func _section(caption: String) -> VBoxContainer:
 	var column := VBoxContainer.new()
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -204,13 +205,6 @@ func _section(caption: String, hint: String = "") -> VBoxContainer:
 	heading.add_theme_color_override("font_color", Color("57e4f2"))
 	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	heading_row.add_child(heading)
-	if not hint.is_empty():
-		var instruction := Label.new()
-		instruction.text = hint
-		instruction.add_theme_font_size_override("font_size", 12)
-		instruction.add_theme_color_override("font_color", Color("8297ac"))
-		instruction.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		heading_row.add_child(instruction)
 	column.set_drag_forwarding(Callable(), _can_drop_data, _drop_data)
 	return column
 
@@ -236,15 +230,15 @@ func _layout() -> void:
 		title_label.position = Vector2(left + 36, 7)
 		title_label.size = Vector2(title_width, 32)
 		title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	scroll.position = Vector2(12, 58 if target else 82)
+	scroll.position = Vector2(12, 82 if source_label.visible else 58)
 	scroll.size = Vector2(size.x - 24, size.y - 116)
 	if target:
 		scroll.size.y = size.y - (138 if imprint else 70)
 	if card_data.get("category") == "rule":
 		scroll.position.y = 58
 		scroll.size.y = size.y - 70
-	if card_data.get("category") == "analysis" and not analysis_overflow:
-		scroll.size.y = size.y - 94
+	if card_data.get("category") == "analysis":
+		scroll.size.y = size.y - (92 if analysis_overflow else 70)
 	if is_instance_valid(stamp_plate):
 		stamp_plate.position = Vector2(24, size.y - 72)
 		stamp_plate.size = Vector2(size.x - 48, 55)
