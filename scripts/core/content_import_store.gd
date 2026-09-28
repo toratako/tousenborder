@@ -4,18 +4,23 @@ extends RefCounted
 var directory: String
 var error := ""
 
+
 func _init(path := "user://content") -> void:
 	directory = path
+
 
 func sources() -> Array[ContentSource]:
 	var result: Array[ContentSource] = []
 	var dir := DirAccess.open(directory)
-	if dir == null: return result
+	if dir == null:
+		return result
 	var names := dir.get_files()
 	names.sort()
 	for name in names:
-		if name.get_extension() in ["zip", "json"]: result.append(ContentSource.open_file(directory.path_join(name)))
+		if name.get_extension() in ["zip", "json"]:
+			result.append(ContentSource.open_file(directory.path_join(name)))
 	return result
+
 
 func save(source: ContentSource) -> bool:
 	error = ""
@@ -27,7 +32,8 @@ func save(source: ContentSource) -> bool:
 		return false
 	var digest := ContentSource.digest(source.payload)
 	var path := directory.path_join(digest + "." + source.extension)
-	if FileAccess.file_exists(path) and FileAccess.get_sha256(path) == digest: return true
+	if FileAccess.file_exists(path) and FileAccess.get_sha256(path) == digest:
+		return true
 	var temporary := path + "." + Crypto.new().generate_random_bytes(8).hex_encode() + ".tmp"
 	var file := FileAccess.open(temporary, FileAccess.WRITE)
 	if file == null:
@@ -37,7 +43,10 @@ func save(source: ContentSource) -> bool:
 	file.flush()
 	var failed := file.get_error() != OK
 	file.close()
-	if failed or FileAccess.get_sha256(temporary) != digest or DirAccess.rename_absolute(temporary, path) != OK:
+	if (
+		failed or FileAccess.get_sha256(temporary) != digest
+		or DirAccess.rename_absolute(temporary, path) != OK
+	):
 		DirAccess.remove_absolute(temporary)
 		error = "教材の保存を完了できません。"
 		return false

@@ -2,8 +2,10 @@ extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
 ## 未調査・一部調査でも押印でき、判定時の証拠不足と調査履歴を保持する。
 
+
 func _initialize() -> void:
 	_run.call_deferred()
+
 
 func _run() -> void:
 	var desk = Fixtures.desk()
@@ -11,7 +13,10 @@ func _run() -> void:
 	await process_frame
 	for reviewed in [0, 1]:
 		desk._start_shift()
-		var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-REFERENCES")
+		var cases: Array[Dictionary] = desk.library.cases.filter(
+			func(c):
+				return c.id == "FIX-REFERENCES",
+		)
 		desk.shift.start(cases)
 		if reviewed == 1:
 			desk.tool_buttons[0].pressed.emit()

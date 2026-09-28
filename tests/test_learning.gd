@@ -3,17 +3,20 @@ const Fixtures = preload("res://tests/fixtures.gd")
 ## 固定データを実際のUIとcoreで通し、送信前確認・見送り・採点の分離を検証する。
 var failures := 0
 
+
 func check(value: bool, message: String) -> void:
 	if not value:
 		failures += 1
 		printerr("失敗: " + message)
 
+
 func _initialize() -> void:
 	_run.call_deferred()
 
+
 func available_input(shift: InspectionShift, tool: Dictionary) -> Dictionary:
 	if tool.get("accepted_information_types", []).is_empty():
-		return {}
+		return { }
 	var facts: Array = shift.current().information.duplicate(true)
 	for observation in shift.observations:
 		facts.append_array(observation.get("information", []))
@@ -22,34 +25,56 @@ func available_input(shift: InspectionShift, tool: Dictionary) -> Dictionary:
 		token.case_id = shift.current().id
 		if Information.accepts(tool, token):
 			return token
-	return {}
+	return { }
+
 
 func ui_input(desk, tool: Dictionary) -> Dictionary:
 	for card in desk.cards:
 		for token in card.tokens:
 			if Information.accepts(tool, token.payload()):
 				return token.payload()
-	return {}
+	return { }
+
 
 func one_case(library: ProblemLibrary, id: String) -> Array[Dictionary]:
-	return library.cases.filter(func(c): return c.id == id)
+	return library.cases.filter(
+		func(c):
+			return c.id == id,
+	)
+
 
 func test_input_contracts(library: ProblemLibrary) -> void:
 	var shift := InspectionShift.new()
 	shift.start(one_case(library, "FIX-HASH"))
 	var item := shift.current()
-	var hash_tool: Dictionary = Fixtures.resources(item, "tools").filter(func(t): return t.id == "sha256sum")[0]
+	var hash_tool: Dictionary = Fixtures.resources(item, "tools").filter(
+		func(t):
+			return t.id == "sha256sum",
+	)[0]
 	var external: Dictionary = Fixtures.resources(item, "external_references")[0]
 	check(not shift.inspect(hash_tool).ok, "FileなしでHash結果は出ない")
-	var wrong: Dictionary = item.information.filter(func(i): return i.id == "Size")[0].duplicate(true)
+	var wrong: Dictionary = item.information.filter(
+		func(i):
+			return i.id == "Size",
+	)[0].duplicate(true)
 	wrong.case_id = item.id
 	check(not shift.inspect(hash_tool, wrong).ok, "SizeからFileのHashは取得できない")
-	var unearned := {"id": "sha256", "source": "sha256sum", "data_type": "sha256", "value": hash_tool.result.information[0].value, "tool_input": true, "case_id": item.id}
+	var unearned := {
+		"id": "sha256",
+		"source": "sha256sum",
+		"data_type": "sha256",
+		"value": hash_tool.result.information[0].value,
+		"tool_input": true,
+		"case_id": item.id,
+	}
 	check(not shift.inspect(external, unearned).ok, "未取得の正しいHashも利用できない")
 	var file := available_input(shift, hash_tool)
 	check(shift.inspect(hash_tool, file).ok, "FileからSHA-256取得")
 	var hash := available_input(shift, external)
-	check(not hash.is_empty() and hash.value == hash_tool.result.information[0].value, "取得結果が次の入力になる")
+	check(
+		not hash.is_empty() and hash.value == hash_tool.result.information[0].value,
+		"取得結果が次の入力になる",
+	)
 	var forged := hash.duplicate(true)
 	forged.value = "0".repeat(64)
 	check(not shift.inspect(external, forged).ok, "同じID・型でも値の改変は拒否")
@@ -57,15 +82,28 @@ func test_input_contracts(library: ProblemLibrary) -> void:
 	var stale := hash.duplicate(true)
 	shift.start(one_case(library, "FIX-PROCESS"))
 	item = shift.current()
-	var process_tool: Dictionary = Fixtures.resources(item, "tools").filter(func(t): return t.id == "process_explorer")[0]
-	var get_hash: Dictionary = Fixtures.resources(item, "tools").filter(func(t): return t.id == "get_filehash")[0]
+	var process_tool: Dictionary = Fixtures.resources(item, "tools").filter(
+		func(t):
+			return t.id == "process_explorer",
+	)[0]
+	var get_hash: Dictionary = Fixtures.resources(item, "tools").filter(
+		func(t):
+			return t.id == "get_filehash",
+	)[0]
 	check(available_input(shift, get_hash).is_empty(), "Process調査前はScriptのPathを使えない")
 	check(shift.inspect(process_tool, available_input(shift, process_tool)).ok, "PIDから実行Fileを調査")
-	var other_file: Dictionary = shift.observations.back().information.filter(func(i): return i.id == "image_file")[0].duplicate(true)
+	var other_file: Dictionary = shift.observations.back().information.filter(
+		func(i):
+			return i.id == "image_file",
+	)[0].duplicate(true)
 	other_file.case_id = item.id
-	check(other_file.data_type == "file" and not shift.inspect(get_hash, other_file).ok, "同じFile型でも別の対象から固定結果を出さない")
+	check(
+		other_file.data_type == "file" and not shift.inspect(get_hash, other_file).ok,
+		"同じFile型でも別の対象から固定結果を出さない",
+	)
 	check(shift.inspect(get_hash, available_input(shift, get_hash)).ok, "選択した実行ScriptのHashを取得")
 	check(not shift.inspect(get_hash, stale).ok, "前の案件の情報を持ち込めない")
+
 
 func test_environment_routes(library: ProblemLibrary) -> void:
 	for os in ["windows", "linux"]:
@@ -77,28 +115,49 @@ func test_environment_routes(library: ProblemLibrary) -> void:
 			check(shift.current().investigation_environment == investigation_os, "調査OS: " + item.id)
 			if item.required_evidence != ["initial_information"]:
 				check(shift.decide(item.ground_truth), "未調査でも判定可能: " + item.id)
-				check(shift.records.back().missing_evidence == item.required_evidence, "未確認証拠を記録: " + item.id)
+				check(
+					shift.records.back().missing_evidence == item.required_evidence,
+					"未確認証拠を記録: " + item.id,
+				)
 				check(shift.advance() and shift.finished(), "未調査でも次へ進める: " + item.id)
 				shift.start(cases)
-			var pending := library.tools_for(item).filter(func(t): return ToolRunner.supports_target(t, item) and t.get("correct_usage", true))
+			var pending := library.tools_for(item).filter(
+				func(t):
+					return ToolRunner.supports_target(t, item) and t.get("correct_usage", true),
+			)
 			if item.id == "FIX-DNS":
 				# Windowsの出題フィルタでも、共通問題のnslookupはLinux出力になる。
-				pending = pending.filter(func(t): return t.id not in ["dig", "resolve_dnsname"])
-				var unsupported: Dictionary = Fixtures.resources(item, "tools").filter(func(t): return t.id == "resolve_dnsname")[0]
+				pending = pending.filter(
+					func(t):
+						return t.id not in ["dig", "resolve_dnsname"],
+				)
+				var unsupported: Dictionary = Fixtures.resources(item, "tools").filter(
+					func(t):
+						return t.id == "resolve_dnsname",
+				)[0]
 				check(not shift.inspect(unsupported).ok, "他OSのDNS Toolを拒否")
 			var progress := true
 			while not pending.is_empty() and progress:
 				progress = false
 				for tool in pending.duplicate():
 					var input := available_input(shift, tool)
-					if not tool.accepted_information_types.is_empty() and input.is_empty(): continue
+					if not tool.accepted_information_types.is_empty() and input.is_empty():
+						continue
 					var result := shift.inspect(tool, input)
 					check(result.ok, "OS別調査: " + os + "/" + item.id + "/" + tool.id)
 					if tool.id == "nslookup":
-						check(result.output.contains("C:\\> nslookup") if investigation_os == "windows" else result.output.contains("$ nslookup") and not result.output.contains("C:\\>"), "nslookup出力OS")
+						check(
+							result.output.contains("C:\\> nslookup") if investigation_os
+							== "windows" else result.output.contains("$ nslookup")
+							and not result.output.contains("C:\\>"),
+							"nslookup出力OS",
+						)
 					pending.erase(tool)
 					progress = true
-			check(pending.is_empty() and shift.missing_evidence().is_empty(), "OS別に必要証拠へ到達: " + item.id)
+			check(
+				pending.is_empty() and shift.missing_evidence().is_empty(),
+				"OS別に必要証拠へ到達: " + item.id,
+			)
 			check(shift.decide(item.ground_truth), "許可された調査で判定可能: " + item.id)
 			check(shift.records.back().missing_evidence.is_empty(), "調査済みの証拠は不足に数えない: " + item.id)
 	var item := one_case(library, "FIX-PRIVATE-FILE")[0]
@@ -108,6 +167,7 @@ func test_environment_routes(library: ProblemLibrary) -> void:
 	var external: Dictionary = Fixtures.resources(item, "external_references")[0].duplicate(true)
 	external.environments = ["linux"]
 	check(not shift.decline_external(external, available_input(shift, external)), "非対応OSでは見送りも拒否")
+
 
 func _run() -> void:
 	var library := Fixtures.library()
@@ -119,20 +179,47 @@ func _run() -> void:
 	check(library.categories.size() == 5, "実際に登録された5種別")
 	for platform in ["windows", "linux"]:
 		var selected := library.select_cases("", "", platform)
-		check(selected.any(func(c): return c.platform == "common"), "共通問題も含める")
-		check(selected.all(func(c): return c.platform in [platform, "common"]), "OSの絞り込み")
-	check(library.select_cases("", "", "common").all(func(c): return c.platform == "common"), "共通のみ選択")
+		check(
+			selected.any(
+				func(c):
+					return c.platform == "common",
+			),
+			"共通問題も含める",
+		)
+		check(
+			selected.all(
+				func(c):
+					return c.platform in [platform, "common"],
+			),
+			"OSの絞り込み",
+		)
+	check(
+		library.select_cases("", "", "common").all(
+			func(c):
+				return c.platform == "common",
+		),
+		"共通のみ選択",
+	)
 	var guide := library.guide_tools()
 	for tool in guide:
 		check(not tool.get("platform_note", "").is_empty(), "利用環境の説明漏れ: " + tool.id)
-	check(guide.any(func(t): return t.id == "get_filehash"), "問題内Toolのガイド")
+	check(
+		guide.any(
+			func(t):
+				return t.id == "get_filehash",
+		),
+		"問題内Toolのガイド",
+	)
 	test_input_contracts(library)
 	test_environment_routes(library)
 	# 全問の全資料を実行し、見送りを含めて正解・解説を保存する。
 	var shift := InspectionShift.new()
 	shift.start(library.cases)
 	for item in library.cases:
-		var pending := library.tools_for(item).filter(func(t): return ToolRunner.supports_target(t, shift.current()))
+		var pending := library.tools_for(item).filter(
+			func(t):
+				return ToolRunner.supports_target(t, shift.current()),
+		)
 		var progress := true
 		while not pending.is_empty() and progress:
 			progress = false
@@ -153,39 +240,92 @@ func _run() -> void:
 		check(shift.decide(item.ground_truth), "正解を記録")
 		check(shift.records.back().explanation == item.explanation, "解説を保持")
 		shift.advance()
-	check(shift.finished() and shift.score() == library.cases.size() and shift.unsafe_investigations() == 0, "固定テストデータ完了・判定と調査を分離")
+	check(
+		shift.finished() and shift.score() == library.cases.size()
+		and shift.unsafe_investigations() == 0,
+		"固定テストデータ完了・判定と調査を分離",
+	)
 	# 主シーンからUIを操作し、誤った外部送信と見送りの両方を検証する。
 	var desk = Fixtures.desk()
 	for tool_id in ["resolve_dnsname", "nslookup", "dig", "wireshark"]:
-		var tool: Dictionary = guide.filter(func(t): return t.id == tool_id)[0]
+		var tool: Dictionary = guide.filter(
+			func(t):
+				return t.id == tool_id,
+		)[0]
 		check(tool.has("platform_note"), "Tool固有の利用環境: " + tool_id)
-		check(tool.platform_note.contains("Windows") if tool_id == "resolve_dnsname" else tool.platform_note.contains("Linux"), "実際の利用環境: " + tool_id)
-	var dns: Dictionary = guide.filter(func(t): return t.id == "resolve_dnsname")[0]
-	var capture: Dictionary = guide.filter(func(t): return t.id == "wireshark")[0]
-	check(dns.environments == ["windows"] and capture.environments == ["windows", "linux"], "Toolの実行OSを保持")
+		check(
+			tool.platform_note.contains("Windows") if tool_id == "resolve_dnsname" else tool
+			.platform_note
+			.contains("Linux"),
+			"実際の利用環境: " + tool_id,
+		)
+	var dns: Dictionary = guide.filter(
+		func(t):
+			return t.id == "resolve_dnsname",
+	)[0]
+	var capture: Dictionary = guide.filter(
+		func(t):
+			return t.id == "wireshark",
+	)[0]
+	check(
+		dns.environments == ["windows"] and capture.environments == ["windows", "linux"],
+		"Toolの実行OSを保持",
+	)
 	root.add_child(desk)
 	await process_frame
-	check(desk._tool_description(dns).contains("Toolの主な利用環境: Windows") and not desk._tool_description(dns).contains("教材の出題環境:"), "ガイドはToolの利用OSを表示")
+	check(
+		desk._tool_description(dns).contains("Toolの主な利用環境: Windows")
+		and not desk._tool_description(dns).contains("教材の出題環境:"),
+		"ガイドはToolの利用OSを表示",
+	)
 	check(desk._tool_description(capture).contains("Windows / Linux"), "Wiresharkの両対応を表示")
 	desk.tool_guide_button.pressed.emit()
-	check(desk.tool_guide_tabs.size() == guide.size() and not desk.tool_guide_body.text.contains("登録されているツールはありません"), "新教材のガイドを表示")
+	check(
+		desk.tool_guide_tabs.size() == guide.size()
+		and not desk.tool_guide_body.text.contains("登録されているツールはありません"),
+		"新教材のガイドを表示",
+	)
 	desk.tool_guide_close.pressed.emit()
 	# Windowsで絞って開始しても、共通問題はLinuxのTool・入力制限を使う。
 	for selection in [desk.platform_select, desk.category_select, desk.difficulty_select]:
-		var value: String = "windows" if selection == desk.platform_select else ("web" if selection == desk.category_select else "beginner")
+		var value: String = "windows" if selection == desk.platform_select else (
+			"web" if selection == desk.category_select else "beginner"
+		)
 		for i in range(selection.item_count):
-			if selection.get_item_metadata(i) == value: selection.select(i)
+			if selection.get_item_metadata(i) == value:
+				selection.select(i)
 	for i in desk.method_select.item_count:
-		if desk.method_select.get_item_metadata(i) == "tools": desk.method_select.select(i)
+		if desk.method_select.get_item_metadata(i) == "tools":
+			desk.method_select.select(i)
 	desk._refresh_selection()
 	desk.start_button.pressed.emit()
 	var linux_web: Dictionary = desk.shift.current()
 	check(linux_web.id == "FIX-DNS", "画面の選択条件から共通Web問題を開始")
-	check(desk.shift.current().platform == "common" and desk.shift.current().investigation_environment == "linux", "問題OSと調査OSを保持")
-	var windows_tool: Dictionary = Fixtures.resources(linux_web, "tools").filter(func(t): return t.id == "resolve_dnsname")[0]
-	var linux_button: ToolInput = desk.tool_buttons.filter(func(b): return b.tool.id == "dig")[0]
-	check(not desk.tool_buttons.any(func(b): return b.tool.id == "resolve_dnsname") and linux_button.visible, "共通Web問題でもOS別にToolを表示")
-	var parse: Dictionary = Fixtures.resources(linux_web, "tools").filter(func(t): return t.id == "url_parse")[0]
+	check(
+		desk.shift.current().platform == "common"
+		and desk.shift.current().investigation_environment == "linux",
+		"問題OSと調査OSを保持",
+	)
+	var windows_tool: Dictionary = Fixtures.resources(linux_web, "tools").filter(
+		func(t):
+			return t.id == "resolve_dnsname",
+	)[0]
+	var linux_button: ToolInput = desk.tool_buttons.filter(
+		func(b):
+			return b.tool.id == "dig",
+	)[0]
+	check(
+		not desk.tool_buttons.any(
+			func(b):
+				return b.tool.id == "resolve_dnsname",
+		)
+		and linux_button.visible,
+		"共通Web問題でもOS別にToolを表示",
+	)
+	var parse: Dictionary = Fixtures.resources(linux_web, "tools").filter(
+		func(t):
+			return t.id == "url_parse",
+	)[0]
 	desk._inspect(parse, available_input(desk.shift, parse))
 	var host := available_input(desk.shift, linux_button.tool)
 	var before_os: int = desk.shift.observations.size()
@@ -201,7 +341,10 @@ func _run() -> void:
 	for item in library.cases:
 		check(desk.shift.current().id == item.id, "画面の出題順")
 		check(desk.target_card.title_label.text == "検査対象", "対象のタイトルを統一")
-		var pending_buttons: Array = desk.tool_buttons.filter(func(b): return b.visible)
+		var pending_buttons: Array = desk.tool_buttons.filter(
+			func(b):
+				return b.visible,
+		)
 		var progress := true
 		while not pending_buttons.is_empty() and progress:
 			progress = false
@@ -211,27 +354,55 @@ func _run() -> void:
 				if not tool.accepted_information_types.is_empty() and input.is_empty():
 					continue
 				var before: int = desk.shift.observations.size()
-				desk._select_information({})
+				desk._select_information({ })
 				if not tool.accepted_information_types.is_empty():
-					check(button.hint.visible and button.hint.text.contains(tool.input_hint), "必要な入力をボタンに表示")
+					check(
+						button.hint.visible and button.hint.text.contains(tool.input_hint),
+						"必要な入力をボタンに表示",
+					)
 					button.pressed.emit()
-					check(desk.shift.observations.size() == before and not desk.external_preview.visible, "全Toolでクリックのみでは結果を出さない")
+					check(
+						desk.shift.observations.size() == before
+						and not desk.external_preview.visible,
+						"全Toolでクリックのみでは結果を出さない",
+					)
 					var wrong: Dictionary = desk.target_card.tokens[0].payload()
-					button._drop_data(Vector2.ZERO, {"kind": "information", "information": wrong})
+					button._drop_data(Vector2.ZERO, { "kind": "information", "information": wrong })
 					check(desk.shift.observations.size() == before, "不適切なドラッグは実行されない")
-					check(button._can_drop_data(Vector2.ZERO, {"kind": "information", "information": input}), "取得済みの対応情報はドラッグ可能")
+					check(
+						button._can_drop_data(
+							Vector2.ZERO,
+							{ "kind": "information", "information": input },
+						),
+						"取得済みの対応情報はドラッグ可能",
+					)
 					if before % 2 == 0:
-						button._drop_data(Vector2.ZERO, {"kind": "information", "information": input})
+						button._drop_data(
+							Vector2.ZERO,
+							{ "kind": "information", "information": input },
+						)
 					else:
 						desk._select_information(input)
 						button.pressed.emit()
 				else:
 					button.pressed.emit()
 				if tool.kind == "external_references":
-					check(desk.external_preview.visible and desk.shift.observations.size() == before, "確認前には調査しない")
-					check(desk.external_preview_body.text.contains(Information.display(input.value)), "選択した入力を送信前に確認")
-					check(not desk.external_preview_body.text.contains(str(tool.result.content)), "実行前に調査結果を漏らさない")
-					check(not desk._can_stamp(desk.get_stamp(item.ground_truth).payload()), "確認中の判定を防ぐ")
+					check(
+						desk.external_preview.visible and desk.shift.observations.size() == before,
+						"確認前には調査しない",
+					)
+					check(
+						desk.external_preview_body.text.contains(Information.display(input.value)),
+						"選択した入力を送信前に確認",
+					)
+					check(
+						not desk.external_preview_body.text.contains(str(tool.result.content)),
+						"実行前に調査結果を漏らさない",
+					)
+					check(
+						not desk._can_stamp(desk.get_stamp(item.ground_truth).payload()),
+						"確認中の判定を防ぐ",
+					)
 					var elapsed: float = desk.shift.elapsed_seconds
 					desk._process(1)
 					check(desk.shift.elapsed_seconds == elapsed, "確認文を読む間は時計停止")
@@ -251,26 +422,45 @@ func _run() -> void:
 		desk.shift.decide(item.ground_truth)
 		check(desk.audit_body.text.contains(item.explanation), "UIに全問の解説")
 		if item.id == "FIX-PRIVATE-FILE":
-			check(desk.shift.records.back().correct and desk.audit_body.text.contains("不適切な利用"), "正解でも不適切なFile Uploadを明示")
+			check(
+				desk.shift.records.back().correct and desk.audit_body.text.contains("不適切な利用"),
+				"正解でも不適切なFile Uploadを明示",
+			)
 		if item.id == "FIX-PRIVATE-URL":
 			check(desk.audit_body.text.contains("外部送信を見送り"), "Token付きURLを送らなかった記録")
 		desk.next.pressed.emit()
 		await process_frame
-	check(desk.shift.score() == library.cases.size() and desk.shift.unsafe_investigations() == 1, "全件正解・不適切調査1件")
+	check(
+		desk.shift.score() == library.cases.size() and desk.shift.unsafe_investigations() == 1,
+		"全件正解・不適切調査1件",
+	)
 	check(desk.summary_stats.text.contains("不適切な調査 1件"), "調査手段の集計")
-	check(desk.summary_review.get_parsed_text().contains("不適切な利用") and desk.summary_review.get_parsed_text().contains("外部送信を見送り"), "一覧でも調査の適否を確認")
+	check(
+		desk.summary_review.get_parsed_text().contains("不適切な利用")
+		and desk.summary_review.get_parsed_text().contains("外部送信を見送り"),
+		"一覧でも調査の適否を確認",
+	)
 	# 確認途中のリスタートが古い案件の資料を実行しないこと。
 	desk._start_shift()
-	var token_case: Dictionary = library.cases.filter(func(c): return c.id == "FIX-PRIVATE-URL")[0]
+	var token_case: Dictionary = library.cases.filter(
+		func(c):
+			return c.id == "FIX-PRIVATE-URL",
+	)[0]
 	var token_cases: Array[Dictionary] = [token_case]
 	desk.shift.start(token_cases)
-	var unsafe_tool: Dictionary = library.tools_for(token_case).filter(func(t): return t.id == "urlscan_private")[0]
+	var unsafe_tool: Dictionary = library.tools_for(token_case).filter(
+		func(t):
+			return t.id == "urlscan_private",
+	)[0]
 	desk._inspect(unsafe_tool, available_input(desk.shift, unsafe_tool))
 	desk._process(2)
 	check(desk.shift.elapsed_seconds == 0, "送信確認中は経過時間の計測を停止")
 	desk._start_shift()
 	desk._finish_external(true)
-	check(desk.pending_external.is_empty() and desk.shift.observations.is_empty(), "リスタートで保留中の外部照会を破棄")
+	check(
+		desk.pending_external.is_empty() and desk.shift.observations.is_empty(),
+		"リスタートで保留中の外部照会を破棄",
+	)
 	desk.queue_free()
 	await process_frame
 	print("代表教材・安全な調査のテスト: 失敗 %d件" % failures)

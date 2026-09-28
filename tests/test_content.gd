@@ -2,14 +2,17 @@ extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
 var failures := 0
 
+
 func check(value: bool, message: String) -> void:
 	if not value:
 		failures += 1
 		printerr(message)
 
+
 func rejected(item: Dictionary, message: String) -> void:
 	check(ContentSchema.validate(item, ContentSchema.PROBLEM).is_empty(), "構造は有効: " + message)
 	check(not ProblemLoader.load_value(item).errors.is_empty(), "意味的に拒否: " + message)
+
 
 func _initialize() -> void:
 	var library := Fixtures.library()
@@ -18,11 +21,22 @@ func _initialize() -> void:
 	visible.erase("difficulty")
 	visible.category = "custom"
 	visible.category_label = "独自分野"
-	visible.resources = [{"id": "policy", "name": "規則", "kind": "references", "section": "社内資料", "result": {"content": "PDFのみ受け入れる。"}}]
+	visible.resources = [
+		{
+			"id": "policy",
+			"name": "規則",
+			"kind": "references",
+			"section": "社内資料",
+			"result": { "content": "PDFのみ受け入れる。" },
+		}
+	]
 	visible.required_evidence = ["policy"]
 	var loaded := ProblemLoader.load_value(visible)
 	check(loaded.errors.is_empty(), "Packや分類登録なしで問題を検証: " + str(loaded.errors))
-	check(loaded.problem.difficulty == "unrated" and loaded.problem.traits.method == "references", "難易度未設定と自動分類")
+	check(
+		loaded.problem.difficulty == "unrated" and loaded.problem.traits.method == "references",
+		"難易度未設定と自動分類",
+	)
 	var shift := InspectionShift.new()
 	shift.start([loaded.problem])
 	check(shift.missing_evidence() == ["policy"], "未閲覧のReference")
@@ -47,7 +61,9 @@ func _initialize() -> void:
 	item = Fixtures.raw("FIX-HASH")
 	var hash_tool := Fixtures.resource(item, "sha256sum")
 	hash_tool.accepted_information_types = ["sha256"]
-	hash_tool.input_bindings = [{"source": hash_tool.id, "id": hash_tool.result.information[0].id}]
+	hash_tool.input_bindings = [
+		{ "source": hash_tool.id, "id": hash_tool.result.information[0].id }
+	]
 	rejected(item, "循環参照")
 	item = Fixtures.raw("FIX-HASH")
 	item.required_evidence = [Fixtures.resources(item, "external_references")[0].id]
@@ -72,18 +88,41 @@ func _initialize() -> void:
 	Fixtures.resource(item, "sha256sum").result.information[0].id = "output"
 	rejected(item, "出力情報の予約ID")
 	item = Fixtures.raw("FIX-DNS")
-	item.evidence_alternatives[" "] = {"label": "空のID", "any_of": ["nslookup"]}
+	item.evidence_alternatives[" "] = { "label": "空のID", "any_of": ["nslookup"] }
 	rejected(item, "空の代替証拠ID")
 	var guide_library := ProblemLibrary.new()
 	check(guide_library.load_builtin(), "公開教材のガイド")
 	var guide := guide_library.guide_tools()
 	for label in ["Get-FileHash", "Sigcheck"]:
-		var variants := guide.filter(func(tool): return tool.label == label)
-		check(variants.size() >= 2 and variants.any(func(tool): return "process" in tool.accepted_information_types or "pid" in tool.accepted_information_types), "入力の異なるToolを保持: " + label)
+		var variants := guide.filter(
+			func(tool):
+				return tool.label == label,
+		)
+		check(
+			variants.size() >= 2
+			and variants.any(
+				func(tool):
+					return (
+						"process" in tool.accepted_information_types
+						or "pid" in tool.accepted_information_types
+					),
+			),
+			"入力の異なるToolを保持: " + label,
+		)
 	guide_library.cases.reverse()
 	var reversed := guide_library.guide_tools()
 	for tool in guide:
-		check(reversed.any(func(other): return other.label == tool.label and other.accepted_information_types == tool.accepted_information_types and other.description == tool.description), "ガイドは登録順で情報を失わない")
+		check(
+			reversed.any(
+				func(other):
+					return (
+						other.label == tool.label
+						and other.accepted_information_types == tool.accepted_information_types
+						and other.description == tool.description
+					),
+			),
+			"ガイドは登録順で情報を失わない",
+		)
 	var before := library.cases.duplicate(true)
 	check(not library.add_source(Fixtures.source([item], "invalid")), "無効な読込元を拒否")
 	check(library.cases == before, "読込失敗で既存問題を変更しない")

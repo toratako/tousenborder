@@ -3,8 +3,10 @@ const Fixtures = preload("res://tests/fixtures.gd")
 ## 実マウスイベントでスタンプを持ち運ぶ。クリックでは判定しない。
 var mouse_position := Vector2.ZERO
 
+
 func _initialize() -> void:
 	call_deferred("_run")
+
 
 func motion(point: Vector2, held := false) -> void:
 	var event := InputEventMouseMotion.new()
@@ -17,6 +19,7 @@ func motion(point: Vector2, held := false) -> void:
 	await process_frame
 	await process_frame
 
+
 func button(point: Vector2, pressed: bool) -> void:
 	var event := InputEventMouseButton.new()
 	event.position = point
@@ -27,10 +30,12 @@ func button(point: Vector2, pressed: bool) -> void:
 	Input.parse_input_event(event)
 	await process_frame
 
+
 func click(point: Vector2) -> void:
 	await motion(point)
 	await button(point, true)
 	await button(point, false)
+
 
 func drag(from: Vector2, to: Vector2) -> void:
 	await motion(from)
@@ -40,13 +45,17 @@ func drag(from: Vector2, to: Vector2) -> void:
 	await button(to, false)
 	await process_frame
 
+
 func _run() -> void:
 	root.size = Vector2i(1280, 800)
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	await click(desk.start_button.get_global_rect().get_center())
-	var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-FILE")
+	var cases: Array[Dictionary] = desk.library.cases.filter(
+		func(c):
+			return c.id == "FIX-FILE",
+	)
 	desk.shift.start(cases)
 	assert(desk.playing and desk.tool_panel.visible)
 	await motion(desk.menu_button.get_global_rect().get_center())
@@ -95,14 +104,30 @@ func _run() -> void:
 	await process_frame
 	# ホバーだけで対応する入力先が分かり、選択や調査は発生しない。
 	await motion(card.tokens[0].get_global_rect().get_center())
-	assert(desk.tool_buttons.all(func(tool): return not tool.hover_drop_ready))
+	assert(
+		desk.tool_buttons.all(
+			func(tool):
+				return not tool.hover_drop_ready,
+		)
+	)
 	await motion(row.get_global_rect().get_center())
 	assert(desk.tool_buttons[0].hover_drop_ready)
 	for tool in desk.tool_buttons:
-		assert(tool.hover_drop_ready == tool._can_drop_data(Vector2.ZERO, {"kind": "information", "information": row.payload()}))
+		assert(
+			tool.hover_drop_ready
+			== tool._can_drop_data(
+				Vector2.ZERO,
+				{ "kind": "information", "information": row.payload() },
+			)
+		)
 	assert(desk.selected_information.is_empty() and desk.shift.observations.is_empty())
 	await motion(Vector2(850, 760))
-	assert(desk.tool_buttons.all(func(tool): return not tool.hover_drop_ready))
+	assert(
+		desk.tool_buttons.all(
+			func(tool):
+				return not tool.hover_drop_ready,
+		)
+	)
 	# グリップからも本文からも同じ情報を持ち出せる。
 	var grip_point := row.global_position + Vector2(15, row.size.y / 2)
 	await motion(grip_point)
@@ -114,7 +139,10 @@ func _run() -> void:
 	await motion(Vector2(850, 760), true)
 	await button(Vector2(850, 760), false)
 	assert(desk.shift.observations.is_empty())
-	await drag(row.get_global_rect().get_center(), desk.tool_buttons[0].get_global_rect().get_center())
+	await drag(
+		row.get_global_rect().get_center(),
+		desk.tool_buttons[0].get_global_rect().get_center(),
+	)
 	assert(desk.shift.observations.size() == 1 and desk.shift.observations[0].ok)
 	assert(desk.tool_panel.visible)
 	assert(desk.cards.back().card_data.category == "analysis")
@@ -146,7 +174,10 @@ func _run() -> void:
 	assert(root.gui_get_hovered_control() == movable_card.header)
 	result_grab = movable_card.header.global_position + Vector2(15, 23)
 	await drag(result_grab, desk.card_layer.global_position + result_position + Vector2(15, 23))
-	var reference: Dictionary = desk.library.tools_for(desk.shift.current()).filter(func(t): return t.kind == "references")[0]
+	var reference: Dictionary = desk.library.tools_for(desk.shift.current()).filter(
+		func(t):
+			return t.kind == "references",
+	)[0]
 	desk._inspect(reference)
 	var stamp: StampTool = desk.get_stamp("block")
 	assert(stamp.get_class() == "Control")

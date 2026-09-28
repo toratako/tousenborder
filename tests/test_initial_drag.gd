@@ -2,13 +2,16 @@ extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
 ## 問題・調査OS・入力の結び付けに応じて基本情報のドラッグ可否を確認する。
 
+
 func _initialize() -> void:
 	_run.call_deferred()
+
 
 func _show_case(desk, item: Dictionary) -> void:
 	desk._clear_desk()
 	var cases: Array[Dictionary] = [item]
 	desk.shift.start(cases)
+
 
 func _check_drag(token: InformationToken, enabled: bool) -> void:
 	assert(token.information.draggable == enabled)
@@ -18,11 +21,15 @@ func _check_drag(token: InformationToken, enabled: bool) -> void:
 	if not enabled:
 		assert(token._get_drag_data(Vector2.ZERO) == null)
 
+
 func _run() -> void:
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	desk._start_shift()
-	var file_case: Dictionary = desk.library.cases.filter(func(c): return c.id == "FIX-FILE")[0]
+	var file_case: Dictionary = desk.library.cases.filter(
+		func(c):
+			return c.id == "FIX-FILE",
+	)[0]
 	var original: Dictionary = file_case.duplicate(true)
 	_show_case(desk, file_case)
 	for token in desk.target_card.tokens:

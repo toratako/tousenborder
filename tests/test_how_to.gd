@@ -1,8 +1,11 @@
 extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
+
+
 ## ギャラリーの入力隔離・ページ境界・勤務状態の保持を検証する。
 func _initialize() -> void:
 	_run.call_deferred()
+
 
 func _key(code: Key, echo := false) -> void:
 	var event := InputEventKey.new()
@@ -11,6 +14,7 @@ func _key(code: Key, echo := false) -> void:
 	event.echo = echo
 	Input.parse_input_event(event)
 	await process_frame
+
 
 func _run() -> void:
 	var desk = Fixtures.desk()
@@ -24,12 +28,21 @@ func _run() -> void:
 	desk._open_how_to()
 	assert(not desk.how_to_overlay.visible)
 	desk._start_shift()
-	var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-FILE")
+	var cases: Array[Dictionary] = desk.library.cases.filter(
+		func(c):
+			return c.id == "FIX-FILE",
+	)
 	desk.shift.start(cases)
 	await process_frame
-	var token: InformationToken = desk.target_card.tokens.filter(func(t): return t.information.id == "File名")[0]
+	var token: InformationToken = desk.target_card.tokens.filter(
+		func(t):
+			return t.information.id == "File名",
+	)[0]
 	token.selected.emit(token.payload())
-	var button: Button = desk.tool_buttons.filter(func(b): return b.tool.id == "file")[0]
+	var button: Button = desk.tool_buttons.filter(
+		func(b):
+			return b.tool.id == "file",
+	)[0]
 	button.pressed.emit()
 	var selected: Dictionary = desk.selected_information.duplicate(true)
 	var observations: Array = desk.shift.observations.duplicate(true)

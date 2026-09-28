@@ -7,11 +7,13 @@ const ORANGE := Color("ffbd73")
 const RED := Color("ff718b")
 const PURPLE := Color("c7b0ff")
 
+
 static func text(parent: Node, value: String, font_size := 18, color := Chrome.TEXT) -> Label:
 	var label := Chrome.label(parent, Rect2(), value, color, font_size)
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.add_theme_constant_override("line_spacing", 4)
 	return label
+
 
 static func section(parent: Node, title: String) -> VBoxContainer:
 	var panel := PanelContainer.new()
@@ -24,14 +26,17 @@ static func section(parent: Node, title: String) -> VBoxContainer:
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 8)
 	panel.add_child(column)
-	if not title.is_empty(): text(column, title, 19)
+	if not title.is_empty():
+		text(column, title, 19)
 	return column
+
 
 static func horizontal(parent: Node) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
 	parent.add_child(row)
 	return row
+
 
 static func meter(parent: Node, numerator: int, denominator: int) -> ProgressBar:
 	var bar := ProgressBar.new()
@@ -45,6 +50,7 @@ static func meter(parent: Node, numerator: int, denominator: int) -> ProgressBar
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(bar)
 	return bar
+
 
 static func category_row(parent: Node, category: Dictionary) -> Button:
 	var button := Chrome.button(parent, Rect2(), "", Chrome.TEXT)
@@ -66,14 +72,22 @@ static func category_row(parent: Node, category: Dictionary) -> Button:
 	name.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var bar := meter(row, category.correct, category.answered)
 	bar.visible = category.answered > 0
-	var count := text(row, "%d / %d問" % [category.correct, category.answered] if category.answered > 0 else "未出題", 15, MUTED)
+	var count := text(
+		row,
+		"%d / %d問" % [category.correct, category.answered] if category.answered > 0 else "未出題",
+		15,
+		MUTED,
+	)
 	count.custom_minimum_size.x = 78
 	count.size_flags_horizontal = Control.SIZE_FILL if category.answered > 0 else Control.SIZE_EXPAND_FILL
 	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	count.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	count.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	button.tooltip_text = ("正答率 %d％。クリックで問題を振り返る。" % roundi(Analysis.ratio(category.correct, category.answered) * 100)) if category.answered > 0 else "この勤務では出題されていません。"
+	button.tooltip_text = (
+		"正答率 %d％。クリックで問題を振り返る。" % roundi(Analysis.ratio(category.correct, category.answered) * 100)
+	) if category.answered > 0 else "この勤務では出題されていません。"
 	return button
+
 
 static func segments(parent: Node, items: Array, colors: Array) -> void:
 	var track := HBoxContainer.new()
@@ -84,7 +98,8 @@ static func segments(parent: Node, items: Array, colors: Array) -> void:
 	for i in items.size():
 		var count := int(items[i].count)
 		total += count
-		if count == 0: continue
+		if count == 0:
+			continue
 		var segment := ColorRect.new()
 		segment.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		segment.size_flags_stretch_ratio = float(count)
@@ -97,23 +112,39 @@ static func segments(parent: Node, items: Array, colors: Array) -> void:
 		empty.color = Chrome.BORDER
 		track.add_child(empty)
 
+
 static func duration(seconds: float) -> String:
 	var whole := floori(seconds)
 	return "%d分%02d秒" % [whole / 60, whole % 60]
+
 
 static func time_scale(seconds: float) -> int:
 	var minutes := seconds / 60.0
 	var step := 1 if minutes <= 5 else (5 if minutes <= 30 else (10 if minutes <= 60 else 60))
 	return maxi(step, ceili(minutes / step) * step) * 60
 
+
 static func metric_cards(parent: Node, data: Dictionary) -> void:
 	var row := horizontal(parent)
 	var accuracy := section(row, "正答率")
 	var time := section(row, "審査時間")
 	var operations := section(row, "調査回数")
-	for column in [accuracy, time, operations]: column.add_theme_constant_override("separation", 5)
-	text(accuracy, "%d％" % roundi(data.accuracy * 100) if data.answered > 0 else "未評価", 28, Chrome.CYAN)
-	segments(accuracy, [{"label": "正解", "count": data.correct}, {"label": "不正解", "count": data.answered - data.correct}], [Chrome.CYAN, RED])
+	for column in [accuracy, time, operations]:
+		column.add_theme_constant_override("separation", 5)
+	text(
+		accuracy,
+		"%d％" % roundi(data.accuracy * 100) if data.answered > 0 else "未評価",
+		28,
+		Chrome.CYAN,
+	)
+	segments(
+		accuracy,
+		[
+			{ "label": "正解", "count": data.correct },
+			{ "label": "不正解", "count": data.answered - data.correct },
+		],
+		[Chrome.CYAN, RED],
+	)
 	text(accuracy, "正解 %d問  /  全%d問" % [data.correct, data.answered], 14, Chrome.CYAN)
 	text(time, duration(data.elapsed_seconds), 28, PURPLE)
 	var limit := time_scale(data.elapsed_seconds)
@@ -130,7 +161,12 @@ static func metric_cards(parent: Node, data: Dictionary) -> void:
 	var items := Analysis.operation_segments(data)
 	var colors := [MUTED, ORANGE]
 	segments(operations, items, colors)
-	operations.tooltip_text = "実行完了 %d回 / 実行失敗 %d回。完了は操作が適切だったことを意味しません。資料の再表示と外部送信の見送り%d回は含みません。" % [data.operations - data.failed, data.failed, data.skipped]
+	operations.tooltip_text = "実行完了 %d回 / 実行失敗 %d回。完了は操作が適切だったことを意味しません。資料の再表示と外部送信の見送り%d回は含みません。" % [
+		data.operations - data.failed,
+		data.failed,
+		data.skipped,
+	]
+
 
 static func radar_section(parent: Node, data: Dictionary) -> void:
 	var column := section(parent, "判断力・確認力")
@@ -155,12 +191,20 @@ static func radar_section(parent: Node, data: Dictionary) -> void:
 		insights.add_child(item)
 		var heading := horizontal(item)
 		text(heading, axis.label, 17)
-		var count := text(heading, "%d％  ·  %d/%d問" % [roundi(Analysis.ratio(axis.part, axis.total) * 100), axis.part, axis.total] if axis.total > 0 else "未評価", 17, Chrome.CYAN if axis.total > 0 else MUTED)
+		var count := text(
+			heading,
+			"%d％  ·  %d/%d問"
+			% [roundi(Analysis.ratio(axis.part, axis.total) * 100), axis.part, axis.total] if axis.total
+			> 0 else "未評価",
+			17,
+			Chrome.CYAN if axis.total > 0 else MUTED,
+		)
 		count.autowrap_mode = TextServer.AUTOWRAP_OFF
 		count.size_flags_horizontal = Control.SIZE_FILL
 		count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		count.tooltip_text = axis.hint
 		text(item, findings[i], 15, MUTED if axis.part == axis.total else ORANGE)
+
 
 static func content_list(parent: ScrollContainer) -> VBoxContainer:
 	parent.gui_input.connect(_scroll_input.bind(parent))
@@ -170,21 +214,35 @@ static func content_list(parent: ScrollContainer) -> VBoxContainer:
 	parent.add_child(list)
 	return list
 
+
 static func profile(parent: Node, data: Dictionary) -> void:
 	var column := section(parent, "")
 	column.add_theme_constant_override("separation", 8)
-	var basic: bool = data.level.reference or data.style.id == "pending" or data.level.id == "pending"
-	var label: String = "復習者" if data.is_retry else ("セキュリティチャレンジャー" if basic else data.style.label + " × " + data.level.label)
+	var basic: bool = (
+		data.level.reference or data.style.id == "pending" or data.level.id == "pending"
+	)
+	var label: String = "復習者" if data.is_retry else (
+		"セキュリティチャレンジャー" if basic else data.style.label + " × " + data.level.label
+	)
 	var result_label := text(column, label, 32, Chrome.CYAN)
-	if not basic and not data.is_retry: result_label.tooltip_text = data.style.reason + "\n" + data.level.reason
+	if not basic and not data.is_retry:
+		result_label.tooltip_text = data.style.reason + "\n" + data.level.reason
 	text(column, "今回の判断と調査を振り返り、次の学習に役立てましょう。" if basic or data.is_retry else data.description, 17)
 	text(column, data.scope, 15, MUTED)
 
-static func build(parent: ScrollContainer, data: Dictionary, feedback: Dictionary, open_category: Callable, open_review: Callable) -> Dictionary:
+
+static func build(
+	parent: ScrollContainer,
+	data: Dictionary,
+	feedback: Dictionary,
+	open_category: Callable,
+	open_review: Callable,
+) -> Dictionary:
 	var links: Array[Button] = []
 	var advice_link: Button = null
 	var list := content_list(parent)
-	if feedback.get("show_expected", true) and feedback.get("show_reason", true): profile(list, data)
+	if feedback.get("show_expected", true) and feedback.get("show_reason", true):
+		profile(list, data)
 	metric_cards(list, data)
 	if feedback.get("show_expected", true):
 		radar_section(list, data)
@@ -198,19 +256,31 @@ static func build(parent: ScrollContainer, data: Dictionary, feedback: Dictionar
 		var action := section(list, "アドバイス")
 		text(action, data.advice.next, 17)
 		if not data.advice.review_indices.is_empty():
-			advice_link = Chrome.button(action, Rect2(), "該当する%d問を復習" % data.advice.review_indices.size(), Chrome.CYAN)
+			advice_link = Chrome.button(
+				action,
+				Rect2(),
+				"該当する%d問を復習" % data.advice.review_indices.size(),
+				Chrome.CYAN,
+			)
 			advice_link.custom_minimum_size.y = 36
 			advice_link.pressed.connect(open_review.bind(data.advice.review_indices))
 	elif feedback.get("show_reason", true):
 		text(section(list, "アドバイス"), "問題ごとの結果を確認し、必要な情報と規則を照合してみましょう。", 17)
-	return {"categories": links, "advice": advice_link}
+	return { "categories": links, "advice": advice_link }
+
 
 static func _scroll_input(event: InputEvent, scroll: ScrollContainer) -> void:
-	if not event is InputEventKey or not event.pressed: return
+	if not event is InputEventKey or not event.pressed:
+		return
 	match event.keycode:
-		KEY_PAGEDOWN: scroll.scroll_vertical += int(scroll.size.y * 0.8)
-		KEY_PAGEUP: scroll.scroll_vertical -= int(scroll.size.y * 0.8)
-		KEY_HOME: scroll.scroll_vertical = 0
-		KEY_END: scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
-		_: return
+		KEY_PAGEDOWN:
+			scroll.scroll_vertical += int(scroll.size.y * 0.8)
+		KEY_PAGEUP:
+			scroll.scroll_vertical -= int(scroll.size.y * 0.8)
+		KEY_HOME:
+			scroll.scroll_vertical = 0
+		KEY_END:
+			scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
+		_:
+			return
 	scroll.accept_event()

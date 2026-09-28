@@ -2,8 +2,10 @@ extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
 ## 実際のシーンとボタンのシグナルを使い、勤務全体を検証する。
 
+
 func _initialize() -> void:
 	call_deferred("_run")
+
 
 func _escape(echo: bool = false) -> void:
 	var event := InputEventKey.new()
@@ -12,6 +14,7 @@ func _escape(echo: bool = false) -> void:
 	event.echo = echo
 	Input.parse_input_event(event)
 	await process_frame
+
 
 func _run() -> void:
 	var desk = Fixtures.desk()
@@ -55,7 +58,9 @@ func _run() -> void:
 	assert(not desk.playing)
 	desk.license_tabs[1].pressed.emit()
 	assert(desk.license_body.text.contains("2014-2021 Adobe"))
-	assert(desk.license_body.text.contains(FileAccess.get_file_as_string("res://assets/fonts/LICENSE")))
+	assert(
+		desk.license_body.text.contains(FileAccess.get_file_as_string("res://assets/fonts/LICENSE"))
+	)
 	desk.license_tabs[2].pressed.emit()
 	assert(desk.license_body.text.contains(Engine.get_copyright_info()[0].name))
 	desk.license_tabs[3].pressed.emit()
@@ -74,7 +79,8 @@ func _run() -> void:
 	assert(not desk.target_card.scroll_hint.visible and not desk.target_card.stamp_plate.visible)
 	desk._show_start_screen()
 	for i in desk.method_select.item_count:
-		if desk.method_select.get_item_metadata(i) == "initial": desk.method_select.select(i)
+		if desk.method_select.get_item_metadata(i) == "initial":
+			desk.method_select.select(i)
 	desk.start_button.pressed.emit()
 	assert(not desk.start_screen.visible and desk.workspace.visible)
 	assert(desk.playing and desk.elapsed_time.text == "00:00")
@@ -176,7 +182,10 @@ func _run() -> void:
 		await process_frame
 		assert(not desk.audit_overlay.visible)
 	assert(desk.shift.finished() and is_instance_valid(desk.summary))
-	assert(desk.summary_overlay.visible and desk.summary_overlay.mouse_filter == Control.MOUSE_FILTER_STOP)
+	assert(
+		desk.summary_overlay.visible
+		and desk.summary_overlay.mouse_filter == Control.MOUSE_FILTER_STOP
+	)
 	assert(desk.summary_overlay.get_parent() == desk)
 	assert(desk.summary_restart.has_focus())
 	await _escape()
@@ -214,7 +223,9 @@ func _run() -> void:
 	assert(desk.shift.finished())
 	desk._process(600)
 	assert(desk.elapsed_time.text == "100:00")
-	assert(desk.summary_title.text == "再挑戦の結果" and desk.completed_snapshot.retry_of == first_session)
+	assert(
+		desk.summary_title.text == "再挑戦の結果" and desk.completed_snapshot.retry_of == first_session
+	)
 	desk.summary_home.pressed.emit()
 	await process_frame
 	assert(desk.start_screen.visible and not desk.workspace.visible)
