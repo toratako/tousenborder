@@ -2,9 +2,11 @@ class_name HistoryStore
 extends RefCounted
 ## 一勤務一ファイル。教材の現行データや画面には依存しない。
 const MAX_ENTRIES := 100
+const INDEX_SUFFIX := ".index.json"
 var directory: String
 var error := ""
 var warnings: PackedStringArray = []
+static var _index_schema: Dictionary = {}
 
 func _init(path: String = "user://history") -> void:
 	directory = path
@@ -67,6 +69,42 @@ func load_entry(id: String) -> Dictionary:
 		return {}
 	return data
 
+static func _valid_index(data: Variant, id: String) -> bool:
+	if _index_schema.is_empty():
+		var history_schema: Dictionary = ContentSchema.read_schema(ContentSchema.HISTORY)
+		var properties := {"schema_version": {"type": "integer", "const": 1},
+			"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+		for key in ["session_id", "completed_at", "stats", "selection"]:
+			properties[key] = history_schema.properties[key]
+		_index_schema = {"type": "object", "properties": properties,
+			"required": properties.keys(), "additionalProperties": false}
+	return ContentSchema.check(data, _index_schema).is_empty() and data.session_id == id
+
+func _index_path(id: String) -> String:
+	return directory.path_join(id + INDEX_SUFFIX)
+
+func _write_index(data: Dictionary, path: String) -> Dictionary:
+	var index := {"schema_version": 1, "session_id": data.session_id,
+		"completed_at": data.completed_at, "stats": data.stats.duplicate(true),
+		"selection": data.selection.duplicate(true), "digest": FileAccess.get_sha256(path)}
+	if not _valid_index(index, data.session_id): return index
+	# 索引は再生成できる。書き込みが途中で止まっても履歴本体は変更しない。
+	var file := FileAccess.open(_index_path(data.session_id), FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(index))
+		file.close()
+	return index
+
+func _read_index(id: String) -> Dictionary:
+	var path := directory.path_join(id + ".json")
+	var index_path := _index_path(id)
+	if FileAccess.file_exists(index_path):
+		var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(index_path))
+		if _valid_index(index, id) and index.digest == FileAccess.get_sha256(path):
+			return index
+	var data := load_entry(id)
+	return {} if data.is_empty() else _write_index(data, path)
+
 func save_completed(data: Dictionary) -> bool:
 	error = validate(data)
 	if not error.is_empty(): return false
@@ -100,19 +138,41 @@ func save_completed(data: Dictionary) -> bool:
 	if status != OK:
 		error = "履歴を確定できません: " + str(status)
 		return false
+	_write_index(data, path)
 	_prune_entries()
 	return true
 
 func _prune_entries() -> void:
 	# 保存確定後だけ整理する。破損・未知版・一時ファイルは削除しない。
-	var entries := list_entries()
+	var entries := list_summaries()
 	for index in range(MAX_ENTRIES, entries.size()):
 		var path := directory.path_join(entries[index].session_id + ".json")
 		var status := DirAccess.remove_absolute(path)
 		if status != OK:
 			warnings.append("古い履歴を削除できません: " + str(status))
+		else:
+			DirAccess.remove_absolute(_index_path(entries[index].session_id))
 	# 整理の失敗と、新規履歴の保存成功は分ける。
 	error = ""
+
+func list_summaries() -> Array[Dictionary]:
+	error = ""
+	warnings.clear()
+	var entries: Array[Dictionary] = []
+	if not DirAccess.dir_exists_absolute(directory): return entries
+	var dir := DirAccess.open(directory)
+	if dir == null:
+		warnings.append("履歴フォルダを開けません。")
+		return entries
+	for filename in dir.get_files():
+		if not filename.ends_with(".json") or not valid_id(filename.get_basename()): continue
+		var index := _read_index(filename.get_basename())
+		if index.is_empty():
+			warnings.append(filename + ": " + error)
+		else:
+			entries.append(index)
+	entries.sort_custom(func(a, b): return a.completed_at > b.completed_at if a.completed_at != b.completed_at else a.session_id > b.session_id)
+	return entries
 
 func list_entries() -> Array[Dictionary]:
 	error = ""

@@ -133,6 +133,10 @@ func _run() -> void:
 		quit(1)
 		return
 	var saved: Dictionary = entries[0]
+	var index_path := store.directory.path_join(saved.session_id + HistoryStore.INDEX_SUFFIX)
+	check(FileAccess.file_exists(index_path), "保存時に履歴索引を作成")
+	write_json(index_path, {})
+	check(store.list_summaries().size() == 1 and JSON.parse_string(FileAccess.get_file_as_string(index_path)).get("digest", "").length() == 64, "壊れた索引を履歴本体から再生成")
 	var invalid_snapshot := saved.duplicate(true)
 	invalid_snapshot.stats.correct += 1
 	check(not HistoryStore.validate(invalid_snapshot).is_empty(), "集計の改変を検出")
@@ -190,6 +194,12 @@ func _run() -> void:
 	write_json(damaged_path, {})
 	write_json(unknown_path, unknown)
 	write_json(temporary_path, {})
+	var stale := saved.duplicate(true)
+	stale.session_id = "f".repeat(32)
+	var stale_path := limited.directory.path_join(stale.session_id + ".json")
+	write_json(stale_path, stale)
+	limited.list_summaries()
+	write_json(stale_path, {})
 	check(not limited.save_completed({}) and limited.list_entries().size() == 101, "保存失敗時は古い履歴を削除しない")
 	var latest := saved.duplicate(true)
 	latest.session_id = "e".repeat(32)
@@ -198,7 +208,8 @@ func _run() -> void:
 	var retained := limited.list_entries()
 	check(retained.size() == 100 and retained[0].session_id == latest.session_id, "最新100件を保持")
 	check(not FileAccess.file_exists(limited.directory.path_join("%032x.json" % 1)) and not FileAccess.file_exists(limited.directory.path_join("%032x.json" % 2)), "最古の2件を削除")
-	check(FileAccess.file_exists(damaged_path) and FileAccess.file_exists(unknown_path) and FileAccess.file_exists(temporary_path), "破損・未知版・一時ファイルを保持")
+	check(not FileAccess.file_exists(limited.directory.path_join("%032x" % 1 + HistoryStore.INDEX_SUFFIX)), "削除した履歴の索引も削除")
+	check(FileAccess.file_exists(damaged_path) and FileAccess.file_exists(unknown_path) and FileAccess.file_exists(temporary_path) and FileAccess.file_exists(stale_path), "破損・未知版・一時ファイル・索引と不一致の履歴を保持")
 	check(limited.save_completed(latest) and limited.list_entries().size() == 100, "再保存で保持件数を減らさない")
 	# 教材読込失敗の起動でも履歴への導線を残す。
 	desk.queue_free()
@@ -209,6 +220,10 @@ func _run() -> void:
 	root.add_child(desk)
 	await process_frame
 	check(desk.start_screen.visible and desk.start_button.disabled, "教材エラー時は新規勤務だけ無効")
+	check(desk.tool_guide_button.disabled, "教材エラー時はツール一覧を無効化")
+	desk.license_button.pressed.emit()
+	desk.license_close.pressed.emit()
+	check(desk.tool_guide_button.disabled, "ライセンス画面から戻ってもツール一覧を無効のままにする")
 	desk.history_button.pressed.emit()
 	desk._open_history_entry(saved.session_id)
 	check(desk.summary_review.get_parsed_text().contains(saved.records[0].explanation), "教材エラー時も履歴を閲覧")

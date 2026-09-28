@@ -34,6 +34,8 @@ sectionはinitial／overview／result／submission。source_idはinitial_informa
 
 勤務終了時にuser://historyへスナップショットを保存。途中再開は対象外。解説・初期情報・調査記録を保存し、現在の教材から再計算しない。辞書の過去版は保存しない。保存形式変更時はschema_versionと移行を検討する。
 
+履歴一覧と件数整理は、各履歴の`<session_id>.index.json`から表示情報を読む。索引は履歴本体のSHA-256と照合し、不足・破損・不一致なら本体を検証して再生成する。既存履歴は初回読込時に索引を作るため、件数が多いと一度だけ時間がかかる。索引は派生データで、履歴本体だけが正本。
+
 tests/fixtures/learning-supportは出題しない専用教材。test_learning_support.py／.gdで追加項目の検証、表示タイミング、保存・再読込・失敗時の再試行を確認する。Python側では標準教材の紛らわしい用語・結果用語の先出しも検証する。test_playable_content.gdは標準全問の資料を辿り、履歴保存まで検証する。
 
 移植時の検証: Python 48テスト・カタログ照合成功。Godot 4.5.1で19/20テスト成功（112問の保存・再読込を含む）。test_content_sizing.gd:29は以前から確認されているサイズ検証の失敗が残る。最新版指定の4.7.2では未検証。
