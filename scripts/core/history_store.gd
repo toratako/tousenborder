@@ -76,8 +76,10 @@ static func _valid_index(data: Variant, id: String) -> bool:
 			"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
 		for key in ["session_id", "completed_at", "stats", "selection"]:
 			properties[key] = history_schema.properties[key]
+		var required := properties.keys()
+		properties.retry_of = history_schema.properties.retry_of
 		_index_schema = {"type": "object", "properties": properties,
-			"required": properties.keys(), "additionalProperties": false}
+			"required": required, "additionalProperties": false}
 	return ContentSchema.check(data, _index_schema).is_empty() and data.session_id == id
 
 func _index_path(id: String) -> String:
@@ -87,6 +89,7 @@ func _write_index(data: Dictionary, path: String) -> Dictionary:
 	var index := {"schema_version": 1, "session_id": data.session_id,
 		"completed_at": data.completed_at, "stats": data.stats.duplicate(true),
 		"selection": data.selection.duplicate(true), "digest": FileAccess.get_sha256(path)}
+	if data.has("retry_of"): index.retry_of = data.retry_of
 	if not _valid_index(index, data.session_id): return index
 	# 索引は再生成できる。書き込みが途中で止まっても履歴本体は変更しない。
 	var file := FileAccess.open(_index_path(data.session_id), FileAccess.WRITE)

@@ -2,6 +2,8 @@
 
 7fd014cを土台に、用語集・勤務履歴を移植。移植時の112問に用語を付与済み。現在の出題対象と難易度は [学習設計](learning-design.md) を参照。
 
+勤務結果の分析画面・審査スタイルの指標と保存互換は [result-analysis.md](result-analysis.md) を参照。
+
 ## 編集先
 
 | 対象 | ファイル |
@@ -42,6 +44,10 @@ tests/fixtures/learning-supportは出題しない専用教材。test_learning_su
 
 用語執筆後の検証: Python 54テスト・カタログ照合成功。Godot 4.5.1のtest_learning_support.gdとtest_playable_content.gdも成功。
 
+## 誤答の再挑戦
+
+誤答の再挑戦: 勤務結果・履歴詳細のボタンから、その勤務の誤答IDだけを`wrong_answer_retry.gd`で現行Catalogに照合して出題する。重複IDは一度、削除済みは除外、別Pack・読込失敗は開始不可。履歴本文を問題データとして流用しない。再開ボタン・一時停止からのやり直しは対象を維持し、タイトルへ戻ると通常出題へ戻る。結果は新規勤務IDで保存し、任意の`retry_of`に元の勤務IDを記録（schema_version=2）。索引にも任意で複写する。古い履歴や元履歴が100件上限で消えても閲覧は独立。`tests/test_wrong_answer_retry.gd`で出題・保存・再開始を確認する。
+
 ## 記入用ひな形
 
 各問題のexplanation直前にglossaryがある。以下は追加する際の形式例。空配列なら何も表示しない。
@@ -60,6 +66,6 @@ tests/fixtures/learning-supportは出題しない専用教材。test_learning_su
 term_idは共通辞書のキーを指定する。実行後に表示する語は、その問題のツールIDとsection: resultを指定する。新しいPackでも辞書を利用するならglossary_pathの指定が必要。
 
 
-診断・監査手順は撤去し、追加機能は用語集と勤務履歴のみを残した。履歴形式はschema_version=2。以前の形式は移行せず読み飛ばす（ファイルは削除しない）。
+以前の診断・監査手順は移植時に撤去した。現在の勤務結果には、別途result-analysis.mdに定義した分析・審査スタイルを追加している。履歴形式はschema_version=2。以前の形式は移行せず読み飛ばす（ファイルは削除しない）。
 
 調査欄の名称表示修正は維持する。tool_input.gdの_layout_labelsで高さ0の自動調整に依存せず、折り返し行数から高さを確保する。test_tool_labels.gdで全問題の名称表示領域と入力案内との重なりを検証する。

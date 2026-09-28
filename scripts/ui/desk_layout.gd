@@ -317,28 +317,47 @@ static func build_summary(desk) -> void:
 	desk.summary_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.82))
 	desk.summary_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.summary_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	Chrome.panel(desk.summary_overlay, Rect2(252, 97, 800, 630), Color("050a12"))
-	desk.summary = Chrome.panel(desk.summary_overlay, Rect2(240, 85, 800, 630), Color("101e32"), Color("34556f"))
-	desk.summary_title = Chrome.label(desk.summary, Rect2(30, 22, 740, 45), "勤務結果", INK, 30)
+	desk.summary = Chrome.panel(desk.summary_overlay, Rect2(140, 40, 1000, 720), Color("101e32"), Color("34556f"))
+	desk.summary_title = Chrome.label(desk.summary, Rect2(30, 18, 940, 45), "勤務結果", INK, 30)
 	var stats: Dictionary = desk.summary_snapshot.stats
-	desk.summary_stats = Chrome.label(desk.summary, Rect2(30, 77, 740, 30), "正解 %d件  /  誤判定 %d件" % [stats.correct, stats.answered - stats.correct], INK, 18)
+	desk.summary_stats = Chrome.label(desk.summary, Rect2(30, 65, 940, 30), "正解 %d件  /  誤判定 %d件" % [stats.correct, stats.answered - stats.correct], MUTED, 18)
 	desk.summary_stats.text += "  /  不適切な調査 %d件" % stats.unsafe
 	desk.summary_stats.add_theme_font_size_override("font_size", 16)
-	Chrome.panel(desk.summary, Rect2(30, 119, 740, 2), Color("34556f"))
-	desk.summary_review = Chrome.rich(desk.summary, Rect2(30, 137, 740, 374), INK, 15)
-	desk.summary_save_notice = Chrome.label(desk.summary, Rect2(30, 520, 500, 27), "", RED, 15)
-	desk.summary_retry = Chrome.button(desk.summary, Rect2(550, 517, 220, 30), "保存を再試行", PAPER)
+	desk.summary_stats.hide()
+	desk.summary_tabs.clear()
+	for i in 2:
+		var tab := Chrome.button(desk.summary, Rect2(30 + i * 475, 72, 465, 40), ["分析", "問題ごとの振り返り"][i], PAPER)
+		tab.toggle_mode = true
+		tab.pressed.connect(desk._select_summary_tab.bind(i))
+		desk.summary_tabs.append(tab)
+	desk.summary_analysis = ScrollContainer.new()
+	desk.summary_analysis.position = Vector2(30, 128)
+	desk.summary_analysis.size = Vector2(940, 477)
+	desk.summary_analysis.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	desk.summary_analysis.follow_focus = true
+	desk.summary_analysis.focus_mode = Control.FOCUS_ALL
+	desk.summary.add_child(desk.summary_analysis)
+	desk.summary_review = Chrome.rich(desk.summary, Rect2(30, 128, 940, 477), INK, 18)
+	desk.summary_review.focus_mode = Control.FOCUS_ALL
+	desk.summary_save_notice = Chrome.label(desk.summary, Rect2(30, 620, 670, 27), "", RED, 15)
+	desk.summary_retry = Chrome.button(desk.summary, Rect2(730, 616, 240, 32), "保存を再試行", PAPER)
 	desk.summary_retry.pressed.connect(desk._save_summary)
 	desk.summary_retry.hide()
 
 static func build_summary_actions(desk) -> void:
-	desk.summary_home = Chrome.button(desk.summary, Rect2(30, 557, 280, 45), "スタート画面へ", MUTED)
+	desk.summary_home = Chrome.button(desk.summary, Rect2(30, 660, 230, 45), "スタート画面へ", MUTED)
+	var plan: Dictionary = desk.WrongAnswerRetry.plan(desk.summary_snapshot, desk.catalog)
+	desk.summary_retry_wrong = Chrome.button(desk.summary, Rect2(276, 660, 370, 45), "誤った問題に再挑戦（%d問）" % plan.cases.size(), PAPER)
+	desk.summary_retry_wrong.add_theme_font_size_override("font_size", 19)
+	desk.summary_retry_wrong.disabled = plan.cases.is_empty()
+	desk.summary_retry_wrong.tooltip_text = plan.reason
+	desk.summary_retry_wrong.pressed.connect(desk._retry_wrong_answers)
 	if desk.summary_from_history:
 		desk.summary_home.text = "勤務履歴へ戻る"
 		desk.summary_home.pressed.connect(desk._back_to_history)
 		return
 	desk.summary_home.pressed.connect(desk._show_start_screen)
-	desk.summary_restart = Chrome.button(desk.summary, Rect2(326, 557, 444, 45), "新しい勤務を開始", PAPER)
+	desk.summary_restart = Chrome.button(desk.summary, Rect2(662, 660, 308, 45), "新しい勤務を開始" if desk.retry_source_id.is_empty() else "同じ問題で再挑戦", PAPER)
 	desk.summary_restart.pressed.connect(desk._start_shift)
 
 static func build_external_preview(desk) -> void:

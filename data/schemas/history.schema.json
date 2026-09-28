@@ -2,6 +2,10 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
+    "retry_of": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
+    },
     "schema_version": {
       "type": "integer",
       "const": 2
@@ -382,6 +386,9 @@
               ],
               "additionalProperties": false
             }
+          },
+          "investigation_required": {
+            "type": "boolean"
           },
           "missing_evidence": {
             "type": "array",
