@@ -1,7 +1,7 @@
 config_version=5
 
 [application]
-config/name="（仮）"
+config/name="とーせんぼ～だ～"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
