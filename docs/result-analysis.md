@@ -4,10 +4,10 @@
 
 | 変更箇所 | 参照先 |
 | --- | --- |
-| 集計・しきい値・助言 | [result_analysis.gd](../scripts/core/result_analysis.gd)：`RULES`、`_style()`、`_level()`、`_advice()` |
-| 表示名・正解非表示時の制御 | [result_analysis_view.gd](../scripts/ui/result_analysis_view.gd)：`profile()`、`build()` |
-| 三角形の指標・描画 | `result_analysis.gd` の `radar_metrics()` / `radar_findings()`、[result_radar.gd](../scripts/ui/result_radar.gd) |
-| 分析から振り返りへの絞込・フォーカス | [desk.gd](../scripts/ui/desk.gd) の `_select_summary_tab()` / `_update_summary_focus()` |
+| 集計・しきい値・助言 | [result_analysis.gd](../src/domain/result_analysis.gd)：`RULES`、`_style()`、`_level()`、`_advice()` |
+| 表示名・正解非表示時の制御 | [result_analysis_view.gd](../src/ui/results/result_analysis_view.gd)：`profile()`、`build()` |
+| 三角形の指標・描画 | `result_analysis.gd` の `radar_metrics()` / `radar_findings()`、[result_radar.gd](../src/ui/results/result_radar.gd) |
+| 分析から振り返りへの絞込・フォーカス | [summary_screen.gd](../src/ui/results/summary_screen.gd) の `select_tab()` / `update_focus()` |
 | しきい値・少数・旧履歴・UIの検証 | [test_result_analysis.gd](../tests/test_result_analysis.gd)。未評価の教材と難易度を明示したfixtureを分ける |
 
 ## 指標の注意点

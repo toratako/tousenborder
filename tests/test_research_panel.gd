@@ -27,23 +27,23 @@ func _run() -> void:
 	Fixtures.resources(cases[0], "references")[1].result.content = literal_json
 	desk.shift.start(cases)
 	await process_frame
-	assert(desk.tool_panel.is_visible_in_tree())
-	assert(desk.tool_buttons.size() == 4)
+	assert(desk.workspace.tool_panel.is_visible_in_tree())
+	assert(desk.workspace.tool_buttons.size() == 4)
 	var headings: Array[String] = []
-	for child in desk.tool_rack.get_children():
+	for child in desk.workspace.tool_rack.get_children():
 		if child is Label:
 			headings.append(child.text)
 	assert(headings == ["Reference"], "空のTool・外部照会の見出しは出さない")
-	var button: ToolInput = desk.tool_buttons[0]
+	var button: ToolInput = desk.workspace.tool_buttons[0]
 	assert(button.heading.size.x > 150)
 	assert(is_instance_valid(button.reference_icon) and not button.hint.visible)
 	assert(button.reference_icon.get_rect().end.x < button.heading.position.x)
 	assert(button.get_theme_stylebox("normal").bg_color.a == 0)
 	assert(button.hint.text.begins_with("未読"))
 	button.pressed.emit()
-	assert(desk.tool_panel.visible)
+	assert(desk.workspace.tool_panel.visible)
 	assert(button.hint.text.begins_with("確認済み"))
-	var reference: DraggableCard = desk.active_card
+	var reference: DraggableCard = desk.workspace.active_card
 	var value_label: Label = reference.tokens[0].get_child(0).get_child(1)
 	assert(
 		value_label.text
@@ -53,23 +53,23 @@ func _run() -> void:
 	assert(reference.tokens[0].payload().value == approved, "表示の整形で元の情報値・型を変更しない")
 	assert(desk.shift.observations.back().output == "照合用情報: " + value_label.text, "調査記録もカードと同じ項目表示")
 	var observations: Array = desk.shift.observations.duplicate(true)
-	var card_count: int = desk.cards.size()
+	var card_count: int = desk.workspace.cards.size()
 	# 別の資料を開いた後でも同じカードを手前に戻す。
-	desk.tool_buttons[1].pressed.emit()
-	assert(desk.active_card != reference)
-	var literal_label: Label = desk.active_card.tokens[0].get_child(0).get_child(1)
+	desk.workspace.tool_buttons[1].pressed.emit()
+	assert(desk.workspace.active_card != reference)
+	var literal_label: Label = desk.workspace.active_card.tokens[0].get_child(0).get_child(1)
 	assert(literal_label.text == literal_json, "JSONそのものの抜粋は括弧を含めて保持")
 	button.pressed.emit()
 	assert(
-		desk.active_card == reference
-		and reference.get_index() == desk.card_layer.get_child_count() - 1
+		desk.workspace.active_card == reference
+		and reference.get_index() == desk.workspace.card_layer.get_child_count() - 1
 	)
 	assert(desk.shift.observations.size() == observations.size() + 1)
-	assert(desk.cards.size() == card_count + 1)
+	assert(desk.workspace.cards.size() == card_count + 1)
 	reference.close_button.pressed.emit()
 	assert(not reference.visible)
 	button.pressed.emit()
-	assert(reference.visible and desk.active_card == reference)
+	assert(reference.visible and desk.workspace.active_card == reference)
 	assert(desk.shift.observations.size() == observations.size() + 1)
 	# メニュー中の資料再表示も背面操作として止める。
 	reference.hide()
@@ -78,21 +78,21 @@ func _run() -> void:
 	assert(not reference.visible)
 	desk._close_menu()
 	# 問題を切り替えると資料と確認済み状態を作り直す。
-	desk._clear_desk()
+	desk.workspace.clear_case()
 	desk.shift.start(cases)
-	assert(desk.reference_cards.is_empty())
+	assert(desk.workspace.reference_cards.is_empty())
 	assert(
-		desk.tool_buttons.all(
+		desk.workspace.tool_buttons.all(
 			func(b):
 				return not b.reviewed and b.hint.text.begins_with("未読"),
 		)
 	)
-	assert(desk.tool_panel.visible)
+	assert(desk.workspace.tool_panel.visible)
 	var beginner: Array[Dictionary] = desk.library.select_cases("", "file", "", "initial")
 	desk.shift.start(beginner)
-	assert(desk.tool_buttons.is_empty() and desk.tool_panel.visible)
-	assert(desk.tool_rack.get_child_count() == 1)
-	assert(desk.tool_rack.get_child(0).text.contains("基本情報のみ"))
+	assert(desk.workspace.tool_buttons.is_empty() and desk.workspace.tool_panel.visible)
+	assert(desk.workspace.tool_rack.get_child_count() == 1)
+	assert(desk.workspace.tool_rack.get_child(0).text.contains("基本情報のみ"))
 	desk.queue_free()
 	await process_frame
 	print("調査パネルテスト: 常設表示、Reference再利用・確認状態、問題切り替えに成功")

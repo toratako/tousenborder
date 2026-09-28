@@ -34,28 +34,27 @@ func _run() -> void:
 				func(c):
 					return (
 						c.platform in [os, "common"]
-						and c.investigation_environment == (
-							"linux" if c.platform == "common" else os
-						)
+						and c.investigation_environment
+						== ("linux" if c.platform == "common" else os)
 					),
 			)
 		)
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
-	select_value(desk.difficulty_select, "beginner")
-	desk.start_button.pressed.emit()
+	select_value(desk.start_screen.difficulty_select, "beginner")
+	desk.start_screen.start_button.pressed.emit()
 	assert(
-		desk.playing
+		desk.workspace.playing
 		and desk.shift.cases.all(
 			func(c):
 				return c.difficulty == "beginner",
 		)
 	)
 	desk._show_start_screen()
-	select_value(desk.method_select, "initial")
-	select_value(desk.category_select, "process")
-	assert(desk.start_button.disabled)
+	select_value(desk.start_screen.method_select, "initial")
+	select_value(desk.start_screen.category_select, "process")
+	assert(desk.start_screen.start_button.disabled)
 	desk.queue_free()
 	await process_frame
 	desk = load("res://scenes/main.tscn").instantiate()
@@ -64,38 +63,42 @@ func _run() -> void:
 	root.add_child(desk)
 	await process_frame
 	assert(desk.library.errors.is_empty(), str(desk.library.errors))
-	assert(desk.difficulty_select.item_count == 2 and desk.library.difficulties.has("unrated"))
+	assert(
+		desk.start_screen.difficulty_select.item_count == 2
+		and desk.library.difficulties.has("unrated")
+	)
 	var all_ids := { }
 	for method in desk.library.methods:
-		select_value(desk.method_select, method)
-		var selected: Array = desk._selected_cases()
+		select_value(desk.start_screen.method_select, method)
+		var selected: Array = desk.start_screen.selected_cases()
 		assert(not selected.is_empty())
 		for item in selected:
 			assert(item.traits.method == method and not all_ids.has(item.id))
 			all_ids[item.id] = true
-		desk.start_button.pressed.emit()
-		assert(desk.playing and desk.shift.cases.size() == selected.size())
+		desk.start_screen.start_button.pressed.emit()
+		assert(desk.workspace.playing and desk.shift.cases.size() == selected.size())
 		desk._start_shift()
 		assert(desk.shift.cases.size() == selected.size())
 		desk._show_start_screen()
 	assert(all_ids.size() == 70)
-	select_value(desk.method_select, "")
-	select_value(desk.category_select, "file")
-	select_value(desk.platform_select, "linux")
+	select_value(desk.start_screen.method_select, "")
+	select_value(desk.start_screen.category_select, "file")
+	select_value(desk.start_screen.platform_select, "linux")
 	assert(
 		desk
-		._selected_cases()
+		.start_screen
+		.selected_cases()
 		.all(
 			func(c):
 				return c.category == "file" and c.platform in ["common", "linux"],
 		)
 	)
-	select_value(desk.pack_select, desk.library.packs[0].key)
+	select_value(desk.start_screen.pack_select, desk.library.packs[0].key)
 	assert(
-		desk._selected_cases().size() == 70
-		and desk.category_select.disabled and desk.method_select.disabled
+		desk.start_screen.selected_cases().size() == 70
+		and desk.start_screen.category_select.disabled and desk.start_screen.method_select.disabled
 	)
-	desk.start_button.pressed.emit()
+	desk.start_screen.start_button.pressed.emit()
 	assert(desk.shift.current().id == desk.library.packs[0].chapters[0].problems[0])
 	desk.queue_free()
 	await process_frame

@@ -1,6 +1,6 @@
 extends Control
 ## 未評価の軸は欠測のまま描画する。3軸すべて揃ったときだけ面を塗る。
-const Chrome = preload("res://scripts/ui/cyber_theme.gd")
+const Chrome = preload("res://src/ui/shared/game_theme.gd")
 var metrics: Array[Dictionary] = []
 var values: Array[float] = []
 var captions: Array[Label] = []

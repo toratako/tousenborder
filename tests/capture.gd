@@ -20,7 +20,7 @@ func _capture() -> void:
 	root.add_child(desk)
 	await process_frame
 	await _save("start")
-	desk.start_button.pressed.emit()
+	desk.start_screen.start_button.pressed.emit()
 	var item: Dictionary = desk.library.cases.filter(
 		func(c):
 			return c.id == "FIX-PRIVATE-URL",
@@ -28,9 +28,9 @@ func _capture() -> void:
 	var cases: Array[Dictionary] = [item]
 	desk.shift.start(cases)
 	await _save("workspace")
-	desk.rules_button.pressed.emit()
+	desk.workspace.rules_button.pressed.emit()
 	await _save("rules")
-	desk.rules_close.pressed.emit()
+	desk.rules_overlay.close_button.pressed.emit()
 	var external: Dictionary = desk.library.tools_for(item).filter(
 		func(t):
 			return t.id == "urlscan_private",
@@ -40,15 +40,15 @@ func _capture() -> void:
 			return i.data_type == "url",
 	)[0].duplicate(true)
 	url.case_id = item.id
-	desk._inspect(external, url)
+	desk.workspace._inspect(external, url)
 	await _save("external")
-	desk.external_skip.pressed.emit()
+	desk.external_preview.skip_button.pressed.emit()
 	for reference in Fixtures.resources(item, "references"):
-		desk._inspect(reference)
+		desk.workspace._inspect(reference)
 	await _save("references")
 	desk.shift.decide(item.ground_truth)
 	await _save("audit")
-	desk.next.pressed.emit()
+	desk.audit_overlay.next_button.pressed.emit()
 	await _save("summary")
 	desk._start_shift()
 	var dense_cases: Array[Dictionary] = desk.library.cases.filter(
@@ -57,7 +57,9 @@ func _capture() -> void:
 	)
 	desk.shift.start(dense_cases)
 	await _save("dense_panel")
-	desk.tool_scroll.scroll_vertical = int(desk.tool_scroll.get_v_scroll_bar().max_value)
+	desk.workspace.tool_scroll.scroll_vertical = int(
+		desk.workspace.tool_scroll.get_v_scroll_bar().max_value
+	)
 	await _save("dense_panel_scrolled")
 	desk.queue_free()
 	await process_frame

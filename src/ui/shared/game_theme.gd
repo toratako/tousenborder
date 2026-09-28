@@ -3,6 +3,9 @@ extends RefCounted
 const BACKGROUND := Color("070e1b")
 const SURFACE := Color("101e32")
 const TEXT := Color("e4f5ff")
+const MUTED := Color("b0c8da")
+const GREEN := Color("57edc2")
+const RED := Color("ff718b")
 const CYAN := Color("57e4f2")
 const BORDER := Color("34556f")
 

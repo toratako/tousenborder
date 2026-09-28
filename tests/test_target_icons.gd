@@ -10,7 +10,7 @@ func _run() -> void:
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
-	desk.start_button.pressed.emit()
+	desk.start_screen.start_button.pressed.emit()
 	var category_icons := {
 		"web": "web",
 		"email": "email",
@@ -28,15 +28,17 @@ func _run() -> void:
 	for item in desk.library.cases:
 		var cases: Array[Dictionary] = [item]
 		desk.shift.start(cases)
-		var expected: String = file_icons[item.id] if item.category == "file" else category_icons[
-			item.category
-		]
+		var expected: String = (
+			file_icons[item.id]
+			if item.category == "file"
+			else category_icons[item.category]
+		)
 		assert(
-			desk.target_card.title_icon.texture.resource_path
+			desk.workspace.target_card.title_icon.texture.resource_path
 			== "res://assets/icons/%s.svg" % expected,
 			item.id,
 		)
-		assert(desk.target_card.title_label.text == "検査対象")
+		assert(desk.workspace.target_card.title_label.text == "検査対象")
 	for sample in [
 		["photo.PNG", "image"],
 		["invoice.pdf.EXE", "executable"],
@@ -53,9 +55,11 @@ func _run() -> void:
 				{ "data_type": "file", "value": "unrelated.zip" },
 			],
 		}
-		assert(desk._target_icon(item) == "res://assets/icons/%s.svg" % sample[1])
-	assert(desk._target_icon({ "category": "file", "information": [] }).ends_with("/document.svg"))
-	assert(desk._target_icon({ "category": "custom" }).ends_with("/document.svg"))
+		assert(desk.workspace._target_icon(item) == "res://assets/icons/%s.svg" % sample[1])
+	assert(desk.workspace._target_icon({ "category": "file", "information": [] }).ends_with(
+			"/document.svg"
+		))
+	assert(desk.workspace._target_icon({ "category": "custom" }).ends_with("/document.svg"))
 	desk.queue_free()
 	await process_frame
 	print("Target icons: all checks passed")

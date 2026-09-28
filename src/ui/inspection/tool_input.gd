@@ -1,6 +1,6 @@
 class_name ToolInput
 extends Button
-const Chrome = preload("res://scripts/ui/cyber_theme.gd")
+const Chrome = preload("res://src/ui/shared/game_theme.gd")
 
 signal information_dropped(tool: Dictionary, information: Dictionary)
 var tool: Dictionary
@@ -172,7 +172,7 @@ func _can_drop_data(_position: Vector2, data: Variant) -> bool:
 		return false
 	return (
 		data.information.get("case_id") == case_id and Information.accepts(tool, data.information)
-		and ToolRunner.supports_target(tool, { "platform": target_environment })
+		and ProblemContext.supports_target(tool, { "platform": target_environment })
 	)
 
 

@@ -1,8 +1,8 @@
 extends SceneTree
-const Analysis = preload("res://scripts/core/result_analysis.gd")
+const Analysis = preload("res://src/domain/result_analysis.gd")
 const Fixtures = preload("res://tests/fixtures.gd")
-const Radar = preload("res://scripts/ui/result_radar.gd")
-const View = preload("res://scripts/ui/result_analysis_view.gd")
+const Radar = preload("res://src/ui/results/result_radar.gd")
+const View = preload("res://src/ui/results/result_analysis_view.gd")
 var failures := 0
 
 
@@ -333,10 +333,11 @@ func run() -> void:
 			)
 		chart.setup(chart_metrics)
 		check(
-			chart.values.size() == 3 and chart.values[1] == -1.0 if values[1] < 0 else chart
-			.values
-			.size()
-			== 3,
+			(
+				chart.values.size() == 3 and chart.values[1] == -1.0
+				if values[1] < 0
+				else chart.values.size() == 3
+			),
 			"三角形の欠測を0点にしない",
 		)
 		await process_frame
@@ -385,32 +386,40 @@ func run() -> void:
 	desk._start_shift()
 	for item in desk.shift.cases:
 		desk.shift.decide(item.ground_truth)
-		desk.next.pressed.emit()
-	check(desk.summary_analysis.visible and not desk.summary_review.visible, "勤務終了時は分析を表示")
+		desk.audit_overlay.next_button.pressed.emit()
+	check(
+		desk.summary_screen.analysis.visible and not desk.summary_screen.review.visible,
+		"勤務終了時は分析を表示",
+	)
 	for i in 5:
 		await process_frame
-	var radars := radar_nodes(desk.summary_analysis)
+	var radars := radar_nodes(desk.summary_screen.analysis)
 	check(radars.size() == 1, "分析画面にレーダーチャートを表示")
 	if not radars.is_empty():
 		check(radars[0].values.size() == 3, "三角形の3指標を維持")
-		var insights: Control = desk.summary_analysis.find_child("RadarInsights", true, false)
+		var insights: Control = desk.summary_screen.analysis.find_child(
+			"RadarInsights",
+			true,
+			false,
+		)
 		check(
 			insights.get_global_rect().position.x >= radars[0].get_global_rect().end.x + 12,
 			"図の右に余白を空けて分析を配置",
 		)
 		check(
-			insights.get_global_rect().end.x <= desk.summary_analysis.get_global_rect().end.x,
+			insights.get_global_rect().end.x <= desk.summary_screen.analysis.get_global_rect().end.x,
 			"分析文が右にはみ出さない",
 		)
 		check(
 			texts(insights).contains("根拠をそろえる") and texts(insights).contains("問"),
 			"右側に各指標と対象件数を表示",
 		)
-		desk.summary_analysis.ensure_control_visible(radars[0])
+		desk.summary_screen.analysis.ensure_control_visible(radars[0])
 		for i in 2:
 			await process_frame
 		check(
-			radars[0].get_global_rect().end.y <= desk.summary_analysis.get_global_rect().end.y + 1,
+			radars[0].get_global_rect().end.y
+			<= desk.summary_screen.analysis.get_global_rect().end.y + 1,
 			"レーダー全体にスクロールで到達できる",
 		)
 		for caption in radars[0].captions:
@@ -426,46 +435,51 @@ func run() -> void:
 		check(radars[0].size.y <= 270 and Radar.RADIUS > 76, "高さの増加を抑えつつ三角形自体を大きくする")
 		check(radars[0].captions[2].text.contains("根拠をそろえる"), "確認行動を分かりやすい項目名で表示")
 	check(
-		desk.summary_analysis.get_h_scroll_bar().max_value <= desk.summary_analysis.size.x,
+		desk.summary_screen.analysis.get_h_scroll_bar().max_value
+		<= desk.summary_screen.analysis.size.x,
 		"横方向へのはみ出しがない",
 	)
-	check(not texts(desk.summary_analysis).contains("1問平均"), "時間・調査回数の平均表示を削除")
+	check(not texts(desk.summary_screen.analysis).contains("1問平均"), "時間・調査回数の平均表示を削除")
 	check(
-		texts(desk.summary_analysis).contains("調査回数")
-		and not texts(desk.summary_analysis).contains("調査操作"),
+		texts(desk.summary_screen.analysis).contains("調査回数")
+		and not texts(desk.summary_screen.analysis).contains("調査操作"),
 		"調査回数の見出しに統一",
 	)
-	check(not texts(desk.summary_analysis).contains("今回のスタイル"), "スタイル右上の補足表示を削除")
-	var time_scale_label: Label = desk.summary_analysis.find_child("TimeScaleLabel", true, false)
+	check(not texts(desk.summary_screen.analysis).contains("今回のスタイル"), "スタイル右上の補足表示を削除")
+	var time_scale_label: Label = desk.summary_screen.analysis.find_child(
+		"TimeScaleLabel",
+		true,
+		false,
+	)
 	check(time_scale_label.get_line_count() == 1, "時間の目盛りは1行で読み取れ、カードを縦に押し広げない")
-	for link in desk.summary_category_links:
+	for link in desk.summary_screen.category_links:
 		check(
 			link.tooltip_text.contains("正答率") and link.tooltip_text.contains("クリック")
 			and not link.tooltip_text.contains("参考"),
 			"少数の分野も同じ形式のツールチップを表示",
 		)
-		check(link.size.x >= desk.summary_analysis.size.x * 0.9, "分野別正答率も全幅で配置")
-		desk.summary_analysis.ensure_control_visible(link)
+		check(link.size.x >= desk.summary_screen.analysis.size.x * 0.9, "分野別正答率も全幅で配置")
+		desk.summary_screen.analysis.ensure_control_visible(link)
 		for i in 2:
 			await process_frame
 		check(
-			link.get_global_rect().end.y <= desk.summary_analysis.get_global_rect().end.y + 1,
+			link.get_global_rect().end.y <= desk.summary_screen.analysis.get_global_rect().end.y + 1,
 			"分野別グラフへスクロールで到達できる",
 		)
-	desk.summary_analysis.scroll_vertical = 0
+	desk.summary_screen.analysis.scroll_vertical = 0
 	for i in 2:
 		await process_frame
-	desk.summary_analysis.grab_focus()
+	desk.summary_screen.analysis.grab_focus()
 	var page := InputEventKey.new()
 	page.keycode = KEY_PAGEDOWN
 	page.pressed = true
 	Input.parse_input_event(page)
 	for i in 5:
 		await process_frame
-	check(desk.summary_analysis.scroll_vertical > 0, "キーボードでも下部の分析へスクロールできる")
+	check(desk.summary_screen.analysis.scroll_vertical > 0, "キーボードでも下部の分析へスクロールできる")
 	page.pressed = false
 	Input.parse_input_event(page)
-	check(desk.summary_category_links.size() > 0, "出題分野だけ復習リンクを表示")
+	check(desk.summary_screen.category_links.size() > 0, "出題分野だけ復習リンクを表示")
 	check(HistoryStore.validate(desk.completed_snapshot).is_empty(), "追加記録を含む履歴がスキーマに適合")
 	var snapshot: Dictionary = desk.completed_snapshot.duplicate(true)
 	check(Analysis.analyze(snapshot).unknown_level == 0, "既存教材の難易度と整合")
@@ -493,19 +507,22 @@ func run() -> void:
 	independent_shift.decide(initial_only.ground_truth)
 	check(not independent_shift.records[0].investigation_required, "代替証拠に初期情報がある場合も除外")
 	var expected: Dictionary = snapshot.records[0]
-	desk.summary_category_links[0].pressed.emit()
-	check(desk.summary_review.visible, "分野別グラフのクリックから復習画面へ移動")
-	desk._select_summary_tab(1, expected.category)
-	check(desk.summary_review.visible and not desk.summary_analysis.visible, "分野から振り返りへ切替")
-	check(desk.summary_review.get_parsed_text().contains(expected.id), "選択分野の問題を表示")
+	desk.summary_screen.category_links[0].pressed.emit()
+	check(desk.summary_screen.review.visible, "分野別グラフのクリックから復習画面へ移動")
+	desk.summary_screen.select_tab(1, expected.category)
+	check(
+		desk.summary_screen.review.visible and not desk.summary_screen.analysis.visible,
+		"分野から振り返りへ切替",
+	)
+	check(desk.summary_screen.review.get_parsed_text().contains(expected.id), "選択分野の問題を表示")
 	for record in snapshot.records:
 		if record.category != expected.category:
-			check(not desk.summary_review.get_parsed_text().contains(record.id), "他の分野を絞込")
-	desk.summary_tabs[1].pressed.emit()
+			check(not desk.summary_screen.review.get_parsed_text().contains(record.id), "他の分野を絞込")
+	desk.summary_screen.tabs[1].pressed.emit()
 	check(
 		snapshot.records.all(
 			func(r):
-				return desk.summary_review.get_parsed_text().contains(r.id),
+				return desk.summary_screen.review.get_parsed_text().contains(r.id),
 		),
 		"振り返りタブで全件に戻す",
 	)
@@ -517,42 +534,44 @@ func run() -> void:
 	desk._display_summary(review_snapshot, true)
 	for i in 5:
 		await process_frame
-	check(is_instance_valid(desk.summary_advice_link), "改善対象があれば該当問題の復習ボタンを表示")
-	if is_instance_valid(desk.summary_advice_link):
-		desk.summary_advice_link.grab_focus()
+	check(is_instance_valid(desk.summary_screen.advice_link), "改善対象があれば該当問題の復習ボタンを表示")
+	if is_instance_valid(desk.summary_screen.advice_link):
+		desk.summary_screen.advice_link.grab_focus()
 		for i in 3:
 			await process_frame
 		check(
-			desk.summary_advice_link.get_global_rect().end.y
-			<= desk.summary_analysis.get_global_rect().end.y + 1,
+			desk.summary_screen.advice_link.get_global_rect().end.y
+			<= desk.summary_screen.analysis.get_global_rect().end.y + 1,
 			"復習ボタンへフォーカスするとスクロール追従",
 		)
-		desk.summary_advice_link.pressed.emit()
+		desk.summary_screen.advice_link.pressed.emit()
 		check(
-			desk.summary_review.visible
-			and desk.summary_review.get_parsed_text().contains(review_snapshot.records[0].id),
+			desk.summary_screen.review.visible
+			and desk.summary_screen.review.get_parsed_text().contains(review_snapshot.records[0].id),
 			"アドバイスから該当する問題へ移動",
 		)
 		for record in review_snapshot.records.slice(1):
 			check(
-				not desk.summary_review.get_parsed_text().contains(record.id),
+				not desk.summary_screen.review.get_parsed_text().contains(record.id),
 				"関係のない正解問題を復習リンクに混ぜない",
 			)
-	desk.summary_tabs[1].pressed.emit()
+	desk.summary_screen.tabs[1].pressed.emit()
 	check(
-		review_snapshot.records.all(
+		review_snapshot
+		.records
+		.all(
 			func(r):
-				return desk.summary_review.get_parsed_text().contains(r.id),
+				return desk.summary_screen.review.get_parsed_text().contains(r.id),
 		),
 		"該当問題の復習後も全件へ戻せる",
 	)
-	desk.summary_tabs[0].pressed.emit()
+	desk.summary_screen.tabs[0].pressed.emit()
 	check(
-		desk.summary_analysis.visible and desk.summary_tabs.size() == 2
-		and desk.summary_tabs[0].text == "分析",
+		desk.summary_screen.analysis.visible and desk.summary_screen.tabs.size() == 2
+		and desk.summary_screen.tabs[0].text == "分析",
 		"分析・振り返りの2タブに戻す",
 	)
-	var analysis_text := texts(desk.summary_analysis)
+	var analysis_text := texts(desk.summary_screen.analysis)
 	for removed in ["詳しい数値", "良かった点", "次に伸ばせる点", "次の勤務で試すこと", "外周100", "分野から復習", "今回の出題範囲での評価"]:
 		check(not analysis_text.contains(removed), "削除した表示が残らない：" + removed)
 	check(analysis_text.contains("アドバイス"), "助言の見出しをアドバイスに統一")
@@ -562,20 +581,20 @@ func run() -> void:
 	desk.library.cases.clear()
 	desk._display_summary(snapshot, true)
 	check(
-		texts(desk.summary_analysis).contains("セキュリティチャレンジャー")
-		and not texts(desk.summary_analysis).contains("判定保留"),
+		texts(desk.summary_screen.analysis).contains("セキュリティチャレンジャー")
+		and not texts(desk.summary_screen.analysis).contains("判定保留"),
 		"教材がなくても古い履歴をセキュリティチャレンジャーとして表示",
 	)
 	check(
-		texts(desk.summary_analysis).contains("判断力・確認力")
-		and not texts(desk.summary_analysis).contains("判断と確認"),
+		texts(desk.summary_screen.analysis).contains("判断力・確認力")
+		and not texts(desk.summary_screen.analysis).contains("判断と確認"),
 		"図の見出しを判断力・確認力へ変更",
 	)
-	check(desk.summary_home.text == "勤務履歴へ戻る", "履歴の戻り先を維持")
+	check(desk.summary_screen.home.text == "勤務履歴へ戻る", "履歴の戻り先を維持")
 	snapshot.feedback = { "show_expected": false, "show_reason": false }
 	desk._display_summary(snapshot, true)
-	var visible_text := texts(desk.summary_analysis)
-	check(radar_nodes(desk.summary_analysis).is_empty(), "正解非表示設定では判定内訳をレーダーからも明かさない")
+	var visible_text := texts(desk.summary_screen.analysis)
+	check(radar_nodes(desk.summary_screen.analysis).is_empty(), "正解非表示設定では判定内訳をレーダーからも明かさない")
 	check(
 		not visible_text.contains("危険なものを許可") and not visible_text.contains("今回の審査スタイル")
 		and not visible_text.contains("次に意識"),
@@ -587,10 +606,10 @@ func run() -> void:
 	]:
 		snapshot.feedback = feedback
 		desk._display_summary(snapshot, true)
-		var all_text := texts(desk.summary_analysis)
+		var all_text := texts(desk.summary_screen.analysis)
 		check(
 			not all_text.contains("到達レベル") and not all_text.contains("判定の根拠")
-			and not is_instance_valid(desk.summary_advice_link),
+			and not is_instance_valid(desk.summary_screen.advice_link),
 			"正解または解説非表示ならプロ級条件・助言の復習リンクからも漏らさない",
 		)
 	var empty_scroll := ScrollContainer.new()

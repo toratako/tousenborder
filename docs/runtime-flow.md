@@ -20,20 +20,27 @@
 
 | 変更箇所 | 参照先 |
 | --- | --- |
-| ディレクトリ・ZIP・単独JSONの読込、容量・パス制限 | [content_source.gd](../scripts/core/content_source.gd) |
-| 読込元単位の検証・登録・絞込 | [problem_library.gd](../scripts/core/problem_library.gd) |
-| Pack・章参照、追加教材の保存 | [pack_loader.gd](../scripts/core/pack_loader.gd)、[content_import_store.gd](../scripts/core/content_import_store.gd) |
-| Schemaと意味検証、実行時データへの変換 | [content_schema.gd](../scripts/core/content_schema.gd)、[problem_loader.gd](../scripts/core/problem_loader.gd) |
-| 表示テンプレート・入力の接続、到達性・必要証拠 | [information.gd](../scripts/core/information.gd)、[investigation_inputs.gd](../scripts/core/investigation_inputs.gd) |
-| 勤務・時計・判定・記録、模擬結果 | [shift.gd](../scripts/core/shift.gd)、[tool_runner.gd](../scripts/core/tool_runner.gd) |
-| 部品・操作状態の所有、部品生成・配置 | [desk.gd](../scripts/ui/desk.gd)、[desk_layout.gd](../scripts/ui/desk_layout.gd) |
-| テーマ、カード、情報・スタンプのD&D | [cyber_theme.gd](../scripts/ui/cyber_theme.gd)、[draggable_card.gd](../scripts/ui/draggable_card.gd)、[information_token.gd](../scripts/ui/information_token.gd)、[tool_input.gd](../scripts/ui/tool_input.gd)、[stamp_tool.gd](../scripts/ui/stamp_tool.gd) |
+| ディレクトリ・ZIP・単独JSONの読込、容量・パス制限 | [content_source.gd](../src/content/content_source.gd) |
+| 読込元単位の検証・登録・絞込 | [problem_library.gd](../src/content/problem_library.gd) |
+| Pack・章参照、追加教材の保存 | [pack_loader.gd](../src/content/pack_loader.gd)、[content_import_store.gd](../src/persistence/content_import_store.gd) |
+| Schemaと意味検証、実行時データへの変換 | [content_schema.gd](../src/validation/content_schema.gd)、[problem_loader.gd](../src/content/problem_loader.gd) |
+| 表示テンプレート・入力の接続、到達性・必要証拠 | [information.gd](../src/domain/information.gd)、[investigation_inputs.gd](../src/domain/investigation_inputs.gd) |
+| 案件ID・調査OSの共通ルール | [problem_context.gd](../src/domain/problem_context.gd)。検証と実行から参照し、ローダ・実行器には依存しない |
+| 勤務・時計・判定・記録、模擬結果 | [inspection_shift.gd](../src/domain/inspection_shift.gd)、[tool_runner.gd](../src/domain/tool_runner.gd) |
+| 画面遷移、サービスの接続、勤務完了時の保存 | [game.gd](../src/app/game.gd) |
+| カードの寿命・情報選択・調査・押印 | [inspection_workspace.gd](../src/ui/inspection/inspection_workspace.gd)。D&D部品も同じディレクトリ |
+| 出題選択・教材追加、履歴一覧 | [start_screen.gd](../src/ui/screens/start_screen.gd)、[history_screen.gd](../src/ui/screens/history_screen.gd) |
+| 結果の表示・タブ・復習リンク | [summary_screen.gd](../src/ui/results/summary_screen.gd)、[分析の索引](result-analysis.md) |
+| 遊び方・規則・用語 | [help/](../src/ui/help/) |
+| 共通の装飾・配置補助 | [game_theme.gd](../src/ui/shared/game_theme.gd)、[screen_layout.gd](../src/ui/shared/screen_layout.gd) |
 
-画面ごとのクラス階層や別の状態管理は設けません。カードに正解・採点データを渡さず、UIで表示項目の意味を推測しません。前面化は同じ親の最後の子へ移し、描画順と入力順を揃えます。Referenceの再表示は再利用、Tool結果の再表示は再調査です。
+実行コードは `src/`、開発用エントリーポイントは `scripts/`。`domain/` は教材読込・保存・UIに依存せず、`app/` がサービスと画面を接続します。画面は自分の部品・表示状態を所有し、親への要求はシグナルで通知します。部品生成ヘルパーへ親画面全体を渡さないこと。依存方向と循環は [test_module_boundaries.py](../tests/test_module_boundaries.py) で検証します。
 
-対象は左に固定し、押印はD&Dのみ。位置復帰・三本線メニュー・入力トレー・資料一覧・比較配置・記録ボタン・ログ専用画面・下部説明欄・対象イラストは設けません。メニューはESC。寸法・伸縮は `desk_layout.gd` と [test_content_sizing.gd](../tests/test_content_sizing.gd)、停止・復帰・古い操作の拒否は [test_ui.gd](../tests/test_ui.gd) / [test_interaction.gd](../tests/test_interaction.gd) を参照。
+勤務状態の正本は `InspectionShift`。カードに正解・採点データを渡さず、UIで表示項目の意味を推測しません。前面化は同じ親の最後の子へ移し、描画順と入力順を揃えます。Referenceの再表示は再利用、Tool結果の再表示は再調査です。押印待機と外部照会の確定では、案件変更前の操作を世代番号で拒否します。
 
-遊び方の画像は `assets/how_to/`、順序は `desk.gd` の `HOW_TO_SLIDES`。UI変更時の再生成は描画環境で `godot --path . --script tests/capture_how_to.gd` → `python3 scripts/build_how_to_slides.py`（ImageMagick必須）→ Godotのインポート。切り抜き座標は生成スクリプトで管理します。
+対象は左に固定し、押印はD&Dのみ。位置復帰・三本線メニュー・入力トレー・資料一覧・比較配置・記録ボタン・ログ専用画面・下部説明欄・対象イラストは設けません。メニューはESC。寸法・伸縮は `inspection_workspace.gd` と [test_content_sizing.gd](../tests/test_content_sizing.gd)、停止・復帰・古い操作の拒否は [test_ui.gd](../tests/test_ui.gd) / [test_interaction.gd](../tests/test_interaction.gd) を参照。
+
+遊び方の画像は `assets/how_to/`、順序は [how_to_panel.gd](../src/ui/help/how_to_panel.gd) の `HOW_TO_SLIDES`。UI変更時の再生成は描画環境で `godot --path . --script tests/capture_how_to.gd` → `python3 scripts/build_how_to_slides.py`（ImageMagick必須）→ Godotのインポート。切り抜き座標は生成スクリプトで管理します。
 
 ## 教材の境界
 

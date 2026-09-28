@@ -101,4 +101,4 @@ static func load_value(value: Variant, origin: Dictionary = { }) -> Dictionary:
 
 
 static func identity(item: Dictionary) -> String:
-	return item.get("key", item.id)
+	return ProblemContext.identity(item)

@@ -4,17 +4,15 @@ extends RefCounted
 
 
 static func investigation_environment(target: Dictionary) -> String:
-	var platform: String = target.platform
-	return "linux" if platform == "common" else platform
+	return ProblemContext.investigation_environment(target)
 
 
 static func supports_target(tool: Dictionary, target: Dictionary) -> bool:
-	var environments: Array = tool.get("environments", [])
-	return environments.is_empty() or investigation_environment(target) in environments
+	return ProblemContext.supports_target(tool, target)
 
 
 func run(tool: Dictionary, target: Dictionary, input: Dictionary = { }) -> Dictionary:
-	if tool.get("case_id", "") != ProblemLoader.identity(target):
+	if tool.get("case_id", "") != ProblemContext.identity(target):
 		return { "ok": false, "output": "この案件の資料ではありません。" }
 	if not supports_target(tool, target):
 		return { "ok": false, "output": "この調査OSには対応していません。" }

@@ -15,7 +15,7 @@ func _run() -> void:
 		desk.shift.start(cases)
 		for frame in range(8):
 			await process_frame
-		for button in desk.tool_buttons:
+		for button in desk.workspace.tool_buttons:
 			if not button.visible:
 				continue
 			if (

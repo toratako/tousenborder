@@ -16,12 +16,12 @@ func _initialize() -> void:
 
 func submit_external(desk, item: Dictionary) -> void:
 	var tool: Dictionary = Fixtures.resources(item, "external_references")[0]
-	var button: ToolInput = desk.tool_buttons.filter(
+	var button: ToolInput = desk.workspace.tool_buttons.filter(
 		func(b):
 			return b.tool.id == tool.id,
 	)[0]
 	var input: Dictionary = { }
-	for card in desk.cards:
+	for card in desk.workspace.cards:
 		for token in card.tokens:
 			if Information.accepts(tool, token.payload()):
 				input = token.payload()
@@ -35,7 +35,7 @@ func submit_external(desk, item: Dictionary) -> void:
 	var elapsed: float = desk.shift.elapsed_seconds
 	desk._process(1)
 	check(desk.shift.elapsed_seconds == elapsed, "送信確認中は計測停止")
-	desk.external_send.pressed.emit()
+	desk.external_preview.send_button.pressed.emit()
 	check(
 		not desk.external_preview.visible and desk.shift.observations.size() == before + 1,
 		"確認後に調査を記録",
@@ -68,10 +68,10 @@ func _run() -> void:
 		check(desk.shift.records.is_empty() and desk.shift.score() == 0, "経過時間は判定に影響しない")
 		for case in cases:
 			check(desk.shift.decide(case.ground_truth), "調査後に判定可能")
-			desk.next.pressed.emit()
+			desk.audit_overlay.next_button.pressed.emit()
 		check(desk.shift.finished(), "全案件の判定後に終了")
-		check(desk.summary_stats.text.contains("不適切な調査 1件"), "不適切な調査を集計")
-		var review: String = desk.summary_review.get_parsed_text()
+		check(desk.summary_screen.stats.text.contains("不適切な調査 1件"), "不適切な調査を集計")
+		var review: String = desk.summary_screen.review.get_parsed_text()
 		check(review.count("不適切な利用") == (0 if hide_reason else 1), "調査所見は表示設定に従い一度だけ表示")
 		check(not review.contains("正しい判定"), "正解表示設定を保持")
 		check(not review.substr(review.find(future.title)).contains("不適切な利用"), "他の案件に調査所見を転記しない")
@@ -90,7 +90,7 @@ func _run() -> void:
 	submit_external(desk, judged_item)
 	check(desk.shift.decide(judged_item.ground_truth), "判定済みの比較用案件を記録")
 	check(desk.shift.score() == 1 and desk.shift.unsafe_investigations() == 1, "判定直後も調査は一件")
-	desk.next.pressed.emit()
+	desk.audit_overlay.next_button.pressed.emit()
 	desk._process(1)
 	check(
 		desk.shift.records.size() == 1 and desk.shift.score() == 1
@@ -98,8 +98,8 @@ func _run() -> void:
 		"次の案件でも二重計上しない",
 	)
 	check(desk.shift.decide(future.ground_truth) and desk.shift.advance(), "全案件を完了")
-	check(desk.summary_review.get_parsed_text().count("不適切な利用") == 1, "判定済み所見は一度だけ表示")
-	desk.summary_restart.pressed.emit()
+	check(desk.summary_screen.review.get_parsed_text().count("不適切な利用") == 1, "判定済み所見は一度だけ表示")
+	desk.summary_screen.restart.pressed.emit()
 	check(
 		desk.shift.observations.is_empty() and desk.shift.records.is_empty()
 		and desk.shift.unsafe_investigations() == 0 and desk.shift.elapsed_seconds == 0,

@@ -42,7 +42,7 @@ static func reachable(item: Dictionary, without_external := false) -> Dictionary
 	var pending: Array = item.resources.filter(
 		func(resource):
 			return (
-				ToolRunner.supports_target(resource, item)
+				ProblemContext.supports_target(resource, item)
 				and (not without_external or resource.kind != "external_references")
 			),
 	)
@@ -75,7 +75,7 @@ static func reachable(item: Dictionary, without_external := false) -> Dictionary
 static func traits(item: Dictionary) -> Dictionary:
 	var kinds: Array[String] = []
 	for resource in item.resources:
-		if ToolRunner.supports_target(resource, item) and resource.kind not in kinds:
+		if ProblemContext.supports_target(resource, item) and resource.kind not in kinds:
 			kinds.append(resource.kind)
 	var method := "initial" if kinds.is_empty() else "external" if "external_references" in kinds else "tools" if "tools" in kinds else "references"
 	var internal := reachable(item, true)

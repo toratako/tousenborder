@@ -35,7 +35,7 @@
 
 ## 資料と情報の接続
 
-資料は `resources` に置き、`kind` は `tools / references / external_references`。`section` は画面のグループ名で、Packに登録不要。調査形式と外部照会の必須性は [investigation_inputs.gd](../scripts/core/investigation_inputs.gd) が導出する。
+資料は `resources` に置き、`kind` は `tools / references / external_references`。`section` は画面のグループ名で、Packに登録不要。調査形式と外部照会の必須性は [investigation_inputs.gd](../src/domain/investigation_inputs.gd) が導出する。
 
 - 初期情報は `initial.information`、再利用する結果は `resource.result.information`。
 - `input_bindings` は `{ "source": "資料IDまたはinitial_information", "id": "情報ID" }`。入力型は `accepted_information_types`。同型でも別の情報・未取得の出力は渡せない。
@@ -60,7 +60,7 @@ packs/story/chapters/01.json
 
 タイトルの「問題ZIP / JSONを追加」でZIPまたは単独のProblem JSONを読み込む。全体の検証・保存成功後に登録し、無効な読込元があっても他の教材は維持する。保存先は `user://content/`、内容のSHA-256が識別子。同じ内容の再追加は重複せず、内容変更は別の読込元になる。削除UIは未実装で、不要な教材はアプリ終了後に保存先から削除する。
 
-ZIPはJSONとディレクトリのみ、store/deflateに対応する。暗号化・分割・ZIP64・特殊ファイルは対象外。容量上限は [ContentSource](../scripts/core/content_source.gd) の `MAX_*`。教材領域へ展開せずに読む。検証は [test_imports.gd](../tests/test_imports.gd)。
+ZIPはJSONとディレクトリのみ、store/deflateに対応する。暗号化・分割・ZIP64・特殊ファイルは対象外。容量上限は [ContentSource](../src/content/content_source.gd) の `MAX_*`。教材領域へ展開せずに読む。検証は [test_imports.gd](../tests/test_imports.gd)。
 
 ```sh
 godot --headless --path . --script scripts/validate_content.gd -- /path/to/content.zip
@@ -69,4 +69,4 @@ python3 scripts/build_problem_catalog.py --source /path/to/content.zip --json-ou
 
 ## 検証・索引
 
-[ProblemLoader](../scripts/core/problem_loader.gd) が構造・意味検証の共通入口。[問題一覧](problem-catalog.md) と `build/catalog/problems.json` は生成物で、ゲームは依存しない。`--check` はMarkdownを常に、JSONは存在する場合だけ照合する。責務の索引は [実行時の処理](runtime-flow.md#画面と責務)、用語は [学習支援](learning-support.md)。
+[ProblemLoader](../src/content/problem_loader.gd) が構造・意味検証の共通入口。[問題一覧](problem-catalog.md) と `build/catalog/problems.json` は生成物で、ゲームは依存しない。`--check` はMarkdownを常に、JSONは存在する場合だけ照合する。責務の索引は [実行時の処理](runtime-flow.md#画面と責務)、用語は [学習支援](learning-support.md)。

@@ -19,7 +19,7 @@ func start(items: Array[Dictionary]) -> void:
 	started_at = Time.get_unix_time_from_system()
 	cases = items.duplicate(true)
 	for item in cases:
-		item.investigation_environment = ToolRunner.investigation_environment(item)
+		item.investigation_environment = ProblemContext.investigation_environment(item)
 	elapsed_seconds = 0.0
 	index = 0
 	records.clear()
@@ -68,11 +68,11 @@ func inspect(tool: Dictionary, input: Dictionary = { }) -> Dictionary:
 
 func decline_external(tool: Dictionary, input: Dictionary = { }) -> bool:
 	if (
-		finished() or judged or tool.get("case_id", "") != ProblemLoader.identity(current())
+		finished() or judged or tool.get("case_id", "") != ProblemContext.identity(current())
 		or tool.get("kind", "") != "external_references"
 	):
 		return false
-	if not ToolRunner.supports_target(tool, current()):
+	if not ProblemContext.supports_target(tool, current()):
 		return false
 	if (
 		not tool.get("accepted_information_types", []).is_empty()
@@ -116,7 +116,7 @@ func decide(verdict: String) -> bool:
 			"method": current().traits.method,
 			"source_id": current().source_id,
 			"definition_hash": current().definition_hash,
-			"investigation_environment": ToolRunner.investigation_environment(current()),
+			"investigation_environment": ProblemContext.investigation_environment(current()),
 			"correct": verdict == current().ground_truth,
 			"ground_truth": current().ground_truth,
 			"explanation": current().explanation,
@@ -210,7 +210,7 @@ func score() -> int:
 
 
 func _owns_information(input: Dictionary) -> bool:
-	if input.get("case_id", "") != ProblemLoader.identity(current()):
+	if input.get("case_id", "") != ProblemContext.identity(current()):
 		return false
 	var candidates: Array = current().get("information", []).duplicate(true)
 	for observation in observations:

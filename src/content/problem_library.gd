@@ -149,7 +149,7 @@ func select_cases(
 		if not method.is_empty() and item.traits.method != method:
 			continue
 		var selected: Dictionary = item.duplicate(true)
-		selected.investigation_environment = ToolRunner.investigation_environment(item)
+		selected.investigation_environment = ProblemContext.investigation_environment(item)
 		result.append(selected)
 	return result
 
