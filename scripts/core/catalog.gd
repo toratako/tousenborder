@@ -3,7 +3,7 @@ extends RefCounted
 ## Schemaと問題間の整合性を検証し、検証が完了した教材だけを公開する。
 
 const DEFAULT_PACK := "res://data/packs/learning.json"
-const DIFFICULTIES := {"very_beginner": "超初級", "beginner_reference": "初級：Referenceのみ", "beginner": "初級：Tool", "beginner_external": "初級：External Referenceあり", "intermediate": "中級", "advanced": "上級"}
+const DIFFICULTIES := {"very_beginner": "入門", "beginner_reference": "Referenceのみ", "beginner": "Tool", "beginner_external": "External Referenceあり", "applied": "応用"}
 const PLATFORMS := {"windows": "Windows", "linux": "Linux", "common": "環境共通"}
 const RESOURCE_GROUPS := {
 	"tools": {"id": "tools", "label": "Tools", "kind": "tools"},

@@ -27,6 +27,14 @@ func _initialize() -> void:
 		quit(1)
 		return
 	schema = ContentSchema.read_schema(ContentSchema.PROBLEM)
+	var applied: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/problems/PROC-WIN-CLICKFIX.json"))
+	var applied_catalog := ContentCatalog.new()
+	check(applied_catalog.load_pack(), "応用の検証用Pack")
+	check(ProblemData.normalize(applied.duplicate(true), applied_catalog, schema).is_empty(), "出典付き実攻撃を応用として受け入れる")
+	for change in [{"scenario_type": "standard"}, {"inspired_by": " "}, {"sources": []}]:
+		var invalid := applied.duplicate(true)
+		invalid.merge(change, true)
+		check(not ProblemData.normalize(invalid, applied_catalog, schema).is_empty(), "実攻撃の根拠が欠ける応用を拒否する")
 	var beginner_examples := {
 		"beginner_reference": "PKG-NPM-LOCKED-DEPENDENCY",
 		"beginner": "FILE-LINUX-ELF-AS-DOCUMENT",
@@ -61,10 +69,10 @@ func _initialize() -> void:
 	var policy := {"id": "policy", "name": "受入れ形式", "content": "PDFのみ受け入れる。"}
 	visible.references = [policy]
 	visible.required_evidence = ["initial_information", "policy"]
-	check(ProblemData.normalize(visible, catalog, schema).is_empty(), "超初級でReferenceを必要証拠にできる")
+	check(ProblemData.normalize(visible, catalog, schema).is_empty(), "入門でReferenceを必要証拠にできる")
 	var reference_shift := InspectionShift.new()
 	reference_shift.start([visible])
-	check(reference_shift.missing_evidence() == ["policy"], "超初級でもReferenceは閲覧するまで未確認")
+	check(reference_shift.missing_evidence() == ["policy"], "入門でもReferenceは閲覧するまで未確認")
 	check(reference_shift.inspect(catalog.tools_for(visible)[0]).ok, "入力なしでReferenceを閲覧できる")
 	check(reference_shift.missing_evidence().is_empty(), "閲覧でReferenceの証拠が揃う")
 	var custom_catalog := Fixtures.catalog()
@@ -74,7 +82,7 @@ func _initialize() -> void:
 	visible.resources = {"policy_documents": [{"id": "policy", "name": "受入れ形式", "content": "PDFのみ受け入れる。"}]}
 	visible.evidence_alternatives = {"format_policy": {"label": "形式の規則", "any_of": ["policy"]}}
 	visible.required_evidence = ["format_policy"]
-	check(ProblemData.normalize(visible, custom_catalog, schema).is_empty(), "超初級で追加Referenceグループと代替証拠を使用できる")
+	check(ProblemData.normalize(visible, custom_catalog, schema).is_empty(), "入門で追加Referenceグループと代替証拠を使用できる")
 	for kind in ["tools", "external_references"]:
 		var source := raw("FIX-FILE") if kind == "tools" else raw("FIX-PRIVATE-FILE")
 		var resource: Dictionary = source[kind][0].duplicate(true)
@@ -87,8 +95,8 @@ func _initialize() -> void:
 				visible.resources = {"extra": [resource.duplicate(true)]}
 			else:
 				visible[kind] = [resource.duplicate(true)]
-			check(ContentSchema.check(visible, schema).is_empty(), "構造が有効な超初級の調査候補")
-			check(ProblemData.normalize(visible, custom_catalog, schema).contains("Referenceのみ"), "超初級のTool・External Referenceは追加グループでも拒否")
+			check(ContentSchema.check(visible, schema).is_empty(), "構造が有効な入門の調査候補")
+			check(ProblemData.normalize(visible, custom_catalog, schema).contains("Referenceのみ"), "入門のTool・External Referenceは追加グループでも拒否")
 	var item := raw("FIX-FILE")
 	item.initial_information_types.unknown = "file"
 	rejected(item, "未登録の初期情報型")

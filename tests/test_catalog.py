@@ -60,6 +60,23 @@ class CatalogTests(unittest.TestCase):
                         "Reason", "Learning Objective", "Real-world Inspiration"]:
             self.assertIn(heading, markdown)
 
+    def test_applied_selection_excludes_non_attack_cases(self):
+        pack = read_json(ROOT / "data/packs/learning.json")
+        cases = [read_json(resource_path(path)) for path in pack["problems"]]
+        self.assertFalse(any(p["level"] in ("intermediate", "advanced") for p in cases))
+        applied = [p for p in cases if p["level"] == "applied"]
+        self.assertEqual(len(applied), 11)
+        excluded = read_json(ROOT / "data/catalog/excluded.json")["reviews"]
+        self.assertEqual(len(excluded), 39)
+        self.assertTrue(set(excluded).isdisjoint(p["id"] for p in cases))
+        for item in applied:
+            self.assertEqual(item["scenario_type"], "real_world_inspired")
+            for field, invalid in [("scenario_type", "standard"), ("inspired_by", ""), ("sources", [])]:
+                invalid_item = copy.deepcopy(item)
+                invalid_item[field] = invalid
+                with self.subTest(problem=item["id"], field=field), self.assertRaises(ValueError):
+                    validate_authoring(invalid_item, pack)
+
     def test_rdap_queries_bind_the_actual_ip_or_registered_domain(self):
         pack = read_json(ROOT / "data/packs/learning.json")
         reviews = read_json(ROOT / "data/catalog/learning.json")["reviews"]
@@ -102,7 +119,7 @@ class CatalogTests(unittest.TestCase):
         item = read_json(ROOT / "data/problems/WEB-UNKNOWN-CAMPAIGN.json")
         pack = read_json(ROOT / "data/packs/learning.json")
         entries = validate_authoring(item, pack)
-        review = copy.deepcopy(read_json(ROOT / "data/catalog/learning.json")["reviews"][item["id"]])
+        review = copy.deepcopy(read_json(ROOT / "data/catalog/excluded.json")["reviews"][item["id"]])
         review["flow"][0]["resource_id"] = "nslookup"
         validate_review(item, entries, review)
         review["flow"] = [step for step in review["flow"] if step["resource_id"] != "official"]
@@ -112,6 +129,7 @@ class CatalogTests(unittest.TestCase):
     def test_review_flow_rejects_unsafe_or_unavailable_investigation(self):
         pack = read_json(ROOT / "data/packs/learning.json")
         reviews = read_json(ROOT / "data/catalog/learning.json")["reviews"]
+        reviews.update(read_json(ROOT / "data/catalog/excluded.json")["reviews"])
         for problem_id, resource in [("FILE-WIN-UNSIGNED-INTERNAL", "file_rep"),
                                      ("WEB-LINUX-DNS", "dig")]:
             with self.subTest(problem=problem_id):
@@ -162,9 +180,12 @@ class CatalogTests(unittest.TestCase):
                         build(ROOT / "data/packs/learning.json")
 
     def test_review_text_regenerates_and_markdown_preserves_literal_content(self):
-        source_path = ROOT / "data/problems/FILE-WIN-DOUBLE-EXTENSION.json"
+        source_path = ROOT / "data/problems/FILE-LINUX-KNOWN-HASH.json"
         review_path = ROOT / "data/catalog/learning.json"
         item = copy.deepcopy(read_json(source_path))
+        unsafe = copy.deepcopy(item["external_references"][0])
+        unsafe.update(id="unsafe_render_example", correct_usage=False, reason="送信不可の資料")
+        item["external_references"].append(unsafe)
         value = 'C:\\Temp\\_literal_ | <TRAINING-PLACEHOLDER>\n**text** [link](target)'
         item["initial_information"]["Render check"] = value
         reviews = copy.deepcopy(read_json(review_path))
@@ -178,7 +199,7 @@ class CatalogTests(unittest.TestCase):
             return read_json(path)
         with patch("build_problem_catalog.read_json", side_effect=reader):
             generated, markdown = build(ROOT / "data/packs/learning.json")
-        row = json.loads(generated)["problems"][0]
+        row = next(p for p in json.loads(generated)["problems"] if p["id"] == item["id"])
         self.assertEqual(row["initial_information"]["Render check"], value)
         self.assertEqual(row["overview"], "Changed review overview")
         self.assertEqual(row["review_notes"], "Review note for rendering test")

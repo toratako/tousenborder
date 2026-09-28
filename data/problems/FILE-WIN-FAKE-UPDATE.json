@@ -3,7 +3,7 @@
   "id": "FILE-WIN-FAKE-UPDATE",
   "category": "file",
   "platform": "windows",
-  "level": "intermediate",
+  "level": "applied",
   "ground_truth": "block",
   "title": "偽のソフトウェア更新",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",

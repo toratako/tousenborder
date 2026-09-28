@@ -3,7 +3,7 @@
   "id": "PROC-WIN-LOLBIN",
   "category": "process",
   "platform": "windows",
-  "level": "intermediate",
+  "level": "applied",
   "ground_truth": "block",
   "title": "LOLBinによる外部HTA実行",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",

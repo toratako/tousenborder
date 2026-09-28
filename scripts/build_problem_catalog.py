@@ -14,8 +14,8 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
 LEVEL_LABELS = {
-    "very_beginner": "超初級", "beginner_reference": "初級：Referenceのみ", "beginner": "初級：Tool",
-    "beginner_external": "初級：External Referenceあり", "intermediate": "中級", "advanced": "上級",
+    "very_beginner": "入門", "beginner_reference": "Referenceのみ", "beginner": "Tool",
+    "beginner_external": "External Referenceあり", "applied": "応用", "intermediate": "応用", "advanced": "応用",
 }
 GROUP_KINDS = {"tools": "tools", "references": "references", "external_references": "external_references"}
 
@@ -120,6 +120,12 @@ def validate_authoring(item: dict, pack: dict) -> list[tuple[str, dict]]:
     """Reject invalid authoring data before building runtime-relevant contracts."""
     validate_pack(pack)
     validate_schema(item, "problem")
+    if item["level"] == "applied" and (
+        item["scenario_type"] != "real_world_inspired"
+        or not item.get("inspired_by", "").strip()
+        or not item["sources"]
+    ):
+        raise ValueError(f"{item['id']}: applied requires a real-world attack, inspired_by and sources")
     if item["category"] not in {entry["id"] for entry in pack["categories"]}:
         raise ValueError(f"{item['id']}: unregistered category")
     groups = dict(GROUP_KINDS)
