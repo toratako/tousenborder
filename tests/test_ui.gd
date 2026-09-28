@@ -183,6 +183,8 @@ func _run() -> void:
 	await _escape()
 	assert(desk.summary_overlay.visible and desk.summary_restart.has_focus())
 	assert(desk.summary_review.get_parsed_text().contains(desk.shift.cases[0].title))
+	assert(desk.summary_restart.text == "同じ問題に再挑戦")
+	var first_session: String = desk.completed_snapshot.session_id
 	var previous_overlay = desk.summary_overlay
 	desk._refresh()
 	assert(desk.summary_overlay == previous_overlay)
@@ -211,7 +213,7 @@ func _run() -> void:
 	assert(desk.shift.finished())
 	desk._process(600)
 	assert(desk.elapsed_time.text == "100:00")
-	assert(desk.summary_title.text == "勤務結果")
+	assert(desk.summary_title.text == "再挑戦の結果" and desk.completed_snapshot.retry_of == first_session)
 	desk.summary_home.pressed.emit()
 	await process_frame
 	assert(desk.start_screen.visible and not desk.workspace.visible)

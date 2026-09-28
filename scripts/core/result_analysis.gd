@@ -24,7 +24,7 @@ static func analyze(snapshot: Dictionary) -> Dictionary:
 		"unsafe": 0, "failed": 0, "evaluated_operations": 0, "false_allow": 0, "false_block": 0, "expected_allow": 0, "expected_block": 0,
 		"eligible": 0, "eligible_complete": 0, "unknown_evidence": 0,
 		"elapsed_seconds": snapshot.get("elapsed_seconds", 0.0), "categories": {}, "levels": {},
-		"harder_correct": 0, "unknown_level": 0,
+		"harder_correct": 0, "unknown_level": 0, "is_retry": snapshot.has("retry_of"),
 		"review": {"unsafe": [], "false_allow": [], "incomplete": []}}
 	for id in CATEGORY_LABELS:
 		result.categories[id] = {"label": CATEGORY_LABELS[id], "answered": 0, "correct": 0, "errors": []}

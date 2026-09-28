@@ -367,6 +367,11 @@ func _retry_wrong_answers() -> void:
 	retry_source_id = summary_snapshot.session_id
 	_begin_shift(retry_cases)
 
+func _retry_same_cases() -> void:
+	retry_cases.assign(shift.cases)
+	retry_source_id = summary_snapshot.session_id
+	_start_shift()
+
 func _begin_shift(selected: Array[Dictionary]) -> void:
 	completed_snapshot.clear()
 	summary_from_history = false
@@ -748,7 +753,7 @@ func _show_summary() -> void:
 	for stamp in action_stamps:
 		stamp.hide()
 		stamp.disabled = true
-	tool_message.text = "勤務終了。案件を振り返るか、新しい勤務を開始してください。"
+	tool_message.text = "勤務終了。案件を振り返るか、同じ問題に再挑戦してください。"
 	summary_restart.grab_focus()
 
 func _display_summary(snapshot: Dictionary, from_history: bool) -> void:

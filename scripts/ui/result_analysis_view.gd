@@ -174,10 +174,10 @@ static func profile(parent: Node, data: Dictionary) -> void:
 	var column := section(parent, "")
 	column.add_theme_constant_override("separation", 8)
 	var basic: bool = data.level.reference or data.style.id == "pending" or data.level.id == "pending"
-	var label: String = "セキュリティチャレンジャー" if basic else data.style.label + " × " + data.level.label
+	var label: String = "復習者" if data.is_retry else ("セキュリティチャレンジャー" if basic else data.style.label + " × " + data.level.label)
 	var result_label := text(column, label, 32, Chrome.CYAN)
-	if not basic: result_label.tooltip_text = data.style.reason + "\n" + data.level.reason
-	text(column, "今回の判断と調査を振り返り、次の学習に役立てましょう。" if basic else data.description, 17)
+	if not basic and not data.is_retry: result_label.tooltip_text = data.style.reason + "\n" + data.level.reason
+	text(column, "今回の判断と調査を振り返り、次の学習に役立てましょう。" if basic or data.is_retry else data.description, 17)
 	text(column, data.scope, 15, MUTED)
 
 static func build(parent: ScrollContainer, data: Dictionary, feedback: Dictionary, open_category: Callable, open_review: Callable) -> Dictionary:

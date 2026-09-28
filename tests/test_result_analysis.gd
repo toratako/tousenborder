@@ -63,6 +63,14 @@ func check_profiles() -> void:
 		View.profile(panel, Analysis.analyze(profile_sample(count, count, count)))
 		check(texts(panel).contains("慎重型 × 実践級") and not texts(panel).contains("セキュリティチャレンジャー"), "5～9問でも通常のスタイルと級を表示し、プロ級にはしない")
 		panel.free()
+	for count in [1, 10]:
+		var retry := profile_sample(count, count, count)
+		retry.retry_of = "previous-session"
+		var panel := VBoxContainer.new()
+		View.profile(panel, Analysis.analyze(retry))
+		var display := texts(panel)
+		check(display.contains("復習者") and not display.contains("セキュリティチャレンジャー") and not display.contains(" × "), "再挑戦は件数や内部判定に関係なく復習者と表示")
+		panel.free()
 	for pair in [[5, "intuitive"], [6, "middle"], [7, "middle"], [8, "careful"]]:
 		check(Analysis.analyze(profile_sample(10, pair[0], 10)).style.id == pair[1], "確認率50・80％と中間の境界")
 	for pair in [[6, "beginner"], [7, "practice"]]:

@@ -357,8 +357,8 @@ static func build_summary_actions(desk) -> void:
 		desk.summary_home.pressed.connect(desk._back_to_history)
 		return
 	desk.summary_home.pressed.connect(desk._show_start_screen)
-	desk.summary_restart = Chrome.button(desk.summary, Rect2(662, 660, 308, 45), "新しい勤務を開始" if desk.retry_source_id.is_empty() else "同じ問題で再挑戦", PAPER)
-	desk.summary_restart.pressed.connect(desk._start_shift)
+	desk.summary_restart = Chrome.button(desk.summary, Rect2(662, 660, 308, 45), "同じ問題に再挑戦", PAPER)
+	desk.summary_restart.pressed.connect(desk._retry_same_cases)
 
 static func build_external_preview(desk) -> void:
 	desk.external_preview = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.9))
