@@ -111,16 +111,16 @@ func test_ui(cases: Array[Dictionary]) -> void:
 	)[0]
 	var external: Dictionary = Fixtures.resources(item, "external_references")[0]
 	var followup: Dictionary = Fixtures.resources(item, "external_references").back()
-	desk._inspect(hash_tool, input_for(desk.shift, hash_tool))
-	desk._inspect(external, input_for(desk.shift, external))
+	desk.workspace._inspect(hash_tool, input_for(desk.shift, hash_tool))
+	desk.workspace._inspect(external, input_for(desk.shift, external))
 	check(desk.external_preview.visible, "必須照会でも送信前確認を表示")
-	desk.external_skip.pressed.emit()
+	desk.external_preview.skip_button.pressed.emit()
 	check(desk.shift.missing_evidence() == [followup.id], "UIの見送りで証拠を取得しない")
 	for tool in [external, followup]:
-		desk._inspect(tool, input_for(desk.shift, tool))
+		desk.workspace._inspect(tool, input_for(desk.shift, tool))
 		check(desk.external_preview.visible, "後続照会も送信前確認を表示")
-		check(desk.external_preview_body.text.contains(tool.submission.warning), "注意事項は送信前確認に表示")
-		desk.external_send.pressed.emit()
+		check(desk.external_preview.body.text.contains(tool.submission.warning), "注意事項は送信前確認に表示")
+		desk.external_preview.send_button.pressed.emit()
 		var observation: Dictionary = desk.shift.observations.back()
 		check(not observation.output.contains(tool.submission.warning), "照会結果には送信前の注意事項を繰り返さない")
 		check(
@@ -132,7 +132,7 @@ func test_ui(cases: Array[Dictionary]) -> void:
 		)
 	check(desk.shift.missing_evidence().is_empty(), "UIから後続の外部証拠を取得")
 	desk.shift.decide(item.ground_truth)
-	check(desk.audit_body.text.contains(item.explanation), "回答後の解説")
+	check(desk.audit_overlay.body.text.contains(item.explanation), "回答後の解説")
 	desk.queue_free()
 	await process_frame
 	print("External evidence tests: %d failures" % failures)

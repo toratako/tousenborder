@@ -29,7 +29,7 @@ func available_input(shift: InspectionShift, tool: Dictionary) -> Dictionary:
 
 
 func ui_input(desk, tool: Dictionary) -> Dictionary:
-	for card in desk.cards:
+	for card in desk.workspace.cards:
 		for token in card.tokens:
 			if Information.accepts(tool, token.payload()):
 				return token.payload()
@@ -147,9 +147,12 @@ func test_environment_routes(library: ProblemLibrary) -> void:
 					check(result.ok, "OS別調査: " + os + "/" + item.id + "/" + tool.id)
 					if tool.id == "nslookup":
 						check(
-							result.output.contains("C:\\> nslookup") if investigation_os
-							== "windows" else result.output.contains("$ nslookup")
-							and not result.output.contains("C:\\>"),
+							(
+								result.output.contains("C:\\> nslookup")
+								if investigation_os == "windows"
+								else result.output.contains("$ nslookup")
+								and not result.output.contains("C:\\>")
+							),
 							"nslookup出力OS",
 						)
 					pending.erase(tool)
@@ -254,9 +257,11 @@ func _run() -> void:
 		)[0]
 		check(tool.has("platform_note"), "Tool固有の利用環境: " + tool_id)
 		check(
-			tool.platform_note.contains("Windows") if tool_id == "resolve_dnsname" else tool
-			.platform_note
-			.contains("Linux"),
+			(
+				tool.platform_note.contains("Windows")
+				if tool_id == "resolve_dnsname"
+				else tool.platform_note.contains("Linux")
+			),
 			"実際の利用環境: " + tool_id,
 		)
 	var dns: Dictionary = guide.filter(
@@ -273,32 +278,41 @@ func _run() -> void:
 	)
 	root.add_child(desk)
 	await process_frame
+	desk.start_screen.tool_guide_button.pressed.emit()
 	check(
-		desk._tool_description(dns).contains("Toolの主な利用環境: Windows")
-		and not desk._tool_description(dns).contains("教材の出題環境:"),
+		desk.tool_guide._tool_description(dns).contains("Toolの主な利用環境: Windows")
+		and not desk.tool_guide._tool_description(dns).contains("教材の出題環境:"),
 		"ガイドはToolの利用OSを表示",
 	)
-	check(desk._tool_description(capture).contains("Windows / Linux"), "Wiresharkの両対応を表示")
-	desk.tool_guide_button.pressed.emit()
 	check(
-		desk.tool_guide_tabs.size() == guide.size()
-		and not desk.tool_guide_body.text.contains("登録されているツールはありません"),
+		desk.tool_guide._tool_description(capture).contains("Windows / Linux"),
+		"Wiresharkの両対応を表示",
+	)
+	check(
+		desk.tool_guide.tabs.size() == guide.size()
+		and not desk.tool_guide.body.text.contains("登録されているツールはありません"),
 		"新教材のガイドを表示",
 	)
-	desk.tool_guide_close.pressed.emit()
+	desk.tool_guide.close_button.pressed.emit()
 	# Windowsで絞って開始しても、共通問題はLinuxのTool・入力制限を使う。
-	for selection in [desk.platform_select, desk.category_select, desk.difficulty_select]:
-		var value: String = "windows" if selection == desk.platform_select else (
-			"web" if selection == desk.category_select else "beginner"
+	for selection in [
+		desk.start_screen.platform_select,
+		desk.start_screen.category_select,
+		desk.start_screen.difficulty_select,
+	]:
+		var value: String = (
+			"windows"
+			if selection == desk.start_screen.platform_select
+			else ("web" if selection == desk.start_screen.category_select else "beginner")
 		)
 		for i in range(selection.item_count):
 			if selection.get_item_metadata(i) == value:
 				selection.select(i)
-	for i in desk.method_select.item_count:
-		if desk.method_select.get_item_metadata(i) == "tools":
-			desk.method_select.select(i)
-	desk._refresh_selection()
-	desk.start_button.pressed.emit()
+	for i in desk.start_screen.method_select.item_count:
+		if desk.start_screen.method_select.get_item_metadata(i) == "tools":
+			desk.start_screen.method_select.select(i)
+	desk.start_screen.refresh_selection()
+	desk.start_screen.start_button.pressed.emit()
 	var linux_web: Dictionary = desk.shift.current()
 	check(linux_web.id == "FIX-DNS", "画面の選択条件から共通Web問題を開始")
 	check(
@@ -310,12 +324,12 @@ func _run() -> void:
 		func(t):
 			return t.id == "resolve_dnsname",
 	)[0]
-	var linux_button: ToolInput = desk.tool_buttons.filter(
+	var linux_button: ToolInput = desk.workspace.tool_buttons.filter(
 		func(b):
 			return b.tool.id == "dig",
 	)[0]
 	check(
-		not desk.tool_buttons.any(
+		not desk.workspace.tool_buttons.any(
 			func(b):
 				return b.tool.id == "resolve_dnsname",
 		)
@@ -326,22 +340,25 @@ func _run() -> void:
 		func(t):
 			return t.id == "url_parse",
 	)[0]
-	desk._inspect(parse, available_input(desk.shift, parse))
+	desk.workspace._inspect(parse, available_input(desk.shift, parse))
 	var host := available_input(desk.shift, linux_button.tool)
 	var before_os: int = desk.shift.observations.size()
-	desk._inspect(windows_tool, host)
+	desk.workspace._inspect(windows_tool, host)
 	check(desk.shift.observations.size() == before_os, "直接UI呼び出しもOSを検証")
-	check(desk._can_stamp(desk.get_stamp(linux_web.ground_truth).payload()), "必要証拠が揃う前でも押印可能")
+	check(
+		desk.workspace._can_stamp(desk.workspace.get_stamp(linux_web.ground_truth).payload()),
+		"必要証拠が揃う前でも押印可能",
+	)
 	desk._show_start_screen()
-	desk.platform_select.select(0)
-	desk.category_select.select(0)
-	desk.difficulty_select.select(0)
-	desk.method_select.select(0)
-	desk.start_button.pressed.emit()
+	desk.start_screen.platform_select.select(0)
+	desk.start_screen.category_select.select(0)
+	desk.start_screen.difficulty_select.select(0)
+	desk.start_screen.method_select.select(0)
+	desk.start_screen.start_button.pressed.emit()
 	for item in library.cases:
 		check(desk.shift.current().id == item.id, "画面の出題順")
-		check(desk.target_card.title_label.text == "検査対象", "対象のタイトルを統一")
-		var pending_buttons: Array = desk.tool_buttons.filter(
+		check(desk.workspace.target_card.title_label.text == "検査対象", "対象のタイトルを統一")
+		var pending_buttons: Array = desk.workspace.tool_buttons.filter(
 			func(b):
 				return b.visible,
 		)
@@ -354,7 +371,7 @@ func _run() -> void:
 				if not tool.accepted_information_types.is_empty() and input.is_empty():
 					continue
 				var before: int = desk.shift.observations.size()
-				desk._select_information({ })
+				desk.workspace._select_information({ })
 				if not tool.accepted_information_types.is_empty():
 					check(
 						button.hint.visible and button.hint.text.contains(tool.input_hint),
@@ -366,7 +383,7 @@ func _run() -> void:
 						and not desk.external_preview.visible,
 						"全Toolでクリックのみでは結果を出さない",
 					)
-					var wrong: Dictionary = desk.target_card.tokens[0].payload()
+					var wrong: Dictionary = desk.workspace.target_card.tokens[0].payload()
 					button._drop_data(Vector2.ZERO, { "kind": "information", "information": wrong })
 					check(desk.shift.observations.size() == before, "不適切なドラッグは実行されない")
 					check(
@@ -382,7 +399,7 @@ func _run() -> void:
 							{ "kind": "information", "information": input },
 						)
 					else:
-						desk._select_information(input)
+						desk.workspace._select_information(input)
 						button.pressed.emit()
 				else:
 					button.pressed.emit()
@@ -392,52 +409,61 @@ func _run() -> void:
 						"確認前には調査しない",
 					)
 					check(
-						desk.external_preview_body.text.contains(Information.display(input.value)),
+						desk.external_preview.body.text.contains(Information.display(input.value)),
 						"選択した入力を送信前に確認",
 					)
 					check(
-						not desk.external_preview_body.text.contains(str(tool.result.content)),
+						not desk.external_preview.body.text.contains(str(tool.result.content)),
 						"実行前に調査結果を漏らさない",
 					)
 					check(
-						not desk._can_stamp(desk.get_stamp(item.ground_truth).payload()),
+						not desk
+						.workspace
+						._can_stamp(desk.workspace.get_stamp(item.ground_truth).payload()),
 						"確認中の判定を防ぐ",
 					)
 					var elapsed: float = desk.shift.elapsed_seconds
 					desk._process(1)
 					check(desk.shift.elapsed_seconds == elapsed, "確認文を読む間は時計停止")
 					if tool.id == "urlscan_private":
-						desk.external_skip.pressed.emit()
+						desk.external_preview.skip_button.pressed.emit()
 						check(desk.shift.observations.back().get("skipped", false), "UIの見送りを保存")
 					else:
-						desk.external_send.pressed.emit()
+						desk.external_preview.send_button.pressed.emit()
 					check(not desk.external_preview.visible, "確認画面を閉じる")
 				check(desk.shift.observations.size() == before + 1, "各資料につき調査1件")
-				check(desk.cards.back().card_data.title.begins_with(tool.label), "調査結果をカード表示")
+				check(
+					desk.workspace.cards.back().card_data.title.begins_with(tool.label),
+					"調査結果をカード表示",
+				)
 				pending_buttons.erase(button)
 				progress = true
 		check(pending_buttons.is_empty(), "UIの情報から全調査を実行可能: " + item.id)
 		# スタンプのドラッグ結果と同じ判定経路。アニメーション待ちだけ省略する。
-		check(desk._can_stamp(desk.get_stamp(item.ground_truth).payload()), "対象にスタンプを使用可能")
+		check(
+			desk.workspace._can_stamp(desk.workspace.get_stamp(item.ground_truth).payload()),
+			"対象にスタンプを使用可能",
+		)
 		desk.shift.decide(item.ground_truth)
-		check(desk.audit_body.text.contains(item.explanation), "UIに全問の解説")
+		check(desk.audit_overlay.body.text.contains(item.explanation), "UIに全問の解説")
 		if item.id == "FIX-PRIVATE-FILE":
 			check(
-				desk.shift.records.back().correct and desk.audit_body.text.contains("不適切な利用"),
+				desk.shift.records.back().correct
+				and desk.audit_overlay.body.text.contains("不適切な利用"),
 				"正解でも不適切なFile Uploadを明示",
 			)
 		if item.id == "FIX-PRIVATE-URL":
-			check(desk.audit_body.text.contains("外部送信を見送り"), "Token付きURLを送らなかった記録")
-		desk.next.pressed.emit()
+			check(desk.audit_overlay.body.text.contains("外部送信を見送り"), "Token付きURLを送らなかった記録")
+		desk.audit_overlay.next_button.pressed.emit()
 		await process_frame
 	check(
 		desk.shift.score() == library.cases.size() and desk.shift.unsafe_investigations() == 1,
 		"全件正解・不適切調査1件",
 	)
-	check(desk.summary_stats.text.contains("不適切な調査 1件"), "調査手段の集計")
+	check(desk.summary_screen.stats.text.contains("不適切な調査 1件"), "調査手段の集計")
 	check(
-		desk.summary_review.get_parsed_text().contains("不適切な利用")
-		and desk.summary_review.get_parsed_text().contains("外部送信を見送り"),
+		desk.summary_screen.review.get_parsed_text().contains("不適切な利用")
+		and desk.summary_screen.review.get_parsed_text().contains("外部送信を見送り"),
 		"一覧でも調査の適否を確認",
 	)
 	# 確認途中のリスタートが古い案件の資料を実行しないこと。
@@ -452,7 +478,7 @@ func _run() -> void:
 		func(t):
 			return t.id == "urlscan_private",
 	)[0]
-	desk._inspect(unsafe_tool, available_input(desk.shift, unsafe_tool))
+	desk.workspace._inspect(unsafe_tool, available_input(desk.shift, unsafe_tool))
 	desk._process(2)
 	check(desk.shift.elapsed_seconds == 0, "送信確認中は経過時間の計測を停止")
 	desk._start_shift()

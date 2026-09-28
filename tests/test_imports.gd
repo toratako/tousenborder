@@ -181,6 +181,9 @@ func _run() -> void:
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
+	desk.start_screen.tool_guide_button.pressed.emit()
+	var cached_guide: Control = desk.tool_guide
+	desk.tool_guide.close_button.pressed.emit()
 	var working_store: ContentImportStore = desk.import_store
 	desk.import_store = FailingStore.new(directory.path_join("failed"))
 	var before_import: int = desk.library.cases.size()
@@ -189,42 +192,51 @@ func _run() -> void:
 		desk.library.cases.size() == before_import and desk.library.packs.is_empty(),
 		"保存失敗ならUIの登録も変更しない",
 	)
+	check(desk.tool_guide == cached_guide, "保存失敗なら既存のツールガイドも保持")
 	desk.import_store = working_store
 	desk._import_content(story_path)
 	check(
 		desk.library.packs.size() == 1 and desk.import_store.sources().size() == 1,
 		"UIから検証・保存・登録",
 	)
-	desk.pack_select.select(1)
+	await process_frame
+	check(not is_instance_valid(cached_guide) and desk.tool_guide == null, "教材追加で古いガイドを破棄")
+	desk.start_screen.tool_guide_button.pressed.emit()
+	check(desk.tool_guide.tools == desk.library.guide_tools(), "追加後の教材からガイドを再構築")
+	desk.tool_guide.close_button.pressed.emit()
+	desk.start_screen.pack_select.select(1)
 	desk._start_shift()
-	check(desk.chapter_overlay.visible and desk.chapter_continue.has_focus(), "最初の章の導入を表示")
+	check(
+		desk.chapter_overlay.visible and desk.chapter_overlay.continue_button.has_focus(),
+		"最初の章の導入を表示",
+	)
 	desk._toggle_menu()
 	check(not desk.pause_menu.visible, "章の導入中にメニューを重ねない")
 	var elapsed: float = desk.shift.elapsed_seconds
 	desk._process(5)
 	check(
 		desk.shift.elapsed_seconds == elapsed
-		and not desk._can_stamp(desk.get_stamp("allow").payload()),
+		and not desk.workspace._can_stamp(desk.workspace.get_stamp("allow").payload()),
 		"章の導入中は時計・判定を停止",
 	)
-	desk.chapter_continue.pressed.emit()
+	desk.chapter_overlay.continue_button.pressed.emit()
 	check(not desk.chapter_overlay.visible, "導入から問題へ")
 	desk.shift.decide(raw.ground_truth)
-	desk.next.pressed.emit()
+	desk.audit_overlay.next_button.pressed.emit()
 	check(
 		desk.chapter_overlay.visible
-		and desk.chapter_body.get_parsed_text().contains("夕方") and not desk.shift.judged,
+		and desk.chapter_overlay.body.get_parsed_text().contains("夕方") and not desk.shift.judged,
 		"同じ問題IDでも次の章を再表示: %s / %s / %s / %s"
 		% [
 			desk.chapter_overlay.visible,
-			desk.chapter_body.get_parsed_text(),
+			desk.chapter_overlay.body.get_parsed_text(),
 			desk.shift.judged,
 			desk.shift.index,
 		],
 	)
-	desk.chapter_continue.pressed.emit()
+	desk.chapter_overlay.continue_button.pressed.emit()
 	desk.shift.decide(raw.ground_truth)
-	desk.next.pressed.emit()
+	desk.audit_overlay.next_button.pressed.emit()
 	check(
 		desk.completed_snapshot.records.size() == 2
 		and HistoryStore.validate(desk.completed_snapshot).is_empty(),
@@ -250,7 +262,7 @@ func _run() -> void:
 	)
 	desk.library.cases.clear()
 	desk._display_summary(saved, true)
-	check(desk.summary_review.get_parsed_text().contains(raw.explanation), "教材がなくても履歴を表示")
+	check(desk.summary_screen.review.get_parsed_text().contains(raw.explanation), "教材がなくても履歴を表示")
 	desk.queue_free()
 	await process_frame
 	print("Content imports and chapters: %d failures" % failures)

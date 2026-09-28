@@ -31,16 +31,19 @@ func run() -> void:
 	for i in items.size():
 		desk.shift.tick(10)
 		desk.shift.decide(
-			items[i].ground_truth if i == 1 else (
-				"allow" if items[i].ground_truth == "block" else "block"
+			(
+				items[i].ground_truth
+				if i == 1
+				else ("allow" if items[i].ground_truth == "block" else "block")
 			)
 		)
-		desk.next.pressed.emit()
+		desk.audit_overlay.next_button.pressed.emit()
 	var saved: Dictionary = desk.completed_snapshot.duplicate(true)
 	check(HistoryStore.validate(saved).is_empty(), "通常勤務の保存形式")
-	check(desk.summary_restart.text == "同じ問題に再挑戦", "右下の再挑戦ボタンは出題内容に沿った表示")
+	check(desk.summary_screen.restart.text == "同じ問題に再挑戦", "右下の再挑戦ボタンは出題内容に沿った表示")
 	check(
-		desk.summary_retry_wrong.text.contains("2問") and not desk.summary_retry_wrong.disabled,
+		desk.summary_screen.retry_wrong.text.contains("2問")
+		and not desk.summary_screen.retry_wrong.disabled,
 		"今回の誤答2問を案内",
 	)
 	var before := saved.duplicate(true)
@@ -72,15 +75,15 @@ func run() -> void:
 	check(Retry.plan(saved, desk.library).cases.size() == 2, "追加教材の失敗でも既存教材は出題可能")
 	desk.library.errors.clear()
 	# 実際に保存した履歴から開始する。タイトル画面の選択条件には依存しない。
-	desk.summary_home.pressed.emit()
-	desk.history_button.pressed.emit()
+	desk.summary_screen.home.pressed.emit()
+	desk.start_screen.history_button.pressed.emit()
 	desk._open_history_entry(saved.session_id)
 	check(desk.summary_from_history, "過去の履歴から再挑戦へ")
 	desk.library.cases[0].title = "更新された問題"
-	desk.summary_retry_wrong.pressed.emit()
+	desk.summary_screen.retry_wrong.pressed.emit()
 	check(
-		desk.playing and not desk.summary_from_history and not desk.history_overlay.visible
-		and not is_instance_valid(desk.summary_overlay),
+		desk.workspace.playing and not desk.summary_from_history
+		and not desk.history_overlay.visible and not is_instance_valid(desk.summary_screen),
 		"履歴から勤務画面へ遷移",
 	)
 	check(desk.shift.cases.size() == 2 and desk.shift.current().title == "更新された問題", "現在の教材で誤答だけ出題")
@@ -94,15 +97,16 @@ func run() -> void:
 		"別勤務IDと元履歴ID",
 	)
 	check(
-		desk.displayed_case == items[0].id and is_instance_valid(desk.target_card)
-		and desk.selected_information.is_empty(),
+		desk.workspace.displayed_case == items[0].id
+		and is_instance_valid(desk.workspace.target_card)
+		and desk.workspace.selected_information.is_empty(),
 		"通常の案件表示と入力選択を初期化",
 	)
 	var first_id: String = desk.shift.session_id
 	desk.shift.tick(9)
 	desk._toggle_menu()
 	check(desk.pause_menu.visible, "再挑戦中も一時停止できる")
-	desk.menu_restart.pressed.emit()
+	desk.pause_menu.restart_button.pressed.emit()
 	check(
 		desk.shift.cases.size() == 2 and desk.shift.elapsed_seconds == 0
 		and desk.shift.session_id != first_id,
@@ -110,19 +114,19 @@ func run() -> void:
 	)
 	for item in desk.shift.cases:
 		desk.shift.decide(item.ground_truth)
-		desk.next.pressed.emit()
+		desk.audit_overlay.next_button.pressed.emit()
 	var retried: Dictionary = desk.completed_snapshot.duplicate(true)
 	check(
 		retried.get("retry_of") == saved.session_id and HistoryStore.validate(retried).is_empty(),
 		"再挑戦の履歴を正しく保存",
 	)
 	check(
-		desk.summary_title.text == "再挑戦の結果" and desk.summary_retry_wrong.disabled,
+		desk.summary_screen.title.text == "再挑戦の結果" and desk.summary_screen.retry_wrong.disabled,
 		"全問正解なら誤答再挑戦は無効",
 	)
 	check(
-		texts(desk.summary_analysis).contains("復習者")
-		and not texts(desk.summary_analysis).contains("セキュリティチャレンジャー"),
+		texts(desk.summary_screen.analysis).contains("復習者")
+		and not texts(desk.summary_screen.analysis).contains("セキュリティチャレンジャー"),
 		"再挑戦の分析は復習者と表示",
 	)
 	check(retried.selection == Retry.selection(desk.shift.cases, desk.library), "履歴の出題条件は実際の問題から作成")
@@ -139,7 +143,7 @@ func run() -> void:
 	var index: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(index_path))
 	check(index.get("retry_of") == saved.session_id, "索引にも再挑戦の識別情報")
 	check(HistoryStore._valid_index(index, retried.session_id), "再挑戦索引のスキーマ")
-	desk.summary_restart.pressed.emit()
+	desk.summary_screen.restart.pressed.emit()
 	check(
 		desk.shift.cases.size() == 2 and desk.completed_snapshot.is_empty()
 		and desk.retry_source_id == retried.session_id,
@@ -148,12 +152,13 @@ func run() -> void:
 	desk._show_start_screen()
 	check(desk.retry_cases.is_empty() and desk.retry_source_id.is_empty(), "タイトルで再挑戦状態を解除")
 	desk._start_shift()
-	check(desk.shift.cases.size() == desk._selected_cases().size(), "通常の勤務はタイトルの条件で出題")
+	check(desk.shift.cases.size() == desk.start_screen.selected_cases().size(), "通常の勤務はタイトルの条件で出題")
 	desk._show_start_screen()
-	desk.history_button.pressed.emit()
+	desk.start_screen.history_button.pressed.emit()
 	check(
 		desk
-		.history_list
+		.history_overlay
+		.entries_list
 		.get_children()
 		.any(
 			func(node):
@@ -163,10 +168,10 @@ func run() -> void:
 	)
 	desk._open_history_entry(retried.session_id)
 	check(
-		desk.summary_title.text.contains("再挑戦") and desk.summary_retry_wrong.disabled,
+		desk.summary_screen.title.text.contains("再挑戦") and desk.summary_screen.retry_wrong.disabled,
 		"再挑戦結果も後から閲覧可能",
 	)
-	check(texts(desk.summary_analysis).contains("復習者"), "履歴から見た再挑戦の分析も復習者と表示")
+	check(texts(desk.summary_screen.analysis).contains("復習者"), "履歴から見た再挑戦の分析も復習者と表示")
 	desk.queue_free()
 	await process_frame
 	print("Wrong answer retry tests: %d failures" % failures)

@@ -8,7 +8,7 @@ func _initialize() -> void:
 
 
 func _show_case(desk, item: Dictionary) -> void:
-	desk._clear_desk()
+	desk.workspace.clear_case()
 	var cases: Array[Dictionary] = [item]
 	desk.shift.start(cases)
 
@@ -32,7 +32,7 @@ func _run() -> void:
 	)[0]
 	var original: Dictionary = file_case.duplicate(true)
 	_show_case(desk, file_case)
-	for token in desk.target_card.tokens:
+	for token in desk.workspace.target_card.tokens:
 		_check_drag(token, token.information.id == "File名")
 	assert(file_case == original, "表示用の変更で教材を変えない")
 	assert(desk.shift.current().information == original.information)
@@ -46,9 +46,9 @@ func _run() -> void:
 	other_source.source = "other_source"
 	extra.information.append(other_source)
 	_show_case(desk, extra)
-	_check_drag(desk.target_card.tokens[1], true)
-	_check_drag(desk.target_card.tokens[-2], false)
-	_check_drag(desk.target_card.tokens[-1], false)
+	_check_drag(desk.workspace.target_card.tokens[1], true)
+	_check_drag(desk.workspace.target_card.tokens[-2], false)
+	_check_drag(desk.workspace.target_card.tokens[-1], false)
 
 	# 同じ入力でも、その問題で使えるツールと調査OSによって変わる。
 	var os_case := file_case.duplicate(true)
@@ -56,23 +56,23 @@ func _run() -> void:
 		tool.environments = ["windows"]
 	os_case.platform = "linux"
 	_show_case(desk, os_case)
-	_check_drag(desk.target_card.tokens[1], false)
+	_check_drag(desk.workspace.target_card.tokens[1], false)
 	os_case.platform = "windows"
 	_show_case(desk, os_case)
-	_check_drag(desk.target_card.tokens[1], true)
+	_check_drag(desk.workspace.target_card.tokens[1], true)
 	for flag in ["draggable", "tool_input"]:
 		var restricted := file_case.duplicate(true)
 		restricted.information[0][flag] = false
 		_show_case(desk, restricted)
-		_check_drag(desk.target_card.tokens[1], false)
+		_check_drag(desk.workspace.target_card.tokens[1], false)
 
 	var beginner: Dictionary = desk.library.select_cases("", "file", "", "initial")[0]
 	_show_case(desk, beginner)
-	assert(desk.tool_buttons.is_empty())
-	for token in desk.target_card.tokens:
+	assert(desk.workspace.tool_buttons.is_empty())
+	for token in desk.workspace.target_card.tokens:
 		_check_drag(token, false)
 	_show_case(desk, file_case)
-	_check_drag(desk.target_card.tokens[1], true)
+	_check_drag(desk.workspace.target_card.tokens[1], true)
 	desk.queue_free()
 	await process_frame
 	print("基本情報のドラッグテスト: 問題別・OS別の対応、入力指定、表示と教材の保持に成功")
