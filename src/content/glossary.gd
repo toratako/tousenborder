@@ -29,7 +29,7 @@ static func visible_terms(
 	if viewed.has(key("initial_information", "initial")):
 		ids.append_array(item.initial.get("terms", []))
 	for resource in resources:
-		if not ToolRunner.supports_target(resource, item):
+		if not ProblemContext.supports_target(resource, item):
 			continue
 		for section in ["overview", "result", "submission"]:
 			if not viewed.has(key(resource.id, section)):

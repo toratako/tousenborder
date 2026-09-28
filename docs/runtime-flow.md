@@ -25,6 +25,7 @@
 | Pack・章参照、追加教材の保存 | [pack_loader.gd](../src/content/pack_loader.gd)、[content_import_store.gd](../src/persistence/content_import_store.gd) |
 | Schemaと意味検証、実行時データへの変換 | [content_schema.gd](../src/validation/content_schema.gd)、[problem_loader.gd](../src/content/problem_loader.gd) |
 | 表示テンプレート・入力の接続、到達性・必要証拠 | [information.gd](../src/domain/information.gd)、[investigation_inputs.gd](../src/domain/investigation_inputs.gd) |
+| 案件ID・調査OSの共通ルール | [problem_context.gd](../src/domain/problem_context.gd)。検証と実行から参照し、ローダ・実行器には依存しない |
 | 勤務・時計・判定・記録、模擬結果 | [inspection_shift.gd](../src/domain/inspection_shift.gd)、[tool_runner.gd](../src/domain/tool_runner.gd) |
 | 部品・操作状態の所有、部品生成・配置 | [game.gd](../src/app/game.gd)、[desk_layout.gd](../src/ui/inspection/desk_layout.gd) |
 | テーマ、カード、情報・スタンプのD&D | [game_theme.gd](../src/ui/shared/game_theme.gd)、[draggable_card.gd](../src/ui/inspection/draggable_card.gd)、[information_token.gd](../src/ui/inspection/information_token.gd)、[tool_input.gd](../src/ui/inspection/tool_input.gd)、[stamp_tool.gd](../src/ui/inspection/stamp_tool.gd) |
@@ -36,5 +37,7 @@
 遊び方の画像は `assets/how_to/`、順序は `game.gd` の `HOW_TO_SLIDES`。UI変更時の再生成は描画環境で `godot --path . --script tests/capture_how_to.gd` → `python3 scripts/build_how_to_slides.py`（ImageMagick必須）→ Godotのインポート。切り抜き座標は生成スクリプトで管理します。
 
 ## 教材の境界
+
+`domain/` は教材読込・保存・UIに依存しません。依存方向と循環は [test_module_boundaries.py](../tests/test_module_boundaries.py) で検証します。
 
 全資料・外部照会はローカルJSONの模擬です。実コマンド・外部API・ブラウザー起動・File Upload・任意File解析・自由入力の照会は行いません。NPC対話・自動比較・日ごとの進行・勤務途中の再開は未実装です。

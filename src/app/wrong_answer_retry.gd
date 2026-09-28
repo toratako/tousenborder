@@ -7,7 +7,7 @@ static func plan(snapshot: Dictionary, library: ProblemLibrary) -> Dictionary:
 	var result := { "cases": cases, "missing": 0, "changed": 0, "reason": "" }
 	var available := { }
 	for item in library.cases:
-		available[ProblemLoader.identity(item)] = item
+		available[ProblemContext.identity(item)] = item
 	var seen := { }
 	for record in snapshot.get("records", []):
 		if record.correct:

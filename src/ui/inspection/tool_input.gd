@@ -172,7 +172,7 @@ func _can_drop_data(_position: Vector2, data: Variant) -> bool:
 		return false
 	return (
 		data.information.get("case_id") == case_id and Information.accepts(tool, data.information)
-		and ToolRunner.supports_target(tool, { "platform": target_environment })
+		and ProblemContext.supports_target(tool, { "platform": target_environment })
 	)
 
 

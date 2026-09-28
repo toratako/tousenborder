@@ -510,7 +510,7 @@ func _build_tools() -> void:
 func _set_case_tools(item: Dictionary) -> void:
 	var available := library.tools_for(item).filter(
 		func(tool):
-			return ToolRunner.supports_target(tool, item),
+			return ProblemContext.supports_target(tool, item),
 	)
 	active_tools = available
 	tool_buttons.clear()
@@ -680,7 +680,7 @@ func _select_information(token: Dictionary) -> void:
 func _inspect(tool: Dictionary, input: Dictionary = { }) -> void:
 	if not playing or shift.finished() or shift.judged or _investigation_paused():
 		return
-	if not ToolRunner.supports_target(tool, shift.current()):
+	if not ProblemContext.supports_target(tool, shift.current()):
 		tool_message.text = "この調査環境では利用できません。"
 		return
 	if (
@@ -758,7 +758,7 @@ func _refresh() -> void:
 		_show_summary()
 		return
 	var item := shift.current()
-	if displayed_case != ProblemLoader.identity(item) or displayed_index != shift.index:
+	if displayed_case != ProblemContext.identity(item) or displayed_index != shift.index:
 		_display_case(item)
 	_display_observations(item)
 	_update_case_controls(item)
@@ -770,7 +770,7 @@ func _refresh() -> void:
 
 func _display_case(item: Dictionary) -> void:
 	_clear_desk()
-	displayed_case = ProblemLoader.identity(item)
+	displayed_case = ProblemContext.identity(item)
 	displayed_index = shift.index
 	_set_case_tools(item)
 	var information: Array = [
@@ -790,7 +790,7 @@ func _display_case(item: Dictionary) -> void:
 			and active_tools.any(
 				func(tool):
 					return (
-						ToolRunner.supports_target(tool, item) and Information.accepts(tool, fact)
+						ProblemContext.supports_target(tool, item) and Information.accepts(tool, fact)
 					),
 			)
 		)
@@ -810,7 +810,7 @@ func _display_case(item: Dictionary) -> void:
 	_select_information({ })
 	glossary_viewed[LearningGlossary.key("initial_information", "initial")] = true
 	for tool in active_tools:
-		if ToolRunner.supports_target(tool, item):
+		if ProblemContext.supports_target(tool, item):
 			glossary_viewed[LearningGlossary.key(tool.id, "overview")] = true
 	if item.has("chapter") and not shown_chapters.has(item.chapter.id):
 		shown_chapters[item.chapter.id] = true
@@ -866,7 +866,7 @@ func _display_observations(item: Dictionary) -> void:
 		var card := add_information_card(
 			{
 				"id": "result_%d" % displayed_observations,
-				"case_id": ProblemLoader.identity(item),
+				"case_id": ProblemContext.identity(item),
 				"title": entry.tool + ("" if entry.ok else " · 取得不可"),
 				"category": "analysis",
 				"source": entry.tool,
@@ -892,9 +892,9 @@ func _update_case_controls(item: Dictionary) -> void:
 	for i in range(tool_buttons.size()):
 		var button = tool_buttons[i]
 		var tool: Dictionary = button.tool
-		button.target_environment = ToolRunner.investigation_environment(item)
-		button.case_id = ProblemLoader.identity(item)
-		button.visible = ToolRunner.supports_target(tool, item)
+		button.target_environment = ProblemContext.investigation_environment(item)
+		button.case_id = ProblemContext.identity(item)
+		button.visible = ProblemContext.supports_target(tool, item)
 		button.disabled = shift.judged or _investigation_paused()
 		button.reviewed = reference_cards.has(tool.id)
 		button.update_input(selected_information)
@@ -903,7 +903,7 @@ func _update_case_controls(item: Dictionary) -> void:
 		stamp.disabled = shift.judged or _investigation_paused()
 		stamp.modulate.a = 0.4 if stamp.disabled else 1.0
 		stamp.tooltip_text = ""
-		stamp.case_id = ProblemLoader.identity(item)
+		stamp.case_id = ProblemContext.identity(item)
 		stamp.generation = desk_generation
 	tool_message.text = "必要に応じて調査し、判定してください。" if not active_tools.is_empty() else ""
 
