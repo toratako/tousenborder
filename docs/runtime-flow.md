@@ -1,6 +1,6 @@
 # 実行時の教材処理
 
-教材の書式・検証は [作問](problem-data.md)、判断の設計は [学習設計](learning-design.md)。読込に失敗した教材では勤務を開始しません。
+教材の書式・検証は [作問](problem-data.md)、判断の設計は [学習設計](learning-design.md)。無効な教材は読込元単位で登録せず、他の検証済み教材は利用できます。
 
 ## 調査から判定まで
 
@@ -10,7 +10,7 @@
 
 外部照会は入力・送信内容・注意文の確認後に模擬送信／見送り（ESC可）。確認中は判定と時計を止めます。適切な送信で得た結果は必須証拠・後続入力に使えます。不適切な送信も結果を表示して理由・件数を残しますが、証拠・後続入力には使えません。見送りも証拠にならず、減点なし。必要な照会を見送っても回答は可能で、不足する証拠はmissing_evidenceに残します。判定スコアとは独立し、未利用サービスに正誤は付けません。
 
-時計は案件をまたいだ経過時間。メニュー・規則集・遊び方・送信確認・監査票・勤務終了で止まり、再開始でリセットします。回帰確認は `tests/test_core.gd` / `test_ui.gd`。
+時計は案件をまたいだ経過時間。メニュー・規則集・遊び方・用語集・章の導入・送信確認・監査票・勤務終了で止まり、再開始でリセットします。回帰確認は `tests/test_core.gd` / `test_ui.gd`。
 
 ## 対象OSと調査OS
 
@@ -18,16 +18,18 @@
 
 Toolの `environments` は省略時両OS対応。表示・ドラッグ・直接実行・送信確認・見送りで同じ条件を使います。`platform_note` は説明専用で、出題先OSを製品の対応OSとみなしません（[実装別の確認資料](tool-platform-audit.md)）。
 
-`output_by_environment` のキーは明示した `environments` と一致させ、共有の `output_information` と対象・値を揃えます。Pathや対象が違うなら別問題・別Toolにします。両対応の宣言だけでは別OSの問題や出力は増えません。
+`result.by_environment` のキーは明示した `environments` と一致させ、共有の `result.information` と対象・値を揃えます。Pathや対象が違うなら別問題・別Toolにします。両対応の宣言だけでは別OSの問題や出力は増えません。
 
-代替証拠の例は [出題対象外のWeb問題の `dns`](../data/problems/WEB-UNKNOWN-CAMPAIGN.json)。同じ証拠とする出力は事実を一致させます（[Linux NetworkのWireshark/tcpdump](../data/problems/NET-LINUX-SECURITY-TELEMETRY.json)も同じ過去Flowを表示）。
+代替証拠の例は [出題対象外のWeb問題の `dns`](../authoring/archive/problems/WEB-UNKNOWN-CAMPAIGN.json)。同じ証拠とする出力は事実を一致させます（[Linux NetworkのWireshark/tcpdump](../authoring/archive/problems/NET-LINUX-SECURITY-TELEMETRY.json)も同じ過去Flowを表示）。
 
 ## 画面と責務
 
 | 変更箇所 | 参照先 |
 | --- | --- |
-| 教材読込・登録・絞り込み | `scripts/core/catalog.gd` |
-| Schemaの構造検証、検証済み問題の実行時データ | `scripts/core/content_schema.gd`、`problem_data.gd` |
+| ディレクトリ・ZIP・単独JSONの読込 | `scripts/core/content_source.gd` |
+| 登録・絞込・資料グループの導出 | `scripts/core/problem_library.gd` |
+| Packと章、追加教材の保存 | `scripts/core/pack_loader.gd`、`content_import_store.gd` |
+| Schemaの構造検証、検証済み問題の実行時データ | `scripts/core/content_schema.gd`、`problem_loader.gd` |
 | 情報の表示・入力型、調査経路・必要証拠 | `scripts/core/information.gd`、`investigation_inputs.gd` |
 | 勤務進行・時計・判定・履歴、模擬結果の実行 | `scripts/core/shift.gd`、`tool_runner.gd` |
 | 画面遷移・操作状態、部品生成・配置 | `scripts/ui/desk.gd`、`desk_layout.gd` |

@@ -1,75 +1,81 @@
-# 教材データと作問
+# 教材データ
 
-正本は `data/packs/*.json` と `data/problems/*.json`。キー・必須条件・値域は [Pack Schema](../data/schemas/pack.schema.json) / [Problem Schema](../data/schemas/problem.schema.json)、動く問題は [生成一覧](problem-catalog.md) から辿れます。未知キー・旧形式・別名は拒否し、変換しません。
-
-## PackとProblemの注意点
-
-- 別Packは `scenes/main.tscn` の `InspectionDesk` → **Content Pack** に指定。`problems` の登録順が出題順です。
-- カテゴリ・資料グループはPackで追加可能。判定種別・難易度・OSの追加にはSchemaと実装の変更が必要です。
-- 初級の `level` は `beginner_reference`（Referenceのみ）、`beginner`（Tool）、`beginner_external`（External Referenceあり）。追加グループも含む資料種別で分類を検証し、`beginner` のレビュー手順ではToolをちょうど1つ使うことを確認します。代替Toolの選択肢は複数登録できます。
-- 標準の `tools / references / external_references` は問題のトップレベル、追加グループだけを `resources` に置きます。標準グループのkindは変更できません。
-- `initial_information_types` は初期情報のキーと型名の対応。未指定は `text` で、値から型を推測しません。型名は追加できます。
-- `applied`（応用）は `scenario_type: real_world_inspired`、攻撃手法を示す `inspired_by`、出典 `sources` が必須です。旧 `intermediate` / `advanced` は除外問題とテスト資料の読み取り用に残しています。
-- 入門はReferenceを調査欄で閲覧できます。Tool・External Referenceは追加グループを含め使用不可。`required_evidence` には初期情報と必要なReference（代替証拠も可）を指定します。Referenceは閲覧後に証拠へ加わります。調査充足は進行条件ではありません（[判定・履歴](runtime-flow.md#調査から判定まで)）。
-
-## 資料と情報の接続
-
-Referenceは入力不要の `content` を表示します。Tool・External Referenceは `accepted_information_types` と `input_bindings` で入力を指定し、型・取得元・情報IDを照合します。複数のbindingはいずれか1つを使う代替入力です。
-
-辞書・配列の値は項目名と箇条書きで表示します。JSONやCommandの抜粋をそのまま見せる場合は文字列で記述してください。表示だけを整形し、Toolへ渡す元の値・型は保持します。
-
-以下は資料定義の抜粋です。初期情報に数値のPID、型マップに `"PID": "pid"` を用意します。
-
-```json
-{
-  "id": "process_lookup",
-  "name": "Process情報",
-  "output": "Image: /opt/example/agent",
-  "accepted_information_types": ["pid"],
-  "input_bindings": [{"source": "initial_information", "id": "PID"}],
-  "input_hint": "調査するPID",
-  "environments": ["linux"],
-  "output_information": [
-    {"id": "image", "label": "実行File", "value": "/opt/example/agent", "data_type": "file"}
-  ]
-}
-```
-
-`output_information` の `id / label / value / data_type` は必須、`tool_input / draggable` は真偽値（既定true）です。値は `output` と一致させます。`draggable: false` はドラッグだけを禁止し、入力も禁止するなら `tool_input: false` を指定します。取得元は資料から設定するため `source` は書けません。Referenceも同じ方式で入力用の情報を返せます。
-
-次のFile調査には `accepted_information_types: ["file"]` と `input_bindings: [{"source": "process_lookup", "id": "image"}]` を指定します。出力情報IDの `output / content / submission_type / submission_value / warning` は予約済みです。
-
-| 作りたい調査経路 | 動く例 |
-| --- | --- |
-| File → SHA-256 → 外部Hash検索 | [FILE-LINUX-KNOWN-HASH](../data/problems/FILE-LINUX-KNOWN-HASH.json) |
-| PID → 実行ScriptのPath → Hash（Process本体と区別） | [PROC-WIN-ADMIN-POWERSHELL](../data/problems/PROC-WIN-ADMIN-POWERSHELL.json) |
-| 受付済みHost → DNS → 承認記録との照合 | [WEB-UNKNOWN-CAMPAIGN](../data/problems/WEB-UNKNOWN-CAMPAIGN.json) |
-| Email内でHeader・添付・URLを調査する追加グループ | [EMAIL-GENUINE-URGENT](../data/problems/EMAIL-GENUINE-URGENT.json) |
-
-入力は値・案件・適切な調査で取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも区別します。
-
-ProcessのBacking Executableを直接調査する場合は、初期情報のPIDを入力にし、対象Pathと結果をoutputに明記できます。ScriptのHashとは別資料にします。Windows用DNS Toolを使う問題はplatformをwindowsにし、commonの調査OSはLinuxのままとします。
-
-External Referenceの入力型への適合は送信許可を意味しません。[送信確認](runtime-flow.md#調査から判定まで) と [外部照会の判断](learning-design.md#外部照会の判断) を参照してください。
+正本は問題JSON。形式は [Problem v2](../data/schemas/problem.schema.json)、[Pack v2](../data/schemas/pack.schema.json)、[Chapter v1](../data/schemas/chapter.schema.json)。旧形式・未知キーは拒否する。公開70問は `data/problems/`、出題対象外39問は `authoring/archive/problems/` に隔離し、後者は配布にも含めない。
 
 ## 追加・変更の手順
 
-近い問題を複製して新しいIDを付け、Packの `problems` に登録します。[学習設計](learning-design.md) に沿って独立した照合資料から結論を導ける構成にし、問題の調査OS（共通問題はLinux）で入力・必要証拠に到達できるようにします。
+1. `data/problems/` に単独で検証できる問題JSONを置く。Packへの登録は自由演習には不要。
+2. `just validate`。構造・資料参照・入力の到達性をゲームと同じローダで検証する。
+3. `python3 scripts/build_problem_catalog.py` で一覧を再生成して `just test`。生成前の `--check` は一覧の差分があれば失敗する。
 
-```sh
-python3 scripts/build_problem_catalog.py
-just test
+最小限の資料付き問題:
+
+```json
+{
+  "schema_version": 2,
+  "id": "EXAMPLE-FILE",
+  "category": "file",
+  "platform": "common",
+  "title": "受入れ可能な文書",
+  "request": "この文書を受け入れてよいか判断してください。",
+  "initial": {
+    "information": [{"id": "filename", "label": "ファイル名", "value": "report.pdf", "data_type": "file"}]
+  },
+  "resources": [{
+    "id": "format", "kind": "references", "name": "受入れ規則",
+    "result": {"content": "この受付ではPDFを受け入れます。"}
+  }],
+  "required_evidence": ["format"],
+  "ground_truth": "allow",
+  "explanation": "PDFという受入れ条件と一致します。"
+}
 ```
 
-依存の準備は [README](../README.md#開発教材編集)。生成先は `docs/problem-catalog.md` と `build/catalog/problems.json`（Git管理外）。生成処理の `--check` はMarkdownを常に、JSONは存在する場合だけ比較します。別Packの検証は `godot --headless --path . --script scripts/validate_content.gd -- res://data/packs/別名.json`（成功0・失敗1）。
+`category` は自由なIDで、必要なら `category_label` を問題に置く。選択肢はロードした問題から生成する。`difficulty` は任意の `beginner / intermediate / advanced`。省略は未評価で、調査形式や実例の有無から推測しない。移行済みの公開問題は未評価。`learning_objectives / sources / inspired_by` は作問・出典追跡用で、判定条件には使わない。
 
-レビュー用の説明は [data/catalog/learning.json](../data/catalog/learning.json)。Packと同じFile名で `data/catalog/` に置き、[Review Schema](../data/schemas/catalog-review.schema.json) に従って全登録IDの `overview / flow / decisive_evidence` を記述します。`flow` は資料IDと確認内容の順序付き配列で、初期情報は常に取得済みとし、必要な入力を先に取得する代表経路を記載します。代替証拠は利用可能な経路を一つ選びます。機密Uploadなど不適切な調査は実行手順にせず、方針を読む手順に見送りを記述してください。問題JSONの変更時には説明も再確認し、未解決の不足がある場合だけ `review_notes` に記載し、問題側で解消したら削除します。これらはゲームUIへ読み込みません。
+## 資料と情報の接続
 
-初期情報・全調査候補・正解・理由・学習目標は問題JSONから直接転記します。Main Evidenceはrequired_evidence、Main Toolはその入力元も含む経路から導出し、代替候補を併記します。レビューJSONがあるPackでは登録IDの過不足、手順の入力順序・OS適合・適切な利用・必須証拠の充足も検証します。レビューJSONがない別Packは想定手順・決定的証拠を「未レビュー」と表示し、自動推測しません。
+資料は `resources` に統一し、`kind` は `tools / references / external_references`。任意の `section` は画面のグループ名で、Packに登録不要。ゲームの調査形式と外部照会の必須性は、対応OS・資料種別・入力経路・必要証拠から導出する。
 
-検証の分担:
+- 初期情報は `initial.information`、結果の再利用可能な情報は `resource.result.information`。型と値を一つのオブジェクトに持つ。
+- `input_bindings` は `{ "source": "資料IDまたはinitial_information", "id": "情報ID" }`。入力型は `accepted_information_types`。同型でも別の情報・未取得の出力は渡せない。
+- `result.content` は文字列または構造化JSON。`{{fact:情報ID}}` で同じ結果の情報値、`{{input}}` で選択入力を表示でき、挿入した値は再評価しない。二重記入を避けるため出力値は `information` を正本にする。
+- 外部照会は `submission.type / warning` を持つ。送信値は選択入力そのもので、別の `submission_value` は記入しない。
+- `required_evidence` は資料ID。`evidence_alternatives` で複数資料のいずれかを認める。不適切な調査や到達できない入力に依存する必須経路は拒否する。
+- `correct_usage` を指定する場合は `reason` も必要。結果はすべて模擬JSONで、実コマンド・外部通信は実行しない。
 
-- 構造は共有Schema。PythonはDraft 2020-12、Godotの `content_schema.gd` は同梱Schemaの構文のみ対応し、未知キーワードはエラー、深度上限128です。Schema拡張時は両方を検証します。
-- 意味・到達性は `scripts/build_problem_catalog.py` と `scripts/core/problem_data.gd` / `investigation_inputs.gd`。循環入力、非対応OSの必須証拠、不適切な調査・外部送信に依存する経路を拒否します。correct_usageがtrueの外部照会は必須・代替証拠と後続入力に利用できます。内部調査だけの代替経路は必須ではありません。
-- 資料の意味、出力の事実整合、判定時点は自動検証できません。作問時に確認し、出題用Packの全問の実行経路・送信確認・解説表示は `tests/test_playable_content.gd` で確認します。
-- UI・入力契約の回帰テストは `tests/fixtures/content.json` と `tests/fixtures.gd` の固定データを使用します。通常のPackには登録せず、既存教材の件数・IDを維持するために問題を残す必要はありません。外部証拠の必須化・後続入力・見送りは `tests/test_external_evidence.gd` とPython側でも検証します。
+OS別出力は `result.by_environment`。明示した `environments` とキーを一致させ、共通の `result.information` と事実を一致させる。共通問題の調査OSはLinux（詳細は [実行時の処理](runtime-flow.md#対象osと調査os)）。
+
+## Pack・章・ZIP
+
+Packは任意の出題順・章の導入を管理する。問題の分類辞書、規則集、用語辞書は持たない。
+
+```text
+problems/
+  first.json
+  second.json
+packs/
+  story/
+    pack.json
+    chapters/
+      01.json
+      02.json
+```
+
+`pack.json` は `{ "schema_version": 2, "id": "story", "title": "物語", "chapters": ["chapters/01.json", "chapters/02.json"] }`。
+章は `{ "schema_version": 1, "id": "first", "title": "第一章", "intro": "朝の審査を始めます。", "problems": ["EXAMPLE-FILE"] }`。章パスはPackディレクトリからの相対パス、問題IDは同じ読込元の問題を参照する。別章で同じ問題を使える。章の導入は任意で、表示中は時計と調査・判定を止める。
+
+この構成をZIPの直下に置き、タイトルの「問題ZIP / JSONを追加」から読み込む。単独のProblem JSONも追加可能。全体の検証と保存に成功してから登録し、失敗時は既存教材を維持する。追加した教材は `user://content/` に内容のSHA-256名で保存し、次回起動時も読み込む。同じ内容の再追加は重複しない。異なる内容は別の読込元として共存する。削除UIは未実装で、不要な教材はアプリ終了後に保存先から削除する。
+
+ZIPはJSONとディレクトリのみ。通常のstore/deflateに対応し、暗号化・分割・ZIP64・特殊ファイルは対象外。上限は512エントリ、JSONごと1 MiB、展開後合計8 MiB、ZIP本体16 MiB（`ContentSource`）。ファイルを教材領域へ展開せず、相対パスとJSONとして読む。
+
+```sh
+godot --headless --path . --script scripts/validate_content.gd -- /path/to/content.zip
+python3 scripts/build_problem_catalog.py --source /path/to/content.zip --json-output build/custom.json --markdown-output build/custom.md
+```
+
+## 検証・索引
+
+`ProblemLoader` が構造・意味検証の一つの入口。`ContentSource` は格納形式、`PackLoader` は章参照、`ProblemLibrary` は登録・絞込、`ContentImportStore` は保存を担当する。CLIも同じコードを呼ぶ。
+
+手書き `data/catalog/` は廃止。[問題一覧](problem-catalog.md) と `build/catalog/problems.json` は問題JSONから生成する索引。`--check` はMarkdownを常に、JSONは存在する場合だけ照合する。ゲームは生成一覧に依存しない。用語と履歴の形式・互換性は [学習支援](learning-support.md)。
