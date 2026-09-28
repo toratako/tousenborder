@@ -22,7 +22,7 @@ func _run() -> void:
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	desk._start_shift()
-	var file_case: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FIX-FILE")[0]
+	var file_case: Dictionary = desk.library.cases.filter(func(c): return c.id == "FIX-FILE")[0]
 	var original: Dictionary = file_case.duplicate(true)
 	_show_case(desk, file_case)
 	for token in desk.target_card.tokens:
@@ -45,7 +45,7 @@ func _run() -> void:
 
 	# 同じ入力でも、その問題で使えるツールと調査OSによって変わる。
 	var os_case := file_case.duplicate(true)
-	for tool in os_case.tools:
+	for tool in Fixtures.resources(os_case, "tools"):
 		tool.environments = ["windows"]
 	os_case.platform = "linux"
 	_show_case(desk, os_case)
@@ -59,7 +59,7 @@ func _run() -> void:
 		_show_case(desk, restricted)
 		_check_drag(desk.target_card.tokens[1], false)
 
-	var beginner: Dictionary = desk.catalog.select_cases("very_beginner", "file")[0]
+	var beginner: Dictionary = desk.library.select_cases("", "file", "", "initial")[0]
 	_show_case(desk, beginner)
 	assert(desk.tool_buttons.is_empty())
 	for token in desk.target_card.tokens:

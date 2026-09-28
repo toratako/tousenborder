@@ -1,32 +1,86 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "AUTH-WIN-REVOKED-DEVICE",
   "category": "account",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "登録解除済みの端末",
   "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
-  "initial_information": {
-    "要求ID": "AUTH-901",
-    "User": "mori",
-    "Source IP": "192.0.2.41",
-    "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
-    "要求Logon Type": "10 / RemoteInteractive",
-    "Gatewayの認証確認": "パスワード確認済み / MFA確認済み",
-    "Device ID": "WIN-017"
+  "required_evidence": [
+    "events",
+    "device"
+  ],
+  "ground_truth": "block",
+  "explanation": "過去のログインが通常どおりでも、今回提示された端末はすでに失効しているため、セッションの確立を遮断します。過去にログインが成功していても、現在の利用許可を保証するものではありません。",
+  "initial": {
+    "information": [
+      {
+        "id": "要求ID",
+        "label": "要求ID",
+        "value": "AUTH-901",
+        "data_type": "text"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "mori",
+        "data_type": "username"
+      },
+      {
+        "id": "Source IP",
+        "label": "Source IP",
+        "value": "192.0.2.41",
+        "data_type": "ip"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "要求Logon Type",
+        "label": "要求Logon Type",
+        "value": "10 / RemoteInteractive",
+        "data_type": "text"
+      },
+      {
+        "id": "Gatewayの認証確認",
+        "label": "Gatewayの認証確認",
+        "value": "パスワード確認済み / MFA確認済み",
+        "data_type": "text"
+      },
+      {
+        "id": "Device ID",
+        "label": "Device ID",
+        "value": "WIN-017",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "user",
+      "ip",
+      "authentication",
+      "session",
+      "mfa",
+      "gateway",
+      "device",
+      "password",
+      "login",
+      "logon_type",
+      "source_ip"
+    ]
   },
-  "initial_information_types": {
-    "User": "username",
-    "Source IP": "ip"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "events",
       "name": "Event Viewer / Windows Security Log",
       "description": "今回の要求より前のセキュリティログを調べます。接続元別・ユーザー別の集計は、保存ログから抽出して表示します。",
-      "output": "2026-08-17 09:01 Event ID 4624\nTargetUserName: mori\nLogonType: 10\nIpAddress: 192.0.2.41\nWorkstationName: WIN-017\n2026-08-17 18:02 Event ID 4634 / TargetUserName: mori",
       "accepted_information_types": [
         "username"
       ],
@@ -40,225 +94,50 @@
       "platform_note": "Windows標準 / Event Viewer",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "2026-08-17 09:01 Event ID 4624\nTargetUserName: mori\nLogonType: 10\nIpAddress: 192.0.2.41\nWorkstationName: WIN-017\n2026-08-17 18:02 Event ID 4634 / TargetUserName: mori",
+        "terms": [
+          "user",
+          "ip",
+          "device",
+          "login",
+          "logon_type",
+          "source_ip",
+          "log",
+          "event_id"
+        ]
+      },
+      "terms": [
+        "user",
+        "source_ip",
+        "log",
+        "tool_events"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "device",
       "name": "端末登録情報",
-      "content": "WIN-017 / 所有者mori / 2026-08-18 08:00に紛失届を受けて失効。登録が有効な端末以外からのログインは禁止。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "events",
-    "device"
-  ],
-  "glossary": [
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "overview"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "session",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "mfa",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "gateway",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        },
-        {
-          "source_id": "device",
-          "section": "overview"
-        },
-        {
-          "source_id": "device",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "password",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "login",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        },
-        {
-          "source_id": "device",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "logon_type",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "source_ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "overview"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "log",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "overview"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_events",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "event_id",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reference",
-      "occurrences": [
-        {
-          "source_id": "device",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "active_revoked",
-      "occurrences": [
-        {
-          "source_id": "device",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "WIN-017 / 所有者mori / 2026-08-18 08:00に紛失届を受けて失効。登録が有効な端末以外からのログインは禁止。",
+        "terms": [
+          "device",
+          "login",
+          "active_revoked"
+        ]
+      },
+      "terms": [
+        "device",
+        "reference"
       ]
     }
   ],
-  "explanation": "過去のログインが通常どおりでも、今回提示された端末はすでに失効しているため、セッションの確立を遮断します。過去にログインが成功していても、現在の利用許可を保証するものではありません。",
-  "topic": "端末の現在の登録状態を過去の利用履歴より優先する",
-  "summary": "端末の現在の登録状態を過去の利用履歴より優先する",
   "learning_objectives": [
     "端末の現在の登録状態を過去の利用履歴より優先する"
   ],
-  "decision_context": "before_session",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

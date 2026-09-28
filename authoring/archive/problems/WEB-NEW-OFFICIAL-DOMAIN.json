@@ -1,0 +1,235 @@
+{
+  "schema_version": 2,
+  "id": "WEB-NEW-OFFICIAL-DOMAIN",
+  "category": "web",
+  "platform": "linux",
+  "title": "新規登録された公式ドメイン",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "dns",
+    "change",
+    "disclosure"
+  ],
+  "ground_truth": "allow",
+  "explanation": "承認済み移行通知・DNS・接続先が一致するため公開ページへのアクセスを許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "URL",
+        "label": "URL",
+        "value": "https://aster-learning.example/",
+        "data_type": "url"
+      },
+      {
+        "id": "URLのHost",
+        "label": "URLのHost",
+        "value": "aster-learning.example",
+        "data_type": "domain"
+      },
+      {
+        "id": "受付状態",
+        "label": "受付状態",
+        "value": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "url",
+      "host",
+      "http",
+      "url_path",
+      "browser"
+    ]
+  },
+  "resources": [
+    {
+      "id": "dig",
+      "name": "dig",
+      "description": "選択したホストのDNSレコードとTTLを表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのホスト",
+      "platform_note": "Linux / BIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": ";; ANSWER SECTION:\naster-learning.example. 300 IN A {{fact:ip}}",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.62",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "ip",
+          "dns_records",
+          "dns_query"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "dns",
+        "ttl",
+        "tool_dns"
+      ]
+    },
+    {
+      "id": "nslookup",
+      "name": "nslookup",
+      "description": "選択したホストのDNS応答を表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのホスト",
+      "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Server: 192.0.2.53\nName: aster-learning.example\nAddress: {{fact:ip}}\n",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.62",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "ip",
+          "dns_resolver",
+          "server"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "dns",
+        "tool_dns"
+      ]
+    },
+    {
+      "id": "change",
+      "name": "リリース・変更承認記録",
+      "kind": "references",
+      "result": {
+        "content": "CHG-606 / 旧training.aster.exampleからaster-learning.exampleへ公開教材を移行 / 切替2026-08-18 08:00 / A=198.51.100.62 / 社内の承認済み広報記録。認証不要。",
+        "terms": [
+          "ip",
+          "dns_records",
+          "approved",
+          "authentication",
+          "ticket"
+        ]
+      },
+      "terms": [
+        "reference",
+        "release"
+      ]
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
+        },
+        "terms": [
+          "url",
+          "host",
+          "url_path",
+          "authentication",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "user",
+          "token",
+          "attachment",
+          "pcap",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
+    {
+      "id": "domain_rep",
+      "name": "ドメインの評判",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのホスト",
+      "correct_usage": true,
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "Domain: {{input}}\nNo record / submissions: 0",
+        "terms": [
+          "host",
+          "no_record"
+        ]
+      },
+      "submission": {
+        "type": "domain",
+        "warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
+        "terms": [
+          "url",
+          "host",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "reputation"
+      ]
+    }
+  ],
+  "evidence_alternatives": {
+    "dns": {
+      "label": "DNSの解決先",
+      "any_of": [
+        "dig",
+        "nslookup"
+      ]
+    }
+  },
+  "learning_objectives": [
+    "新規ドメインを公式変更記録で検証する"
+  ]
+}

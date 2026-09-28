@@ -103,10 +103,17 @@ func check_profiles() -> void:
 	source.records[3].level = "custom"
 	check(Analysis.analyze(source).level.id == "practice", "未知の難易度を高難度扱いしない")
 	source = profile_sample(10, 10, 10)
-	var known_levels := Analysis.LEVEL_LABELS.keys()
+	var known_levels := ["beginner", "intermediate", "advanced"]
 	for i in source.records.size(): source.records[i].level = known_levels[i % known_levels.size()]
 	data = Analysis.analyze(source)
-	check(data.unknown_level == 0 and data.scope.contains("超初級") and not data.scope.contains("不明"), "超初級・初級の3区分も既存の難易度として認識")
+	check(data.unknown_level == 0 and data.scope.contains("初級") and not data.scope.contains("不明"), "超初級・初級の3区分も既存の難易度として認識")
+	source = profile_sample(10, 10, 10)
+	for record in source.records: record.level = "unrated"
+	data = Analysis.analyze(source)
+	check(data.unknown_level == 10 and data.harder_correct == 0 and data.level.id == "practice" and data.scope.contains("難易度未評価"), "未評価問題を高難度実績に数えない")
+	source.records[0].category = "custom"
+	source.records[0].category_label = "独自の分類"
+	check(Analysis.analyze(source).categories.custom.label == "独自の分類", "追加教材の分野名は履歴だけで再現")
 	source = profile_sample(100, 100, 100)
 	for record in source.records: record.level = "beginner"
 	for i in 3:
@@ -319,7 +326,7 @@ func run() -> void:
 	check(analysis_text.contains("アドバイス"), "助言の見出しをアドバイスに統一")
 	for record in snapshot.records: record.erase("investigation_required")
 	check(HistoryStore.validate(snapshot).is_empty(), "既存形式の履歴も引き続き有効")
-	desk.catalog.cases.clear()
+	desk.library.cases.clear()
 	desk._display_summary(snapshot, true)
 	check(texts(desk.summary_analysis).contains("セキュリティチャレンジャー") and not texts(desk.summary_analysis).contains("判定保留"), "教材がなくても古い履歴をセキュリティチャレンジャーとして表示")
 	check(texts(desk.summary_analysis).contains("判断力・確認力") and not texts(desk.summary_analysis).contains("判断と確認"), "図の見出しを判断力・確認力へ変更")

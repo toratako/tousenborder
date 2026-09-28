@@ -8,13 +8,13 @@ func _run() -> void:
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	desk._start_shift()
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-REFERENCES")
+	var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-REFERENCES")
 	var approved := {"製品": "帳票Tool", "Path": "C:\\Company\\report.exe",
 		"承認条件": {"Version": "2.3", "署名": "未署名の社内版"},
 		"接続先": ["192.0.2.80:443", "192.0.2.81:443"], "追加依存": {}, "例外": []}
 	var literal_json := "package.json抜粋:\n{\"dependencies\": {\"core\": \"2.5.0\"}}"
-	cases[0].references[0].content = approved.duplicate(true)
-	cases[0].references[1].content = literal_json
+	Fixtures.resources(cases[0], "references")[0].result.content = approved.duplicate(true)
+	Fixtures.resources(cases[0], "references")[1].result.content = literal_json
 	desk.shift.start(cases)
 	await process_frame
 	assert(desk.tool_panel.is_visible_in_tree())
@@ -66,7 +66,7 @@ func _run() -> void:
 	assert(desk.reference_cards.is_empty())
 	assert(desk.tool_buttons.all(func(b): return not b.reviewed and b.hint.text.begins_with("未読")))
 	assert(desk.tool_panel.visible)
-	var beginner: Array[Dictionary] = desk.catalog.select_cases("very_beginner", "file")
+	var beginner: Array[Dictionary] = desk.library.select_cases("", "file", "", "initial")
 	desk.shift.start(beginner)
 	assert(desk.tool_buttons.is_empty() and desk.tool_panel.visible)
 	assert(desk.tool_rack.get_child_count() == 1)

@@ -6,6 +6,7 @@ const KEYWORDS := ["$schema", "title", "description", "$defs", "$ref", "type", "
 	"properties", "required", "additionalProperties", "items", "minLength", "minItems", "minProperties",
 	"minimum", "maximum", "pattern", "uniqueItems", "allOf", "anyOf", "if", "then", "else"]
 const PACK := "res://data/schemas/pack.schema.json"
+const CHAPTER := "res://data/schemas/chapter.schema.json"
 const PROBLEM := "res://data/schemas/problem.schema.json"
 const GLOSSARY := "res://data/schemas/glossary.schema.json"
 const HISTORY := "res://data/schemas/history.schema.json"

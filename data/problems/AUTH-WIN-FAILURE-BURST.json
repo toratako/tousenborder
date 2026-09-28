@@ -1,140 +1,83 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "AUTH-WIN-FAILURE-BURST",
   "category": "account",
   "platform": "windows",
-  "level": "very_beginner",
-  "ground_truth": "block",
   "title": "短時間の失敗と一時遮断規則",
   "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
-  "initial_information": {
-    "要求ID": "AUTH-901",
-    "User": "mori",
-    "Source IP": "203.0.113.130",
-    "状態": "認証ゲートウェイで保留中。パスワードの検証前で、セッションはまだ確立していない。",
-    "直前5分の認証失敗": "同じ接続元から同じユーザーに対する認証失敗が20回。今回の要求は集計に含まない。"
-  },
-  "initial_information_types": {
-    "User": "username",
-    "Source IP": "ip"
-  },
-  "tools": [],
-  "references": [
-    {
-      "id": "policy",
-      "name": "アカウント利用方針",
-      "content": "このゲートウェイでは、同じ接続元から同じユーザーに対する認証失敗が5分間に20回に達した場合、次の認証要求から15分間、その組み合わせへの新規認証要求を一時的に遮断する。"
-    }
-  ],
-  "external_references": [],
   "required_evidence": [
     "initial_information",
     "policy"
   ],
-  "glossary": [
+  "ground_truth": "block",
+  "explanation": "直前5分間に同じ接続元から同じユーザーに対する認証失敗が20回に達しており、今回の要求はその直後のため、15分間の一時遮断条件に従って遮断します。今回のセッションはまだ確立していません。失敗回数だけでは、攻撃の手法や実行者、アカウントが侵害されたかどうかまでは判断できません。",
+  "initial": {
+    "information": [
+      {
+        "id": "要求ID",
+        "label": "要求ID",
+        "value": "AUTH-901",
+        "data_type": "text"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "mori",
+        "data_type": "username"
+      },
+      {
+        "id": "Source IP",
+        "label": "Source IP",
+        "value": "203.0.113.130",
+        "data_type": "ip"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "認証ゲートウェイで保留中。パスワードの検証前で、セッションはまだ確立していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "直前5分の認証失敗",
+        "label": "直前5分の認証失敗",
+        "value": "同じ接続元から同じユーザーに対する認証失敗が20回。今回の要求は集計に含まない。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "user",
+      "ip",
+      "authentication",
+      "session",
+      "gateway",
+      "password",
+      "source_ip"
+    ]
+  },
+  "resources": [
     {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "policy",
-          "section": "overview"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "session",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "gateway",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "password",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "source_ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "policy",
-          "section": "overview"
-        }
+      "id": "policy",
+      "name": "アカウント利用方針",
+      "kind": "references",
+      "result": {
+        "content": "このゲートウェイでは、同じ接続元から同じユーザーに対する認証失敗が5分間に20回に達した場合、次の認証要求から15分間、その組み合わせへの新規認証要求を一時的に遮断する。",
+        "terms": [
+          "user",
+          "authentication",
+          "gateway",
+          "source_ip"
+        ]
+      },
+      "terms": [
+        "user",
+        "policy"
       ]
     }
   ],
-  "explanation": "直前5分間に同じ接続元から同じユーザーに対する認証失敗が20回に達しており、今回の要求はその直後のため、15分間の一時遮断条件に従って遮断します。今回のセッションはまだ確立していません。失敗回数だけでは、攻撃の手法や実行者、アカウントが侵害されたかどうかまでは判断できません。",
-  "topic": "提示された失敗回数を遮断条件の閾値と比較する",
-  "summary": "提示された失敗回数を遮断条件の閾値と比較する",
   "learning_objectives": [
     "提示された失敗回数を遮断条件の閾値と比較する"
   ],
-  "decision_context": "before_session",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

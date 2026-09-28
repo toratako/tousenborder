@@ -2,13 +2,10 @@ extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
 var failures := 0
 
-class SupportCatalog extends ContentCatalog:
-	func _read(path: String) -> Variant:
-		if path == DEFAULT_PACK:
-			return JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/learning-support/pack.json"))
-		if path == "res://data/problems/FILE-LINUX-BEGINNER-002.json":
-			return JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/learning-support/problem.json"))
-		return super._read(path)
+class SupportLibrary extends ProblemLibrary:
+	func load_builtin(_root := DEFAULT_ROOT) -> bool:
+		var item: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/learning-support/problem.json"))
+		return add_source(Fixtures.source([item]))
 
 class FailingStore extends HistoryStore:
 	func save_completed(_data: Dictionary) -> bool:
@@ -27,7 +24,7 @@ func input_for(desk, tool: Dictionary) -> Dictionary:
 	return {}
 
 func terms(desk) -> Array[Dictionary]:
-	return LearningGlossary.visible_terms(desk.shift.current(), desk.catalog.glossary_terms, desk.active_tools, desk.glossary_viewed)
+	return LearningGlossary.visible_terms(desk.shift.current(), desk.glossary_terms, desk.active_tools, desk.glossary_viewed)
 
 func write_json(path: String, data: Variant) -> void:
 	var file := FileAccess.open(path, FileAccess.WRITE)
@@ -40,29 +37,17 @@ func _initialize() -> void:
 func _run() -> void:
 	var desk = load("res://scenes/main.tscn").instantiate()
 	var store := Fixtures.history_store()
-	desk.catalog = SupportCatalog.new()
+	desk.library = SupportLibrary.new()
 	desk.history_store = store
 	root.add_child(desk)
 	await process_frame
-	check(desk.catalog.errors.is_empty(), "標準教材と用語辞書を読込")
-	var schema: Dictionary = ContentSchema.read_schema(ContentSchema.PROBLEM)
-	var sample: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/learning-support/problem.json"))
-	for invalid in ["unknown_term", "wrong_source", "wrong_submission", "duplicate_term", "duplicate_occurrence"]:
-		var candidate := sample.duplicate(true)
-		match invalid:
-			"unknown_term": candidate.glossary[0].term_id = "missing"
-			"wrong_source": candidate.glossary[0].occurrences = [{"source_id": "missing", "section": "result"}]
-			"wrong_submission": candidate.glossary[0].occurrences = [{"source_id": "vendor_hash", "section": "submission"}]
-			"duplicate_term": candidate.glossary.append(candidate.glossary[0].duplicate(true))
-			"duplicate_occurrence": candidate.glossary[0].occurrences.append(candidate.glossary[0].occurrences[0].duplicate(true))
-		var structural := ContentSchema.check(candidate, schema)
-		check(not structural.is_empty() or not ProblemData.normalize(candidate, desk.catalog, schema).is_empty(), "Godot側でも教材の不備を拒否: " + invalid)
+	check(desk.library.errors.is_empty(), "標準教材と用語辞書を読込")
 	desk._start_shift()
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-002")
+	var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FILE-LINUX-BEGINNER-002")
 	desk.shift.start(cases)
-	var hash_tool: Dictionary = desk.shift.current().tools[0]
+	var hash_tool: Dictionary = Fixtures.resources(desk.shift.current(), "tools")[0]
 	var sha: Dictionary = terms(desk).filter(func(t): return t.id == "sha256")[0]
-	check(not sha.tags.any(func(tag): return "実行結果" in tag), "未調査のタグを表示しない")
+	check(terms(desk).all(func(term): return term.id != "out_of_band"), "未調査の用語を表示しない")
 	desk.glossary_button.pressed.emit()
 	check(desk.glossary_overlay.visible, "用語集を開く")
 	var column: VBoxContainer = desk.glossary_list.get_child(0)
@@ -110,8 +95,8 @@ func _run() -> void:
 	desk._inspect(hash_tool, input_for(desk, hash_tool))
 	desk._inspect(hash_tool, input_for(desk, hash_tool))
 	sha = terms(desk).filter(func(t): return t.id == "sha256")[0]
-	check(sha.tags.count("sha256sumの実行結果") == 1, "結果表示でタグを一度だけ追加")
-	var external: Dictionary = desk.shift.current().external_references[0].duplicate(true)
+	check(terms(desk).filter(func(term): return term.id == "sha256").size() == 1, "用語を重複させない")
+	var external: Dictionary = Fixtures.resources(desk.shift.current(), "external_references")[0].duplicate(true)
 	desk._inspect(external, input_for(desk, external))
 	check(desk.glossary_viewed.has(LearningGlossary.key(external.id, "submission")), "送信確認を閲覧済みにする")
 	desk._finish_external(false)
@@ -148,8 +133,8 @@ func _run() -> void:
 	check(not store.save_completed(conflicting), "同じIDの異なるデータを上書きしない")
 	var old_records: Array = desk.shift.records.duplicate(true)
 	desk.summary_home.pressed.emit()
-	desk.catalog.cases.clear()
-	desk.catalog.glossary_terms.clear()
+	desk.library.cases.clear()
+	desk.glossary_terms.clear()
 	desk.history_button.pressed.emit()
 	check(desk.history_overlay.visible, "タイトルから勤務履歴へ")
 	desk._open_history_entry(saved.session_id)
@@ -215,7 +200,7 @@ func _run() -> void:
 	desk.queue_free()
 	await process_frame
 	desk = load("res://scenes/main.tscn").instantiate()
-	desk.content_pack = "res://data/packs/missing.json"
+	desk.content_root = "res://data/missing"
 	desk.history_store = reopened
 	root.add_child(desk)
 	await process_frame
@@ -235,7 +220,7 @@ func _run() -> void:
 	root.add_child(desk)
 	await process_frame
 	desk._start_shift()
-	var basic_cases: Array[Dictionary] = desk.catalog.select_cases("very_beginner")
+	var basic_cases: Array[Dictionary] = desk.library.select_cases("", "", "", "initial")
 	desk.shift.start(basic_cases)
 	for item in basic_cases:
 		desk.shift.decide(item.ground_truth)

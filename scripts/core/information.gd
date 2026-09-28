@@ -11,12 +11,40 @@ static func normalize(items: Array, source: String = "") -> Array[Dictionary]:
 		result.append(item)
 	return result
 
-static func from_initial(item: Dictionary) -> Array[Dictionary]:
-	var items: Array = []
-	for key in item.initial_information:
-		items.append({"id": key, "label": key, "value": item.initial_information[key],
-			"data_type": item.initial_information_types.get(key, "text")})
-	return normalize(items, "initial_information")
+static func validate_template(value: Variant, facts: Array, accepts_input: bool) -> String:
+	if value is Dictionary or value is Array:
+		for part in value.values() if value is Dictionary else value:
+			var error := validate_template(part, facts, accepts_input)
+			if not error.is_empty(): return error
+	elif value is String:
+		var expression := RegEx.create_from_string("\\{\\{([^{}]+)\\}\\}")
+		for token in expression.search_all(value):
+			var id := token.get_string(1)
+			if id == "input" and accepts_input: continue
+			if id.begins_with("fact:") and facts.any(func(fact): return fact.id == id.substr(5)): continue
+			return "表示テンプレートの参照が存在しません: " + id
+	return ""
+
+static func render(value: Variant, facts: Array, input: Dictionary = {}) -> Variant:
+	if value is Dictionary:
+		var result := {}
+		for key in value: result[key] = render(value[key], facts, input)
+		return result
+	if value is Array: return value.map(func(part): return render(part, facts, input))
+	if not value is String: return value
+	# Only named data substitutions are supported. Inserted values are never evaluated again.
+	var expression := RegEx.create_from_string("\\{\\{([^{}]+)\\}\\}")
+	var result: String = value
+	var tokens := expression.search_all(value)
+	tokens.reverse()
+	for token in tokens:
+		var id := token.get_string(1)
+		var replacement: Variant = input.get("value", "")
+		if id.begins_with("fact:"):
+			for fact in facts:
+				if fact.id == id.substr(5): replacement = fact.value
+		result = result.substr(0, token.get_start()) + display(replacement) + result.substr(token.get_end())
+	return result
 
 static func display(value: Variant) -> String:
 	# 構造化された資料は項目として読む。JSON・Commandの文字列はそのまま表示する。

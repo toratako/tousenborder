@@ -1,30 +1,76 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "EMAIL-REPLY-ADDRESS",
   "category": "email",
   "platform": "common",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "返信先だけが別の組織",
   "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Email": "quarantine/message-1077.eml",
-    "From": "請求窓口 <billing@cedar.example>",
-    "To": "mori@aster.example",
-    "Subject": "口座確認",
-    "本文": "確認用の口座資料を、このメールに返信して送ってください。",
-    "受信時刻": "2026-08-18 09:10",
-    "状態": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。"
+  "required_evidence": [
+    "header",
+    "vendor"
+  ],
+  "ground_truth": "block",
+  "explanation": "Reply-Toは取引先の承認アドレスではなく外部ドメインを指し、口座資料の返信先として許可されていないため遮断します。Reply-Toの差だけでなく依頼内容と照合しています。",
+  "initial": {
+    "information": [
+      {
+        "id": "Email",
+        "label": "Email",
+        "value": "quarantine/message-1077.eml",
+        "data_type": "email"
+      },
+      {
+        "id": "From",
+        "label": "From",
+        "value": "請求窓口 <billing@cedar.example>",
+        "data_type": "text"
+      },
+      {
+        "id": "To",
+        "label": "To",
+        "value": "mori@aster.example",
+        "data_type": "text"
+      },
+      {
+        "id": "Subject",
+        "label": "Subject",
+        "value": "口座確認",
+        "data_type": "text"
+      },
+      {
+        "id": "本文",
+        "label": "本文",
+        "value": "確認用の口座資料を、このメールに返信して送ってください。",
+        "data_type": "text"
+      },
+      {
+        "id": "受信時刻",
+        "label": "受信時刻",
+        "value": "2026-08-18 09:10",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "reply_to",
+      "attachment",
+      "gateway",
+      "email",
+      "to_subject",
+      "quarantine"
+    ]
   },
-  "initial_information_types": {
-    "Email": "email"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "header",
       "name": "メールの原文を表示",
       "description": "信頼する受信ゲートウェイのヘッダーと保存MIMEを表示し、URL・添付を選べるようにします。",
-      "output": "Received: from outbound.cedar.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=cedar.example; dkim=pass header.d=cedar.example; dmarc=pass header.from=cedar.example\nFrom: 請求窓口 <billing@cedar.example>\nTo: mori@aster.example\nReply-To: settlement@cedar-payments.example\nReturn-Path: <bounce@cedar.example>\nSubject: 口座確認\n\nMIME本文の抜粋:\n確認用の口座資料を、このメールに返信して送ってください。",
       "accepted_information_types": [
         "email"
       ],
@@ -38,277 +84,55 @@
       "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Received: from outbound.cedar.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=cedar.example; dkim=pass header.d=cedar.example; dmarc=pass header.from=cedar.example\nFrom: 請求窓口 <billing@cedar.example>\nTo: mori@aster.example\nReply-To: settlement@cedar-payments.example\nReturn-Path: <bounce@cedar.example>\nSubject: 口座確認\n\nMIME本文の抜粋:\n確認用の口座資料を、このメールに返信して送ってください。",
+        "terms": [
+          "reply_to",
+          "to_subject",
+          "header",
+          "mime",
+          "ip",
+          "ttl",
+          "spf",
+          "dkim",
+          "dmarc",
+          "authentication",
+          "timezone",
+          "received",
+          "authentication_results",
+          "auth_mail_fields",
+          "pass_fail",
+          "esmtps"
+        ]
+      },
+      "terms": [
+        "attachment",
+        "gateway",
+        "email",
+        "url",
+        "header",
+        "mime"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "vendor",
       "name": "取引先台帳",
-      "content": "Cedar商事: billing@cedar.example / 口座資料は契約済みfinance.cedar.example経由のみ / cedar-payments.exampleは登録なし。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "header",
-    "vendor"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "reply_to",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "gateway",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "to_subject",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "quarantine",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "header",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "overview"
-        },
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "mime",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "overview"
-        },
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ttl",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "spf",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "dkim",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "dmarc",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "timezone",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "received",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication_results",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "auth_mail_fields",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pass_fail",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "esmtps",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "vendor",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "directory",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "overview"
-        }
+      "kind": "references",
+      "result": {
+        "content": "Cedar商事: billing@cedar.example / 口座資料は契約済みfinance.cedar.example経由のみ / cedar-payments.exampleは登録なし。"
+      },
+      "terms": [
+        "vendor",
+        "directory"
       ]
     }
   ],
-  "explanation": "Reply-Toは取引先の承認アドレスではなく外部ドメインを指し、口座資料の返信先として許可されていないため遮断します。Reply-Toの差だけでなく依頼内容と照合しています。",
-  "topic": "返信先と情報の送付先の正当性を確認する",
-  "summary": "返信先と情報の送付先の正当性を確認する",
   "learning_objectives": [
     "返信先と情報の送付先の正当性を確認する"
   ],
-  "decision_context": "before_delivery",
-  "scenario_type": "standard",
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc8601"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

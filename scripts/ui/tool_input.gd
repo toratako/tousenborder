@@ -34,7 +34,7 @@ func setup_presentation() -> void:
 			style.border_width_left = 2
 		add_theme_stylebox_override(state, style)
 	heading = Label.new()
-	var is_reference: bool = tool.get("resource_kind") == "references"
+	var is_reference: bool = tool.get("kind") == "references"
 	if is_reference:
 		reference_icon = Chrome.icon(self, Rect2(10, 11, 22, 22), "res://assets/icons/document.svg")
 	heading.position = Vector2(40, 10) if is_reference else Vector2(12, 6)
@@ -69,7 +69,7 @@ func _layout_labels() -> void:
 	custom_minimum_size.y = maxf(44.0, heading.get_rect().end.y + 10.0) if not hint.visible else maxf(64.0, hint.get_rect().end.y + 8.0)
 
 func _resting_color() -> Color:
-	return Color("19394d", 0.55) if tool.get("resource_kind") == "tools" else Color.TRANSPARENT
+	return Color("19394d", 0.55) if tool.get("kind") == "tools" else Color.TRANSPARENT
 
 func update_input(input: Dictionary) -> void:
 	selected = input.duplicate(true)
@@ -78,9 +78,9 @@ func update_input(input: Dictionary) -> void:
 	var compatible: bool = not input.is_empty() and input.get("case_id") == case_id and Information.accepts(tool, input)
 	ready_for_input = compatible
 	var color := Color("e4f5ff")
-	if tool.get("resource_kind", "") == "references":
+	if tool.get("kind", "") == "references":
 		hint.text = "確認済み · クリックで再表示" if reviewed else "未読 · クリックで読む"
-	elif tool.get("resource_kind", "") == "external_references":
+	elif tool.get("kind", "") == "external_references":
 		hint.text = "送信：" + Information.input_hint(tool) + (" →" if compatible else "")
 		color = Color("57edc2") if compatible else color
 	elif compatible:
@@ -110,7 +110,7 @@ func _draw() -> void:
 	elif reviewed:
 		var point := Vector2(size.x - 12, 22)
 		draw_polyline(PackedVector2Array([point + Vector2(-4, 0), point + Vector2(-1, 3), point + Vector2(5, -4)]), Color("57edc2"), 1.5, true)
-	elif tool.get("resource_kind") == "external_references":
+	elif tool.get("kind") == "external_references":
 		var point := Vector2(size.x - 12, 18)
 		draw_line(point + Vector2(-4, 4), point + Vector2(4, -4), Color("b0c8da"), 1.5, true)
 		draw_polyline(PackedVector2Array([point + Vector2(-3, -4), point + Vector2(4, -4), point + Vector2(4, 3)]), Color("b0c8da"), 1.5, true)

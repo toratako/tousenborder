@@ -13,7 +13,7 @@ func _run() -> void:
 		"process": "process", "account": "account", "package": "package"}
 	var file_icons := {"FIX-FILE": "document", "FIX-HASH": "archive",
 		"FIX-PRIVATE-FILE": "executable", "FIX-VISIBLE-FILE": "executable"}
-	for item in desk.catalog.cases:
+	for item in desk.library.cases:
 		var cases: Array[Dictionary] = [item]
 		desk.shift.start(cases)
 		var expected: String = file_icons[item.id] if item.category == "file" else category_icons[item.category]

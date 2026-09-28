@@ -21,42 +21,43 @@ func input_for(shift: InspectionShift, tool: Dictionary) -> Dictionary:
 	return {}
 
 func _initialize() -> void:
-	var catalog := Fixtures.catalog()
-	check(catalog.load_pack(), str(catalog.errors))
-	var schema: Dictionary = ContentSchema.read_schema(ContentSchema.PROBLEM)
+	var library := Fixtures.library()
+	check(library.load_builtin(), str(library.errors))
 	var raw := Fixtures.raw("FIX-HASH")
-	var external: Dictionary = raw.external_references[0]
-	external.output_information = [{"id": "domain", "label": "Domain", "value": "analysis.example", "data_type": "domain"}]
+	var external: Dictionary = Fixtures.resources(raw, "external_references")[0]
+	external.result.information = [{"id": "domain", "label": "Domain", "value": "analysis.example", "data_type": "domain"}]
 	var followup := external.duplicate(true)
-	followup.merge({"id": "domain_report", "accepted_information_types": ["domain"],
-		"input_bindings": [{"source": external.id, "id": "domain"}], "submission_type": "domain",
-		"submission_value": "analysis.example", "output_information": []}, true)
-	raw.external_references.append(followup)
+	followup.id = "domain_report"
+	followup.accepted_information_types = ["domain"]
+	followup.input_bindings = [{"source": external.id, "id": "domain"}]
+	followup.submission.type = "domain"
+	followup.result.information = []
+	raw.resources.append(followup)
 	raw.required_evidence = [followup.id]
-	var item := raw.duplicate(true)
-	check(ProblemData.normalize(item, catalog, schema).is_empty(), "許可された外部照会を辿って証拠に到達")
+	var item := Fixtures.loaded(raw)
+	check(ProblemLoader.load_value(raw).errors.is_empty(), "許可された外部照会を辿って証拠に到達")
 	var denied := raw.duplicate(true)
-	denied.external_references[0].correct_usage = false
-	check(not ProblemData.normalize(denied, catalog, schema).is_empty(), "不適切な照会からの後続入力を拒否")
+	Fixtures.resources(denied, "external_references")[0].correct_usage = false
+	check(not ProblemLoader.load_value(denied).errors.is_empty(), "不適切な照会からの後続入力を拒否")
 	denied = raw.duplicate(true)
-	denied.external_references[0].environments = ["windows"]
-	check(not ProblemData.normalize(denied, catalog, schema).is_empty(), "非対応OSの外部照会からの後続入力を拒否")
+	Fixtures.resources(denied, "external_references")[0].environments = ["windows"]
+	check(not ProblemLoader.load_value(denied).errors.is_empty(), "非対応OSの外部照会からの後続入力を拒否")
 	var alternatives := raw.duplicate(true)
 	alternatives.required_evidence = ["report"]
 	alternatives.evidence_alternatives = {"report": {"label": "Report", "any_of": [external.id, followup.id]}}
-	check(ProblemData.normalize(alternatives, catalog, schema).is_empty(), "外部照会だけの代替証拠も許可")
+	check(ProblemLoader.load_value(alternatives).errors.is_empty(), "外部照会だけの代替証拠も許可")
 	alternatives = raw.duplicate(true)
-	alternatives.external_references[0].correct_usage = false
-	alternatives.external_references.pop_back()
+	Fixtures.resources(alternatives, "external_references")[0].correct_usage = false
+	alternatives.resources.pop_back()
 	alternatives.required_evidence = [external.id]
-	check(not ProblemData.normalize(alternatives, catalog, schema).is_empty(), "不適切な外部照会の必須化を拒否")
+	check(not ProblemLoader.load_value(alternatives).errors.is_empty(), "不適切な外部照会の必須化を拒否")
 	var shift := InspectionShift.new()
 	var cases: Array[Dictionary] = [item]
 	shift.start(cases)
 	item = shift.current()
-	var hash_tool: Dictionary = item.tools.filter(func(t): return t.id == "sha256sum")[0]
-	external = item.external_references[0]
-	followup = item.external_references.back()
+	var hash_tool: Dictionary = Fixtures.resources(item, "tools").filter(func(t): return t.id == "sha256sum")[0]
+	external = Fixtures.resources(item, "external_references")[0]
+	followup = Fixtures.resources(item, "external_references").back()
 	check(shift.inspect(hash_tool, input_for(shift, hash_tool)).ok, "照会に使うHashを取得")
 	check(shift.decline_external(external, input_for(shift, external)), "必要な照会でも見送り可能")
 	check(shift.missing_evidence() == [followup.id], "見送りは証拠を満たさない")
@@ -87,9 +88,9 @@ func test_ui(cases: Array[Dictionary]) -> void:
 	desk._start_shift()
 	desk.shift.start(cases)
 	var item: Dictionary = desk.shift.current()
-	var hash_tool: Dictionary = item.tools.filter(func(t): return t.id == "sha256sum")[0]
-	var external: Dictionary = item.external_references[0]
-	var followup: Dictionary = item.external_references.back()
+	var hash_tool: Dictionary = Fixtures.resources(item, "tools").filter(func(t): return t.id == "sha256sum")[0]
+	var external: Dictionary = Fixtures.resources(item, "external_references")[0]
+	var followup: Dictionary = Fixtures.resources(item, "external_references").back()
 	desk._inspect(hash_tool, input_for(desk.shift, hash_tool))
 	desk._inspect(external, input_for(desk.shift, external))
 	check(desk.external_preview.visible, "必須照会でも送信前確認を表示")
@@ -98,10 +99,10 @@ func test_ui(cases: Array[Dictionary]) -> void:
 	for tool in [external, followup]:
 		desk._inspect(tool, input_for(desk.shift, tool))
 		check(desk.external_preview.visible, "後続照会も送信前確認を表示")
-		check(desk.external_preview_body.text.contains(tool.confidentiality_warning), "注意事項は送信前確認に表示")
+		check(desk.external_preview_body.text.contains(tool.submission.warning), "注意事項は送信前確認に表示")
 		desk.external_send.pressed.emit()
 		var observation: Dictionary = desk.shift.observations.back()
-		check(not observation.output.contains(tool.confidentiality_warning), "照会結果には送信前の注意事項を繰り返さない")
+		check(not observation.output.contains(tool.submission.warning), "照会結果には送信前の注意事項を繰り返さない")
 		check(observation.information.all(func(info): return info.id != "warning"), "結果の情報欄にも注意事項を追加しない")
 	check(desk.shift.missing_evidence().is_empty(), "UIから後続の外部証拠を取得")
 	desk.shift.decide(item.ground_truth)

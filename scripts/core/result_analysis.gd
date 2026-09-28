@@ -1,8 +1,8 @@
 class_name ResultAnalysis
 extends RefCounted
 ## 保存済みの事実だけを集計する。教材の現在の正解や資料には依存しない。
-const CATEGORY_LABELS := {"file": "ファイル", "process": "プロセス", "network": "ネットワーク", "web": "Web", "email": "メール", "account": "認証", "package": "パッケージ"}
-const LEVEL_LABELS := {"very_beginner": "超初級", "beginner_reference": "初級", "beginner": "初級", "beginner_external": "初級", "intermediate": "中級", "advanced": "上級"}
+const CATEGORY_LABELS = ContentLabels.CATEGORIES
+const LEVEL_LABELS = ContentLabels.DIFFICULTIES
 # 教材内の暫定基準。心理尺度・資格認定ではない。
 const RULES := {"style_min_cases": 3, "careful_rate": 0.8, "intuitive_rate": 0.5,
 	"level_min_cases": 5, "pro_min_cases": 10, "practice_rate": 0.7, "pro_rate": 0.9,
@@ -38,7 +38,7 @@ static func analyze(snapshot: Dictionary) -> Dictionary:
 		if not complete: result.review.incomplete.append(index)
 		var level: String = record.get("level", "unknown")
 		result.levels[level] = result.levels.get(level, 0) + 1
-		if not LEVEL_LABELS.has(level): result.unknown_level += 1
+		if not LEVEL_LABELS.has(level) or level == "unrated": result.unknown_level += 1
 		if level in ["intermediate", "advanced"] and correct: result.harder_correct += 1
 		if record.ground_truth == "allow":
 			result.expected_allow += 1
@@ -49,7 +49,9 @@ static func analyze(snapshot: Dictionary) -> Dictionary:
 				result.false_allow += 1
 				result.review.false_allow.append(index)
 		if not result.categories.has(record.category):
-			result.categories[record.category] = {"label": record.category, "answered": 0, "correct": 0, "errors": []}
+			result.categories[record.category] = {"label": record.get("category_label", record.category), "answered": 0, "correct": 0, "errors": []}
+		if result.categories[record.category].answered == 0 and record.has("category_label"):
+			result.categories[record.category].label = record.category_label
 		result.categories[record.category].answered += 1
 		if correct: result.categories[record.category].correct += 1
 		else: result.categories[record.category].errors.append(index)
@@ -126,7 +128,7 @@ static func _level(data: Dictionary) -> Dictionary:
 	if reference: reasons.append("%d問未満のため参考判定" % RULES.level_min_cases)
 	if data.accuracy >= RULES.pro_rate:
 		if data.answered < RULES.pro_min_cases: reasons.append("プロ級には%d問以上の回答が必要" % RULES.pro_min_cases)
-		if data.unknown_level > 0: reasons.append("難易度の記録が不足")
+		if data.unknown_level > 0: reasons.append("難易度が未評価の問題を含む")
 		if data.harder_correct < RULES.pro_harder_correct: reasons.append("中級以上での正解が%d問未満" % RULES.pro_harder_correct)
 		if data.expected_allow < RULES.pro_each_verdict or data.expected_block < RULES.pro_each_verdict: reasons.append("ALLOW・BLOCK両方の出題が必要")
 		if data.false_allow > 0: reasons.append("危険な許可が%d問" % data.false_allow)
@@ -145,11 +147,12 @@ static func _scope(data: Dictionary) -> String:
 	var levels: Array[String] = []
 	var grouped := {}
 	for id in LEVEL_LABELS:
+		if id == "unrated": continue
 		var label: String = LEVEL_LABELS[id]
 		grouped[label] = grouped.get(label, 0) + data.levels.get(id, 0)
 	for label in grouped:
 		if grouped[label] > 0: levels.append("%s %d問" % [label, grouped[label]])
-	if data.unknown_level > 0: levels.append("難易度不明 %d問" % data.unknown_level)
+	if data.unknown_level > 0: levels.append("難易度未評価 %d問" % data.unknown_level)
 	var categories: Array[String] = []
 	for category in data.categories.values():
 		if category.answered > 0: categories.append(category.label)

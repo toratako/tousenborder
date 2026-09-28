@@ -1,27 +1,50 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "WEB-WIN-DNS",
   "category": "web",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "allow",
   "title": "Windowsで解決先を確認する",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "URL": "https://training.aster.example/",
-    "URLのHost": "training.aster.example",
-    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。"
+  "required_evidence": [
+    "dns",
+    "official"
+  ],
+  "ground_truth": "allow",
+  "explanation": "ホストとDNSの解決先が研修サイトの承認記録に一致し、公開トップページの閲覧条件を満たすため許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "URL",
+        "label": "URL",
+        "value": "https://training.aster.example/",
+        "data_type": "url"
+      },
+      {
+        "id": "URLのHost",
+        "label": "URLのHost",
+        "value": "training.aster.example",
+        "data_type": "domain"
+      },
+      {
+        "id": "受付状態",
+        "label": "受付状態",
+        "value": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "url",
+      "host",
+      "http",
+      "url_path",
+      "browser"
+    ]
   },
-  "initial_information_types": {
-    "URL": "url",
-    "URLのHost": "domain"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "resolve",
       "name": "Resolve-DnsName",
       "description": "選択したホストのDNSレコードを問い合わせます。",
-      "output": "Name: training.aster.example\nType: A; IPAddress: 198.51.100.20; TTL: 300",
       "accepted_information_types": [
         "domain"
       ],
@@ -36,20 +59,34 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "解決先IP",
-          "value": "198.51.100.20",
-          "data_type": "ip"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "Name: training.aster.example\nType: A; IPAddress: {{fact:ip}}; TTL: 300",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.20",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "ip",
+          "ttl",
+          "dns_records"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "dns",
+        "tool_dns"
       ]
     },
     {
       "id": "nslookup",
       "name": "nslookup",
       "description": "選択したホストのDNS応答を表示します。",
-      "output": "Server: 192.0.2.53\nName: training.aster.example\nAddress: 198.51.100.20",
       "accepted_information_types": [
         "domain"
       ],
@@ -64,205 +101,52 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "解決先IP",
-          "value": "198.51.100.20",
-          "data_type": "ip"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "Server: 192.0.2.53\nName: training.aster.example\nAddress: {{fact:ip}}",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.20",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "ip",
+          "dns_resolver",
+          "server"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "dns",
+        "tool_dns"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "official",
       "name": "公式サービス・ドメイン",
-      "content": {
-        "Host": "training.aster.example",
-        "IP": "198.51.100.20",
-        "用途": "公開研修トップページ",
-        "状態": "2026-08-18現在、変更承認済み"
-      }
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "dns",
-    "official"
-  ],
-  "glossary": [
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
+      "kind": "references",
+      "result": {
+        "content": {
+          "Host": "training.aster.example",
+          "IP": "198.51.100.20",
+          "用途": "公開研修トップページ",
+          "状態": "2026-08-18現在、変更承認済み"
         },
-        {
-          "source_id": "resolve",
-          "section": "overview"
-        },
-        {
-          "source_id": "nslookup",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "resolve",
-          "section": "overview"
-        },
-        {
-          "source_id": "nslookup",
-          "section": "overview"
-        },
-        {
-          "source_id": "official",
-          "section": "overview"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "browser",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "dns",
-      "occurrences": [
-        {
-          "source_id": "resolve",
-          "section": "overview"
-        },
-        {
-          "source_id": "nslookup",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_dns",
-      "occurrences": [
-        {
-          "source_id": "resolve",
-          "section": "overview"
-        },
-        {
-          "source_id": "nslookup",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "resolve",
-          "section": "result"
-        },
-        {
-          "source_id": "nslookup",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ttl",
-      "occurrences": [
-        {
-          "source_id": "resolve",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "dns_records",
-      "occurrences": [
-        {
-          "source_id": "resolve",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "dns_resolver",
-      "occurrences": [
-        {
-          "source_id": "nslookup",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "server",
-      "occurrences": [
-        {
-          "source_id": "nslookup",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "official",
-          "section": "result"
-        }
+        "terms": [
+          "host",
+          "ip",
+          "approved"
+        ]
+      },
+      "terms": [
+        "host"
       ]
     }
   ],
-  "explanation": "ホストとDNSの解決先が研修サイトの承認記録に一致し、公開トップページの閲覧条件を満たすため許可します。",
-  "topic": "Resolve-DnsNameまたはnslookupでホストの解決先を取得し、承認ホスト・IP・用途と照合する",
-  "summary": "Resolve-DnsNameまたはnslookupでホストの解決先を取得し、承認ホスト・IP・用途と照合する",
-  "learning_objectives": [
-    "Resolve-DnsNameまたはnslookupでホストの解決先を取得し、承認ホスト・IP・用途と照合する"
-  ],
-  "decision_context": "before_access",
-  "scenario_type": "standard",
-  "sources": [
-    "https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname?view=windowsserver2025-ps",
-    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "evidence_alternatives": {
     "dns": {
       "label": "DNSの解決先",
@@ -271,5 +155,12 @@
         "nslookup"
       ]
     }
-  }
+  },
+  "learning_objectives": [
+    "Resolve-DnsNameまたはnslookupでホストの解決先を取得し、承認ホスト・IP・用途と照合する"
+  ],
+  "sources": [
+    "https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname?view=windowsserver2025-ps",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup"
+  ]
 }

@@ -1,327 +1,134 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PKG-NPM-LOCKED-DEPENDENCY",
   "category": "package",
   "platform": "common",
-  "level": "beginner_reference",
-  "ground_truth": "allow",
   "title": "ロックファイルと一致する依存パッケージ",
   "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Package": "@aster-ui/icons",
-    "Version": "1.8.0",
-    "Ecosystem": "npm",
-    "状態": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。",
-    "Resolverの取得元": "https://registry.npmjs.org/@aster-ui/icons/-/icons-1.8.0.tgz",
-    "Resolverの検証Integrity": "sha512-DPj2gqCtozswxBtNwwWWp9xRQi0RCGA2jbz3ceidh6+J1UDnfmiB8DU1drUEb9zlq3k8rMqk9Biy/dhjHy6tLg=="
-  },
-  "initial_information_types": {
-    "Package": "package"
-  },
-  "tools": [],
-  "references": [
-    {
-      "id": "lock",
-      "name": "ロックファイル",
-      "content": {
-        "承認": "CHG-1004 / package-lock.json lockfileVersion=3",
-        "node_modules/@aster-ui/icons": {
-          "version": "1.8.0",
-          "resolved": "https://registry.npmjs.org/@aster-ui/icons/-/icons-1.8.0.tgz",
-          "integrity": "sha512-DPj2gqCtozswxBtNwwWWp9xRQi0RCGA2jbz3ceidh6+J1UDnfmiB8DU1drUEb9zlq3k8rMqk9Biy/dhjHy6tLg=="
-        }
-      }
-    },
-    {
-      "id": "official",
-      "name": "公式リポジトリ・承認済みコンポーネント",
-      "content": "@aster-ui/icons 1.8.0を本番UIの依存として承認。レジストリの固定tarball・ロックファイルのintegrity値で照合する。"
-    }
-  ],
-  "external_references": [],
   "required_evidence": [
     "lock",
     "official"
   ],
-  "glossary": [
+  "ground_truth": "allow",
+  "explanation": "名前・バージョン・解決元・integrity値が承認済みロックファイルと一致するため導入を許可します。名前とバージョンだけの照合ではありません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Package",
+        "label": "Package",
+        "value": "@aster-ui/icons",
+        "data_type": "package"
+      },
+      {
+        "id": "Version",
+        "label": "Version",
+        "value": "1.8.0",
+        "data_type": "text"
+      },
+      {
+        "id": "Ecosystem",
+        "label": "Ecosystem",
+        "value": "npm",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "Resolverの取得元",
+        "label": "Resolverの取得元",
+        "value": "https://registry.npmjs.org/@aster-ui/icons/-/icons-1.8.0.tgz",
+        "data_type": "text"
+      },
+      {
+        "id": "Resolverの検証Integrity",
+        "label": "Resolverの検証Integrity",
+        "value": "sha512-DPj2gqCtozswxBtNwwWWp9xRQi0RCGA2jbz3ceidh6+J1UDnfmiB8DU1drUEb9zlq3k8rMqk9Biy/dhjHy6tLg==",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "archive",
+      "hash",
+      "script",
+      "url",
+      "package",
+      "registry",
+      "integrity",
+      "install_script",
+      "version",
+      "http",
+      "url_path",
+      "ecosystem",
+      "dependency",
+      "package_resolver",
+      "tarball",
+      "install",
+      "package_source"
+    ]
+  },
+  "resources": [
     {
-      "term_id": "archive",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
+      "id": "lock",
+      "name": "ロックファイル",
+      "kind": "references",
+      "result": {
+        "content": {
+          "承認": "CHG-1004 / package-lock.json lockfileVersion=3",
+          "node_modules/@aster-ui/icons": {
+            "version": "1.8.0",
+            "resolved": "https://registry.npmjs.org/@aster-ui/icons/-/icons-1.8.0.tgz",
+            "integrity": "sha512-DPj2gqCtozswxBtNwwWWp9xRQi0RCGA2jbz3ceidh6+J1UDnfmiB8DU1drUEb9zlq3k8rMqk9Biy/dhjHy6tLg=="
+          }
         },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
+        "terms": [
+          "archive",
+          "hash",
+          "url",
+          "package",
+          "registry",
+          "integrity",
+          "version",
+          "http",
+          "url_path",
+          "tarball",
+          "lock_file",
+          "ticket"
+        ]
+      },
+      "terms": [
+        "file",
+        "lock_file"
       ]
     },
     {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "script",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "package",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "registry",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "integrity",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "install_script",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "version",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ecosystem",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "dependency",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "package_resolver",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "tarball",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "install",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "package_source",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "lock",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "lock_file",
-      "occurrences": [
-        {
-          "source_id": "lock",
-          "section": "overview"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ticket",
-      "occurrences": [
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "official",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "repository",
-      "occurrences": [
-        {
-          "source_id": "official",
-          "section": "overview"
-        }
+      "id": "official",
+      "name": "公式リポジトリ・承認済みコンポーネント",
+      "kind": "references",
+      "result": {
+        "content": "@aster-ui/icons 1.8.0を本番UIの依存として承認。レジストリの固定tarball・ロックファイルのintegrity値で照合する。",
+        "terms": [
+          "registry",
+          "integrity",
+          "dependency",
+          "tarball",
+          "lock_file"
+        ]
+      },
+      "terms": [
+        "package",
+        "approved",
+        "repository"
       ]
     }
   ],
-  "explanation": "名前・バージョン・解決元・integrity値が承認済みロックファイルと一致するため導入を許可します。名前とバージョンだけの照合ではありません。",
-  "topic": "ロックファイルで取得元と配布物の同一性を確認する",
-  "summary": "ロックファイルで取得元と配布物の同一性を確認する",
   "learning_objectives": [
     "ロックファイルで取得元と配布物の同一性を確認する"
   ],
-  "decision_context": "before_install",
-  "scenario_type": "standard",
   "sources": [
     "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
-  "ecosystem": "npm"
+  ]
 }

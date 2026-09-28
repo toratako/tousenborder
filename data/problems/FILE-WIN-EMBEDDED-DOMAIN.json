@@ -1,26 +1,50 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-WIN-EMBEDDED-DOMAIN",
   "category": "file",
   "platform": "windows",
-  "level": "beginner_external",
-  "ground_truth": "block",
   "title": "埋め込み文字列とドメインの検出履歴",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "C:\\Downloads\\report-converter.exe",
-    "申請内容": "社外の公開変換ツールを初回実行する。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+  "required_evidence": [
+    "strings",
+    "domain_rep",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "静的文字列にある取得先ドメインが、外部照会で現行のマルウェア配布先として報告されているため遮断します。文字列だけで通信が発生したとは扱いません。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "C:\\Downloads\\report-converter.exe",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "社外の公開変換ツールを初回実行する。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "extension",
+      "executable",
+      "path"
+    ]
   },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "strings",
       "name": "Strings (Sysinternals)",
       "description": "ファイル内の可読文字列を抽出します。",
-      "output": "対象: C:\\Downloads\\report-converter.exe\n抽出文字列:\nhttps://asset-fetch.example/component.bin\n/quiet",
       "accepted_information_types": [
         "file"
       ],
@@ -35,35 +59,72 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "domain",
-          "label": "埋め込みURLのホスト",
-          "value": "asset-fetch.example",
-          "data_type": "domain"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "対象: C:\\Downloads\\report-converter.exe\n抽出文字列:\nhttps://{{fact:domain}}/component.bin\n/quiet",
+        "information": [
+          {
+            "id": "domain",
+            "label": "埋め込みURLのホスト",
+            "value": "asset-fetch.example",
+            "data_type": "domain"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "path",
+          "static_analysis",
+          "url",
+          "host",
+          "http",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "file",
+        "static_analysis",
+        "tool_strings"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "disclosure",
       "name": "外部照会方針",
-      "content": {
-        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
-        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
-        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
-        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
-      }
-    }
-  ],
-  "external_references": [
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
+        },
+        "terms": [
+          "file",
+          "path",
+          "url",
+          "host",
+          "url_path",
+          "hash",
+          "sha256",
+          "confidential",
+          "user",
+          "token",
+          "attachment",
+          "authentication",
+          "pcap",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
     {
       "id": "domain_rep",
       "name": "ドメインの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
-      "output": "Domain: asset-fetch.example\n2026-08-18: malware-distribution 9/12 feeds; last seen 2026-08-18",
       "accepted_information_types": [
         "domain"
       ],
@@ -74,306 +135,36 @@
         }
       ],
       "input_hint": "ドメイン",
-      "submission_type": "domain",
-      "submission_value": "asset-fetch.example",
-      "confidentiality_warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
-    }
-  ],
-  "required_evidence": [
-    "strings",
-    "domain_rep",
-    "disclosure"
-  ],
-  "glossary": [
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "strings",
-          "section": "overview"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "strings",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "static_analysis",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "overview"
-        },
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_strings",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "overview"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "confidential",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "token",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pcap",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "indicator",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reputation",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "detection",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "malware",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        }
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "Domain: {{input}}\n2026-08-18: malware-distribution 9/12 feeds; last seen 2026-08-18",
+        "terms": [
+          "host",
+          "detection",
+          "malware"
+        ]
+      },
+      "submission": {
+        "type": "domain",
+        "warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
+        "terms": [
+          "url",
+          "host",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "host",
+        "reputation"
       ]
     }
   ],
-  "explanation": "静的文字列にある取得先ドメインが、外部照会で現行のマルウェア配布先として報告されているため遮断します。文字列だけで通信が発生したとは扱いません。",
-  "topic": "静的文字列から得たドメインを外部照会する",
-  "summary": "静的文字列から得たドメインを外部照会する",
   "learning_objectives": [
     "静的文字列から得たドメインを外部照会する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

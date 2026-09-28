@@ -8,7 +8,7 @@ func _run() -> void:
 	root.add_child(desk)
 	desk._start_shift()
 	var failures := 0
-	for item in desk.catalog.cases:
+	for item in desk.library.cases:
 		var cases: Array[Dictionary] = [item]
 		desk.shift.start(cases)
 		for frame in range(8): await process_frame

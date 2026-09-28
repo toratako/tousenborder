@@ -1,30 +1,77 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "EMAIL-BEC-DESTINATION",
   "category": "email",
   "platform": "common",
-  "level": "applied",
-  "ground_truth": "block",
   "title": "BEC — 振込先の変更依頼",
   "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Email": "quarantine/message-1081.eml",
-    "From": "Cedar請求 <billing@cedar-invoices.example>",
-    "To": "mori@aster.example",
-    "Subject": "振込先変更のお知らせ",
-    "本文": "請求PO-821の振込先を別銀行の口座末尾9912へ変更してください。今日は担当者へ電話がつながりません。",
-    "受信時刻": "2026-08-18 09:10",
-    "状態": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。"
+  "required_evidence": [
+    "header",
+    "vendor",
+    "procedure"
+  ],
+  "ground_truth": "block",
+  "explanation": "取引先の登録アドレスと送信ドメインが異なり、変更依頼にも登録番号での確認記録がないため受入れを遮断します。緊急性の主張だけで振込先を変えません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Email",
+        "label": "Email",
+        "value": "quarantine/message-1081.eml",
+        "data_type": "email"
+      },
+      {
+        "id": "From",
+        "label": "From",
+        "value": "Cedar請求 <billing@cedar-invoices.example>",
+        "data_type": "text"
+      },
+      {
+        "id": "To",
+        "label": "To",
+        "value": "mori@aster.example",
+        "data_type": "text"
+      },
+      {
+        "id": "Subject",
+        "label": "Subject",
+        "value": "振込先変更のお知らせ",
+        "data_type": "text"
+      },
+      {
+        "id": "本文",
+        "label": "本文",
+        "value": "請求PO-821の振込先を別銀行の口座末尾9912へ変更してください。今日は担当者へ電話がつながりません。",
+        "data_type": "text"
+      },
+      {
+        "id": "受信時刻",
+        "label": "受信時刻",
+        "value": "2026-08-18 09:10",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "reply_to",
+      "attachment",
+      "gateway",
+      "email",
+      "to_subject",
+      "quarantine"
+    ]
   },
-  "initial_information_types": {
-    "Email": "email"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "header",
       "name": "メールの原文を表示",
       "description": "信頼する受信ゲートウェイのヘッダーと保存MIMEを表示し、URL・添付を選べるようにします。",
-      "output": "Received: from outbound.cedar-invoices.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=cedar-invoices.example; dkim=pass header.d=cedar-invoices.example; dmarc=pass header.from=cedar-invoices.example\nFrom: Cedar請求 <billing@cedar-invoices.example>\nTo: mori@aster.example\nReply-To: Cedar請求 <billing@cedar-invoices.example>\nReturn-Path: <bounce@cedar-invoices.example>\nSubject: 振込先変更のお知らせ\n\nMIME本文の抜粋:\n請求PO-821の振込先を別銀行の口座末尾9912へ変更してください。今日は担当者へ電話がつながりません。",
       "accepted_information_types": [
         "email"
       ],
@@ -38,322 +85,87 @@
       "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Received: from outbound.cedar-invoices.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=cedar-invoices.example; dkim=pass header.d=cedar-invoices.example; dmarc=pass header.from=cedar-invoices.example\nFrom: Cedar請求 <billing@cedar-invoices.example>\nTo: mori@aster.example\nReply-To: Cedar請求 <billing@cedar-invoices.example>\nReturn-Path: <bounce@cedar-invoices.example>\nSubject: 振込先変更のお知らせ\n\nMIME本文の抜粋:\n請求PO-821の振込先を別銀行の口座末尾9912へ変更してください。今日は担当者へ電話がつながりません。",
+        "terms": [
+          "reply_to",
+          "to_subject",
+          "header",
+          "mime",
+          "ip",
+          "spf",
+          "dkim",
+          "dmarc",
+          "authentication",
+          "timezone",
+          "received",
+          "authentication_results",
+          "auth_mail_fields",
+          "pass_fail",
+          "esmtps"
+        ]
+      },
+      "terms": [
+        "attachment",
+        "gateway",
+        "email",
+        "url",
+        "header",
+        "mime"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "gateway",
       "name": "メールゲートウェイ構成",
-      "content": "信頼する受信ゲートウェイはmx.aster.example。自社ゲートウェイが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+      "kind": "references",
+      "result": {
+        "content": "信頼する受信ゲートウェイはmx.aster.example。自社ゲートウェイが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。",
+        "terms": [
+          "gateway",
+          "authentication",
+          "received",
+          "authentication_results"
+        ]
+      },
+      "terms": [
+        "gateway"
+      ]
     },
     {
       "id": "vendor",
       "name": "取引先台帳",
-      "content": "Cedar商事請求窓口=billing@cedar.example / 登録済み口座末尾2048 / 連絡先=契約台帳の電話番号 / cedar-invoices.exampleの登録なし。"
+      "kind": "references",
+      "result": {
+        "content": "Cedar商事請求窓口=billing@cedar.example / 登録済み口座末尾2048 / 連絡先=契約台帳の電話番号 / cedar-invoices.exampleの登録なし。",
+        "terms": [
+          "directory"
+        ]
+      },
+      "terms": [
+        "vendor",
+        "directory"
+      ]
     },
     {
       "id": "procedure",
       "name": "口座変更手順",
-      "content": "変更チケットと登録電話番号への折返し確認、経理2名承認が必要。PO-821について当日時点の変更チケット・確認記録は0件。"
+      "kind": "references",
+      "result": {
+        "content": "変更チケットと登録電話番号への折返し確認、経理2名承認が必要。PO-821について当日時点の変更チケット・確認記録は0件。",
+        "terms": [
+          "independent",
+          "ticket"
+        ]
+      }
     }
   ],
-  "external_references": [],
-  "required_evidence": [
-    "header",
-    "vendor",
-    "procedure"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "reply_to",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "gateway",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "overview"
-        },
-        {
-          "source_id": "gateway",
-          "section": "overview"
-        },
-        {
-          "source_id": "gateway",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "to_subject",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "quarantine",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "header",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "overview"
-        },
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "mime",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "overview"
-        },
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "spf",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "dkim",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "dmarc",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        },
-        {
-          "source_id": "gateway",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "timezone",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "received",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        },
-        {
-          "source_id": "gateway",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication_results",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        },
-        {
-          "source_id": "gateway",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "auth_mail_fields",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pass_fail",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "esmtps",
-      "occurrences": [
-        {
-          "source_id": "header",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "vendor",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "directory",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "overview"
-        },
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "independent",
-      "occurrences": [
-        {
-          "source_id": "procedure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ticket",
-      "occurrences": [
-        {
-          "source_id": "procedure",
-          "section": "result"
-        }
-      ]
-    }
-  ],
-  "explanation": "取引先の登録アドレスと送信ドメインが異なり、変更依頼にも登録番号での確認記録がないため受入れを遮断します。緊急性の主張だけで振込先を変えません。",
-  "topic": "送信元と口座変更手順を独立した台帳で検証する",
-  "summary": "送信元と口座変更手順を独立した台帳で検証する",
   "learning_objectives": [
     "送信元と口座変更手順を独立した台帳で検証する"
   ],
-  "decision_context": "before_delivery",
-  "scenario_type": "real_world_inspired",
   "sources": [
     "https://www.fbi.gov/how-we-can-help-you/common-frauds-and-scams/business-email-compromise"
   ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "BEC — Payment Destination Change"
 }

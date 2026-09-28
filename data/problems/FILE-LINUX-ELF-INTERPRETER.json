@@ -1,26 +1,49 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-LINUX-ELF-INTERPRETER",
   "category": "file",
   "platform": "linux",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "承認されていないELFインタープリター",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "/opt/incoming/stats-agent",
-    "申請内容": "統計エージェント 2.0の導入。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+  "required_evidence": [
+    "elf",
+    "service"
+  ],
+  "ground_truth": "block",
+  "explanation": "ELFのインタープリターが承認構成の標準ローダーではなく/tmp配下を指すため、導入条件を満たさず遮断します。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "/opt/incoming/stats-agent",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "統計エージェント 2.0の導入。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "path",
+      "agent",
+      "install"
+    ]
   },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "elf",
       "name": "readelf",
       "description": "ELFヘッダー・インタープリター・依存ライブラリ・RUNPATHを静的に表示します。",
-      "output": "ELF64 / x86-64\nINTERP: /tmp/ld-stats.so\nNEEDED: libc.so.6",
       "accepted_information_types": [
         "file"
       ],
@@ -34,200 +57,54 @@
       "platform_note": "Linux / GNU binutils",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "ELF64 / x86-64\nINTERP: /tmp/ld-stats.so\nNEEDED: libc.so.6",
+        "terms": [
+          "path",
+          "elf",
+          "elf_interpreter",
+          "shared_library",
+          "temp",
+          "architecture"
+        ]
+      },
+      "terms": [
+        "file",
+        "elf",
+        "elf_interpreter",
+        "shared_library",
+        "runpath",
+        "static_analysis",
+        "dependency",
+        "tool_readelf"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "service",
       "name": "サービス構成台帳",
-      "content": "stats-agent 2.0: Interpreter=/lib64/ld-linux-x86-64.so.2。ローダーを/tmpに配置する構成は未承認。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "elf",
-    "service"
-  ],
-  "glossary": [
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "elf",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "elf",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "agent",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "install",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "elf",
-      "occurrences": [
-        {
-          "source_id": "elf",
-          "section": "overview"
-        },
-        {
-          "source_id": "elf",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "elf_interpreter",
-      "occurrences": [
-        {
-          "source_id": "elf",
-          "section": "overview"
-        },
-        {
-          "source_id": "elf",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "shared_library",
-      "occurrences": [
-        {
-          "source_id": "elf",
-          "section": "overview"
-        },
-        {
-          "source_id": "elf",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "runpath",
-      "occurrences": [
-        {
-          "source_id": "elf",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "static_analysis",
-      "occurrences": [
-        {
-          "source_id": "elf",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "dependency",
-      "occurrences": [
-        {
-          "source_id": "elf",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_readelf",
-      "occurrences": [
-        {
-          "source_id": "elf",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "temp",
-      "occurrences": [
-        {
-          "source_id": "elf",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "architecture",
-      "occurrences": [
-        {
-          "source_id": "elf",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "service",
-      "occurrences": [
-        {
-          "source_id": "service",
-          "section": "overview"
-        }
+      "kind": "references",
+      "result": {
+        "content": "stats-agent 2.0: Interpreter=/lib64/ld-linux-x86-64.so.2。ローダーを/tmpに配置する構成は未承認。",
+        "terms": [
+          "path",
+          "agent",
+          "elf_interpreter",
+          "shared_library",
+          "architecture"
+        ]
+      },
+      "terms": [
+        "service"
       ]
     }
   ],
-  "explanation": "ELFのインタープリターが承認構成の標準ローダーではなく/tmp配下を指すため、導入条件を満たさず遮断します。",
-  "topic": "readelfで静的なローダー指定を照合する",
-  "summary": "readelfで静的なローダー指定を照合する",
   "learning_objectives": [
     "readelfで静的なローダー指定を照合する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "standard",
   "sources": [
     "https://sourceware.org/binutils/docs/binutils/readelf.html",
     "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

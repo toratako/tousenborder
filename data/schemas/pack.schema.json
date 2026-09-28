@@ -1,11 +1,9 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Canonical security learning pack",
   "type": "object",
   "properties": {
     "schema_version": {
-      "const": 1,
-      "type": "integer"
+      "type": "integer",
+      "const": 2
     },
     "id": {
       "$ref": "#/$defs/text"
@@ -13,132 +11,28 @@
     "title": {
       "$ref": "#/$defs/text"
     },
-    "problems": {
+    "chapters": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "pattern": "^res://data/problems/[A-Za-z0-9_-]+\\.json$"
-      },
       "minItems": 1,
-      "uniqueItems": true
-    },
-    "rules": {
-      "type": "array",
+      "uniqueItems": true,
       "items": {
-        "$ref": "#/$defs/rule"
+        "$ref": "#/$defs/text"
       }
-    },
-    "categories": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/category"
-      },
-      "minItems": 1
-    },
-    "resource_groups": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/resource_group"
-      }
-    },
-    "feedback": {
-      "type": "object",
-      "properties": {
-        "show_expected": {
-          "type": "boolean"
-        },
-        "show_reason": {
-          "type": "boolean"
-        },
-        "correct_heading": {
-          "$ref": "#/$defs/text"
-        },
-        "incorrect_heading": {
-          "$ref": "#/$defs/text"
-        }
-      },
-      "required": [],
-      "additionalProperties": false
-    },
-    "glossary_path": {
-      "type": "string",
-      "pattern": "^res://data/glossary/[A-Za-z0-9_-]+\\.json$"
     }
   },
   "required": [
     "schema_version",
     "id",
     "title",
-    "problems",
-    "rules",
-    "categories"
+    "chapters"
   ],
   "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
     "text": {
       "type": "string",
       "minLength": 1,
       "pattern": "\\S"
-    },
-    "category": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/$defs/text"
-        },
-        "label": {
-          "$ref": "#/$defs/text"
-        }
-      },
-      "required": [
-        "id",
-        "label"
-      ],
-      "additionalProperties": false
-    },
-    "rule": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/$defs/text"
-        },
-        "label": {
-          "$ref": "#/$defs/text"
-        },
-        "value": {
-          "$ref": "#/$defs/text"
-        }
-      },
-      "required": [
-        "id",
-        "label",
-        "value"
-      ],
-      "additionalProperties": false
-    },
-    "resource_group": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/$defs/text"
-        },
-        "label": {
-          "$ref": "#/$defs/text"
-        },
-        "kind": {
-          "enum": [
-            "tools",
-            "references",
-            "external_references"
-          ]
-        }
-      },
-      "required": [
-        "id",
-        "label",
-        "kind"
-      ],
-      "additionalProperties": false
     }
   }
 }

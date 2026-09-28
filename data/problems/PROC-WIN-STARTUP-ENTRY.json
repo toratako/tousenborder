@@ -1,28 +1,56 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-WIN-STARTUP-ENTRY",
   "category": "process",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "Temp配下からの自動起動",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "helper.exe",
-    "PID": 4200,
-    "User": "ASTER\\mori",
-    "採取時点": "2026-08-18 09:10 / 起動済み"
+  "required_evidence": [
+    "autoruns",
+    "startup"
+  ],
+  "ground_truth": "block",
+  "explanation": "PID 4200のイメージに対応するRun登録がTemp配下のhelper.exeを指定し、登録と稼働の許可条件に反するため停止します。この登録が今回の起動元だったとまでは断定しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "helper.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "ASTER\\mori",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "user"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "autoruns",
       "name": "Autoruns",
       "description": "選択PIDのイメージに対応する自動起動登録を検索します。PIDから対象パスを選ぶ操作は教材のラッパーです。",
-      "output": "対象の対応付け: PID 4200 / C:\\Users\\mori\\AppData\\Local\\Temp\\helper.exe\nLogon\nRegistry Key: HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\nValue Name: OfficeHelper\nValue Data: C:\\Users\\mori\\AppData\\Local\\Temp\\helper.exe\nImage Path: C:\\Users\\mori\\AppData\\Local\\Temp\\helper.exe",
       "accepted_information_types": [
         "pid"
       ],
@@ -36,235 +64,56 @@
       "platform_note": "Windows / Microsoft Sysinternals・要導入",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "対象の対応付け: PID 4200 / C:\\Users\\mori\\AppData\\Local\\Temp\\helper.exe\nLogon\nRegistry Key: HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\nValue Name: OfficeHelper\nValue Data: C:\\Users\\mori\\AppData\\Local\\Temp\\helper.exe\nImage Path: C:\\Users\\mori\\AppData\\Local\\Temp\\helper.exe",
+        "terms": [
+          "extension",
+          "executable",
+          "user",
+          "path",
+          "image_process",
+          "version",
+          "login",
+          "temp",
+          "windows_registry"
+        ]
+      },
+      "terms": [
+        "pid",
+        "path",
+        "image_process",
+        "autostart",
+        "tool_autoruns"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "startup",
       "name": "自動起動方針",
-      "content": "業務端末のユーザー Run登録は管理配布パスの承認済みエージェントのみ。Temp配下のファイルを指定する登録は不可。禁止された登録に対応するイメージの稼働も認めない。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "autoruns",
-    "startup"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "autoruns",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "autoruns",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "autoruns",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "autoruns",
-          "section": "result"
-        },
-        {
-          "source_id": "startup",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "autoruns",
-          "section": "overview"
-        },
-        {
-          "source_id": "autoruns",
-          "section": "result"
-        },
-        {
-          "source_id": "startup",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "autoruns",
-          "section": "overview"
-        },
-        {
-          "source_id": "autoruns",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "autostart",
-      "occurrences": [
-        {
-          "source_id": "autoruns",
-          "section": "overview"
-        },
-        {
-          "source_id": "startup",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_autoruns",
-      "occurrences": [
-        {
-          "source_id": "autoruns",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "version",
-      "occurrences": [
-        {
-          "source_id": "autoruns",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "login",
-      "occurrences": [
-        {
-          "source_id": "autoruns",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "temp",
-      "occurrences": [
-        {
-          "source_id": "autoruns",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "windows_registry",
-      "occurrences": [
-        {
-          "source_id": "autoruns",
-          "section": "result"
-        },
-        {
-          "source_id": "startup",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "startup",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "startup",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "startup",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "startup",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "agent",
-      "occurrences": [
-        {
-          "source_id": "startup",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "業務端末のユーザー Run登録は管理配布パスの承認済みエージェントのみ。Temp配下のファイルを指定する登録は不可。禁止された登録に対応するイメージの稼働も認めない。",
+        "terms": [
+          "user",
+          "path",
+          "windows_registry",
+          "file",
+          "approved",
+          "device",
+          "agent"
+        ]
+      },
+      "terms": [
+        "autostart",
+        "policy"
       ]
     }
   ],
-  "explanation": "PID 4200のイメージに対応するRun登録がTemp配下のhelper.exeを指定し、登録と稼働の許可条件に反するため停止します。この登録が今回の起動元だったとまでは断定しません。",
-  "topic": "Autorunsの登録先を組織の自動起動規則と比較する",
-  "summary": "Autorunsの登録先を組織の自動起動規則と比較する",
   "learning_objectives": [
     "Autorunsの登録先を組織の自動起動規則と比較する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

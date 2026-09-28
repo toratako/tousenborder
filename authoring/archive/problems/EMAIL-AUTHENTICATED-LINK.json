@@ -1,0 +1,328 @@
+{
+  "schema_version": 2,
+  "id": "EMAIL-AUTHENTICATED-LINK",
+  "category": "email",
+  "platform": "common",
+  "title": "認証に成功していても正規企業のURLではない",
+  "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "header",
+    "isolated",
+    "official",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "SPF/DKIM/DMARCの認証成功は送信元ドメインについての結果です。隔離解析先は組織のパスワードを求める承認外ホストなのでメールの受入れを遮断します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Email",
+        "label": "Email",
+        "value": "quarantine/message-1082.eml",
+        "data_type": "email"
+      },
+      {
+        "id": "From",
+        "label": "From",
+        "value": "Asterサポート <support@aster-support.example>",
+        "data_type": "text"
+      },
+      {
+        "id": "To",
+        "label": "To",
+        "value": "mori@aster.example",
+        "data_type": "text"
+      },
+      {
+        "id": "Subject",
+        "label": "Subject",
+        "value": "Passwordの有効期限",
+        "data_type": "text"
+      },
+      {
+        "id": "本文",
+        "label": "本文",
+        "value": "リンクから組織アカウントを確認してください。",
+        "data_type": "text"
+      },
+      {
+        "id": "受信時刻",
+        "label": "受信時刻",
+        "value": "2026-08-18 09:10",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "user",
+      "port",
+      "reply_to",
+      "attachment",
+      "gateway",
+      "password",
+      "email",
+      "to_subject",
+      "quarantine"
+    ]
+  },
+  "resources": [
+    {
+      "id": "header",
+      "name": "メールの原文を表示",
+      "description": "信頼する受信ゲートウェイのヘッダーと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Email"
+        }
+      ],
+      "input_hint": "メール",
+      "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Received: from outbound.{{fact:host}} ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom={{fact:host}}; dkim=pass header.d={{fact:host}}; dmarc=pass header.from={{fact:host}}\nFrom: Asterサポート <support@{{fact:host}}>\nTo: mori@aster.example\nReply-To: Asterサポート <support@{{fact:host}}>\nReturn-Path: <bounce@{{fact:host}}>\nSubject: Passwordの有効期限\n\nMIME本文の抜粋:\n<a href=\"{{fact:url}}\">確認</a>",
+        "information": [
+          {
+            "id": "url",
+            "label": "本文内URL",
+            "value": "https://aster-support.example/verify",
+            "data_type": "url"
+          },
+          {
+            "id": "host",
+            "label": "本文内URLのホスト",
+            "value": "aster-support.example",
+            "data_type": "domain"
+          }
+        ],
+        "terms": [
+          "port",
+          "reply_to",
+          "password",
+          "to_subject",
+          "url",
+          "header",
+          "mime",
+          "ip",
+          "host",
+          "spf",
+          "dkim",
+          "dmarc",
+          "authentication",
+          "timezone",
+          "http",
+          "url_path",
+          "received",
+          "authentication_results",
+          "auth_mail_fields",
+          "pass_fail",
+          "esmtps",
+          "href"
+        ]
+      },
+      "terms": [
+        "attachment",
+        "gateway",
+        "email",
+        "url",
+        "header",
+        "mime"
+      ]
+    },
+    {
+      "id": "gateway",
+      "name": "メールゲートウェイ構成",
+      "kind": "references",
+      "result": {
+        "content": "信頼する受信ゲートウェイはmx.aster.example。自社ゲートウェイが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。",
+        "terms": [
+          "gateway",
+          "authentication",
+          "received",
+          "authentication_results"
+        ]
+      },
+      "terms": [
+        "gateway"
+      ]
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。"
+        },
+        "terms": [
+          "user",
+          "attachment",
+          "email",
+          "url",
+          "host",
+          "authentication",
+          "url_path",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "token",
+          "pcap",
+          "indicator"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
+    {
+      "id": "official",
+      "name": "公式サービス・ドメイン",
+      "kind": "references",
+      "result": {
+        "content": "組織アカウントのパスワード入力先はlogin.aster.exampleのみ。サポート通知はsupport@aster.exampleから送る。",
+        "terms": [
+          "user",
+          "port",
+          "password",
+          "login"
+        ]
+      },
+      "terms": [
+        "host"
+      ]
+    },
+    {
+      "id": "isolated",
+      "name": "隔離環境でのURL解析",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "accepted_information_types": [
+        "url"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "url"
+        }
+      ],
+      "input_hint": "URL",
+      "correct_usage": true,
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "URL: {{input}}\nHTTP 200\nForm labels: Aster email / password\nForm action: https://aster-support.example/session",
+        "terms": [
+          "password",
+          "email",
+          "url",
+          "http",
+          "url_path",
+          "session",
+          "form",
+          "http_200"
+        ]
+      },
+      "submission": {
+        "type": "full_url",
+        "warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
+        "terms": [
+          "url",
+          "http",
+          "url_path",
+          "isolated"
+        ]
+      },
+      "terms": [
+        "url",
+        "isolated"
+      ]
+    },
+    {
+      "id": "dig",
+      "name": "dig",
+      "description": "選択したホストのDNSレコードとTTLを表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "host"
+        }
+      ],
+      "input_hint": "host",
+      "platform_note": "Linux / BIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "section": "URLの調査",
+      "result": {
+        "content": ";; ANSWER SECTION:\naster-support.example. 300 IN A {{fact:ip}}",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "203.0.113.122",
+            "data_type": "ip"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nslookup",
+      "name": "nslookup",
+      "description": "選択したホストのDNS応答を表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "host"
+        }
+      ],
+      "input_hint": "host",
+      "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "section": "URLの調査",
+      "result": {
+        "content": "Server: 192.0.2.53\nName: aster-support.example\nAddress: {{fact:ip}}\n",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "203.0.113.122",
+            "data_type": "ip"
+          }
+        ]
+      }
+    }
+  ],
+  "learning_objectives": [
+    "メールの認証とリンク先の正当性を別々に調べる"
+  ],
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc8601"
+  ]
+}

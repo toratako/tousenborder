@@ -1,26 +1,50 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-LINUX-PUBLISHED-HASH",
   "category": "file",
   "platform": "linux",
-  "level": "beginner",
-  "ground_truth": "allow",
   "title": "Linux配布アーカイブの同一性",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "/srv/downloads/aster-cli-4.2.tar.gz",
-    "申請内容": "公開版CLI 4.2の導入。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+  "required_evidence": [
+    "hash",
+    "vendor",
+    "approved"
+  ],
+  "ground_truth": "allow",
+  "explanation": "SHA-256がベンダー公開値と一致し、導入対象も承認済みバージョンなので許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "/srv/downloads/aster-cli-4.2.tar.gz",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "公開版CLI 4.2の導入。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "path",
+      "archive",
+      "install"
+    ]
   },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "hash",
       "name": "sha256sum",
       "description": "選択したファイルのSHA-256を計算します。",
-      "output": "04a7be8b7f2573b105d0b3eb1c9d30825e77f2463588013f61a5d31957260e6f  /srv/downloads/aster-cli-4.2.tar.gz",
       "accepted_information_types": [
         "file"
       ],
@@ -35,230 +59,79 @@
       "environments": [
         "linux"
       ],
-      "output_information": [
-        {
-          "id": "sha256",
-          "label": "対象ファイルのSHA-256",
-          "value": "04a7be8b7f2573b105d0b3eb1c9d30825e77f2463588013f61a5d31957260e6f",
-          "data_type": "sha256"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "{{fact:sha256}}  /srv/downloads/aster-cli-4.2.tar.gz",
+        "information": [
+          {
+            "id": "sha256",
+            "label": "対象ファイルのSHA-256",
+            "value": "04a7be8b7f2573b105d0b3eb1c9d30825e77f2463588013f61a5d31957260e6f",
+            "data_type": "sha256"
+          }
+        ],
+        "terms": [
+          "file",
+          "path",
+          "archive",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "file",
+        "hash",
+        "sha256",
+        "tool_hash_linux"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "vendor",
       "name": "ベンダー公開ハッシュ",
-      "content": {
-        "配布物": "aster-cli-4.2.tar.gz",
-        "SHA256": "04a7be8b7f2573b105d0b3eb1c9d30825e77f2463588013f61a5d31957260e6f",
-        "公開元": "https://downloads.aster.example/cli/4.2"
-      }
+      "kind": "references",
+      "result": {
+        "content": {
+          "配布物": "aster-cli-4.2.tar.gz",
+          "SHA256": "04a7be8b7f2573b105d0b3eb1c9d30825e77f2463588013f61a5d31957260e6f",
+          "公開元": "https://downloads.aster.example/cli/4.2"
+        },
+        "terms": [
+          "archive",
+          "hash",
+          "sha256",
+          "url",
+          "http",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "hash",
+        "vendor"
+      ]
     },
     {
       "id": "approved",
       "name": "承認済みソフトウェア",
-      "content": "aster-cli 4.2 / Linux x86-64 / 運用サーバーへの導入承認 CHG-435。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "hash",
-    "vendor",
-    "approved"
-  ],
-  "glossary": [
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "archive",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "install",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "vendor",
-          "section": "overview"
-        },
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_hash_linux",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "vendor",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "ticket",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "architecture",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "server",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "aster-cli 4.2 / Linux x86-64 / 運用サーバーへの導入承認 CHG-435。",
+        "terms": [
+          "install",
+          "ticket",
+          "architecture",
+          "server"
+        ]
+      },
+      "terms": [
+        "approved"
       ]
     }
   ],
-  "explanation": "SHA-256がベンダー公開値と一致し、導入対象も承認済みバージョンなので許可します。",
-  "topic": "Linuxで公開ハッシュと導入承認を照合する",
-  "summary": "Linuxで公開ハッシュと導入承認を照合する",
   "learning_objectives": [
     "Linuxで公開ハッシュと導入承認を照合する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "standard",
   "sources": [
     "https://sourceware.org/binutils/docs/binutils/readelf.html",
     "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

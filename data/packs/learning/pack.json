@@ -1,0 +1,8 @@
+{
+  "schema_version": 2,
+  "id": "learning",
+  "title": "セキュリティ判断の基礎",
+  "chapters": [
+    "chapters/01.json"
+  ]
+}

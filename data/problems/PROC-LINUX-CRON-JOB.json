@@ -1,30 +1,68 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-LINUX-CRON-JOB",
   "category": "process",
   "platform": "linux",
-  "level": "beginner",
-  "ground_truth": "allow",
   "title": "定例crontabの保守ジョブ",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "rotate-reports",
-    "PID": 4200,
-    "User": "reports",
-    "採取時点": "2026-08-18 09:10:05 / 起動済み",
-    "起動時刻": "2026-08-18 09:10:00",
-    "実行Command": "/opt/reports/rotate-reports --days 30"
+  "required_evidence": [
+    "cron",
+    "job"
+  ],
+  "ground_truth": "allow",
+  "explanation": "現在のPID 4200はreportsユーザーで09:10にcronの子シェルから起動され、完全なコマンドもcrontabの登録内容と承認済みJOB-503に一致するため継続を許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "rotate-reports",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "reports",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10:05 / 起動済み",
+        "data_type": "text"
+      },
+      {
+        "id": "起動時刻",
+        "label": "起動時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "実行Command",
+        "label": "実行Command",
+        "value": "/opt/reports/rotate-reports --days 30",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "path",
+      "process",
+      "pid",
+      "command",
+      "user"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "cron",
       "name": "crontab",
       "description": "選択PIDの実効ユーザーのcrontabを表示します。ユーザー選択は教材のラッパーで、起動原因の断定には別の観測も必要です。",
-      "output": "crontab -u reports -l\n10 9 * * * /opt/reports/rotate-reports --days 30",
       "accepted_information_types": [
         "pid"
       ],
@@ -38,146 +76,45 @@
       "platform_note": "Linux / cron・cronie等のcrontab実装",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "crontab -u reports -l\n10 9 * * * /opt/reports/rotate-reports --days 30",
+        "terms": [
+          "path",
+          "command",
+          "cron"
+        ]
+      },
+      "terms": [
+        "pid",
+        "user",
+        "cron"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "job",
       "name": "承認済みジョブ",
-      "content": "reports / 毎日09:10 / /opt/reports/rotate-reports --days 30 / JOB-503。\n端末監視の起動記録: cron (PID 800) → /bin/sh (PID 3100) → rotate-reports (PID 4200)。User=reports。起動記録のCommand=/opt/reports/rotate-reports --days 30。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "cron",
-    "job"
-  ],
-  "glossary": [
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "cron",
-          "section": "result"
-        },
-        {
-          "source_id": "job",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "cron",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "command",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "cron",
-          "section": "result"
-        },
-        {
-          "source_id": "job",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "cron",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "shell",
-      "occurrences": [
-        {
-          "source_id": "job",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "cron",
-      "occurrences": [
-        {
-          "source_id": "cron",
-          "section": "overview"
-        },
-        {
-          "source_id": "cron",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "job",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "job",
-      "occurrences": [
-        {
-          "source_id": "job",
-          "section": "overview"
-        },
-        {
-          "source_id": "job",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "reports / 毎日09:10 / /opt/reports/rotate-reports --days 30 / JOB-503。\n端末監視の起動記録: cron (PID 800) → /bin/sh (PID 3100) → rotate-reports (PID 4200)。User=reports。起動記録のCommand=/opt/reports/rotate-reports --days 30。",
+        "terms": [
+          "path",
+          "command",
+          "shell",
+          "job"
+        ]
+      },
+      "terms": [
+        "approved",
+        "job"
       ]
     }
   ],
-  "explanation": "現在のPID 4200はreportsユーザーで09:10にcronの子シェルから起動され、完全なコマンドもcrontabの登録内容と承認済みJOB-503に一致するため継続を許可します。",
-  "topic": "crontabの予定とジョブ承認を照合する",
-  "summary": "crontabの予定とジョブ承認を照合する",
   "learning_objectives": [
     "crontabの予定とジョブ承認を照合する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

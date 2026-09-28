@@ -51,7 +51,7 @@ func inspect(tool: Dictionary, input: Dictionary = {}) -> Dictionary:
 	return result
 
 func decline_external(tool: Dictionary, input: Dictionary = {}) -> bool:
-	if finished() or judged or tool.get("case_id", "") != current().id or tool.get("resource_kind", "") != "external_references":
+	if finished() or judged or tool.get("case_id", "") != ProblemLoader.identity(current()) or tool.get("kind", "") != "external_references":
 		return false
 	if not ToolRunner.supports_target(tool, current()):
 		return false
@@ -69,7 +69,9 @@ func decide(verdict: String) -> bool:
 	var missing := missing_evidence()
 	records.append({"id": current().id, "title": current().title, "verdict": verdict,
 		"request": current().request, "information": current().information.duplicate(true),
-		"category": current().category, "level": current().level, "platform": current().platform,
+		"category": current().category, "category_label": ContentLabels.category(current()),
+		"level": current().difficulty, "platform": current().platform, "method": current().traits.method,
+		"source_id": current().source_id, "definition_hash": current().definition_hash,
 		"investigation_environment": ToolRunner.investigation_environment(current()),
 		"correct": verdict == current().ground_truth, "ground_truth": current().ground_truth,
 		"explanation": current().explanation, "observations": observations.duplicate(true),
@@ -132,7 +134,7 @@ func score() -> int:
 	return records.filter(func(record): return record.correct).size()
 
 func _owns_information(input: Dictionary) -> bool:
-	if input.get("case_id", "") != current().id:
+	if input.get("case_id", "") != ProblemLoader.identity(current()):
 		return false
 	var candidates: Array = current().get("information", []).duplicate(true)
 	for observation in observations:

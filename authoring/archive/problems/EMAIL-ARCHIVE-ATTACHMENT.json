@@ -1,0 +1,258 @@
+{
+  "schema_version": 2,
+  "id": "EMAIL-ARCHIVE-ATTACHMENT",
+  "category": "email",
+  "platform": "common",
+  "title": "添付されたアーカイブの内容を調べる",
+  "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "header",
+    "archive_listing",
+    "format"
+  ],
+  "ground_truth": "block",
+  "explanation": "配送時の認証に成功していても、アーカイブにはスクリプトとショートカットが含まれ、PDFだけという受入れ条件に反するため遮断します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Email",
+        "label": "Email",
+        "value": "quarantine/message-1083.eml",
+        "data_type": "email"
+      },
+      {
+        "id": "From",
+        "label": "From",
+        "value": "取引窓口 <orders@cedar.example>",
+        "data_type": "text"
+      },
+      {
+        "id": "To",
+        "label": "To",
+        "value": "mori@aster.example",
+        "data_type": "text"
+      },
+      {
+        "id": "Subject",
+        "label": "Subject",
+        "value": "発注資料",
+        "data_type": "text"
+      },
+      {
+        "id": "本文",
+        "label": "本文",
+        "value": "PDFだけのArchiveを添付しました。",
+        "data_type": "text"
+      },
+      {
+        "id": "受信時刻",
+        "label": "受信時刻",
+        "value": "2026-08-18 09:10",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "pdf",
+      "archive",
+      "reply_to",
+      "attachment",
+      "gateway",
+      "email",
+      "to_subject",
+      "quarantine"
+    ]
+  },
+  "resources": [
+    {
+      "id": "header",
+      "name": "メールの原文を表示",
+      "description": "信頼する受信ゲートウェイのヘッダーと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Email"
+        }
+      ],
+      "input_hint": "メール",
+      "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Received: from outbound.cedar.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=cedar.example; dkim=pass header.d=cedar.example; dmarc=pass header.from=cedar.example\nFrom: 取引窓口 <orders@cedar.example>\nTo: mori@aster.example\nReply-To: 取引窓口 <orders@cedar.example>\nReturn-Path: <bounce@cedar.example>\nSubject: 発注資料\n\nMIME本文の抜粋:\nContent-Type: application/zip\nContent-Disposition: attachment; filename=\"order-docs.zip\"\nGatewayがMIMEから抽出して保存した添付: {{fact:attachment}}",
+        "information": [
+          {
+            "id": "attachment",
+            "label": "抽出済み添付ファイル",
+            "value": "/quarantine/attachments/order-docs.zip",
+            "data_type": "file"
+          }
+        ],
+        "terms": [
+          "extension",
+          "archive",
+          "reply_to",
+          "attachment",
+          "gateway",
+          "to_subject",
+          "quarantine",
+          "header",
+          "mime",
+          "file",
+          "path",
+          "ip",
+          "spf",
+          "dkim",
+          "dmarc",
+          "authentication",
+          "timezone",
+          "content_type",
+          "dns_records",
+          "received",
+          "authentication_results",
+          "auth_mail_fields",
+          "pass_fail",
+          "disposition",
+          "esmtps"
+        ]
+      },
+      "terms": [
+        "attachment",
+        "gateway",
+        "email",
+        "url",
+        "header",
+        "mime"
+      ]
+    },
+    {
+      "id": "gateway",
+      "name": "メールゲートウェイ構成",
+      "kind": "references",
+      "result": {
+        "content": "信頼する受信ゲートウェイはmx.aster.example。自社ゲートウェイが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。",
+        "terms": [
+          "gateway",
+          "authentication",
+          "received",
+          "authentication_results"
+        ]
+      },
+      "terms": [
+        "gateway"
+      ]
+    },
+    {
+      "id": "format",
+      "name": "受入れ形式",
+      "kind": "references",
+      "result": {
+        "content": "Cedar社との発注資料はPDFのみ。スクリプト・ショートカットを含むアーカイブは受け入れない。",
+        "terms": [
+          "pdf",
+          "archive",
+          "script",
+          "shortcut"
+        ]
+      }
+    },
+    {
+      "id": "archive",
+      "name": "7-Zip",
+      "description": "アーカイブを展開せずに内容の一覧を表示します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "attachment"
+        }
+      ],
+      "input_hint": "attachment",
+      "platform_note": "7-Zip / 対象OS向け版を導入済み",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "section": "添付ファイルの調査",
+      "result": {
+        "content": "7z l order-docs.zip\nType = zip\norder.pdf\nreview.vbs\nopen-order.lnk"
+      }
+    },
+    {
+      "id": "attachment_hash",
+      "name": "sha256sum",
+      "description": "選択したファイルのSHA-256を計算します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "attachment"
+        }
+      ],
+      "input_hint": "attachment",
+      "platform_note": "Linux / GNU coreutils",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "section": "添付ファイルの調査",
+      "result": {
+        "content": "5eac4697f6cf2c6bf69965aa421d6efb47a941baa7e4c7e6406ba12cfaf89460  /quarantine/attachments/order-docs.zip"
+      }
+    },
+    {
+      "id": "unzip",
+      "name": "unzip",
+      "description": "ZIPを展開せずに内容の一覧を表示します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "attachment"
+        }
+      ],
+      "input_hint": "attachment",
+      "platform_note": "Linux / unzipパッケージ",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "section": "添付ファイルの調査",
+      "result": {
+        "content": "unzip -l order-docs.zip\nLength  Name\n18240   order.pdf\n1240    review.vbs\n912     open-order.lnk"
+      }
+    }
+  ],
+  "evidence_alternatives": {
+    "archive_listing": {
+      "label": "添付アーカイブの一覧",
+      "any_of": [
+        "archive",
+        "unzip"
+      ]
+    }
+  },
+  "learning_objectives": [
+    "メール認証と添付の受入れ形式を分ける"
+  ],
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc8601"
+  ]
+}

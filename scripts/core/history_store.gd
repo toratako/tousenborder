@@ -15,7 +15,7 @@ static func snapshot(shift: InspectionShift, pack: Dictionary, selection: Dictio
 	if not shift.finished() or shift.records.is_empty(): return {}
 	var labels := {}
 	for action in actions: labels[action.id] = action.label
-	return {"schema_version": 2, "session_id": shift.session_id, "started_at": shift.started_at,
+	return {"schema_version": 3, "session_id": shift.session_id, "started_at": shift.started_at,
 		"completed_at": Time.get_unix_time_from_system(), "pack": pack.duplicate(true),
 		"selection": selection.duplicate(true), "elapsed_seconds": shift.elapsed_seconds,
 		"stats": {"answered": shift.records.size(), "correct": shift.score(), "unsafe": shift.unsafe_investigations()},

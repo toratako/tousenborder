@@ -1,32 +1,91 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "NET-LINUX-IP-REPUTATION",
   "category": "network",
   "platform": "linux",
-  "level": "beginner_external",
-  "ground_truth": "block",
   "title": "接続先IPの既知検出",
   "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "接続ID": "CONNECT-701",
-    "PID": 5100,
-    "Process表示名": "cache-worker",
-    "Remote Port": 443,
-    "Protocol": "TCP",
-    "端末": "192.0.2.30",
-    "保留中のLocal Port": 52410,
-    "要求時刻": "2026-08-18 09:10:00",
-    "接続状況": "同じプロセスの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。"
+  "required_evidence": [
+    "lsof_i",
+    "ip_rep",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "対象プロセスの接続先IPには、現在も有効な悪性インフラとしての報告があるため新しい接続を遮断します。",
+  "initial": {
+    "information": [
+      {
+        "id": "接続ID",
+        "label": "接続ID",
+        "value": "CONNECT-701",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 5100,
+        "data_type": "pid"
+      },
+      {
+        "id": "Process表示名",
+        "label": "Process表示名",
+        "value": "cache-worker",
+        "data_type": "text"
+      },
+      {
+        "id": "Remote Port",
+        "label": "Remote Port",
+        "value": 443,
+        "data_type": "text"
+      },
+      {
+        "id": "Protocol",
+        "label": "Protocol",
+        "value": "TCP",
+        "data_type": "text"
+      },
+      {
+        "id": "端末",
+        "label": "端末",
+        "value": "192.0.2.30",
+        "data_type": "text"
+      },
+      {
+        "id": "保留中のLocal Port",
+        "label": "保留中のLocal Port",
+        "value": 52410,
+        "data_type": "text"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "接続状況",
+        "label": "接続状況",
+        "value": "同じプロセスの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "process",
+      "pid",
+      "ip",
+      "port",
+      "tcp",
+      "flow",
+      "device",
+      "local_remote",
+      "protocol"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "lsof_i",
       "name": "lsof -i",
       "description": "選択PIDが所有するインターネット接続のソケットを確認します。",
-      "output": "COMMAND PID USER FD TYPE NAME\ncache-worker 5100 agent 5u IPv4 192.0.2.30:52400->203.0.113.100:443 (ESTABLISHED)",
       "accepted_information_types": [
         "pid"
       ],
@@ -41,35 +100,72 @@
       "environments": [
         "linux"
       ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "既存接続の接続先IP",
-          "value": "203.0.113.100",
-          "data_type": "ip"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "COMMAND PID USER FD TYPE NAME\ncache-worker 5100 agent 5u IPv4 192.0.2.30:52400->{{fact:ip}}:443 (ESTABLISHED)",
+        "information": [
+          {
+            "id": "ip",
+            "label": "既存接続の接続先IP",
+            "value": "203.0.113.100",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "pid",
+          "ip",
+          "local_remote",
+          "command",
+          "user",
+          "established",
+          "fd",
+          "agent"
+        ]
+      },
+      "terms": [
+        "pid",
+        "socket",
+        "tool_lsof"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "disclosure",
       "name": "外部照会方針",
-      "content": {
-        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
-        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
-        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
-        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
-      }
-    }
-  ],
-  "external_references": [
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
+        },
+        "terms": [
+          "pcap",
+          "user",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "url",
+          "host",
+          "token",
+          "attachment",
+          "authentication",
+          "url_path",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
     {
       "id": "ip_rep",
       "name": "IPの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
-      "output": "IP: 203.0.113.100\nDedicated endpoint; malicious-infrastructure 12/16 feeds\nLast confirmed: 2026-08-18 00:00Z",
       "accepted_information_types": [
         "ip"
       ],
@@ -80,381 +176,36 @@
         }
       ],
       "input_hint": "IP",
-      "submission_type": "ip",
-      "submission_value": "203.0.113.100",
-      "confidentiality_warning": "IPアドレスをサービスへ送信します。PCAPや通信本文は送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
-    }
-  ],
-  "required_evidence": [
-    "lsof_i",
-    "ip_rep",
-    "disclosure"
-  ],
-  "glossary": [
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lsof_i",
-          "section": "overview"
-        },
-        {
-          "source_id": "lsof_i",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lsof_i",
-          "section": "result"
-        },
-        {
-          "source_id": "ip_rep",
-          "section": "overview"
-        },
-        {
-          "source_id": "ip_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "ip_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "port",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "tcp",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "flow",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pcap",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "ip_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "local_remote",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lsof_i",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "protocol",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "socket",
-      "occurrences": [
-        {
-          "source_id": "lsof_i",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_lsof",
-      "occurrences": [
-        {
-          "source_id": "lsof_i",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "command",
-      "occurrences": [
-        {
-          "source_id": "lsof_i",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "lsof_i",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "established",
-      "occurrences": [
-        {
-          "source_id": "lsof_i",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "fd",
-      "occurrences": [
-        {
-          "source_id": "lsof_i",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "agent",
-      "occurrences": [
-        {
-          "source_id": "lsof_i",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "confidential",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "token",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "indicator",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reputation",
-      "occurrences": [
-        {
-          "source_id": "ip_rep",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "endpoint",
-      "occurrences": [
-        {
-          "source_id": "ip_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "timezone",
-      "occurrences": [
-        {
-          "source_id": "ip_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "detection",
-      "occurrences": [
-        {
-          "source_id": "ip_rep",
-          "section": "result"
-        }
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "IP: {{input}}\nDedicated endpoint; malicious-infrastructure 12/16 feeds\nLast confirmed: 2026-08-18 00:00Z",
+        "terms": [
+          "ip",
+          "endpoint",
+          "timezone",
+          "detection"
+        ]
+      },
+      "submission": {
+        "type": "ip",
+        "warning": "IPアドレスをサービスへ送信します。PCAPや通信本文は送りません。",
+        "terms": [
+          "ip",
+          "pcap"
+        ]
+      },
+      "terms": [
+        "ip",
+        "reputation"
       ]
     }
   ],
-  "explanation": "対象プロセスの接続先IPには、現在も有効な悪性インフラとしての報告があるため新しい接続を遮断します。",
-  "topic": "ソケットを所有するプロセスとIPアドレスの評判を確認する",
-  "summary": "ソケットを所有するプロセスとIPアドレスの評判を確認する",
   "learning_objectives": [
     "ソケットを所有するプロセスとIPアドレスの評判を確認する"
   ],
-  "decision_context": "before_connection",
-  "scenario_type": "standard",
   "sources": [
     "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

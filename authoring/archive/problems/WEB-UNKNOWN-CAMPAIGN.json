@@ -1,0 +1,249 @@
+{
+  "schema_version": 2,
+  "id": "WEB-UNKNOWN-CAMPAIGN",
+  "category": "web",
+  "platform": "linux",
+  "title": "評判情報の少ない正規キャンペーン",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "dns",
+    "official",
+    "domain_rep",
+    "disclosure"
+  ],
+  "ground_truth": "allow",
+  "explanation": "外部評判は未登録ですが、キャンペーン承認記録・DNSが一致するため公開ページへのアクセスを許可します。未登録というだけでは遮断しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "URL",
+        "label": "URL",
+        "value": "https://summer.aster-events.example/",
+        "data_type": "url"
+      },
+      {
+        "id": "URLのHost",
+        "label": "URLのHost",
+        "value": "summer.aster-events.example",
+        "data_type": "domain"
+      },
+      {
+        "id": "受付状態",
+        "label": "受付状態",
+        "value": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+        "data_type": "text"
+      },
+      {
+        "id": "登録Domain",
+        "label": "登録Domain",
+        "value": "aster-events.example",
+        "data_type": "domain"
+      }
+    ],
+    "terms": [
+      "url",
+      "host",
+      "http",
+      "url_path",
+      "browser"
+    ]
+  },
+  "resources": [
+    {
+      "id": "dig",
+      "name": "dig",
+      "description": "選択したホストのDNSレコードとTTLを表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのホスト",
+      "platform_note": "Linux / BIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": ";; ANSWER SECTION:\nsummer.aster-events.example. 300 IN A {{fact:ip}}",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.60",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "ip",
+          "dns_records",
+          "dns_query"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "dns",
+        "ttl",
+        "tool_dns"
+      ]
+    },
+    {
+      "id": "nslookup",
+      "name": "nslookup",
+      "description": "選択したホストのDNS応答を表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのホスト",
+      "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Server: 192.0.2.53\nName: summer.aster-events.example\nAddress: {{fact:ip}}\n",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.60",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "ip",
+          "dns_resolver",
+          "server"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "dns",
+        "tool_dns"
+      ]
+    },
+    {
+      "id": "official",
+      "name": "キャンペーン・変更承認記録",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Host": "summer.aster-events.example",
+          "A": "198.51.100.60",
+          "運営": "Aster Events Ltd.",
+          "公開日": "2026-08-18",
+          "承認": "CHG-604 / 契約広報担当確認済み",
+          "範囲": "公開告知のみ。認証・ファイル取得は不要。"
+        },
+        "terms": [
+          "host",
+          "ip",
+          "file",
+          "authentication",
+          "ticket"
+        ]
+      },
+      "terms": [
+        "reference",
+        "release"
+      ]
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
+        },
+        "terms": [
+          "url",
+          "host",
+          "url_path",
+          "file",
+          "authentication",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "user",
+          "token",
+          "attachment",
+          "pcap",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
+    {
+      "id": "domain_rep",
+      "name": "ドメインの評判",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのホスト",
+      "correct_usage": true,
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "Domain: {{input}}\nNo record / submissions: 0\n分類情報なし",
+        "terms": [
+          "host",
+          "no_record"
+        ]
+      },
+      "submission": {
+        "type": "domain",
+        "warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
+        "terms": [
+          "url",
+          "host",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "reputation"
+      ]
+    }
+  ],
+  "evidence_alternatives": {
+    "dns": {
+      "label": "DNSの解決先",
+      "any_of": [
+        "dig",
+        "nslookup"
+      ]
+    }
+  },
+  "learning_objectives": [
+    "評判不明のサイトを独立した公式情報で検証する"
+  ]
+}

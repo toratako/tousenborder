@@ -1,32 +1,88 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "AUTH-WIN-SERVICE-INTERACTIVE",
   "category": "account",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "サービスアカウントへの対話型ログイン",
   "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
-  "initial_information": {
-    "要求ID": "AUTH-901",
-    "User": "svc_backup",
-    "Source IP": "192.0.2.41",
-    "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
-    "要求Logon Type": "2 / Interactive",
-    "Gatewayの認証確認": "パスワード確認済み / MFA確認済み",
-    "Device ID": "WIN-017"
+  "required_evidence": [
+    "events",
+    "policy"
+  ],
+  "ground_truth": "block",
+  "explanation": "今回のType 2は、対話型ログインが禁止されているサービスアカウントからの要求です。過去のサービス用Type 5とは用途が異なるため、遮断します。",
+  "initial": {
+    "information": [
+      {
+        "id": "要求ID",
+        "label": "要求ID",
+        "value": "AUTH-901",
+        "data_type": "text"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "svc_backup",
+        "data_type": "username"
+      },
+      {
+        "id": "Source IP",
+        "label": "Source IP",
+        "value": "192.0.2.41",
+        "data_type": "ip"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "要求Logon Type",
+        "label": "要求Logon Type",
+        "value": "2 / Interactive",
+        "data_type": "text"
+      },
+      {
+        "id": "Gatewayの認証確認",
+        "label": "Gatewayの認証確認",
+        "value": "パスワード確認済み / MFA確認済み",
+        "data_type": "text"
+      },
+      {
+        "id": "Device ID",
+        "label": "Device ID",
+        "value": "WIN-017",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "user",
+      "ip",
+      "authentication",
+      "session",
+      "mfa",
+      "gateway",
+      "device",
+      "password",
+      "login",
+      "logon_type",
+      "service_account",
+      "storage",
+      "source_ip"
+    ]
   },
-  "initial_information_types": {
-    "User": "username",
-    "Source IP": "ip"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "events",
       "name": "Event Viewer / Windows Security Log",
       "description": "今回の要求より前のセキュリティログを調べます。接続元別・ユーザー別の集計は、保存ログから抽出して表示します。",
-      "output": "2026-08-17 02:00 Event ID 4624 / TargetUserName: svc_backup / LogonType: 5 / ProcessName: C:\\Windows\\System32\\services.exe",
       "accepted_information_types": [
         "username"
       ],
@@ -40,279 +96,54 @@
       "platform_note": "Windows標準 / Event Viewer",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "2026-08-17 02:00 Event ID 4624 / TargetUserName: svc_backup / LogonType: 5 / ProcessName: C:\\Windows\\System32\\services.exe",
+        "terms": [
+          "user",
+          "login",
+          "logon_type",
+          "service_account",
+          "storage",
+          "extension",
+          "executable",
+          "path",
+          "process",
+          "service",
+          "event_id"
+        ]
+      },
+      "terms": [
+        "user",
+        "source_ip",
+        "log",
+        "tool_events"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "policy",
       "name": "アカウント利用方針",
-      "content": "svc_backupはバックアップサービス専用。Type 5のみを許可し、Type 2・10は禁止。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "events",
-    "policy"
-  ],
-  "glossary": [
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "overview"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        },
-        {
-          "source_id": "policy",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "session",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "mfa",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "gateway",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "password",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "login",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "logon_type",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "service_account",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "storage",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "result"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "source_ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "events",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "log",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_events",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "service",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "result"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "event_id",
-      "occurrences": [
-        {
-          "source_id": "events",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "policy",
-          "section": "overview"
-        }
+      "kind": "references",
+      "result": {
+        "content": "svc_backupはバックアップサービス専用。Type 5のみを許可し、Type 2・10は禁止。",
+        "terms": [
+          "logon_type",
+          "service_account",
+          "storage",
+          "service"
+        ]
+      },
+      "terms": [
+        "user",
+        "policy"
       ]
     }
   ],
-  "explanation": "今回のType 2は、対話型ログインが禁止されているサービスアカウントからの要求です。過去のサービス用Type 5とは用途が異なるため、遮断します。",
-  "topic": "今回のログオン種別とアカウントの用途を比較する",
-  "summary": "今回のログオン種別とアカウントの用途を比較する",
   "learning_objectives": [
     "今回のログオン種別とアカウントの用途を比較する"
   ],
-  "decision_context": "before_session",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

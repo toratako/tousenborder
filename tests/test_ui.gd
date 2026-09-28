@@ -70,10 +70,11 @@ func _run() -> void:
 	assert(desk.shift.cases.is_empty() and not desk.playing)
 	desk.start_button.pressed.emit()
 	assert(desk.elapsed_time.text == "00:00")
-	assert(desk.status.text == "問題: 1/%d" % Fixtures.pack().problems.size())
+	assert(desk.status.text == "問題: 1/%d" % Fixtures.count())
 	assert(not desk.target_card.scroll_hint.visible and not desk.target_card.stamp_plate.visible)
 	desk._show_start_screen()
-	desk.difficulty_select.select(1)
+	for i in desk.method_select.item_count:
+		if desk.method_select.get_item_metadata(i) == "initial": desk.method_select.select(i)
 	desk.start_button.pressed.emit()
 	assert(not desk.start_screen.visible and desk.workspace.visible)
 	assert(desk.playing and desk.elapsed_time.text == "00:00")
@@ -85,7 +86,7 @@ func _run() -> void:
 	desk.rules_button.pressed.emit()
 	assert(desk.rules_overlay.visible and desk.rules_close.has_focus())
 	assert(desk.rules_overlay.mouse_filter == Control.MOUSE_FILTER_STOP)
-	for rule in desk.catalog.rules:
+	for rule in desk.rules:
 		assert(desk.rules_body.get_parsed_text().contains(rule.label))
 		assert(desk.rules_body.get_parsed_text().contains(Information.display(rule.value)))
 	var book_time: float = desk.shift.elapsed_seconds

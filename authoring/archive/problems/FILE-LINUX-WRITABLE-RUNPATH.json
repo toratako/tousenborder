@@ -1,0 +1,188 @@
+{
+  "schema_version": 2,
+  "id": "FILE-LINUX-WRITABLE-RUNPATH",
+  "category": "file",
+  "platform": "linux",
+  "title": "共有ライブラリ探索先の相違",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "elf",
+    "service"
+  ],
+  "ground_truth": "block",
+  "explanation": "RUNPATHが一般ユーザーの書込み可能な共有ディレクトリを優先し、承認構成と不一致のため遮断します。ライブラリが実際に読み込まれたとは扱いません。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "/opt/incoming/report-agent",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "標準構成のReport エージェントをインストールする。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "path",
+      "agent",
+      "install"
+    ]
+  },
+  "resources": [
+    {
+      "id": "file",
+      "name": "file",
+      "description": "マジック値などからファイル形式を識別します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "platform_note": "Linux / fileパッケージ",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "/opt/incoming/report-agent: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped",
+        "terms": [
+          "path",
+          "agent",
+          "executable",
+          "elf",
+          "stripped",
+          "architecture",
+          "elf_flags"
+        ]
+      },
+      "terms": [
+        "file",
+        "magic",
+        "tool_file"
+      ]
+    },
+    {
+      "id": "strings",
+      "name": "strings (GNU)",
+      "description": "ファイル内の可読文字列を抽出します。実行時の動作は観測しません。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "platform_note": "Linux / GNU binutils",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "対象: /opt/incoming/report-agent\n抽出文字列:\nreport-agent\n/var/tmp/shared\n/opt/report/lib\nlibreport.so",
+        "terms": [
+          "path",
+          "agent",
+          "static_analysis",
+          "temp",
+          "shared_library"
+        ]
+      },
+      "terms": [
+        "file",
+        "static_analysis",
+        "tool_strings"
+      ]
+    },
+    {
+      "id": "elf",
+      "name": "readelf",
+      "description": "ELFヘッダー・インタープリター・依存ライブラリ・RUNPATHを静的に表示します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "platform_note": "Linux / GNU binutils",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "ELF64 / x86-64\nINTERP: /lib64/ld-linux-x86-64.so.2\nNEEDED: libreport.so\nRUNPATH: /var/tmp/shared:/opt/report/lib",
+        "terms": [
+          "path",
+          "elf",
+          "architecture",
+          "temp",
+          "shared_library",
+          "elf_interpreter",
+          "runpath"
+        ]
+      },
+      "terms": [
+        "file",
+        "elf",
+        "static_analysis",
+        "shared_library",
+        "elf_interpreter",
+        "runpath",
+        "dependency",
+        "tool_readelf"
+      ]
+    },
+    {
+      "id": "service",
+      "name": "サービス構成台帳",
+      "kind": "references",
+      "result": {
+        "content": {
+          "期待RUNPATH": "/opt/report/lib",
+          "配置権限": "/var/tmp/shared = mode 1777; /opt/report/lib = root:root 0755",
+          "条件": "Report エージェントはroot管理の専用libのみを探索する。"
+        },
+        "terms": [
+          "path",
+          "agent",
+          "temp",
+          "runpath",
+          "root",
+          "permissions"
+        ]
+      },
+      "terms": [
+        "service"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "静的なRUNPATHと配置権限を照合する"
+  ],
+  "sources": [
+    "https://sourceware.org/binutils/docs/binutils/readelf.html",
+    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  ]
+}

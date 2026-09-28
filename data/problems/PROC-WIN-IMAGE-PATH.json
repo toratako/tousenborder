@@ -1,28 +1,57 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-WIN-IMAGE-PATH",
   "category": "process",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "想定外のプロセス配置",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "agent.exe",
-    "PID": 4200,
-    "User": "ASTER\\mori",
-    "採取時点": "2026-08-18 09:10 / 起動済み"
+  "required_evidence": [
+    "pe",
+    "approved"
+  ],
+  "ground_truth": "block",
+  "explanation": "実行イメージはDownloads配下で、サービスアカウントが管理パスから起動する承認構成と一致しないため停止します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "agent.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "ASTER\\mori",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "user",
+      "agent"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "pe",
       "name": "Process Explorer",
       "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
-      "output": "Parent: explorer.exe (1800)\nPID: 4200\nImage: C:\\Users\\mori\\Downloads\\agent.exe\nCommand line: agent.exe --sync\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
       "accepted_information_types": [
         "pid"
       ],
@@ -37,240 +66,64 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "image",
-          "label": "実体ファイル",
-          "value": "C:\\Users\\mori\\Downloads\\agent.exe",
-          "data_type": "file"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "Parent: explorer.exe (1800)\nPID: 4200\nImage: {{fact:image}}\nCommand line: agent.exe --sync\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
+        "information": [
+          {
+            "id": "image",
+            "label": "実体ファイル",
+            "value": "C:\\Users\\mori\\Downloads\\agent.exe",
+            "data_type": "file"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "user",
+          "agent",
+          "parent",
+          "command",
+          "dll",
+          "path",
+          "image_process"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "command",
+        "dll",
+        "tool_pe"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "approved",
       "name": "承認済みソフトウェア",
-      "content": "業務agent.exe: C:\\Program Files\\AsterAgent\\agent.exe / ASTER\\svc_agent / services.exe配下のみ承認。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "pe",
-    "approved"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "agent",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "parent",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "command",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "dll",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_pe",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "service",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "service_account",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "業務agent.exe: C:\\Program Files\\AsterAgent\\agent.exe / ASTER\\svc_agent / services.exe配下のみ承認。",
+        "terms": [
+          "extension",
+          "executable",
+          "agent",
+          "path",
+          "file",
+          "service",
+          "service_account"
+        ]
+      },
+      "terms": [
+        "approved"
       ]
     }
   ],
-  "explanation": "実行イメージはDownloads配下で、サービスアカウントが管理パスから起動する承認構成と一致しないため停止します。",
-  "topic": "実行パス・ユーザー・起動元をソフトウェア台帳と照合する",
-  "summary": "実行パス・ユーザー・起動元をソフトウェア台帳と照合する",
   "learning_objectives": [
     "実行パス・ユーザー・起動元をソフトウェア台帳と照合する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

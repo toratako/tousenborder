@@ -1,0 +1,189 @@
+{
+  "schema_version": 2,
+  "id": "AUTH-WIN-CORPORATE-VPN",
+  "category": "account",
+  "platform": "windows",
+  "title": "遠隔地と表示された企業VPN出口",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
+  "required_evidence": [
+    "vpn",
+    "device",
+    "policy"
+  ],
+  "ground_truth": "allow",
+  "explanation": "接続元IPは契約済み企業VPNの出口です。VPNトンネルで確認されたユーザー、管理端末、今回のMFA確認が一致するため許可します。IPの地理表示だけでユーザーの移動や侵害があったとは判断しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "要求ID",
+        "label": "要求ID",
+        "value": "AUTH-901",
+        "data_type": "text"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "mori",
+        "data_type": "username"
+      },
+      {
+        "id": "Source IP",
+        "label": "Source IP",
+        "value": "198.51.100.140",
+        "data_type": "ip"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "要求Logon Type",
+        "label": "要求Logon Type",
+        "value": "10 / RemoteInteractive",
+        "data_type": "text"
+      },
+      {
+        "id": "Gatewayの認証確認",
+        "label": "Gatewayの認証確認",
+        "value": "パスワード確認済み / MFA確認済み",
+        "data_type": "text"
+      },
+      {
+        "id": "Device ID",
+        "label": "Device ID",
+        "value": "WIN-017",
+        "data_type": "text"
+      },
+      {
+        "id": "Gatewayの経路確認",
+        "label": "Gatewayの経路確認",
+        "value": "企業VPNトンネル V-140 / mori / WIN-017 / 接続08:59",
+        "data_type": "text"
+      },
+      {
+        "id": "IP位置表示",
+        "label": "IP位置表示",
+        "value": "海外のデータセンター",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "user",
+      "ip",
+      "authentication",
+      "session",
+      "mfa",
+      "gateway",
+      "vpn",
+      "device",
+      "password",
+      "login",
+      "logon_type",
+      "source_ip"
+    ]
+  },
+  "resources": [
+    {
+      "id": "events",
+      "name": "Event Viewer / Windows Security Log",
+      "description": "今回の要求より前のセキュリティログを調べます。接続元別・ユーザー別の集計は、保存ログから抽出して表示します。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "ユーザー",
+      "platform_note": "Windows標準 / Event Viewer",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "2026-08-17 09:01 Event ID 4624 / TargetUserName: mori / LogonType: 10 / IpAddress: 192.0.2.41",
+        "terms": [
+          "user",
+          "ip",
+          "login",
+          "logon_type",
+          "source_ip",
+          "event_id"
+        ]
+      },
+      "terms": [
+        "user",
+        "source_ip",
+        "log",
+        "tool_events"
+      ]
+    },
+    {
+      "id": "vpn",
+      "name": "承認済みVPN出口",
+      "kind": "references",
+      "result": {
+        "content": "198.51.100.140 / 企業VPN出口 / 契約VPN-140 / VPNトンネルV-140をmori・WIN-017に割り当て済み。",
+        "terms": [
+          "ip",
+          "vpn"
+        ]
+      },
+      "terms": [
+        "vpn",
+        "approved"
+      ]
+    },
+    {
+      "id": "device",
+      "name": "端末登録情報",
+      "kind": "references",
+      "result": {
+        "content": "WIN-017 / mori / 有効 / 管理登録済み。",
+        "terms": [
+          "active_revoked"
+        ]
+      },
+      "terms": [
+        "device",
+        "reference"
+      ]
+    },
+    {
+      "id": "policy",
+      "name": "アカウント利用方針",
+      "kind": "references",
+      "result": {
+        "content": "管理端末から承認済みVPNを経由し、ゲートウェイでパスワードとMFAを確認済みなら、RemoteInteractiveでのログオンを許可。",
+        "terms": [
+          "mfa",
+          "gateway",
+          "vpn",
+          "device",
+          "password",
+          "logon_type"
+        ]
+      },
+      "terms": [
+        "user",
+        "policy"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "VPN出口のIPとユーザーの実際の経路を区別する"
+  ],
+  "sources": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
+  ]
+}

@@ -17,20 +17,20 @@ func _capture() -> void:
 	await process_frame
 	await _save("start")
 	desk.start_button.pressed.emit()
-	var item: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-URL")[0]
+	var item: Dictionary = desk.library.cases.filter(func(c): return c.id == "FIX-PRIVATE-URL")[0]
 	var cases: Array[Dictionary] = [item]
 	desk.shift.start(cases)
 	await _save("workspace")
 	desk.rules_button.pressed.emit()
 	await _save("rules")
 	desk.rules_close.pressed.emit()
-	var external: Dictionary = desk.catalog.tools_for(item).filter(func(t): return t.id == "urlscan_private")[0]
+	var external: Dictionary = desk.library.tools_for(item).filter(func(t): return t.id == "urlscan_private")[0]
 	var url: Dictionary = item.information.filter(func(i): return i.data_type == "url")[0].duplicate(true)
 	url.case_id = item.id
 	desk._inspect(external, url)
 	await _save("external")
 	desk.external_skip.pressed.emit()
-	for reference in item.references:
+	for reference in Fixtures.resources(item, "references"):
 		desk._inspect(reference)
 	await _save("references")
 	desk.shift.decide(item.ground_truth)
@@ -38,7 +38,7 @@ func _capture() -> void:
 	desk.next.pressed.emit()
 	await _save("summary")
 	desk._start_shift()
-	var dense_cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-FILE")
+	var dense_cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-PRIVATE-FILE")
 	desk.shift.start(dense_cases)
 	await _save("dense_panel")
 	desk.tool_scroll.scroll_vertical = int(desk.tool_scroll.get_v_scroll_bar().max_value)

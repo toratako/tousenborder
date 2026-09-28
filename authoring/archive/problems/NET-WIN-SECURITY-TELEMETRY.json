@@ -1,0 +1,281 @@
+{
+  "schema_version": 2,
+  "id": "NET-WIN-SECURITY-TELEMETRY",
+  "category": "network",
+  "platform": "windows",
+  "title": "定期送信するセキュリティエージェント",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "tcp",
+    "pe",
+    "flow",
+    "server"
+  ],
+  "ground_truth": "allow",
+  "explanation": "所有プロセス・管理パス・宛先・60秒間隔の送信量が承認済みセキュリティテレメトリーの仕様に一致するため接続を許可します。暗号化本文の内容をPCAPから推測してはいません。",
+  "initial": {
+    "information": [
+      {
+        "id": "接続ID",
+        "label": "接続ID",
+        "value": "CONNECT-701",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 5100,
+        "data_type": "pid"
+      },
+      {
+        "id": "Process表示名",
+        "label": "Process表示名",
+        "value": "agent.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "Remote IP",
+        "label": "Remote IP",
+        "value": "192.0.2.80",
+        "data_type": "ip"
+      },
+      {
+        "id": "Remote Port",
+        "label": "Remote Port",
+        "value": 443,
+        "data_type": "text"
+      },
+      {
+        "id": "Protocol",
+        "label": "Protocol",
+        "value": "TCP",
+        "data_type": "text"
+      },
+      {
+        "id": "端末",
+        "label": "端末",
+        "value": "192.0.2.25",
+        "data_type": "text"
+      },
+      {
+        "id": "保留中のLocal Port",
+        "label": "保留中のLocal Port",
+        "value": 52410,
+        "data_type": "text"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "保存PCAP",
+        "label": "保存PCAP",
+        "value": "flow-before-0910.pcap",
+        "data_type": "pcap"
+      },
+      {
+        "id": "観測範囲",
+        "label": "観測範囲",
+        "value": "PCAPは09:09:59まで。同じプロセスの既存接続を含む。今回の接続はまだ未許可。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "ip",
+      "port",
+      "tcp",
+      "flow",
+      "device",
+      "agent",
+      "pcap",
+      "local_remote",
+      "protocol"
+    ]
+  },
+  "resources": [
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのソケットと相手IP・ポートを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Process: C:\\Program Files\\AsterAgent\\agent.exe\n192.0.2.25:52400 -> {{fact:ip}}:443 ESTABLISHED / PID 5100 / agent.exe",
+        "information": [
+          {
+            "id": "ip",
+            "label": "既存接続の接続先IP",
+            "value": "192.0.2.80",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "process",
+          "pid",
+          "ip",
+          "agent",
+          "local_remote",
+          "file",
+          "path",
+          "established"
+        ]
+      },
+      "terms": [
+        "pid",
+        "port",
+        "tcp",
+        "socket",
+        "tool_tcpview"
+      ]
+    },
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID: 5100\nImage: C:\\Program Files\\AsterAgent\\agent.exe\nCommand line: C:\\Program Files\\AsterAgent\\agent.exe --telemetry --interval 60\nParent: services.exe (800)",
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "agent",
+          "file",
+          "path",
+          "parent",
+          "command",
+          "service",
+          "image_process",
+          "telemetry"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "command",
+        "dll",
+        "tool_pe"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのパケットや通信統計を表示します。所有プロセスはソケット調査ツールで照合します。",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "File: flow-before-0910.pcap\n09:06:00 192.0.2.25:52400 -> 192.0.2.80:443 TLSv1.3 / TCP Len=512 bytes\n09:07:00 192.0.2.25:52400 -> 192.0.2.80:443 TLSv1.3 / TCP Len=512 bytes\n09:08:00 192.0.2.25:52400 -> 192.0.2.80:443 TLSv1.3 / TCP Len=512 bytes\n09:09:00 192.0.2.25:52400 -> 192.0.2.80:443 TLSv1.3 / TCP Len=512 bytes",
+        "terms": [
+          "ip",
+          "tcp",
+          "flow",
+          "pcap",
+          "file",
+          "size",
+          "tls"
+        ]
+      },
+      "terms": [
+        "process",
+        "flow",
+        "pcap",
+        "socket",
+        "tool_capture"
+      ]
+    },
+    {
+      "id": "server",
+      "name": "承認済みサーバー",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Image": "C:\\Program Files\\AsterAgent\\agent.exe",
+          "引数": "--telemetry --interval 60",
+          "宛先": "192.0.2.80:443",
+          "周期": "60秒",
+          "送信量": "400–800 bytes/回",
+          "承認": "管理済みエージェント / NET-707"
+        },
+        "terms": [
+          "extension",
+          "executable",
+          "ip",
+          "agent",
+          "file",
+          "path",
+          "command",
+          "image_process",
+          "telemetry",
+          "size"
+        ]
+      },
+      "terms": [
+        "approved",
+        "server"
+      ]
+    }
+  ],
+  "evidence_alternatives": {
+    "flow": {
+      "label": "周期と送信量",
+      "any_of": [
+        "capture"
+      ]
+    }
+  },
+  "learning_objectives": [
+    "定期通信をセキュリティエージェントの仕様と照合する"
+  ],
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ]
+}

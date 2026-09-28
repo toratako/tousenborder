@@ -1,78 +1,38 @@
-"""Authoring contract for beginner support, independent of UI and generated prose."""
-import copy
-import sys
+"""Location-specific glossary regressions: unrelated evidence stays hidden."""
+import json
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'scripts'))
-from build_problem_catalog import read_json, resource_path, validate_authoring, validate_schema
 
-
-class LearningSupportTests(unittest.TestCase):
-    def setUp(self):
-        self.pack = read_json(ROOT / 'tests/fixtures/learning-support/pack.json')
-        self.item = read_json(ROOT / 'tests/fixtures/learning-support/problem.json')
-
-    def test_support_fixture_validates(self):
-        validate_authoring(self.item, self.pack)
-
-    def test_unknown_or_duplicate_term_is_rejected(self):
-        for mode in ('unknown', 'duplicate'):
-            item = copy.deepcopy(self.item)
-            if mode == 'unknown':
-                item['glossary'][0]['term_id'] = 'not_a_term'
-            else:
-                item['glossary'].append(copy.deepcopy(item['glossary'][0]))
-            with self.assertRaises(ValueError):
-                validate_authoring(item, self.pack)
-
-    def test_occurrence_contract(self):
-        for occurrence in [
-            {'source_id': 'missing', 'section': 'result'},
-            {'source_id': 'sha256sum', 'section': 'initial'},
-            {'source_id': 'initial_information', 'section': 'result'},
-            {'source_id': 'vendor_hash', 'section': 'submission'},
-            {'source_id': 'sha256sum', 'section': 'unknown'},
-        ]:
-            item = copy.deepcopy(self.item)
-            item['glossary'][0]['occurrences'] = [occurrence]
-            with self.assertRaises(ValueError):
-                validate_authoring(item, self.pack)
-        item = copy.deepcopy(self.item)
-        item['glossary'][0]['occurrences'] *= 2
-        with self.assertRaises(ValueError):
-            validate_authoring(item, self.pack)
-
-    def test_dictionary_required_only_when_terms_are_used(self):
-        pack = copy.deepcopy(self.pack)
-        del pack['glossary_path']
-        with self.assertRaises(ValueError):
-            validate_authoring(self.item, pack)
-        item = copy.deepcopy(self.item)
-        del item['glossary']
-        validate_authoring(item, pack)
-
-    def test_unknown_dictionary_fields_rejected(self):
-        with self.assertRaises(ValueError):
-            validate_schema({'schema_version': 1, 'terms': {'x': {'label': 'X', 'description': 'Y', 'answer': 'block'}}}, 'glossary')
-
+def read_json(path):
+    return json.loads(path.read_text())
 
 class StandardGlossaryTests(unittest.TestCase):
     """Content regressions: similar words must not reveal unrelated evidence."""
 
     def glossary(self, problem_id):
-        item = read_json(ROOT / 'data/problems' / f'{problem_id}.json')
-        return {entry['term_id']: entry['occurrences'] for entry in item['glossary']}
+        path = ROOT / 'data/problems' / f'{problem_id}.json'
+        if not path.exists():
+            path = ROOT / 'authoring/archive/problems' / f'{problem_id}.json'
+        item = read_json(path)
+        locations = {}
+        blocks = [('initial_information', 'initial', item['initial'])]
+        for resource in item['resources']:
+            blocks += [(resource['id'], 'overview', resource), (resource['id'], 'result', resource['result'])]
+            if 'submission' in resource:
+                blocks.append((resource['id'], 'submission', resource['submission']))
+        for source, section, block in blocks:
+            for term in block.get('terms', []):
+                locations.setdefault(term, []).append({'source_id': source, 'section': section})
+        return locations
 
-    def test_standard_pack_has_glossary_for_every_problem(self):
-        pack = read_json(ROOT / 'data/packs/learning.json')
-        self.assertEqual(pack['glossary_path'], 'res://data/glossary/security.json')
-        for path in pack['problems']:
-            with self.subTest(path=path):
-                item = read_json(resource_path(path))
-                self.assertTrue(item['glossary'])
-                validate_authoring(item, pack)
+    def test_published_terms_have_definitions(self):
+        terms = read_json(ROOT / 'data/glossary/security.json')['terms']
+        for path in (ROOT / 'data/problems').glob('*.json'):
+            mapping = self.glossary(path.stem)
+            self.assertTrue(mapping)
+            self.assertTrue(set(mapping) <= terms.keys(), path.stem)
 
     def test_revocation_and_log_events_require_their_evidence(self):
         entries = self.glossary('AUTH-WIN-REVOKED-DEVICE')

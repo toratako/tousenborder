@@ -1,0 +1,207 @@
+{
+  "schema_version": 2,
+  "id": "FILE-LINUX-STRIPPED-INTERNAL",
+  "category": "file",
+  "platform": "linux",
+  "title": "シンボル情報を除去した正規の社内バイナリ",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "file",
+    "hash",
+    "elf",
+    "approved"
+  ],
+  "ground_truth": "allow",
+  "explanation": "シンボル情報の除去は承認済みのリリース仕様であり、ハッシュ・ローダー・依存ライブラリも台帳に一致するため許可します。シンボルがないこと自体は悪性根拠ではありません。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "/opt/incoming/metrics-agent",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "社内監視エージェント 5.0を更新する。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "path",
+      "agent"
+    ]
+  },
+  "resources": [
+    {
+      "id": "file",
+      "name": "file",
+      "description": "マジック値などからファイル形式を識別します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "platform_note": "Linux / fileパッケージ",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "/opt/incoming/metrics-agent: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped",
+        "terms": [
+          "path",
+          "agent",
+          "executable",
+          "elf",
+          "stripped",
+          "architecture",
+          "elf_flags"
+        ]
+      },
+      "terms": [
+        "file",
+        "magic",
+        "tool_file"
+      ]
+    },
+    {
+      "id": "hash",
+      "name": "sha256sum",
+      "description": "選択したファイルのSHA-256を計算します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "platform_note": "Linux / GNU coreutils",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "{{fact:sha256}}  /opt/incoming/metrics-agent",
+        "information": [
+          {
+            "id": "sha256",
+            "label": "対象ファイルのSHA-256",
+            "value": "a8caf2a8d553486c540581f52b95cb6514f1744f4ee4705b54bed96093b2a713",
+            "data_type": "sha256"
+          }
+        ],
+        "terms": [
+          "file",
+          "path",
+          "agent",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "file",
+        "hash",
+        "sha256",
+        "tool_hash_linux"
+      ]
+    },
+    {
+      "id": "elf",
+      "name": "readelf",
+      "description": "ELFヘッダー・インタープリター・依存ライブラリ・RUNPATHを静的に表示します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "platform_note": "Linux / GNU binutils",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "ELF Header: Class: ELF64; Machine: Advanced Micro Devices X86-64\nINTERP: /lib64/ld-linux-x86-64.so.2\nNEEDED: libc.so.6\nRUNPATH: (none)",
+        "terms": [
+          "path",
+          "elf",
+          "architecture",
+          "elf_interpreter",
+          "shared_library",
+          "runpath",
+          "device",
+          "n_a"
+        ]
+      },
+      "terms": [
+        "file",
+        "elf",
+        "elf_interpreter",
+        "shared_library",
+        "runpath",
+        "static_analysis",
+        "dependency",
+        "tool_readelf"
+      ]
+    },
+    {
+      "id": "approved",
+      "name": "承認済みソフトウェア",
+      "kind": "references",
+      "result": {
+        "content": {
+          "製品": "metrics-agent 5.0",
+          "SHA256": "a8caf2a8d553486c540581f52b95cb6514f1744f4ee4705b54bed96093b2a713",
+          "Build": "strip --strip-unneeded適用",
+          "Interpreter": "/lib64/ld-linux-x86-64.so.2",
+          "NEEDED": "libc.so.6",
+          "RUNPATH": "なし",
+          "配布": "社内成果物庫"
+        },
+        "terms": [
+          "path",
+          "agent",
+          "stripped",
+          "architecture",
+          "hash",
+          "sha256",
+          "elf_interpreter",
+          "shared_library",
+          "runpath",
+          "build"
+        ]
+      },
+      "terms": [
+        "approved"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "シンボル情報を除去したバイナリを承認済みのビルド情報で検証する"
+  ],
+  "sources": [
+    "https://sourceware.org/binutils/docs/binutils/readelf.html",
+    "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  ]
+}
