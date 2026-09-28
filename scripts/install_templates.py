@@ -32,9 +32,7 @@ def detect_version(godot):
         result.stdout.strip(),
     )
     if not match:
-        raise ValueError(
-            "公式リリースに対応するGodotのバージョンを判別できません。"
-        )
+        raise ValueError("公式リリースに対応するGodotのバージョンを判別できません。")
     number, channel = match.groups()
     return f"{number}.{channel}", f"{number}-{channel}"
 
@@ -53,8 +51,7 @@ def is_installed(destination, version):
         destination.is_dir()
         and not destination.is_symlink()
         and all(
-            (destination / name).is_file()
-            and (destination / name).stat().st_size > 0
+            (destination / name).is_file() and (destination / name).stat().st_size > 0
             for name in REQUIRED
         )
         and (destination / "version.txt").is_file()
@@ -82,10 +79,10 @@ def release_asset(tag):
         raise ValueError(f"公式テンプレートが見つかりません: {name}")
     digest = asset.get("digest") or ""
     if not re.fullmatch(r"sha256:[0-9a-f]{64}", digest):
-        raise ValueError(
-            "公式SHA-256が取得できないため、インストールを中止しました。"
-        )
-    expected_url = f"https://github.com/godotengine/godot-builds/releases/download/{tag}/{name}"
+        raise ValueError("公式SHA-256が取得できないため、インストールを中止しました。")
+    expected_url = (
+        f"https://github.com/godotengine/godot-builds/releases/download/{tag}/{name}"
+    )
     if asset["browser_download_url"] != expected_url:
         raise ValueError("公式リリースのダウンロードURLが想定と異なります。")
     return asset
@@ -133,8 +130,7 @@ def install_archive(archive, destination, version, digest):
             )
         ]
         if any(
-            names.count("templates/" + name) != 1
-            for name in (*REQUIRED, "version.txt")
+            names.count("templates/" + name) != 1 for name in (*REQUIRED, "version.txt")
         ):
             raise ValueError(
                 "アーカイブに必要なテンプレートが揃っていないか、重複しています。"
@@ -151,9 +147,7 @@ def install_archive(archive, destination, version, digest):
                 target = staging / Path(name).name
                 with bundle.open(name) as source, target.open("xb") as output:
                     shutil.copyfileobj(source, output)
-                target.chmod(
-                    0o755 if target.name.startswith("linux_") else 0o644
-                )
+                target.chmod(0o755 if target.name.startswith("linux_") else 0o644)
             if not is_installed(staging, version):
                 raise ValueError("展開したテンプレートを検証できませんでした。")
             if os.path.lexists(destination):
@@ -181,13 +175,9 @@ def main():
             f"導入先が既に存在します。既存ファイルは上書きしません: {destination}"
         )
     asset = release_asset(tag)
-    with tempfile.TemporaryDirectory(
-        prefix="godot-template-download-"
-    ) as temporary:
+    with tempfile.TemporaryDirectory(prefix="godot-template-download-") as temporary:
         supplied = os.environ.get("GODOT_TEMPLATE_ARCHIVE")
-        archive = (
-            Path(supplied) if supplied else Path(temporary) / asset["name"]
-        )
+        archive = Path(supplied) if supplied else Path(temporary) / asset["name"]
         if not supplied:
             download(asset, archive)
         print("SHA-256を検証し、テンプレートを配置します。", flush=True)
