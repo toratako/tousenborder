@@ -1,26 +1,49 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-LINUX-KNOWN-HASH",
   "category": "file",
   "platform": "linux",
-  "level": "beginner_external",
-  "ground_truth": "block",
   "title": "Linux実行ファイルの外部ハッシュ照会",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "/tmp/preview-helper",
-    "申請内容": "公開配布のプレビュー補助プログラム。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+  "required_evidence": [
+    "hash",
+    "disclosure",
+    "hash_rep"
+  ],
+  "ground_truth": "block",
+  "explanation": "対象ハッシュには現在有効なマルウェア検出が複数登録されているため実行を遮断します。未知のハッシュという理由で遮断しているのではありません。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "/tmp/preview-helper",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "公開配布のプレビュー補助プログラム。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "path",
+      "temp"
+    ]
   },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "hash",
       "name": "sha256sum",
       "description": "選択したファイルのSHA-256を計算します。",
-      "output": "2344cd6310e9e63754e1ac1b1d4e4c48f8817e805aebfb32be9c440a1bf501e4  /tmp/preview-helper",
       "accepted_information_types": [
         "file"
       ],
@@ -35,35 +58,70 @@
       "environments": [
         "linux"
       ],
-      "output_information": [
-        {
-          "id": "sha256",
-          "label": "対象ファイルのSHA-256",
-          "value": "2344cd6310e9e63754e1ac1b1d4e4c48f8817e805aebfb32be9c440a1bf501e4",
-          "data_type": "sha256"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "{{fact:sha256}}  /tmp/preview-helper",
+        "information": [
+          {
+            "id": "sha256",
+            "label": "対象ファイルのSHA-256",
+            "value": "2344cd6310e9e63754e1ac1b1d4e4c48f8817e805aebfb32be9c440a1bf501e4",
+            "data_type": "sha256"
+          }
+        ],
+        "terms": [
+          "file",
+          "path",
+          "temp",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "file",
+        "hash",
+        "sha256",
+        "tool_hash_linux"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "disclosure",
       "name": "外部照会方針",
-      "content": {
-        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
-        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
-        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
-        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
-      }
-    }
-  ],
-  "external_references": [
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
+        },
+        "terms": [
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "user",
+          "url",
+          "host",
+          "token",
+          "attachment",
+          "authentication",
+          "pcap",
+          "url_path",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
     {
       "id": "hash_rep",
       "name": "ハッシュ値の評判照会",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
-      "output": "SHA256: 2344cd6310e9e63754e1ac1b1d4e4c48f8817e805aebfb32be9c440a1bf501e4\n2026-08-18: malicious 35/62; classification: downloader",
       "accepted_information_types": [
         "sha256"
       ],
@@ -74,288 +132,39 @@
         }
       ],
       "input_hint": "SHA-256",
-      "submission_type": "hash",
-      "submission_value": "2344cd6310e9e63754e1ac1b1d4e4c48f8817e805aebfb32be9c440a1bf501e4",
-      "confidentiality_warning": "SHA-256のみをサービスへ送信します。ファイル本体は送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
-    }
-  ],
-  "required_evidence": [
-    "hash",
-    "disclosure",
-    "hash_rep"
-  ],
-  "glossary": [
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "hash_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "temp",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "hash_rep",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "hash_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "hash_rep",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "hash_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_hash_linux",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "confidential",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "token",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pcap",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "indicator",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reputation",
-      "occurrences": [
-        {
-          "source_id": "hash_rep",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "detection",
-      "occurrences": [
-        {
-          "source_id": "hash_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "malware",
-      "occurrences": [
-        {
-          "source_id": "hash_rep",
-          "section": "result"
-        }
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "SHA256: {{input}}\n2026-08-18: malicious 35/62; classification: downloader",
+        "terms": [
+          "hash",
+          "sha256",
+          "detection",
+          "malware"
+        ]
+      },
+      "submission": {
+        "type": "hash",
+        "warning": "SHA-256のみをサービスへ送信します。ファイル本体は送りません。",
+        "terms": [
+          "file",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "hash",
+        "sha256",
+        "reputation"
       ]
     }
   ],
-  "explanation": "対象ハッシュには現在有効なマルウェア検出が複数登録されているため実行を遮断します。未知のハッシュという理由で遮断しているのではありません。",
-  "topic": "sha256sumの結果を外部評判と照合する",
-  "summary": "sha256sumの結果を外部評判と照合する",
   "learning_objectives": [
     "sha256sumの結果を外部評判と照合する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "standard",
   "sources": [
     "https://sourceware.org/binutils/docs/binutils/readelf.html",
     "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

@@ -1,0 +1,219 @@
+{
+  "schema_version": 2,
+  "id": "AUTH-LINUX-PRIVILEGED-PATH",
+  "category": "account",
+  "platform": "linux",
+  "title": "rootへの直接SSH要求",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
+  "required_evidence": [
+    "journal",
+    "admin"
+  ],
+  "ground_truth": "block",
+  "explanation": "rootへの直接SSHは現行方針で禁止され、個人アカウントから踏み台経由で権限を昇格する管理経路にも一致しないため、遮断します。鍵が検証済みでも、利用許可を意味するわけではありません。",
+  "initial": {
+    "information": [
+      {
+        "id": "要求ID",
+        "label": "要求ID",
+        "value": "AUTH-901",
+        "data_type": "text"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "root",
+        "data_type": "username"
+      },
+      {
+        "id": "Source IP",
+        "label": "Source IP",
+        "value": "203.0.113.153",
+        "data_type": "ip"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "認証方式",
+        "label": "認証方式",
+        "value": "SSH公開鍵認証",
+        "data_type": "text"
+      },
+      {
+        "id": "Gatewayの鍵検証",
+        "label": "Gatewayの鍵検証",
+        "value": "SHA256:DEMO_APPROVED_KEY_17 と一致",
+        "data_type": "text"
+      },
+      {
+        "id": "GatewayのMFA",
+        "label": "GatewayのMFA",
+        "value": "確認済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "hash",
+      "sha256",
+      "approved",
+      "user",
+      "ip",
+      "authentication",
+      "session",
+      "mfa",
+      "gateway",
+      "ssh",
+      "public_key",
+      "key_fingerprint",
+      "root",
+      "source_ip"
+    ]
+  },
+  "resources": [
+    {
+      "id": "journal",
+      "name": "journalctl",
+      "description": "今回の要求より前のsshd記録を確認します。集計は保存ログから抽出したものです。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "ユーザー",
+      "platform_note": "Linux / systemd",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "2026-08-17T09:01:00+09:00 server sshd[2030]: Accepted publickey for ops-mori from 192.0.2.150 port 51200 ssh2\n2026-08-17T09:02:00+09:00 server sudo[2035]: ops-mori : USER=root ; COMMAND=/usr/bin/systemctl status app",
+        "terms": [
+          "user",
+          "ip",
+          "ssh",
+          "public_key",
+          "root",
+          "path",
+          "command",
+          "port",
+          "auth_result",
+          "timezone",
+          "server"
+        ]
+      },
+      "terms": [
+        "user",
+        "ssh",
+        "log",
+        "tool_journal"
+      ]
+    },
+    {
+      "id": "last",
+      "name": "last",
+      "description": "wtmpに記録された過去のログインセッションを表示します。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "ユーザー",
+      "platform_note": "Linux / util-linux",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "root tty1 Mon Aug 3 08:00 - 08:10 (00:10)\n過去のrootログインは現地コンソールでの保守によるもの。",
+        "terms": [
+          "root",
+          "terminal"
+        ]
+      },
+      "terms": [
+        "user",
+        "session",
+        "wtmp",
+        "tool_last"
+      ]
+    },
+    {
+      "id": "lastlog",
+      "name": "lastlog",
+      "description": "アカウントの最終ログイン記録を表示します。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "ユーザー",
+      "platform_note": "Linux / shadow-utilsのlastlogを備える教材環境",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Username Port From Latest\nroot tty1 Mon Aug 3 08:00:00 +0900 2026",
+        "terms": [
+          "user",
+          "root",
+          "timezone",
+          "terminal"
+        ]
+      },
+      "terms": [
+        "user",
+        "login",
+        "tool_lastlog"
+      ]
+    },
+    {
+      "id": "admin",
+      "name": "承認済みの管理経路",
+      "kind": "references",
+      "result": {
+        "content": "通常の保守では、ops-moriが192.0.2.150の踏み台から鍵とMFAを使ってSSHでログインし、チケット承認後にsudoで権限を昇格する。rootへの直接SSHは不可。今回はコンソール保守の申請なし。",
+        "terms": [
+          "mfa",
+          "ssh",
+          "root",
+          "terminal",
+          "ticket",
+          "bastion",
+          "privilege"
+        ]
+      },
+      "terms": [
+        "approved"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "特権ログインの本人確認と経路制約を区別する"
+  ],
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
+  ]
+}

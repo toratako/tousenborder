@@ -1,28 +1,58 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-WIN-DLL-SIDELOAD",
   "category": "process",
   "platform": "windows",
-  "level": "applied",
-  "ground_truth": "block",
   "title": "DLLサイドローディング",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "AsterViewer.exe",
-    "PID": 4200,
-    "User": "ASTER\\mori",
-    "採取時点": "2026-08-18 09:10 / 起動済み"
+  "required_evidence": [
+    "pe",
+    "dll_hash",
+    "approved",
+    "sig"
+  ],
+  "ground_truth": "block",
+  "explanation": "Viewer本体の署名・発行元・バージョン・配置・ハッシュは承認記録と一致します。一方、実際にロードした同名のrender.dllは承認配置C:\\Program Files\\AsterViewer\\render.dllではなくユーザーのDownloads配下にあり、ハッシュも承認版と異なるため停止します。DLLサイドローディングを題材に、実行本体と読み込むDLLを別々に検証します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "AsterViewer.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "ASTER\\mori",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "user"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "pe",
       "name": "Process Explorer",
       "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
-      "output": "Parent: explorer.exe (1800)\nPID: 4200\nImage: C:\\Program Files\\AsterViewer\\AsterViewer.exe\nCommand line: AsterViewer.exe\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nName: render.dll\nPath: C:\\Users\\mori\\Downloads\\viewer\\render.dll",
       "accepted_information_types": [
         "pid"
       ],
@@ -37,26 +67,49 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "image",
-          "label": "実体ファイル",
-          "value": "C:\\Program Files\\AsterViewer\\AsterViewer.exe",
-          "data_type": "file"
-        },
-        {
-          "id": "dll",
-          "label": "ロード済みDLL",
-          "value": "C:\\Users\\mori\\Downloads\\viewer\\render.dll",
-          "data_type": "file"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "Parent: explorer.exe (1800)\nPID: 4200\nImage: {{fact:image}}\nCommand line: AsterViewer.exe\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nName: render.dll\nPath: {{fact:dll}}",
+        "information": [
+          {
+            "id": "image",
+            "label": "実体ファイル",
+            "value": "C:\\Program Files\\AsterViewer\\AsterViewer.exe",
+            "data_type": "file"
+          },
+          {
+            "id": "dll",
+            "label": "ロード済みDLL",
+            "value": "C:\\Users\\mori\\Downloads\\viewer\\render.dll",
+            "data_type": "file"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "user",
+          "parent",
+          "command",
+          "dll",
+          "file",
+          "path",
+          "image_process"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "command",
+        "dll",
+        "tool_pe"
       ]
     },
     {
       "id": "sig",
       "name": "Sigcheck",
       "description": "署名の検証状態・発行元・バージョン・SHA-256（-h）を確認します。PIDを入力した場合は対応する実体ファイルが対象です。",
-      "output": "PID 4200 のBacking Executable: C:\\Program Files\\AsterViewer\\AsterViewer.exe\nVerified: Signed\nPublisher: Aster Software Ltd.\nFile version: 7.0\nSHA256: 8a485d0ef8b3d0a949d72631324a9c67515e1e80aa9920e47417f84c9bea981e",
       "accepted_information_types": [
         "pid"
       ],
@@ -70,13 +123,40 @@
       "platform_note": "Windows / Microsoft Sysinternals・要導入",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID 4200 のBacking Executable: C:\\Program Files\\AsterViewer\\AsterViewer.exe\nVerified: Signed\nPublisher: Aster Software Ltd.\nFile version: 7.0\nSHA256: 8a485d0ef8b3d0a949d72631324a9c67515e1e80aa9920e47417f84c9bea981e",
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "file",
+          "path",
+          "image_process",
+          "hash",
+          "sha256",
+          "signature",
+          "vendor",
+          "version"
+        ]
+      },
+      "terms": [
+        "executable",
+        "pid",
+        "image_process",
+        "hash",
+        "sha256",
+        "signature",
+        "vendor",
+        "version",
+        "tool_sigcheck"
       ]
     },
     {
       "id": "dll_hash",
       "name": "Get-FileHash（DLL）",
       "description": "Process Explorerで取得したパスのSHA-256を計算します。プロセス本体のハッシュとは別です。",
-      "output": "Path: C:\\Users\\mori\\Downloads\\viewer\\render.dll\nAlgorithm: SHA256\nHash: 3c94190d9f2003f7331423f5e3bc81f762dfe0c2962c3ee2058337f13b225131",
       "accepted_information_types": [
         "file"
       ],
@@ -90,397 +170,65 @@
       "platform_note": "Windows / PowerShell標準",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Path: C:\\Users\\mori\\Downloads\\viewer\\render.dll\nAlgorithm: SHA256\nHash: 3c94190d9f2003f7331423f5e3bc81f762dfe0c2962c3ee2058337f13b225131",
+        "terms": [
+          "extension",
+          "user",
+          "dll",
+          "path",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "process",
+        "dll",
+        "path",
+        "hash",
+        "sha256",
+        "tool_hash_win"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "approved",
       "name": "承認済みソフトウェア",
-      "content": {
-        "製品": "AsterViewer 7.0",
-        "Publisher": "Aster Software Ltd.",
-        "AsterViewer.exe Path": "C:\\Program Files\\AsterViewer\\AsterViewer.exe",
-        "AsterViewer.exe SHA256": "8a485d0ef8b3d0a949d72631324a9c67515e1e80aa9920e47417f84c9bea981e",
-        "AsterViewer.exeのロード対象DLL名": "render.dll",
-        "render.dll Path": "C:\\Program Files\\AsterViewer\\render.dll",
-        "render.dll SHA256": "4d377710ebd81c302aa213167ef0417221add5d5d4557daf705246e42804ea2a",
-        "条件": "Viewerとrender.dllを承認配置・ハッシュの組で管理。ユーザー配下の差替DLLは不可。"
-      }
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "pe",
-    "dll_hash",
-    "approved",
-    "sig"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
+      "kind": "references",
+      "result": {
+        "content": {
+          "製品": "AsterViewer 7.0",
+          "Publisher": "Aster Software Ltd.",
+          "AsterViewer.exe Path": "C:\\Program Files\\AsterViewer\\AsterViewer.exe",
+          "AsterViewer.exe SHA256": "8a485d0ef8b3d0a949d72631324a9c67515e1e80aa9920e47417f84c9bea981e",
+          "AsterViewer.exeのロード対象DLL名": "render.dll",
+          "render.dll Path": "C:\\Program Files\\AsterViewer\\render.dll",
+          "render.dll SHA256": "4d377710ebd81c302aa213167ef0417221add5d5d4557daf705246e42804ea2a",
+          "条件": "Viewerとrender.dllを承認配置・ハッシュの組で管理。ユーザー配下の差替DLLは不可。"
         },
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "parent",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "command",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "dll",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        },
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_pe",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "pe",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "dll_hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "signature",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "vendor",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "version",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_sigcheck",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_hash_win",
-      "occurrences": [
-        {
-          "source_id": "dll_hash",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "overview"
-        }
+        "terms": [
+          "extension",
+          "executable",
+          "user",
+          "dll",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "vendor"
+        ]
+      },
+      "terms": [
+        "approved"
       ]
     }
   ],
-  "explanation": "Viewer本体の署名・発行元・バージョン・配置・ハッシュは承認記録と一致します。一方、実際にロードした同名のrender.dllは承認配置C:\\Program Files\\AsterViewer\\render.dllではなくユーザーのDownloads配下にあり、ハッシュも承認版と異なるため停止します。DLLサイドローディングを題材に、実行本体と読み込むDLLを別々に検証します。",
-  "topic": "実行本体とロード済みDLLを別々に検証する",
-  "summary": "実行本体とロード済みDLLを別々に検証する",
   "learning_objectives": [
     "実行本体とロード済みDLLを別々に検証する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "real_world_inspired",
   "sources": [
     "https://attack.mitre.org/techniques/T1574/001/"
   ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "DLL Side-loading"
 }

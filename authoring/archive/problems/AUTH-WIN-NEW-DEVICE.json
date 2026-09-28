@@ -1,0 +1,178 @@
+{
+  "schema_version": 2,
+  "id": "AUTH-WIN-NEW-DEVICE",
+  "category": "account",
+  "platform": "windows",
+  "title": "交換済み新端末の初回ログイン",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
+  "required_evidence": [
+    "device",
+    "change",
+    "policy"
+  ],
+  "ground_truth": "allow",
+  "explanation": "新しい端末ですが、交換申請・登録状態・ユーザー・今回のMFA確認が一致するため許可します。過去のログにこの端末がないことだけを理由に遮断しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "要求ID",
+        "label": "要求ID",
+        "value": "AUTH-901",
+        "data_type": "text"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "mori",
+        "data_type": "username"
+      },
+      {
+        "id": "Source IP",
+        "label": "Source IP",
+        "value": "192.0.2.43",
+        "data_type": "ip"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "要求Logon Type",
+        "label": "要求Logon Type",
+        "value": "10 / RemoteInteractive",
+        "data_type": "text"
+      },
+      {
+        "id": "Gatewayの認証確認",
+        "label": "Gatewayの認証確認",
+        "value": "パスワード確認済み / MFA確認済み",
+        "data_type": "text"
+      },
+      {
+        "id": "Device ID",
+        "label": "Device ID",
+        "value": "WIN-044",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "user",
+      "ip",
+      "authentication",
+      "session",
+      "mfa",
+      "gateway",
+      "device",
+      "password",
+      "login",
+      "logon_type",
+      "source_ip"
+    ]
+  },
+  "resources": [
+    {
+      "id": "events",
+      "name": "Event Viewer / Windows Security Log",
+      "description": "今回の要求より前のセキュリティログを調べます。接続元別・ユーザー別の集計は、保存ログから抽出して表示します。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "ユーザー",
+      "platform_note": "Windows標準 / Event Viewer",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "2026-08-17 09:01 Event ID 4624 / TargetUserName: mori / LogonType: 10 / WorkstationName: WIN-017 / IpAddress: 192.0.2.41\n検索対象: 今回の要求より前の保存済みセキュリティログ\n検索条件: Event ID = 4624、WorkstationName = WIN-044\n検索結果: 0件",
+        "terms": [
+          "user",
+          "ip",
+          "session",
+          "device",
+          "login",
+          "logon_type",
+          "source_ip",
+          "log",
+          "event_id"
+        ]
+      },
+      "terms": [
+        "user",
+        "source_ip",
+        "log",
+        "tool_events"
+      ]
+    },
+    {
+      "id": "device",
+      "name": "端末登録情報",
+      "kind": "references",
+      "result": {
+        "content": "WIN-044 / mori / 有効 / 09:00に管理登録 / IP: 192.0.2.43 / WIN-017から交換 CHG-904。",
+        "terms": [
+          "ticket",
+          "active_revoked"
+        ]
+      },
+      "terms": [
+        "device",
+        "reference"
+      ]
+    },
+    {
+      "id": "change",
+      "name": "端末交換記録",
+      "kind": "references",
+      "result": {
+        "content": "CHG-904 / moriの端末交換 / 実施時間08:50–09:05 / 受領時に社内チケットで本人確認済み。",
+        "terms": [
+          "device",
+          "ticket"
+        ]
+      },
+      "terms": [
+        "reference",
+        "release"
+      ]
+    },
+    {
+      "id": "policy",
+      "name": "アカウント利用方針",
+      "kind": "references",
+      "result": {
+        "content": "管理登録済み端末で、今回の要求が端末交換申請と一致し、ゲートウェイでMFAを確認済みなら、初回ログインを許可。",
+        "terms": [
+          "mfa",
+          "gateway",
+          "device",
+          "login"
+        ]
+      },
+      "terms": [
+        "user",
+        "policy"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "新端末を交換記録と認証結果で検証する"
+  ],
+  "sources": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
+  ]
+}

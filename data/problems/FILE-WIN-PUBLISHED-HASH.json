@@ -1,26 +1,52 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-WIN-PUBLISHED-HASH",
   "category": "file",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "allow",
   "title": "ベンダー公開ハッシュとの一致",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "C:\\Downloads\\AsterEditor-4.2.exe",
-    "申請内容": "承認済みEditor 4.2をインストールする。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+  "required_evidence": [
+    "hash",
+    "vendor",
+    "approved"
+  ],
+  "ground_truth": "allow",
+  "explanation": "計算したSHA-256がベンダー公開値と一致し、承認台帳のバージョン・用途にも一致するため許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "C:\\Downloads\\AsterEditor-4.2.exe",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "承認済みEditor 4.2をインストールする。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "extension",
+      "executable",
+      "path",
+      "approved",
+      "install"
+    ]
   },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "hash",
       "name": "Get-FileHash",
       "description": "SHA-256を計算します。PID入力では対応する実体ファイルが対象です。",
-      "output": "Algorithm : SHA256\nHash : 14D7F35E80C6C352F955BCF2A8CD09B9179EDE81A9858BA41B22DCCBC7291F23\nPath : C:\\Downloads\\AsterEditor-4.2.exe",
       "accepted_information_types": [
         "file"
       ],
@@ -35,264 +61,81 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "sha256",
-          "label": "対象ファイルのSHA-256",
-          "value": "14d7f35e80c6c352f955bcf2a8cd09b9179ede81a9858ba41b22dccbc7291f23",
-          "data_type": "sha256"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "Algorithm : SHA256\nHash : 14D7F35E80C6C352F955BCF2A8CD09B9179EDE81A9858BA41B22DCCBC7291F23\nPath : C:\\Downloads\\AsterEditor-4.2.exe",
+        "information": [
+          {
+            "id": "sha256",
+            "label": "対象ファイルのSHA-256",
+            "value": "14d7f35e80c6c352f955bcf2a8cd09b9179ede81a9858ba41b22dccbc7291f23",
+            "data_type": "sha256"
+          }
+        ],
+        "terms": [
+          "file",
+          "extension",
+          "executable",
+          "path",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "file",
+        "executable",
+        "hash",
+        "sha256",
+        "pid",
+        "image_process",
+        "tool_hash_win"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "vendor",
       "name": "ベンダー公開ハッシュ",
-      "content": {
-        "製品": "AsterEditor 4.2",
-        "SHA256": "14d7f35e80c6c352f955bcf2a8cd09b9179ede81a9858ba41b22dccbc7291f23",
-        "公開元": "https://downloads.aster.example/releases/4.2"
-      }
+      "kind": "references",
+      "result": {
+        "content": {
+          "製品": "AsterEditor 4.2",
+          "SHA256": "14d7f35e80c6c352f955bcf2a8cd09b9179ede81a9858ba41b22dccbc7291f23",
+          "公開元": "https://downloads.aster.example/releases/4.2"
+        },
+        "terms": [
+          "hash",
+          "sha256",
+          "url",
+          "http",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "hash",
+        "vendor"
+      ]
     },
     {
       "id": "approved",
       "name": "承認済みソフトウェア",
-      "content": "AsterEditor 4.2 / Windows x64 / 設計部端末への導入をCHG-401で承認。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "hash",
-    "vendor",
-    "approved"
-  ],
-  "glossary": [
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "approved",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "install",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "vendor",
-          "section": "overview"
-        },
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_hash_win",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "vendor",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "vendor",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ticket",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "architecture",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "AsterEditor 4.2 / Windows x64 / 設計部端末への導入をCHG-401で承認。",
+        "terms": [
+          "install",
+          "ticket",
+          "device",
+          "architecture"
+        ]
+      },
+      "terms": [
+        "approved"
       ]
     }
   ],
-  "explanation": "計算したSHA-256がベンダー公開値と一致し、承認台帳のバージョン・用途にも一致するため許可します。",
-  "topic": "配布物の同一性と利用承認を分けて確認する",
-  "summary": "配布物の同一性と利用承認を分けて確認する",
   "learning_objectives": [
     "配布物の同一性と利用承認を分けて確認する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

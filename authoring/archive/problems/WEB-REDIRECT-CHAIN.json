@@ -1,0 +1,289 @@
+{
+  "schema_version": 2,
+  "id": "WEB-REDIRECT-CHAIN",
+  "category": "web",
+  "platform": "windows",
+  "title": "隔離解析後の遷移先を調べる",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "isolated",
+    "final_rep",
+    "official",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "最終ページはAsterのパスワードを求める承認外ホストで、ドメインの評判にもフィッシング報告があるため遮断します。入口のドメインやDNSだけでは遷移先の正当性を判断できません。",
+  "initial": {
+    "information": [
+      {
+        "id": "URL",
+        "label": "URL",
+        "value": "https://conference-entry.example/join",
+        "data_type": "url"
+      },
+      {
+        "id": "URLのHost",
+        "label": "URLのHost",
+        "value": "conference-entry.example",
+        "data_type": "domain"
+      },
+      {
+        "id": "受付状態",
+        "label": "受付状態",
+        "value": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+        "data_type": "text"
+      },
+      {
+        "id": "URLの区分",
+        "label": "URLの区分",
+        "value": "公開イベントの共有リンク、個人トークンなし",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "url",
+      "host",
+      "token",
+      "http",
+      "url_path",
+      "browser"
+    ]
+  },
+  "resources": [
+    {
+      "id": "resolve",
+      "name": "Resolve-DnsName",
+      "description": "選択したホストのDNSレコードを問い合わせます。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのホスト",
+      "platform_note": "Windows / PowerShell DnsClient",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Name: conference-entry.example\nType: A; IPAddress: {{fact:ip}}; TTL: 300",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.61",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "ip",
+          "ttl",
+          "dns_records"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "dns",
+        "tool_dns"
+      ]
+    },
+    {
+      "id": "nslookup",
+      "name": "nslookup",
+      "description": "選択したホストのDNS応答を表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのホスト",
+      "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Server: 192.0.2.53\nName: conference-entry.example\nAddress: {{fact:ip}}\n",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.61",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "ip",
+          "dns_resolver",
+          "server"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "dns",
+        "tool_dns"
+      ]
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。"
+        },
+        "terms": [
+          "url",
+          "host",
+          "token",
+          "url_path",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "user",
+          "attachment",
+          "authentication",
+          "pcap",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
+    {
+      "id": "official",
+      "name": "公式サービス・ドメイン",
+      "kind": "references",
+      "result": {
+        "content": "Aster ログインはlogin.aster.exampleのみ。会議サービスへ組織パスワードを直接渡す認証手順はない。",
+        "terms": [
+          "authentication",
+          "password",
+          "login"
+        ]
+      },
+      "terms": [
+        "host"
+      ]
+    },
+    {
+      "id": "isolated",
+      "name": "隔離環境でのURL解析",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "accepted_information_types": [
+        "url"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URL"
+        }
+      ],
+      "input_hint": "URL",
+      "correct_usage": true,
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "{{input}} -> 302 https://{{fact:final_host}}/login\nHTTP 200\nForm: Aster email / Aster password\nForm action: https://{{fact:final_host}}/session",
+        "information": [
+          {
+            "id": "final_host",
+            "label": "最終URLのホスト",
+            "value": "identity-event.example",
+            "data_type": "domain"
+          }
+        ],
+        "terms": [
+          "url",
+          "host",
+          "http",
+          "url_path",
+          "email",
+          "password",
+          "login",
+          "session",
+          "form",
+          "redirect",
+          "http_200"
+        ]
+      },
+      "submission": {
+        "type": "full_url",
+        "warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
+        "terms": [
+          "url",
+          "http",
+          "url_path",
+          "isolated"
+        ]
+      },
+      "terms": [
+        "url",
+        "isolated"
+      ]
+    },
+    {
+      "id": "final_rep",
+      "name": "ドメインの評判",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "isolated",
+          "id": "final_host"
+        }
+      ],
+      "input_hint": "最終接続先ホスト",
+      "correct_usage": true,
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "Domain: {{input}}\n2026-08-18: phishing 14/17 feeds",
+        "terms": [
+          "host",
+          "detection",
+          "phishing"
+        ]
+      },
+      "submission": {
+        "type": "domain",
+        "warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
+        "terms": [
+          "url",
+          "host",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "host",
+        "reputation"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "外部解析で得たホストを次の照会へ引き継ぐ"
+  ],
+  "sources": [
+    "https://urlscan.io/docs/api/"
+  ]
+}

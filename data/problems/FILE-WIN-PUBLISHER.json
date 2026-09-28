@@ -1,26 +1,50 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-WIN-PUBLISHER",
   "category": "file",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "allow",
   "title": "承認された署名付き配布物",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "C:\\Downloads\\AsterPrint-6.1.exe",
-    "申請内容": "社内カタログから取得したプリンタDriver 6.1。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+  "required_evidence": [
+    "sig",
+    "publisher"
+  ],
+  "ground_truth": "allow",
+  "explanation": "署名の検証結果と発行元・バージョンが承認された配布条件に一致するため、この導入を許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "C:\\Downloads\\AsterPrint-6.1.exe",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "社内カタログから取得したプリンタDriver 6.1。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "extension",
+      "executable",
+      "path",
+      "driver"
+    ]
   },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "sig",
       "name": "Sigcheck",
       "description": "署名の検証状態・発行元を確認します。PID入力では実体ファイルが対象です。",
-      "output": "C:\\Downloads\\AsterPrint-6.1.exe:\n  Verified: Signed\n  Publisher: Aster Devices Ltd.\nProduct: AsterPrint\nFile version: 6.1",
       "accepted_information_types": [
         "file"
       ],
@@ -34,189 +58,52 @@
       "platform_note": "Windows / Microsoft Sysinternals・要導入",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "C:\\Downloads\\AsterPrint-6.1.exe:\n  Verified: Signed\n  Publisher: Aster Devices Ltd.\nProduct: AsterPrint\nFile version: 6.1",
+        "terms": [
+          "file",
+          "extension",
+          "executable",
+          "path",
+          "signature",
+          "vendor",
+          "version",
+          "device"
+        ]
+      },
+      "terms": [
+        "file",
+        "executable",
+        "signature",
+        "vendor",
+        "pid",
+        "image_process",
+        "tool_sigcheck"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "publisher",
       "name": "信頼できる発行元",
-      "content": "署名検証がSignedで発行元がAster Devices Ltd.であるAsterPrint 6.1を承認。社内カタログ配布のみ。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "sig",
-    "publisher"
-  ],
-  "glossary": [
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "driver",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "signature",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "vendor",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "overview"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_sigcheck",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "version",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "署名検証がSignedで発行元がAster Devices Ltd.であるAsterPrint 6.1を承認。社内カタログ配布のみ。",
+        "terms": [
+          "signature",
+          "vendor",
+          "device"
+        ]
+      },
+      "terms": [
+        "vendor"
       ]
     }
   ],
-  "explanation": "署名の検証結果と発行元・バージョンが承認された配布条件に一致するため、この導入を許可します。",
-  "topic": "署名の発行元・バージョンを承認内容と照合する",
-  "summary": "署名の発行元・バージョンを承認内容と照合する",
   "learning_objectives": [
     "署名の発行元・バージョンを承認内容と照合する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

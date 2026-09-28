@@ -1,26 +1,50 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-LINUX-ELF-AS-DOCUMENT",
   "category": "file",
   "platform": "linux",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "PDFとして届いたELF",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "/home/user/inbox/delivery.pdf",
-    "申請内容": "配送伝票PDFを表示する。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+  "required_evidence": [
+    "file",
+    "format"
+  ],
+  "ground_truth": "block",
+  "explanation": "fileの結果はPDFではなくELF実行ファイルで、伝票の受入れ形式に合わないため遮断します。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "/home/user/inbox/delivery.pdf",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "配送伝票PDFを表示する。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "extension",
+      "pdf",
+      "path",
+      "user"
+    ]
   },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "file",
       "name": "file",
       "description": "マジック値などからファイル形式を識別します。",
-      "output": "/home/user/inbox/delivery.pdf: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped",
       "accepted_information_types": [
         "file"
       ],
@@ -34,174 +58,47 @@
       "platform_note": "Linux / fileパッケージ",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "/home/user/inbox/delivery.pdf: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped",
+        "terms": [
+          "extension",
+          "pdf",
+          "path",
+          "user",
+          "executable",
+          "elf",
+          "stripped",
+          "architecture",
+          "elf_flags"
+        ]
+      },
+      "terms": [
+        "file",
+        "magic",
+        "tool_file"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "format",
       "name": "受入れ形式",
-      "content": "配送伝票はPDFのみ。実行ファイルを伝票として開かない。"
+      "kind": "references",
+      "result": {
+        "content": "配送伝票はPDFのみ。実行ファイルを伝票として開かない。",
+        "terms": [
+          "file",
+          "pdf",
+          "executable"
+        ]
+      }
     }
   ],
-  "external_references": [],
-  "required_evidence": [
-    "file",
-    "format"
-  ],
-  "glossary": [
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "file",
-          "section": "overview"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "file",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pdf",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "file",
-          "section": "result"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "file",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "file",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "magic",
-      "occurrences": [
-        {
-          "source_id": "file",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_file",
-      "occurrences": [
-        {
-          "source_id": "file",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "file",
-          "section": "result"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "elf",
-      "occurrences": [
-        {
-          "source_id": "file",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "stripped",
-      "occurrences": [
-        {
-          "source_id": "file",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "architecture",
-      "occurrences": [
-        {
-          "source_id": "file",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "elf_flags",
-      "occurrences": [
-        {
-          "source_id": "file",
-          "section": "result"
-        }
-      ]
-    }
-  ],
-  "explanation": "fileの結果はPDFではなくELF実行ファイルで、伝票の受入れ形式に合わないため遮断します。",
-  "topic": "ファイル名ではなく実際の形式を確認する",
-  "summary": "ファイル名ではなく実際の形式を確認する",
   "learning_objectives": [
     "ファイル名ではなく実際の形式を確認する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "standard",
   "sources": [
     "https://sourceware.org/binutils/docs/binutils/readelf.html",
     "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

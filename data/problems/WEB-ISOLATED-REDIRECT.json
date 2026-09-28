@@ -1,48 +1,115 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "WEB-ISOLATED-REDIRECT",
   "category": "web",
   "platform": "common",
-  "level": "beginner_external",
-  "ground_truth": "block",
   "title": "隔離解析で判明するログイン先",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "URL": "https://event-invite.example/open",
-    "URLのHost": "event-invite.example",
-    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
-    "案内": "Asterの公開イベント案内",
-    "URLの区分": "一般公開リンク、トークンなし"
+  "required_evidence": [
+    "isolated",
+    "official",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "隔離解析では組織のパスワードを要求する別ホストへ遷移し、公式の認証先と一致しないため遮断します。",
+  "initial": {
+    "information": [
+      {
+        "id": "URL",
+        "label": "URL",
+        "value": "https://event-invite.example/open",
+        "data_type": "url"
+      },
+      {
+        "id": "URLのHost",
+        "label": "URLのHost",
+        "value": "event-invite.example",
+        "data_type": "domain"
+      },
+      {
+        "id": "受付状態",
+        "label": "受付状態",
+        "value": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+        "data_type": "text"
+      },
+      {
+        "id": "案内",
+        "label": "案内",
+        "value": "Asterの公開イベント案内",
+        "data_type": "text"
+      },
+      {
+        "id": "URLの区分",
+        "label": "URLの区分",
+        "value": "一般公開リンク、トークンなし",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "url",
+      "host",
+      "token",
+      "http",
+      "url_path",
+      "browser"
+    ]
   },
-  "initial_information_types": {
-    "URL": "url",
-    "URLのHost": "domain"
-  },
-  "tools": [],
-  "references": [
+  "resources": [
     {
       "id": "disclosure",
       "name": "外部照会方針",
-      "content": {
-        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
-        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
-        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
-        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。"
-      }
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。"
+        },
+        "terms": [
+          "url",
+          "host",
+          "token",
+          "url_path",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "user",
+          "attachment",
+          "authentication",
+          "pcap",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
     },
     {
       "id": "official",
       "name": "公式サービス・ドメイン",
-      "content": "Asterのパスワードを入力するホストはlogin.aster.exampleのみ。イベント案内は認証不要。"
-    }
-  ],
-  "external_references": [
+      "kind": "references",
+      "result": {
+        "content": "Asterのパスワードを入力するホストはlogin.aster.exampleのみ。イベント案内は認証不要。",
+        "terms": [
+          "host",
+          "authentication",
+          "password",
+          "login"
+        ]
+      },
+      "terms": [
+        "host"
+      ]
+    },
     {
       "id": "isolated",
       "name": "隔離環境でのURL解析",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
-      "output": "GET https://event-invite.example/open -> 302\nLocation: https://event-identity.example/signin\nFinal HTTP status: 200\nForm labels: Aster email / Aster password\nForm action: https://event-identity.example/submit",
       "accepted_information_types": [
         "url"
       ],
@@ -53,323 +120,43 @@
         }
       ],
       "input_hint": "URL",
-      "submission_type": "full_url",
-      "submission_value": "https://event-invite.example/open",
-      "confidentiality_warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
       "correct_usage": true,
-      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
-    }
-  ],
-  "required_evidence": [
-    "isolated",
-    "official",
-    "disclosure"
-  ],
-  "glossary": [
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "isolated",
-          "section": "overview"
-        },
-        {
-          "source_id": "isolated",
-          "section": "result"
-        },
-        {
-          "source_id": "isolated",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "overview"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "token",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "isolated",
-          "section": "result"
-        },
-        {
-          "source_id": "isolated",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "isolated",
-          "section": "result"
-        },
-        {
-          "source_id": "isolated",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "browser",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "confidential",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pcap",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "indicator",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "isolated",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "password",
-      "occurrences": [
-        {
-          "source_id": "official",
-          "section": "result"
-        },
-        {
-          "source_id": "isolated",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "login",
-      "occurrences": [
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "isolated",
-      "occurrences": [
-        {
-          "source_id": "isolated",
-          "section": "overview"
-        },
-        {
-          "source_id": "isolated",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "http_method",
-      "occurrences": [
-        {
-          "source_id": "isolated",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "form",
-      "occurrences": [
-        {
-          "source_id": "isolated",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "redirect",
-      "occurrences": [
-        {
-          "source_id": "isolated",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http_200",
-      "occurrences": [
-        {
-          "source_id": "isolated",
-          "section": "result"
-        }
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "GET {{input}} -> 302\nLocation: https://event-identity.example/signin\nFinal HTTP status: 200\nForm labels: Aster email / Aster password\nForm action: https://event-identity.example/submit",
+        "terms": [
+          "url",
+          "http",
+          "url_path",
+          "email",
+          "password",
+          "http_method",
+          "form",
+          "redirect",
+          "http_200"
+        ]
+      },
+      "submission": {
+        "type": "full_url",
+        "warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
+        "terms": [
+          "url",
+          "http",
+          "url_path",
+          "isolated"
+        ]
+      },
+      "terms": [
+        "url",
+        "isolated"
       ]
     }
   ],
-  "explanation": "隔離解析では組織のパスワードを要求する別ホストへ遷移し、公式の認証先と一致しないため遮断します。",
-  "topic": "外部隔離解析のリダイレクトと公式認証先を比較する",
-  "summary": "外部隔離解析のリダイレクトと公式認証先を比較する",
   "learning_objectives": [
     "外部隔離解析のリダイレクトと公式認証先を比較する"
   ],
-  "decision_context": "before_access",
-  "scenario_type": "standard",
   "sources": [
     "https://urlscan.io/docs/api/"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

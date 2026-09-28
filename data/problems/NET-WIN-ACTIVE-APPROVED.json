@@ -1,32 +1,93 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "NET-WIN-ACTIVE-APPROVED",
   "category": "network",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "allow",
   "title": "承認済みエージェントの接続",
   "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "接続ID": "CONNECT-701",
-    "PID": 5100,
-    "Process表示名": "agent.exe",
-    "Remote Port": 443,
-    "Protocol": "TCP",
-    "端末": "192.0.2.25",
-    "保留中のLocal Port": 52410,
-    "要求時刻": "2026-08-18 09:10:00",
-    "接続状況": "同じプロセスの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。"
+  "required_evidence": [
+    "nettcp",
+    "server"
+  ],
+  "ground_truth": "allow",
+  "explanation": "現在のPIDと既存接続の宛先が、管理台帳のエージェント・承認サーバーと一致するため同じ宛先への新しい接続を許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "接続ID",
+        "label": "接続ID",
+        "value": "CONNECT-701",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 5100,
+        "data_type": "pid"
+      },
+      {
+        "id": "Process表示名",
+        "label": "Process表示名",
+        "value": "agent.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "Remote Port",
+        "label": "Remote Port",
+        "value": 443,
+        "data_type": "text"
+      },
+      {
+        "id": "Protocol",
+        "label": "Protocol",
+        "value": "TCP",
+        "data_type": "text"
+      },
+      {
+        "id": "端末",
+        "label": "端末",
+        "value": "192.0.2.25",
+        "data_type": "text"
+      },
+      {
+        "id": "保留中のLocal Port",
+        "label": "保留中のLocal Port",
+        "value": 52410,
+        "data_type": "text"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "接続状況",
+        "label": "接続状況",
+        "value": "同じプロセスの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "ip",
+      "port",
+      "tcp",
+      "flow",
+      "device",
+      "agent",
+      "local_remote",
+      "protocol"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "nettcp",
       "name": "Get-NetTCPConnection",
       "description": "選択PIDの既存TCP接続を表示します。今回の保留中要求とは別です。",
-      "output": "LocalAddress: 192.0.2.25\nLocalPort: 52400\nRemoteAddress: 192.0.2.80\nRemotePort: 443\nState: Established\nOwningProcess: 5100",
       "accepted_information_types": [
         "pid"
       ],
@@ -41,270 +102,67 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "既存接続の接続先IP",
-          "value": "192.0.2.80",
-          "data_type": "ip"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "LocalAddress: 192.0.2.25\nLocalPort: 52400\nRemoteAddress: {{fact:ip}}\nRemotePort: 443\nState: Established\nOwningProcess: 5100",
+        "information": [
+          {
+            "id": "ip",
+            "label": "既存接続の接続先IP",
+            "value": "192.0.2.80",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "process",
+          "pid",
+          "ip",
+          "port",
+          "local_remote",
+          "established"
+        ]
+      },
+      "terms": [
+        "pid",
+        "tcp",
+        "tool_tcpview"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "server",
       "name": "承認済みサーバー",
-      "content": {
-        "端末": "192.0.2.25",
-        "管理配布AgentのPID": 5100,
-        "Image": "C:\\Program Files\\AsterAgent\\agent.exe",
-        "宛先": "192.0.2.80:443",
-        "用途": "棚卸しデータ",
-        "承認": "NET-701 / 現在の端末管理記録"
-      }
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "nettcp",
-    "server"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
+      "kind": "references",
+      "result": {
+        "content": {
+          "端末": "192.0.2.25",
+          "管理配布AgentのPID": 5100,
+          "Image": "C:\\Program Files\\AsterAgent\\agent.exe",
+          "宛先": "192.0.2.80:443",
+          "用途": "棚卸しデータ",
+          "承認": "NET-701 / 現在の端末管理記録"
         },
-        {
-          "source_id": "server",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "server",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "nettcp",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "nettcp",
-          "section": "overview"
-        },
-        {
-          "source_id": "nettcp",
-          "section": "result"
-        },
-        {
-          "source_id": "server",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "nettcp",
-          "section": "result"
-        },
-        {
-          "source_id": "server",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "port",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "nettcp",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tcp",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "nettcp",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "flow",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "server",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "agent",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "server",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "local_remote",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "nettcp",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "protocol",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_tcpview",
-      "occurrences": [
-        {
-          "source_id": "nettcp",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "established",
-      "occurrences": [
-        {
-          "source_id": "nettcp",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "server",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "server",
-      "occurrences": [
-        {
-          "source_id": "server",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "server",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "server",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "server",
-          "section": "result"
-        }
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "ip",
+          "device",
+          "agent",
+          "file",
+          "path",
+          "image_process"
+        ]
+      },
+      "terms": [
+        "approved",
+        "server"
       ]
     }
   ],
-  "explanation": "現在のPIDと既存接続の宛先が、管理台帳のエージェント・承認サーバーと一致するため同じ宛先への新しい接続を許可します。",
-  "topic": "所有PIDと送信先を独立した台帳に照合する",
-  "summary": "所有PIDと送信先を独立した台帳に照合する",
   "learning_objectives": [
     "所有PIDと送信先を独立した台帳に照合する"
   ],
-  "decision_context": "before_connection",
-  "scenario_type": "standard",
   "sources": [
     "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

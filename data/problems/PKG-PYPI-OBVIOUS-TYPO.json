@@ -1,161 +1,83 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PKG-PYPI-OBVIOUS-TYPO",
   "category": "package",
   "platform": "common",
-  "level": "very_beginner",
-  "ground_truth": "block",
   "title": "明白なタイポスクワッティング",
   "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Package": "aster-reqests",
-    "Version": "1.0.0",
-    "Ecosystem": "pypi",
-    "状態": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。"
-  },
-  "initial_information_types": {
-    "Package": "package"
-  },
-  "tools": [],
-  "references": [
-    {
-      "id": "policy",
-      "name": "コンポーネント導入方針",
-      "content": {
-        "導入規則": "申請済みのパッケージ名・Versionのみインストール可。",
-        "申請したPackage": "aster-requests"
-      }
-    }
-  ],
-  "external_references": [],
   "required_evidence": [
     "initial_information",
     "policy"
   ],
-  "glossary": [
+  "ground_truth": "block",
+  "explanation": "申請したaster-requestsに対して導入対象はaster-reqestsであり、名前が一致しないため遮断します。この差だけで配布物のマルウェア性までは断定しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Package",
+        "label": "Package",
+        "value": "aster-reqests",
+        "data_type": "package"
+      },
+      {
+        "id": "Version",
+        "label": "Version",
+        "value": "1.0.0",
+        "data_type": "text"
+      },
+      {
+        "id": "Ecosystem",
+        "label": "Ecosystem",
+        "value": "pypi",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "script",
+      "package",
+      "registry",
+      "install_script",
+      "version",
+      "ecosystem",
+      "dependency",
+      "package_resolver",
+      "install"
+    ]
+  },
+  "resources": [
     {
-      "term_id": "script",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "package",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
+      "id": "policy",
+      "name": "コンポーネント導入方針",
+      "kind": "references",
+      "result": {
+        "content": {
+          "導入規則": "申請済みのパッケージ名・Versionのみインストール可。",
+          "申請したPackage": "aster-requests"
         },
-        {
-          "source_id": "policy",
-          "section": "overview"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "registry",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "install_script",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "version",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ecosystem",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "dependency",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "package_resolver",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "install",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "policy",
-          "section": "overview"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "policy",
-          "section": "overview"
-        }
+        "terms": [
+          "package",
+          "version",
+          "install"
+        ]
+      },
+      "terms": [
+        "package",
+        "install",
+        "policy"
       ]
     }
   ],
-  "explanation": "申請したaster-requestsに対して導入対象はaster-reqestsであり、名前が一致しないため遮断します。この差だけで配布物のマルウェア性までは断定しません。",
-  "topic": "依存解決結果を申請パッケージ名と比較する",
-  "summary": "依存解決結果を申請パッケージ名と比較する",
   "learning_objectives": [
     "依存解決結果を申請パッケージ名と比較する"
   ],
-  "decision_context": "before_install",
-  "scenario_type": "real_world_inspired",
   "sources": [
     "https://github.com/ossf/malicious-packages"
   ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
-  "inspired_by": "Obvious Typosquatting",
-  "ecosystem": "pypi"
+  "inspired_by": "Obvious Typosquatting"
 }

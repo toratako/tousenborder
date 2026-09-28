@@ -1,0 +1,338 @@
+{
+  "schema_version": 2,
+  "id": "EMAIL-GENUINE-URGENT",
+  "category": "email",
+  "platform": "common",
+  "title": "緊急でも正当な資料再送",
+  "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "header",
+    "gateway",
+    "directory",
+    "thread",
+    "attachment_hash",
+    "dns",
+    "approved"
+  ],
+  "ground_truth": "allow",
+  "explanation": "緊急の連絡ですが、送信経路・既存スレッド・会場変更の承認・添付ハッシュ・URLが一致するため受け入れます。急ぎという表現だけで不正と判断しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Email",
+        "label": "Email",
+        "value": "quarantine/message-1085.eml",
+        "data_type": "email"
+      },
+      {
+        "id": "From",
+        "label": "From",
+        "value": "Aster研修 <training@aster.example>",
+        "data_type": "text"
+      },
+      {
+        "id": "To",
+        "label": "To",
+        "value": "mori@aster.example",
+        "data_type": "text"
+      },
+      {
+        "id": "Subject",
+        "label": "Subject",
+        "value": "本日研修の会場変更",
+        "data_type": "text"
+      },
+      {
+        "id": "本文",
+        "label": "本文",
+        "value": "本日10時の研修はB会議室です。公開資料PDFと会場ページを再送します。",
+        "data_type": "text"
+      },
+      {
+        "id": "受信時刻",
+        "label": "受信時刻",
+        "value": "2026-08-18 09:10",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "pdf",
+      "reply_to",
+      "attachment",
+      "gateway",
+      "email",
+      "to_subject",
+      "quarantine"
+    ]
+  },
+  "resources": [
+    {
+      "id": "header",
+      "name": "メールの原文を表示",
+      "description": "信頼する受信ゲートウェイのヘッダーと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "Email"
+        }
+      ],
+      "input_hint": "メール",
+      "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Received: from outbound.aster.example ([192.0.2.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=aster.example; dkim=pass header.d=aster.example; dmarc=pass header.from=aster.example\nFrom: Aster研修 <training@aster.example>\nTo: mori@aster.example\nReply-To: Aster研修 <training@aster.example>\nReturn-Path: <bounce@aster.example>\nSubject: 本日研修の会場変更\nIn-Reply-To: <TR-810@aster.example>\nMIME本文の抜粋:\nContent-Disposition: attachment; filename=\"training-guide.pdf\"\n<a href=\"{{fact:url}}\">会場</a>\nGatewayがMIMEから抽出して保存した添付: {{fact:attachment}}",
+        "information": [
+          {
+            "id": "attachment",
+            "label": "抽出済み添付ファイル",
+            "value": "/quarantine/attachments/training-guide.pdf",
+            "data_type": "file"
+          },
+          {
+            "id": "url",
+            "label": "会場URL",
+            "value": "https://training.aster.example/venue",
+            "data_type": "url"
+          },
+          {
+            "id": "host",
+            "label": "会場URLのホスト",
+            "value": "training.aster.example",
+            "data_type": "domain"
+          }
+        ],
+        "terms": [
+          "extension",
+          "pdf",
+          "reply_to",
+          "attachment",
+          "gateway",
+          "to_subject",
+          "quarantine",
+          "url",
+          "header",
+          "mime",
+          "file",
+          "path",
+          "ip",
+          "host",
+          "spf",
+          "dkim",
+          "dmarc",
+          "authentication",
+          "timezone",
+          "http",
+          "url_path",
+          "received",
+          "authentication_results",
+          "auth_mail_fields",
+          "pass_fail",
+          "disposition",
+          "esmtps",
+          "thread",
+          "href"
+        ]
+      },
+      "terms": [
+        "attachment",
+        "gateway",
+        "email",
+        "url",
+        "header",
+        "mime"
+      ]
+    },
+    {
+      "id": "gateway",
+      "name": "メールゲートウェイ構成",
+      "kind": "references",
+      "result": {
+        "content": "信頼する受信ゲートウェイはmx.aster.example。自社ゲートウェイが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。",
+        "terms": [
+          "gateway",
+          "authentication",
+          "received",
+          "authentication_results"
+        ]
+      },
+      "terms": [
+        "gateway"
+      ]
+    },
+    {
+      "id": "directory",
+      "name": "社内連絡先台帳",
+      "kind": "references",
+      "result": {
+        "content": "training@aster.example / 社内配信元192.0.2.110 / DKIM d=aster.example。",
+        "terms": [
+          "dkim"
+        ]
+      },
+      "terms": [
+        "directory"
+      ]
+    },
+    {
+      "id": "thread",
+      "name": "過去のメールスレッド",
+      "kind": "references",
+      "result": {
+        "content": "TR-810 / 本人申込済みの本日10:00研修 / 添付=training-guide.pdf / 会場変更を後送予定。",
+        "terms": [
+          "extension",
+          "pdf",
+          "attachment"
+        ]
+      },
+      "terms": [
+        "thread"
+      ]
+    },
+    {
+      "id": "approved",
+      "name": "公開資料・変更承認記録",
+      "kind": "references",
+      "result": {
+        "content": {
+          "変更承認": "CHG-811 / 08:45 / A会議室からB会議室へ",
+          "添付SHA256": "bf049860dc027c8518e96f67838076dc7f6ccb8641fc9397559f0d0fe2258361",
+          "URL": "https://training.aster.example/venue",
+          "DNS": "training.aster.example -> 198.51.100.20",
+          "資料区分": "一般公開"
+        },
+        "terms": [
+          "attachment",
+          "url",
+          "ip",
+          "http",
+          "url_path",
+          "hash",
+          "sha256",
+          "dns",
+          "ticket"
+        ]
+      },
+      "terms": [
+        "reference",
+        "release"
+      ]
+    },
+    {
+      "id": "attachment_hash",
+      "name": "7-Zip / SHA-256",
+      "description": "抽出済み添付ファイルを実行せずSHA-256を計算します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "attachment"
+        }
+      ],
+      "input_hint": "attachment",
+      "platform_note": "Linux / 7-Zipの7zzまたは7zコマンドを導入済み",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "section": "添付ファイルの調査",
+      "result": {
+        "content": "7z h -scrcSHA256 training-guide.pdf\nSHA256: bf049860dc027c8518e96f67838076dc7f6ccb8641fc9397559f0d0fe2258361"
+      }
+    },
+    {
+      "id": "dig",
+      "name": "dig",
+      "description": "選択したホストのDNSレコードとTTLを表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "host"
+        }
+      ],
+      "input_hint": "host",
+      "platform_note": "Linux / BIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "section": "URLの調査",
+      "result": {
+        "content": ";; ANSWER SECTION:\ntraining.aster.example. 300 IN A {{fact:ip}}",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.20",
+            "data_type": "ip"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nslookup",
+      "name": "nslookup",
+      "description": "選択したホストのDNS応答を表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "header",
+          "id": "host"
+        }
+      ],
+      "input_hint": "host",
+      "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "section": "URLの調査",
+      "result": {
+        "content": "Server: 192.0.2.53\nName: training.aster.example\nAddress: {{fact:ip}}\n",
+        "information": [
+          {
+            "id": "ip",
+            "label": "解決先IP",
+            "value": "198.51.100.20",
+            "data_type": "ip"
+          }
+        ]
+      }
+    }
+  ],
+  "evidence_alternatives": {
+    "dns": {
+      "label": "会場ホストの解決先",
+      "any_of": [
+        "dig",
+        "nslookup"
+      ]
+    }
+  },
+  "learning_objectives": [
+    "緊急メールをヘッダー・添付・URL・業務記録で検証する"
+  ],
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc8601"
+  ]
+}

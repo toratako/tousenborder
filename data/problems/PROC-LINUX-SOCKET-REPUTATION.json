@@ -1,28 +1,55 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-LINUX-SOCKET-REPUTATION",
   "category": "process",
   "platform": "linux",
-  "level": "beginner_external",
-  "ground_truth": "block",
   "title": "稼働プロセスの通信先照会",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "cache-worker",
-    "PID": 4200,
-    "User": "web",
-    "採取時点": "2026-08-18 09:10 / 起動済み"
+  "required_evidence": [
+    "ss",
+    "ip_rep",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "プロセスの接続先IPに現行のマルウェア配布基盤としての報告があるため停止します。ポート番号だけを根拠にしていません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "cache-worker",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "web",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "process",
+      "pid",
+      "user"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "ss",
       "name": "ss",
       "description": "選択PIDのソケット・相手IP・ポートを確認します。",
-      "output": "ESTAB 0 0 192.0.2.30:52400 203.0.113.88:443 users:((\"cache-worker\",pid=4200,fd=5))",
       "accepted_information_types": [
         "pid"
       ],
@@ -37,35 +64,71 @@
       "environments": [
         "linux"
       ],
-      "output_information": [
-        {
-          "id": "ip",
-          "label": "通信相手のIP",
-          "value": "203.0.113.88",
-          "data_type": "ip"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "ESTAB 0 0 192.0.2.30:52400 {{fact:ip}}:443 users:((\"cache-worker\",pid=4200,fd=5))",
+        "information": [
+          {
+            "id": "ip",
+            "label": "通信相手のIP",
+            "value": "203.0.113.88",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "pid",
+          "user",
+          "ip",
+          "established",
+          "fd",
+          "local_remote"
+        ]
+      },
+      "terms": [
+        "pid",
+        "socket",
+        "port",
+        "tool_ss"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "disclosure",
       "name": "外部照会方針",
-      "content": {
-        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
-        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
-        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
-        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
-      }
-    }
-  ],
-  "external_references": [
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
+        },
+        "terms": [
+          "user",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "url",
+          "host",
+          "token",
+          "attachment",
+          "authentication",
+          "pcap",
+          "url_path",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
     {
       "id": "ip_rep",
       "name": "IPの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
-      "output": "IP: 203.0.113.88\nDedicated endpoint; malware-distribution 8/10 feeds\nLast confirmed: 2026-08-18 08:50",
       "accepted_information_types": [
         "ip"
       ],
@@ -76,323 +139,36 @@
         }
       ],
       "input_hint": "IP",
-      "submission_type": "ip",
-      "submission_value": "203.0.113.88",
-      "confidentiality_warning": "IPアドレスをサービスへ送信します。PCAPや通信本文は送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
-    }
-  ],
-  "required_evidence": [
-    "ss",
-    "ip_rep",
-    "disclosure"
-  ],
-  "glossary": [
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "ss",
-          "section": "overview"
-        },
-        {
-          "source_id": "ss",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "ss",
-          "section": "result"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "socket",
-      "occurrences": [
-        {
-          "source_id": "ss",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "port",
-      "occurrences": [
-        {
-          "source_id": "ss",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_ss",
-      "occurrences": [
-        {
-          "source_id": "ss",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "ss",
-          "section": "result"
-        },
-        {
-          "source_id": "ip_rep",
-          "section": "overview"
-        },
-        {
-          "source_id": "ip_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "ip_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "established",
-      "occurrences": [
-        {
-          "source_id": "ss",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "fd",
-      "occurrences": [
-        {
-          "source_id": "ss",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "local_remote",
-      "occurrences": [
-        {
-          "source_id": "ss",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "confidential",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "token",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pcap",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "ip_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "indicator",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reputation",
-      "occurrences": [
-        {
-          "source_id": "ip_rep",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "endpoint",
-      "occurrences": [
-        {
-          "source_id": "ip_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "detection",
-      "occurrences": [
-        {
-          "source_id": "ip_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "malware",
-      "occurrences": [
-        {
-          "source_id": "ip_rep",
-          "section": "result"
-        }
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "IP: {{input}}\nDedicated endpoint; malware-distribution 8/10 feeds\nLast confirmed: 2026-08-18 08:50",
+        "terms": [
+          "ip",
+          "endpoint",
+          "detection",
+          "malware"
+        ]
+      },
+      "submission": {
+        "type": "ip",
+        "warning": "IPアドレスをサービスへ送信します。PCAPや通信本文は送りません。",
+        "terms": [
+          "ip",
+          "pcap"
+        ]
+      },
+      "terms": [
+        "ip",
+        "reputation"
       ]
     }
   ],
-  "explanation": "プロセスの接続先IPに現行のマルウェア配布基盤としての報告があるため停止します。ポート番号だけを根拠にしていません。",
-  "topic": "ssから得たIPを外部評判に照会する",
-  "summary": "ssから得たIPを外部評判に照会する",
   "learning_objectives": [
     "ssから得たIPを外部評判に照会する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

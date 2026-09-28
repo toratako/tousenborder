@@ -1,0 +1,251 @@
+{
+  "schema_version": 2,
+  "id": "PROC-LINUX-BACKUP-JOB",
+  "category": "process",
+  "platform": "linux",
+  "title": "業務ファイルを読み取るバックアップジョブ",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "ps",
+    "lsof",
+    "ss",
+    "systemctl",
+    "job"
+  ],
+  "ground_truth": "allow",
+  "explanation": "観測された業務ファイルの読取りと外部接続は、承認されたバックアップの対象・時刻・保存先・サービス構成に一致し、累積送信量12.4 GiBも上限30 GiB以内のため継続を許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "backup-agent",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "backup",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      },
+      {
+        "id": "端末監視の通信集計",
+        "label": "端末監視の通信集計",
+        "value": "PID 4200の今回の起動から採取時点までの送信量: 12.4 GiB。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "size",
+      "process",
+      "pid",
+      "user",
+      "device",
+      "agent",
+      "storage"
+    ]
+  },
+  "resources": [
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのユーザー・親PID・コマンドラインを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "USER PID PPID ELAPSED COMMAND\nbackup 4200 1 10:00 /opt/aster/backup-agent --config /etc/aster/backup.toml",
+        "terms": [
+          "pid",
+          "user",
+          "agent",
+          "storage",
+          "command",
+          "path",
+          "elapsed"
+        ]
+      },
+      "terms": [
+        "pid",
+        "user",
+        "parent",
+        "command",
+        "tool_ps"
+      ]
+    },
+    {
+      "id": "lsof",
+      "name": "lsof",
+      "description": "選択PIDが開いているファイル・FDを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / lsof",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "COMMAND PID USER FD TYPE NAME\nbackup-agent 4200 backup txt REG /opt/aster/backup-agent\nbackup-agent 4200 backup 6r REG /srv/reports/2026-08.csv\nbackup-agent 4200 backup 7r REG /srv/reports/2026-07.csv",
+        "terms": [
+          "pid",
+          "user",
+          "agent",
+          "storage",
+          "command",
+          "path",
+          "fd"
+        ]
+      },
+      "terms": [
+        "pid",
+        "file",
+        "tool_lsof"
+      ]
+    },
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのソケット・相手IP・ポートを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "ESTAB 0 0 192.0.2.30:52400 {{fact:ip}}:443 users:((\"backup-agent\",pid=4200,fd=5))",
+        "information": [
+          {
+            "id": "ip",
+            "label": "通信相手のIP",
+            "value": "198.51.100.40",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "pid",
+          "user",
+          "agent",
+          "storage",
+          "fd",
+          "ip",
+          "established",
+          "local_remote"
+        ]
+      },
+      "terms": [
+        "pid",
+        "socket",
+        "port",
+        "tool_ss"
+      ]
+    },
+    {
+      "id": "systemctl",
+      "name": "systemctl",
+      "description": "選択PIDの所属ユニット・状態・構成を表示します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / systemd",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "backup.service\nActive: active (running)\nUser: backup\nMainPID: 4200\nExecStart=/opt/aster/backup-agent --config /etc/aster/backup.toml",
+        "terms": [
+          "pid",
+          "user",
+          "agent",
+          "storage",
+          "command",
+          "path",
+          "service",
+          "unit_fields"
+        ]
+      },
+      "terms": [
+        "pid",
+        "tool_systemctl"
+      ]
+    },
+    {
+      "id": "job",
+      "name": "承認済みジョブ",
+      "kind": "references",
+      "result": {
+        "content": "JOB-504 / 09:00–10:00 / backup.service / User=backup / /opt/aster/backup-agent --config /etc/aster/backup.toml / 対象=/srv/reports / 宛先=198.51.100.40:443 / 最大30 GiB。",
+        "terms": [
+          "size",
+          "user",
+          "agent",
+          "storage",
+          "command",
+          "path",
+          "ip",
+          "service",
+          "job"
+        ]
+      },
+      "terms": [
+        "approved",
+        "job"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "業務ファイルの読取りと外部通信をバックアップの対象・時間帯・保存先・送信量の条件と照合する"
+  ],
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ]
+}

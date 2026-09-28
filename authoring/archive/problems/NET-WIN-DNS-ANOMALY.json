@@ -1,0 +1,271 @@
+{
+  "schema_version": 2,
+  "id": "NET-WIN-DNS-ANOMALY",
+  "category": "network",
+  "platform": "windows",
+  "title": "プロセスと結び付くDNSの反復",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "tcp",
+    "pe",
+    "flow",
+    "server"
+  ],
+  "ground_truth": "block",
+  "explanation": "台帳にないプロセスが指定外リゾルバーへ特徴的なDNSクエリを繰り返し、組織のDNS利用方針に反するため遮断します。長い名前だけから情報漏洩を断定しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "接続ID",
+        "label": "接続ID",
+        "value": "CONNECT-701",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 5100,
+        "data_type": "pid"
+      },
+      {
+        "id": "Process表示名",
+        "label": "Process表示名",
+        "value": "dns-helper.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "Remote IP",
+        "label": "Remote IP",
+        "value": "203.0.113.53",
+        "data_type": "ip"
+      },
+      {
+        "id": "Remote Port",
+        "label": "Remote Port",
+        "value": 53,
+        "data_type": "text"
+      },
+      {
+        "id": "Protocol",
+        "label": "Protocol",
+        "value": "TCP",
+        "data_type": "text"
+      },
+      {
+        "id": "端末",
+        "label": "端末",
+        "value": "192.0.2.25",
+        "data_type": "text"
+      },
+      {
+        "id": "保留中のLocal Port",
+        "label": "保留中のLocal Port",
+        "value": 52410,
+        "data_type": "text"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "保存PCAP",
+        "label": "保存PCAP",
+        "value": "flow-before-0910.pcap",
+        "data_type": "pcap"
+      },
+      {
+        "id": "観測範囲",
+        "label": "観測範囲",
+        "value": "PCAPは09:09:59まで。同じプロセスの既存接続を含む。今回の接続はまだ未許可。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "ip",
+      "port",
+      "tcp",
+      "flow",
+      "dns",
+      "device",
+      "pcap",
+      "local_remote",
+      "protocol"
+    ]
+  },
+  "resources": [
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのソケットと相手IP・ポートを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Process: C:\\Users\\mori\\AppData\\Local\\Temp\\dns-helper.exe\n192.0.2.25:52400 -> {{fact:ip}}:53 ESTABLISHED / PID 5100 / dns-helper.exe",
+        "information": [
+          {
+            "id": "ip",
+            "label": "既存接続の接続先IP",
+            "value": "203.0.113.53",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "process",
+          "pid",
+          "ip",
+          "dns",
+          "local_remote",
+          "path",
+          "user",
+          "established",
+          "temp"
+        ]
+      },
+      "terms": [
+        "pid",
+        "port",
+        "tcp",
+        "socket",
+        "tool_tcpview"
+      ]
+    },
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID: 5100\nImage: C:\\Users\\mori\\AppData\\Local\\Temp\\dns-helper.exe\nCommand line: C:\\Users\\mori\\AppData\\Local\\Temp\\dns-helper.exe \nParent: services.exe (800)",
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "dns",
+          "path",
+          "user",
+          "temp",
+          "parent",
+          "command",
+          "service",
+          "image_process"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "command",
+        "dll",
+        "tool_pe"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのパケットや通信統計を表示します。所有プロセスはソケット調査ツールで照合します。",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "File: flow-before-0910.pcap\n09:09:10 192.0.2.25:52400 -> 203.0.113.53:53 DNS over TCP query A a8f29e77b1c44d92.part1.metrics-out.example\n09:09:11 same stream query A 7d913c44a129bb01.part2.metrics-out.example\n09:09:12 same stream query A 8ca10eef51db0407.part3.metrics-out.example",
+        "terms": [
+          "ip",
+          "tcp",
+          "flow",
+          "dns",
+          "pcap",
+          "file",
+          "dns_records",
+          "dns_query"
+        ]
+      },
+      "terms": [
+        "process",
+        "flow",
+        "pcap",
+        "socket",
+        "tool_capture"
+      ]
+    },
+    {
+      "id": "server",
+      "name": "承認済みサーバー",
+      "kind": "references",
+      "result": {
+        "content": "全業務プロセスはリゾルバー 192.0.2.53のみ利用。dns-helper.exeというプロセス・metrics-out.exampleへの業務クエリは登録なし。指定外リゾルバーへのDNS接続は禁止。",
+        "terms": [
+          "extension",
+          "process",
+          "dns",
+          "dns_query",
+          "dns_resolver"
+        ]
+      },
+      "terms": [
+        "approved",
+        "server"
+      ]
+    }
+  ],
+  "evidence_alternatives": {
+    "flow": {
+      "label": "DNS クエリの観測",
+      "any_of": [
+        "capture"
+      ]
+    }
+  },
+  "learning_objectives": [
+    "クエリの内容とプロセス・リゾルバー方針を照合する"
+  ],
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ]
+}

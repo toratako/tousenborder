@@ -1,0 +1,272 @@
+{
+  "schema_version": 2,
+  "id": "NET-WIN-UNUSUAL-PORT",
+  "category": "network",
+  "platform": "windows",
+  "title": "8443番の正規収集サービス",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "tcp",
+    "pe",
+    "server"
+  ],
+  "ground_truth": "allow",
+  "explanation": "8443番ポートでもプロセス・引数・宛先が承認済み収集サービスの仕様に一致するため許可します。一般的でないポート番号だけでは遮断しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "接続ID",
+        "label": "接続ID",
+        "value": "CONNECT-701",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 5100,
+        "data_type": "pid"
+      },
+      {
+        "id": "Process表示名",
+        "label": "Process表示名",
+        "value": "agent.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "Remote IP",
+        "label": "Remote IP",
+        "value": "192.0.2.86",
+        "data_type": "ip"
+      },
+      {
+        "id": "Remote Port",
+        "label": "Remote Port",
+        "value": 8443,
+        "data_type": "text"
+      },
+      {
+        "id": "Protocol",
+        "label": "Protocol",
+        "value": "TCP",
+        "data_type": "text"
+      },
+      {
+        "id": "端末",
+        "label": "端末",
+        "value": "192.0.2.25",
+        "data_type": "text"
+      },
+      {
+        "id": "保留中のLocal Port",
+        "label": "保留中のLocal Port",
+        "value": 52410,
+        "data_type": "text"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "保存PCAP",
+        "label": "保存PCAP",
+        "value": "flow-before-0910.pcap",
+        "data_type": "pcap"
+      },
+      {
+        "id": "観測範囲",
+        "label": "観測範囲",
+        "value": "PCAPは09:09:59まで。同じプロセスの既存接続を含む。今回の接続はまだ未許可。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "ip",
+      "port",
+      "tcp",
+      "flow",
+      "device",
+      "agent",
+      "pcap",
+      "local_remote",
+      "protocol"
+    ]
+  },
+  "resources": [
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのソケットと相手IP・ポートを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Process: C:\\Program Files\\AsterAgent\\agent.exe\n192.0.2.25:52400 -> {{fact:ip}}:8443 ESTABLISHED / PID 5100 / agent.exe",
+        "information": [
+          {
+            "id": "ip",
+            "label": "既存接続の接続先IP",
+            "value": "192.0.2.86",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "process",
+          "pid",
+          "ip",
+          "agent",
+          "local_remote",
+          "file",
+          "path",
+          "established"
+        ]
+      },
+      "terms": [
+        "pid",
+        "port",
+        "tcp",
+        "socket",
+        "tool_tcpview"
+      ]
+    },
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID: 5100\nImage: C:\\Program Files\\AsterAgent\\agent.exe\nCommand line: C:\\Program Files\\AsterAgent\\agent.exe --collector 192.0.2.86:8443\nParent: services.exe (800)",
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "ip",
+          "agent",
+          "file",
+          "path",
+          "parent",
+          "command",
+          "service",
+          "image_process"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "command",
+        "dll",
+        "tool_pe"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのパケットや通信統計を表示します。所有プロセスはソケット調査ツールで照合します。",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "File: flow-before-0910.pcap\n09:09:00 192.0.2.25:52400 -> 192.0.2.86:8443 TCP [SYN]\n09:09:01 TLSv1.3 Application Data length 512\n暗号化された本文はこのPCAPから読めない。",
+        "terms": [
+          "ip",
+          "tcp",
+          "flow",
+          "pcap",
+          "file",
+          "size",
+          "syn",
+          "tls"
+        ]
+      },
+      "terms": [
+        "process",
+        "flow",
+        "pcap",
+        "socket",
+        "tool_capture"
+      ]
+    },
+    {
+      "id": "server",
+      "name": "承認済みサーバー",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Image": "C:\\Program Files\\AsterAgent\\agent.exe",
+          "引数": "--collector 192.0.2.86:8443",
+          "宛先": "192.0.2.86:8443",
+          "用途": "Collector専用TLS サービス",
+          "承認": "NET-709"
+        },
+        "terms": [
+          "extension",
+          "executable",
+          "ip",
+          "agent",
+          "file",
+          "path",
+          "command",
+          "service",
+          "image_process",
+          "tls"
+        ]
+      },
+      "terms": [
+        "approved",
+        "server"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "非標準ポートをサービス仕様で判断する"
+  ],
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ]
+}

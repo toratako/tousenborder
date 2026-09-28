@@ -1,0 +1,166 @@
+{
+  "schema_version": 2,
+  "id": "WEB-TOKEN-DOMAIN-ONLY",
+  "category": "web",
+  "platform": "common",
+  "title": "トークンを送らないドメイン照会",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "domain_rep",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "ドメインのみの照会で現行のフィッシング報告が得られるためアクセスを遮断します。招待トークンを含む完全URLを外部へ送る必要はありません。",
+  "initial": {
+    "information": [
+      {
+        "id": "URL",
+        "label": "URL",
+        "value": "https://secure-review.example/invite?token=DEMO-INVITE-913",
+        "data_type": "url"
+      },
+      {
+        "id": "URLのHost",
+        "label": "URLのHost",
+        "value": "secure-review.example",
+        "data_type": "domain"
+      },
+      {
+        "id": "受付状態",
+        "label": "受付状態",
+        "value": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "url",
+      "host",
+      "token",
+      "http",
+      "url_path",
+      "browser"
+    ]
+  },
+  "resources": [
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "完全URLは社外秘。ドメインは機密指定なし。"
+        },
+        "terms": [
+          "url",
+          "host",
+          "token",
+          "url_path",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "user",
+          "attachment",
+          "authentication",
+          "pcap",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
+    {
+      "id": "domain_rep",
+      "name": "ドメインの評判",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URLのHost"
+        }
+      ],
+      "input_hint": "URLのホスト",
+      "correct_usage": true,
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "Domain: {{input}}\n2026-08-18: phishing 12/15 feeds",
+        "terms": [
+          "host",
+          "detection",
+          "phishing"
+        ]
+      },
+      "submission": {
+        "type": "domain",
+        "warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
+        "terms": [
+          "url",
+          "host",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "reputation"
+      ]
+    },
+    {
+      "id": "isolated",
+      "name": "隔離環境でのURL解析",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "accepted_information_types": [
+        "url"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "URL"
+        }
+      ],
+      "input_hint": "URL",
+      "correct_usage": false,
+      "reason": "招待トークンを含む完全URLは外部サービスへ送信できません。",
+      "kind": "external_references",
+      "result": {
+        "content": "Submitted URL; analysis queued.",
+        "terms": [
+          "url",
+          "no_record"
+        ]
+      },
+      "submission": {
+        "type": "full_url",
+        "warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
+        "terms": [
+          "url",
+          "token",
+          "http",
+          "url_path",
+          "isolated"
+        ]
+      },
+      "terms": [
+        "url",
+        "isolated"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "トークン付きURLから公開ドメインだけを外部照会する"
+  ],
+  "sources": [
+    "https://urlscan.io/docs/api/"
+  ]
+}

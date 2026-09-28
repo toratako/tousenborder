@@ -1,30 +1,70 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-WIN-HIGH-CPU",
   "category": "process",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "allow",
   "title": "高CPUの動画変換",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "video-encoder.exe",
-    "PID": 4200,
-    "User": "ASTER\\mori",
-    "採取時点": "2026-08-18 09:10 / 起動済み",
-    "端末": "ENC-04",
-    "起動依頼": "動画課から08:50に登録されたジョブ ENC-188"
+  "required_evidence": [
+    "task",
+    "job"
+  ],
+  "ground_truth": "allow",
+  "explanation": "端末管理の記録がPID 4200をENC-188に対応付けており、端末・ユーザー・プロセス・実行時間帯が承認内容と一致し、CPU 96%も想定範囲内のため継続を許可します。CPU使用率だけは悪性根拠になりません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "video-encoder.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "ASTER\\mori",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      },
+      {
+        "id": "端末",
+        "label": "端末",
+        "value": "ENC-04",
+        "data_type": "text"
+      },
+      {
+        "id": "起動依頼",
+        "label": "起動依頼",
+        "value": "動画課から08:50に登録されたジョブ ENC-188",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "user",
+      "device",
+      "job"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "task",
       "name": "Task Manager",
       "description": "選択PIDのユーザー・CPU・Memory使用量を確認します。",
-      "output": "Name: video-encoder.exe\nPID: 4200\nUser: ASTER\\mori\nCPU: 96%\nMemory: 64 MiB",
       "accepted_information_types": [
         "pid"
       ],
@@ -38,185 +78,49 @@
       "platform_note": "Windows標準",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Name: video-encoder.exe\nPID: 4200\nUser: ASTER\\mori\nCPU: 96%\nMemory: 64 MiB",
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "user",
+          "resource_usage",
+          "size"
+        ]
+      },
+      "terms": [
+        "pid",
+        "user",
+        "resource_usage",
+        "tool_task"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "job",
       "name": "承認済みジョブ",
-      "content": "ENC-188 / ENC-04 / mori / video-encoder.exe / 08:50–10:00 / 動画変換中はCPU 90–100%を想定。管理配布済み。\n端末管理の実行記録: ENC-188をENC-04で08:50にPID 4200として起動。User=ASTER\\mori。video-encoder.exeは管理配布イメージとの同一性を検証済み。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "task",
-    "job"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "task",
-          "section": "result"
-        },
-        {
-          "source_id": "job",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "task",
-          "section": "result"
-        },
-        {
-          "source_id": "job",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "task",
-          "section": "overview"
-        },
-        {
-          "source_id": "task",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "task",
-          "section": "overview"
-        },
-        {
-          "source_id": "task",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "job",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "job",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "job",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "resource_usage",
-      "occurrences": [
-        {
-          "source_id": "task",
-          "section": "overview"
-        },
-        {
-          "source_id": "task",
-          "section": "result"
-        },
-        {
-          "source_id": "job",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_task",
-      "occurrences": [
-        {
-          "source_id": "task",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "size",
-      "occurrences": [
-        {
-          "source_id": "task",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "job",
-          "section": "overview"
-        }
+      "kind": "references",
+      "result": {
+        "content": "ENC-188 / ENC-04 / mori / video-encoder.exe / 08:50–10:00 / 動画変換中はCPU 90–100%を想定。管理配布済み。\n端末管理の実行記録: ENC-188をENC-04で08:50にPID 4200として起動。User=ASTER\\mori。video-encoder.exeは管理配布イメージとの同一性を検証済み。",
+        "terms": [
+          "extension",
+          "executable",
+          "image_process",
+          "resource_usage"
+        ]
+      },
+      "terms": [
+        "job",
+        "approved"
       ]
     }
   ],
-  "explanation": "端末管理の記録がPID 4200をENC-188に対応付けており、端末・ユーザー・プロセス・実行時間帯が承認内容と一致し、CPU 96%も想定範囲内のため継続を許可します。CPU使用率だけは悪性根拠になりません。",
-  "topic": "リソース使用量を業務の予定と照合する",
-  "summary": "リソース使用量を業務の予定と照合する",
   "learning_objectives": [
     "リソース使用量を業務の予定と照合する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

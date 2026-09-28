@@ -1,0 +1,254 @@
+{
+  "schema_version": 2,
+  "id": "AUTH-LINUX-BASTION-LOGIN",
+  "category": "account",
+  "platform": "linux",
+  "title": "踏み台を経由する正規保守",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
+  "required_evidence": [
+    "journal",
+    "last",
+    "bastion",
+    "admin"
+  ],
+  "ground_truth": "allow",
+  "explanation": "踏み台経路・個人アカウント・鍵・今回のMFA・保守時間が承認記録と一致するため許可します。出口IPが共有されていても、ゲートウェイで本人確認と個人アカウントとの紐付けを確認しています。",
+  "initial": {
+    "information": [
+      {
+        "id": "要求ID",
+        "label": "要求ID",
+        "value": "AUTH-901",
+        "data_type": "text"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "ops-mori",
+        "data_type": "username"
+      },
+      {
+        "id": "Source IP",
+        "label": "Source IP",
+        "value": "192.0.2.150",
+        "data_type": "ip"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "認証方式",
+        "label": "認証方式",
+        "value": "SSH公開鍵認証",
+        "data_type": "text"
+      },
+      {
+        "id": "Gatewayの鍵検証",
+        "label": "Gatewayの鍵検証",
+        "value": "SHA256:DEMO_APPROVED_KEY_17 と一致",
+        "data_type": "text"
+      },
+      {
+        "id": "GatewayのMFA",
+        "label": "GatewayのMFA",
+        "value": "確認済み",
+        "data_type": "text"
+      },
+      {
+        "id": "Gatewayの経路確認",
+        "label": "Gatewayの経路確認",
+        "value": "bastion-01 / 個人端末OPS-017 / ops-mori / 経路チケットMAINT-906",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "hash",
+      "sha256",
+      "approved",
+      "user",
+      "ip",
+      "authentication",
+      "session",
+      "mfa",
+      "gateway",
+      "ssh",
+      "ticket",
+      "device",
+      "public_key",
+      "key_fingerprint",
+      "bastion",
+      "source_ip"
+    ]
+  },
+  "resources": [
+    {
+      "id": "journal",
+      "name": "journalctl",
+      "description": "今回の要求より前のsshd記録を確認します。集計は保存ログからの抽出表示です。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "ユーザー",
+      "platform_note": "Linux / systemd",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "2026-08-17T09:01:00+09:00 server sshd[2030]: Accepted publickey for ops-mori from 192.0.2.150 port 51200 ssh2: ED25519 SHA256:DEMO_APPROVED_KEY_17\n2026-08-17T10:00:00+09:00 server sshd[2030]: pam_unix(sshd:session): session closed for user ops-mori",
+        "terms": [
+          "hash",
+          "sha256",
+          "approved",
+          "user",
+          "ip",
+          "session",
+          "ssh",
+          "public_key",
+          "key_fingerprint",
+          "port",
+          "ed25519",
+          "auth_result",
+          "pam",
+          "timezone",
+          "server"
+        ]
+      },
+      "terms": [
+        "user",
+        "ssh",
+        "log",
+        "tool_journal"
+      ]
+    },
+    {
+      "id": "last",
+      "name": "last",
+      "description": "wtmpに記録された過去のログインセッションを表示します。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "ユーザー",
+      "platform_note": "Linux / util-linux",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "ops-mori pts/0 192.0.2.150 Mon Aug 17 09:01 - 10:00 (00:59)\nwtmp begins Sat Aug 1 00:00:00 2026",
+        "terms": [
+          "ip",
+          "wtmp",
+          "terminal"
+        ]
+      },
+      "terms": [
+        "user",
+        "session",
+        "wtmp",
+        "tool_last"
+      ]
+    },
+    {
+      "id": "lastlog",
+      "name": "lastlog",
+      "description": "アカウントの最終ログイン記録を表示します。",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "User"
+        }
+      ],
+      "input_hint": "ユーザー",
+      "platform_note": "Linux / shadow-utilsのlastlogを備える教材環境",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Username Port From Latest\nops-mori pts/0 192.0.2.150 Mon Aug 17 09:01:00 +0900 2026",
+        "terms": [
+          "user",
+          "ip",
+          "timezone",
+          "terminal"
+        ]
+      },
+      "terms": [
+        "user",
+        "login",
+        "tool_lastlog"
+      ]
+    },
+    {
+      "id": "bastion",
+      "name": "承認済み踏み台",
+      "kind": "references",
+      "result": {
+        "content": "bastion-01=192.0.2.150 / OPS-017はops-moriの管理端末 / トンネルは個人アカウントに紐づく。",
+        "terms": [
+          "user",
+          "ip",
+          "device",
+          "bastion",
+          "vpn"
+        ]
+      },
+      "terms": [
+        "approved",
+        "bastion"
+      ]
+    },
+    {
+      "id": "admin",
+      "name": "承認済みの管理経路",
+      "kind": "references",
+      "result": {
+        "content": "MAINT-906 / ops-mori / 本日09:00–10:00 / bastion-01 / 鍵SHA256:DEMO_APPROVED_KEY_17 / MFA / 一般権限でSSH後、必要時に別途sudo承認。",
+        "terms": [
+          "hash",
+          "sha256",
+          "approved",
+          "mfa",
+          "ssh",
+          "key_fingerprint",
+          "bastion",
+          "root"
+        ]
+      },
+      "terms": [
+        "approved"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "踏み台の共有IPと個人認証を組み合わせる"
+  ],
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
+  ]
+}

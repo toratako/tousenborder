@@ -1,28 +1,57 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-WIN-BACKING-HASH",
   "category": "process",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "実行中イメージのハッシュ不一致",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "inventory.exe",
-    "PID": 4200,
-    "User": "ASTER\\svc_inventory",
-    "採取時点": "2026-08-18 09:10 / 起動済み"
+  "required_evidence": [
+    "hash",
+    "approved"
+  ],
+  "ground_truth": "block",
+  "explanation": "PIDから選んだ実行イメージのハッシュが承認版と異なるため停止します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "inventory.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "ASTER\\svc_inventory",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "user",
+      "service_account"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "hash",
       "name": "Get-FileHash",
       "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
-      "output": "PID 4200 のBacking Executable: C:\\Company\\inventory.exe\nAlgorithm: SHA256\nHash: 42d315fc39b4d404ce86d5da8bc4ef329fe3720a95b7bc61bd9fd8a0cafa4ce4",
       "accepted_information_types": [
         "pid"
       ],
@@ -37,213 +66,64 @@
       "environments": [
         "windows"
       ],
-      "output_information": [
-        {
-          "id": "sha256",
-          "label": "実体ファイルのSHA-256",
-          "value": "42d315fc39b4d404ce86d5da8bc4ef329fe3720a95b7bc61bd9fd8a0cafa4ce4",
-          "data_type": "sha256"
-        }
+      "kind": "tools",
+      "result": {
+        "content": "PID 4200 のBacking Executable: C:\\Company\\inventory.exe\nAlgorithm: SHA256\nHash: {{fact:sha256}}",
+        "information": [
+          {
+            "id": "sha256",
+            "label": "実体ファイルのSHA-256",
+            "value": "42d315fc39b4d404ce86d5da8bc4ef329fe3720a95b7bc61bd9fd8a0cafa4ce4",
+            "data_type": "sha256"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "hash",
+          "sha256",
+          "image_process",
+          "path"
+        ]
+      },
+      "terms": [
+        "executable",
+        "pid",
+        "hash",
+        "sha256",
+        "image_process",
+        "tool_hash_win"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "approved",
       "name": "承認済みソフトウェア",
-      "content": {
-        "対象": "C:\\Company\\inventory.exe",
-        "承認Version": "3.0",
-        "SHA256": "11aa0ab9e47516e704156dc44538a051030d1a7a30efecefe65d97db46a95a67"
-      }
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "hash",
-    "approved"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
+      "kind": "references",
+      "result": {
+        "content": {
+          "対象": "C:\\Company\\inventory.exe",
+          "承認Version": "3.0",
+          "SHA256": "11aa0ab9e47516e704156dc44538a051030d1a7a30efecefe65d97db46a95a67"
         },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "service_account",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        },
-        {
-          "source_id": "hash",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_hash_win",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "hash",
-          "section": "result"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "version",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
+        "terms": [
+          "extension",
+          "executable",
+          "hash",
+          "sha256",
+          "path",
+          "version"
+        ]
+      },
+      "terms": [
+        "approved"
       ]
     }
   ],
-  "explanation": "PIDから選んだ実行イメージのハッシュが承認版と異なるため停止します。",
-  "topic": "プロセス本体のハッシュを承認版と直接照合する",
-  "summary": "プロセス本体のハッシュを承認版と直接照合する",
   "learning_objectives": [
     "プロセス本体のハッシュを承認版と直接照合する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

@@ -1,29 +1,67 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-WIN-BACKING-SIGNATURE",
   "category": "process",
   "platform": "windows",
-  "level": "beginner",
-  "ground_truth": "allow",
   "title": "実行中イメージの署名照合",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "print-agent.exe",
-    "PID": 4200,
-    "User": "ASTER\\svc_print",
-    "採取時点": "2026-08-18 09:10 / 起動済み",
-    "端末管理記録": "Print エージェント 6.1 / Software Center配布 / CHG-440"
+  "required_evidence": [
+    "sig",
+    "publisher"
+  ],
+  "ground_truth": "allow",
+  "explanation": "PIDに対応する実行イメージの署名・発行元・配置が台帳と一致し、管理されたPrint Agentの継続条件を満たすため許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "print-agent.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "ASTER\\svc_print",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      },
+      {
+        "id": "端末管理記録",
+        "label": "端末管理記録",
+        "value": "Print エージェント 6.1 / Software Center配布 / CHG-440",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "user",
+      "ticket",
+      "device",
+      "service_account",
+      "agent",
+      "software_center"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "sig",
       "name": "Sigcheck",
       "description": "署名の検証状態・発行元を確認します。PIDを入力した場合は対応する実体ファイルが対象です。",
-      "output": "PID 4200 のBacking Executable: C:\\Program Files\\AsterPrint\\print-agent.exe\nVerified: Signed\nPublisher: Aster Devices Ltd.",
       "accepted_information_types": [
         "pid"
       ],
@@ -37,253 +75,58 @@
       "platform_note": "Windows / Microsoft Sysinternals・要導入",
       "environments": [
         "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID 4200 のBacking Executable: C:\\Program Files\\AsterPrint\\print-agent.exe\nVerified: Signed\nPublisher: Aster Devices Ltd.",
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "device",
+          "agent",
+          "signature",
+          "vendor",
+          "image_process",
+          "file",
+          "path"
+        ]
+      },
+      "terms": [
+        "executable",
+        "pid",
+        "signature",
+        "vendor",
+        "image_process",
+        "tool_sigcheck"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "publisher",
       "name": "信頼できる発行元",
-      "content": "Print エージェント 6.1 / Publisher=Aster Devices Ltd. / C:\\Program Files\\AsterPrint\\print-agent.exe / ASTER\\svc_print / Signedであること。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "sig",
-    "publisher"
-  ],
-  "glossary": [
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "ticket",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "service_account",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "agent",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "software_center",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "signature",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "vendor",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "overview"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        },
-        {
-          "source_id": "sig",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_sigcheck",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "sig",
-          "section": "result"
-        },
-        {
-          "source_id": "publisher",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "Print エージェント 6.1 / Publisher=Aster Devices Ltd. / C:\\Program Files\\AsterPrint\\print-agent.exe / ASTER\\svc_print / Signedであること。",
+        "terms": [
+          "extension",
+          "executable",
+          "device",
+          "service_account",
+          "agent",
+          "vendor",
+          "file",
+          "path"
+        ]
+      },
+      "terms": [
+        "vendor"
       ]
     }
   ],
-  "explanation": "PIDに対応する実行イメージの署名・発行元・配置が台帳と一致し、管理されたPrint Agentの継続条件を満たすため許可します。",
-  "topic": "PIDから実体ファイルの署名を直接確認する",
-  "summary": "PIDから実体ファイルの署名を直接確認する",
   "learning_objectives": [
     "PIDから実体ファイルの署名を直接確認する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

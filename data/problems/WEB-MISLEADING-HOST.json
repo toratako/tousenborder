@@ -1,124 +1,76 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "WEB-MISLEADING-HOST",
   "category": "web",
   "platform": "common",
-  "level": "very_beginner",
-  "ground_truth": "block",
   "title": "正規ドメインに見せた別ホスト",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "URL": "https://login.aster.example.verify-account.example/signin",
-    "URLのHost": "login.aster.example.verify-account.example",
-    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
-    "案内文": "Asterのアカウント確認"
-  },
-  "initial_information_types": {
-    "URL": "url",
-    "URLのHost": "domain"
-  },
-  "tools": [],
-  "references": [
-    {
-      "id": "official",
-      "name": "公式サービス・ドメイン",
-      "content": {
-        "正規Login Host": "login.aster.example"
-      }
-    }
-  ],
-  "external_references": [],
   "required_evidence": [
     "initial_information",
     "official"
   ],
-  "glossary": [
+  "ground_truth": "block",
+  "explanation": "実際のホストはverify-account.example側で、公式サービスの正規ログイン先と一致しないため遮断します。正規名を先頭に含むだけでは正規サイトになりません。",
+  "initial": {
+    "information": [
+      {
+        "id": "URL",
+        "label": "URL",
+        "value": "https://login.aster.example.verify-account.example/signin",
+        "data_type": "url"
+      },
+      {
+        "id": "URLのHost",
+        "label": "URLのHost",
+        "value": "login.aster.example.verify-account.example",
+        "data_type": "domain"
+      },
+      {
+        "id": "受付状態",
+        "label": "受付状態",
+        "value": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+        "data_type": "text"
+      },
+      {
+        "id": "案内文",
+        "label": "案内文",
+        "value": "Asterのアカウント確認",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "user",
+      "url",
+      "host",
+      "login",
+      "http",
+      "url_path",
+      "browser"
+    ]
+  },
+  "resources": [
     {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
+      "id": "official",
+      "name": "公式サービス・ドメイン",
+      "kind": "references",
+      "result": {
+        "content": {
+          "正規Login Host": "login.aster.example"
         },
-        {
-          "source_id": "official",
-          "section": "overview"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "login",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "browser",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
+        "terms": [
+          "host",
+          "login"
+        ]
+      },
+      "terms": [
+        "host"
       ]
     }
   ],
-  "explanation": "実際のホストはverify-account.example側で、公式サービスの正規ログイン先と一致しないため遮断します。正規名を先頭に含むだけでは正規サイトになりません。",
-  "topic": "ホスト全体と正規ログイン先を比較する",
-  "summary": "ホスト全体と正規ログイン先を比較する",
   "learning_objectives": [
     "ホスト全体と正規ログイン先を比較する"
   ],
-  "decision_context": "before_access",
-  "scenario_type": "standard",
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc3986.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

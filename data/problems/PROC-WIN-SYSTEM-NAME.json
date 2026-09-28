@@ -1,168 +1,85 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-WIN-SYSTEM-NAME",
   "category": "process",
   "platform": "windows",
-  "level": "very_beginner",
-  "ground_truth": "allow",
   "title": "システムプロセスの管理パス照合",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "svchost.exe",
-    "PID": 4200,
-    "User": "NT AUTHORITY\\SYSTEM",
-    "採取時点": "2026-08-18 09:10 / 起動済み",
-    "Image": "C:\\Windows\\System32\\svchost.exe"
-  },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [],
-  "references": [
-    {
-      "id": "approved",
-      "name": "承認済みソフトウェア",
-      "content": "この端末のsvchost.exeは、OS管理対象として検証済みで、イメージがC:\\Windows\\System32\\svchost.exeのものを継続可とする。\n端末管理の確認（PID 4200）: OS配布ファイルとの同一性とサービス起動登録は検証済み。"
-    }
-  ],
-  "external_references": [],
   "required_evidence": [
     "initial_information",
     "approved"
   ],
-  "glossary": [
+  "ground_truth": "allow",
+  "explanation": "イメージの完全パスが許可パスと一致し、OS配布ファイルと起動登録の検証済み記録もあるため継続を許可します。svchost.exeという名前だけを根拠にしていません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "svchost.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "NT AUTHORITY\\SYSTEM",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      },
+      {
+        "id": "Image",
+        "label": "Image",
+        "value": "C:\\Windows\\System32\\svchost.exe",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "extension",
+      "executable",
+      "path",
+      "process",
+      "pid",
+      "user",
+      "system_account",
+      "image_process"
+    ]
+  },
+  "resources": [
     {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "service",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "system_account",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "image_process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "approved",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "approved",
-          "section": "overview"
-        }
+      "id": "approved",
+      "name": "承認済みソフトウェア",
+      "kind": "references",
+      "result": {
+        "content": "この端末のsvchost.exeは、OS管理対象として検証済みで、イメージがC:\\Windows\\System32\\svchost.exeのものを継続可とする。\n端末管理の確認（PID 4200）: OS配布ファイルとの同一性とサービス起動登録は検証済み。",
+        "terms": [
+          "extension",
+          "path",
+          "service",
+          "device",
+          "image_process"
+        ]
+      },
+      "terms": [
+        "approved"
       ]
     }
   ],
-  "explanation": "イメージの完全パスが許可パスと一致し、OS配布ファイルと起動登録の検証済み記録もあるため継続を許可します。svchost.exeという名前だけを根拠にしていません。",
-  "topic": "プロセス名だけでなく、管理状態と完全パスを単純な許可規則に照合する",
-  "summary": "プロセス名だけでなく、管理状態と完全パスを単純な許可規則に照合する",
   "learning_objectives": [
     "プロセス名だけでなく、管理状態と完全パスを単純な許可規則に照合する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

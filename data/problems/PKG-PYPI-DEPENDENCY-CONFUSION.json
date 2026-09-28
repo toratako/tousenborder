@@ -1,449 +1,203 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PKG-PYPI-DEPENDENCY-CONFUSION",
   "category": "package",
   "platform": "common",
-  "level": "applied",
-  "ground_truth": "block",
   "title": "依存関係の混同",
   "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Package": "aster-internal-ledger",
-    "Version": "9.9.0",
-    "Ecosystem": "pypi",
-    "状態": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。",
-    "Resolver設定": "index-url=https://packages.aster.example/simple ; extra-index-url=https://pypi.org/simple",
-    "Resolverが選んだ取得元": "https://files.pythonhosted.org/packages/training/aster_internal_ledger-9.9.0-py3-none-any.whl"
-  },
-  "initial_information_types": {
-    "Package": "package"
-  },
-  "tools": [],
-  "references": [
-    {
-      "id": "metadata",
-      "name": "PyPIのパッケージ情報",
-      "content": {
-        "Name": "aster-internal-ledger",
-        "Version": "9.9.0",
-        "Registry": "https://pypi.org",
-        "Project URL / Repository": "https://git.ledger-utils.example/ledger",
-        "Maintainer": "ledger-utils",
-        "Requires-Dist": {},
-        "SHA256": "1e51320a791999d87f36b6d8013a7cc4031969342b21ce0394f957888a18e847"
-      }
-    },
-    {
-      "id": "internal",
-      "name": "社内パッケージ台帳",
-      "content": {
-        "Name": "aster-internal-ledger",
-        "Version": "3.4.0",
-        "Index": "https://packages.aster.example/simple",
-        "Repository": "https://git.aster.example/internal/ledger",
-        "Maintainer": "aster-finance",
-        "公開配布": "なし。Public Registryから同名パッケージを取得しない。"
-      }
-    },
-    {
-      "id": "lock",
-      "name": "ロックファイル",
-      "content": {
-        "Name": "aster-internal-ledger",
-        "Version": "3.4.0",
-        "Source": "https://packages.aster.example/simple",
-        "SHA256": "88d63e17d86902e5e276846439c3b400944220c9551e3079cfc76f0ec47d52d1"
-      }
-    },
-    {
-      "id": "release",
-      "name": "リリース・変更承認記録",
-      "content": "社内Ledgerの最新承認は3.4.0。9.9.0のリリース・公開レジストリへの移管の承認なし。"
-    },
-    {
-      "id": "vuln",
-      "name": "脆弱性データベース",
-      "content": "PyPI / aster-internal-ledger 9.9.0: 脆弱性登録なし。供給元の同一性はこの情報では検証できない。"
-    }
-  ],
-  "external_references": [],
   "required_evidence": [
     "metadata",
     "internal",
     "lock"
   ],
-  "glossary": [
+  "ground_truth": "block",
+  "explanation": "社内パッケージと同名ですが、依存解決器は承認された社内インデックスではなく公開レジストリの別バージョンを選んでいるため導入を遮断します。名前が同じでも供給元の同一性は保証されません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Package",
+        "label": "Package",
+        "value": "aster-internal-ledger",
+        "data_type": "package"
+      },
+      {
+        "id": "Version",
+        "label": "Version",
+        "value": "9.9.0",
+        "data_type": "text"
+      },
+      {
+        "id": "Ecosystem",
+        "label": "Ecosystem",
+        "value": "pypi",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "Resolver設定",
+        "label": "Resolver設定",
+        "value": "index-url=https://packages.aster.example/simple ; extra-index-url=https://pypi.org/simple",
+        "data_type": "text"
+      },
+      {
+        "id": "Resolverが選んだ取得元",
+        "label": "Resolverが選んだ取得元",
+        "value": "https://files.pythonhosted.org/packages/training/aster_internal_ledger-9.9.0-py3-none-any.whl",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "extension",
+      "script",
+      "url",
+      "package",
+      "registry",
+      "install_script",
+      "version",
+      "http",
+      "url_path",
+      "ecosystem",
+      "dependency",
+      "package_resolver",
+      "package_index",
+      "wheel",
+      "install",
+      "package_source"
+    ]
+  },
+  "resources": [
     {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
+      "id": "metadata",
+      "name": "PyPIのパッケージ情報",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Name": "aster-internal-ledger",
+          "Version": "9.9.0",
+          "Registry": "https://pypi.org",
+          "Project URL / Repository": "https://git.ledger-utils.example/ledger",
+          "Maintainer": "ledger-utils",
+          "Requires-Dist": {},
+          "SHA256": "1e51320a791999d87f36b6d8013a7cc4031969342b21ce0394f957888a18e847"
         },
-        {
-          "source_id": "lock",
-          "section": "overview"
-        }
+        "terms": [
+          "url",
+          "registry",
+          "version",
+          "http",
+          "url_path",
+          "dependency",
+          "hash",
+          "sha256",
+          "repository",
+          "maintainer"
+        ]
+      },
+      "terms": [
+        "package",
+        "registry",
+        "metadata"
       ]
     },
     {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
+      "id": "internal",
+      "name": "社内パッケージ台帳",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Name": "aster-internal-ledger",
+          "Version": "3.4.0",
+          "Index": "https://packages.aster.example/simple",
+          "Repository": "https://git.aster.example/internal/ledger",
+          "Maintainer": "aster-finance",
+          "公開配布": "なし。Public Registryから同名パッケージを取得しない。"
+        },
+        "terms": [
+          "url",
+          "package",
+          "registry",
+          "version",
+          "http",
+          "url_path",
+          "repository",
+          "maintainer"
+        ]
+      },
+      "terms": [
+        "package",
+        "reference"
       ]
     },
     {
-      "term_id": "script",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
+      "id": "lock",
+      "name": "ロックファイル",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Name": "aster-internal-ledger",
+          "Version": "3.4.0",
+          "Source": "https://packages.aster.example/simple",
+          "SHA256": "88d63e17d86902e5e276846439c3b400944220c9551e3079cfc76f0ec47d52d1"
+        },
+        "terms": [
+          "url",
+          "package",
+          "version",
+          "http",
+          "url_path",
+          "package_source",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "file",
+        "lock_file"
       ]
     },
     {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "internal",
-          "section": "result"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
+      "id": "release",
+      "name": "リリース・変更承認記録",
+      "kind": "references",
+      "result": {
+        "content": "社内Ledgerの最新承認は3.4.0。9.9.0のリリース・公開レジストリへの移管の承認なし。",
+        "terms": [
+          "registry",
+          "release"
+        ]
+      },
+      "terms": [
+        "reference",
+        "release"
       ]
     },
     {
-      "term_id": "package",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "overview"
-        },
-        {
-          "source_id": "internal",
-          "section": "overview"
-        },
-        {
-          "source_id": "internal",
-          "section": "result"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "registry",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "overview"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "internal",
-          "section": "result"
-        },
-        {
-          "source_id": "release",
-          "section": "result"
-        },
-        {
-          "source_id": "vuln",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "install_script",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "version",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "internal",
-          "section": "result"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "internal",
-          "section": "result"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "internal",
-          "section": "result"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ecosystem",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "dependency",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "package_resolver",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "package_index",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "wheel",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "install",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "package_source",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "metadata",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "lock",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "repository",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "internal",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "maintainer",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "internal",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reference",
-      "occurrences": [
-        {
-          "source_id": "internal",
-          "section": "overview"
-        },
-        {
-          "source_id": "release",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "lock_file",
-      "occurrences": [
-        {
-          "source_id": "lock",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "release",
-      "occurrences": [
-        {
-          "source_id": "release",
-          "section": "overview"
-        },
-        {
-          "source_id": "release",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "vulnerability",
-      "occurrences": [
-        {
-          "source_id": "vuln",
-          "section": "overview"
-        },
-        {
-          "source_id": "vuln",
-          "section": "result"
-        }
+      "id": "vuln",
+      "name": "脆弱性データベース",
+      "kind": "references",
+      "result": {
+        "content": "PyPI / aster-internal-ledger 9.9.0: 脆弱性登録なし。供給元の同一性はこの情報では検証できない。",
+        "terms": [
+          "registry",
+          "vulnerability"
+        ]
+      },
+      "terms": [
+        "vulnerability"
       ]
     }
   ],
-  "explanation": "社内パッケージと同名ですが、依存解決器は承認された社内インデックスではなく公開レジストリの別バージョンを選んでいるため導入を遮断します。名前が同じでも供給元の同一性は保証されません。",
-  "topic": "社内パッケージの名前・バージョン・取得元を確認する",
-  "summary": "社内パッケージの名前・バージョン・取得元を確認する",
   "learning_objectives": [
     "社内パッケージの名前・バージョン・取得元を確認する"
   ],
-  "decision_context": "before_install",
-  "scenario_type": "real_world_inspired",
   "sources": [
     "https://packaging.python.org/en/latest/guides/index-mirrors-and-caches/"
   ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
-  "inspired_by": "Dependency Confusion",
-  "ecosystem": "pypi"
+  "inspired_by": "Dependency Confusion"
 }

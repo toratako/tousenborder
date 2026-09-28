@@ -1,0 +1,203 @@
+{
+  "schema_version": 2,
+  "id": "PROC-LINUX-MONITORING-AGENT",
+  "category": "process",
+  "platform": "linux",
+  "title": "周期接続する監視エージェント",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "ps",
+    "ss",
+    "systemctl",
+    "service"
+  ],
+  "ground_truth": "allow",
+  "explanation": "サービス設定・実行引数・接続先が承認済み監視エージェントに一致するため継続を許可します。バックグラウンド動作や周期通信だけを根拠に遮断しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "metrics-agent",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "metrics",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "process",
+      "pid",
+      "user",
+      "agent"
+    ]
+  },
+  "resources": [
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのユーザー・親PID・コマンドラインを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "USER PID PPID ELAPSED COMMAND\nmetrics 4200 1 00:10 /opt/aster/metrics-agent --interval 60 --server 192.0.2.80",
+        "terms": [
+          "pid",
+          "user",
+          "agent",
+          "command",
+          "path",
+          "ip",
+          "elapsed",
+          "server"
+        ]
+      },
+      "terms": [
+        "pid",
+        "user",
+        "parent",
+        "command",
+        "tool_ps"
+      ]
+    },
+    {
+      "id": "ss",
+      "name": "ss",
+      "description": "選択PIDのソケット・相手IP・ポートを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / iproute2",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "ESTAB 0 0 192.0.2.30:52400 {{fact:ip}}:443 users:((\"metrics-agent\",pid=4200,fd=5))",
+        "information": [
+          {
+            "id": "ip",
+            "label": "通信相手のIP",
+            "value": "192.0.2.80",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "pid",
+          "user",
+          "agent",
+          "ip",
+          "established",
+          "fd",
+          "local_remote"
+        ]
+      },
+      "terms": [
+        "pid",
+        "socket",
+        "port",
+        "tool_ss"
+      ]
+    },
+    {
+      "id": "systemctl",
+      "name": "systemctl",
+      "description": "選択PIDの所属ユニット・状態・構成を表示します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / systemd",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "metrics.service\nActive: active (running)\nUser: metrics\nMainPID: 4200\nExecStart=/opt/aster/metrics-agent --interval 60 --server 192.0.2.80",
+        "terms": [
+          "pid",
+          "user",
+          "agent",
+          "command",
+          "path",
+          "ip",
+          "server",
+          "service",
+          "unit_fields"
+        ]
+      },
+      "terms": [
+        "pid",
+        "tool_systemctl"
+      ]
+    },
+    {
+      "id": "service",
+      "name": "サービス構成台帳",
+      "kind": "references",
+      "result": {
+        "content": "metrics.service / metrics / /opt/aster/metrics-agent --interval 60 --server 192.0.2.80 / TLS 443 / 60秒間隔 / CHG-505。",
+        "terms": [
+          "agent",
+          "command",
+          "path",
+          "ip",
+          "server",
+          "service",
+          "tls",
+          "ticket"
+        ]
+      },
+      "terms": [
+        "service"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "監視エージェントの構成と通信先を照合する"
+  ],
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ]
+}

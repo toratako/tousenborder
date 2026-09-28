@@ -1,0 +1,207 @@
+{
+  "schema_version": 2,
+  "id": "PKG-NPM-MAJOR-UPDATE",
+  "category": "package",
+  "platform": "common",
+  "title": "正規の大規模依存更新",
+  "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "metadata",
+    "official",
+    "release",
+    "lock",
+    "vuln"
+  ],
+  "ground_truth": "allow",
+  "explanation": "ネイティブビルドや依存追加は大きな変更ですが、配布ハッシュ・ソースコード・リリース説明・更新されたロックファイルが承認記録に一致するため導入を許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Package",
+        "label": "Package",
+        "value": "@aster-ui/native-render",
+        "data_type": "package"
+      },
+      {
+        "id": "Version",
+        "label": "Version",
+        "value": "4.0.0",
+        "data_type": "text"
+      },
+      {
+        "id": "Ecosystem",
+        "label": "Ecosystem",
+        "value": "npm",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "script",
+      "package",
+      "registry",
+      "install_script",
+      "version",
+      "ecosystem",
+      "dependency",
+      "package_resolver",
+      "install"
+    ]
+  },
+  "resources": [
+    {
+      "id": "metadata",
+      "name": "npmレジストリのパッケージ情報",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Name": "@aster-ui/native-render",
+          "Version": "4.0.0",
+          "Registry": "https://registry.npmjs.org",
+          "Project URL / Repository": "https://git.aster.example/components/native-render",
+          "Maintainer": "aster-release",
+          "dependencies": {
+            "@aster-ui/core": "4.0.0",
+            "node-addon-api": "8.0.0"
+          },
+          "SHA256": "42c1880d8a8b165cb3827a08d12e899a0a9b9df58149ef7175821d8476092e23",
+          "scripts": {
+            "install": "node-gyp rebuild"
+          }
+        },
+        "terms": [
+          "script",
+          "package",
+          "registry",
+          "version",
+          "dependency",
+          "install",
+          "hash",
+          "sha256",
+          "url",
+          "repository",
+          "build",
+          "maintainer",
+          "http",
+          "url_path",
+          "release",
+          "native_module"
+        ]
+      },
+      "terms": [
+        "package",
+        "registry",
+        "metadata"
+      ]
+    },
+    {
+      "id": "official",
+      "name": "公式リポジトリ・承認済みコンポーネント",
+      "kind": "references",
+      "result": {
+        "content": {
+          "承認Commit": "release-4.0.0 / CHG-1011",
+          "Source Review": "同梱C++をnode-gypでコンパイル。任意の外部Executable取得処理なし。",
+          "配布SHA256": "42c1880d8a8b165cb3827a08d12e899a0a9b9df58149ef7175821d8476092e23",
+          "Repository": "https://git.aster.example/components/native-render",
+          "Maintainer": "aster-release"
+        },
+        "terms": [
+          "package",
+          "hash",
+          "sha256",
+          "url",
+          "repository",
+          "build",
+          "maintainer",
+          "http",
+          "url_path",
+          "release",
+          "native_module",
+          "executable",
+          "ticket",
+          "source_code",
+          "commit"
+        ]
+      },
+      "terms": [
+        "package",
+        "repository",
+        "approved"
+      ]
+    },
+    {
+      "id": "release",
+      "name": "リリース・変更承認記録",
+      "kind": "references",
+      "result": {
+        "content": "4.0.0: ネイティブモジュール化しnode-addon-api 8.0.0を追加。core 4.0.0へ更新。ビルド環境をCIの固定Toolchainに統一。",
+        "terms": [
+          "build",
+          "native_module",
+          "parent",
+          "ci"
+        ]
+      },
+      "terms": [
+        "release",
+        "reference"
+      ]
+    },
+    {
+      "id": "lock",
+      "name": "ロックファイル",
+      "kind": "references",
+      "result": {
+        "content": {
+          "更新承認": "CHG-1011",
+          "Name": "@aster-ui/native-render",
+          "Version": "4.0.0",
+          "Source": "https://registry.npmjs.org",
+          "SHA256": "42c1880d8a8b165cb3827a08d12e899a0a9b9df58149ef7175821d8476092e23",
+          "依存": "@aster-ui/core 4.0.0 / node-addon-api 8.0.0 / 承認済みLockに固定"
+        },
+        "terms": [
+          "registry",
+          "version",
+          "dependency",
+          "hash",
+          "sha256",
+          "url",
+          "http",
+          "native_module",
+          "approved",
+          "ticket",
+          "lock_file",
+          "package_source"
+        ]
+      },
+      "terms": [
+        "file",
+        "lock_file"
+      ]
+    },
+    {
+      "id": "vuln",
+      "name": "脆弱性データベース",
+      "kind": "references",
+      "result": {
+        "content": "2026-08-18時点: この固定構成に組織の禁止対象に該当する登録なし。未知の欠陥がないことを保証する情報ではない。"
+      },
+      "terms": [
+        "vulnerability"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "大規模更新を複数の供給情報で検証する"
+  ],
+  "sources": [
+    "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
+  ]
+}

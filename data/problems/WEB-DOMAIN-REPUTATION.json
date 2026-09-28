@@ -1,41 +1,85 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "WEB-DOMAIN-REPUTATION",
   "category": "web",
   "platform": "common",
-  "level": "beginner_external",
-  "ground_truth": "block",
   "title": "ドメインの既知フィッシング報告",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "URL": "https://portal-check.example/login",
-    "URLのHost": "portal-check.example",
-    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。"
+  "required_evidence": [
+    "domain_rep",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "照会先ドメインに現行のフィッシング報告が複数確認できるためアクセスを遮断します。未知ドメインだからという判断ではありません。",
+  "initial": {
+    "information": [
+      {
+        "id": "URL",
+        "label": "URL",
+        "value": "https://portal-check.example/login",
+        "data_type": "url"
+      },
+      {
+        "id": "URLのHost",
+        "label": "URLのHost",
+        "value": "portal-check.example",
+        "data_type": "domain"
+      },
+      {
+        "id": "受付状態",
+        "label": "受付状態",
+        "value": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "url",
+      "host",
+      "login",
+      "http",
+      "url_path",
+      "browser"
+    ]
   },
-  "initial_information_types": {
-    "URL": "url",
-    "URLのHost": "domain"
-  },
-  "tools": [],
-  "references": [
+  "resources": [
     {
       "id": "disclosure",
       "name": "外部照会方針",
-      "content": {
-        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
-        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
-        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
-        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
-      }
-    }
-  ],
-  "external_references": [
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
+        },
+        "terms": [
+          "url",
+          "host",
+          "url_path",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "user",
+          "token",
+          "attachment",
+          "authentication",
+          "pcap",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
     {
       "id": "domain_rep",
       "name": "ドメインの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
-      "output": "Domain: portal-check.example\n2026-08-18: phishing 13/16 feeds; last seen 00:00Z",
       "accepted_information_types": [
         "domain"
       ],
@@ -46,272 +90,38 @@
         }
       ],
       "input_hint": "URLのホスト",
-      "submission_type": "domain",
-      "submission_value": "portal-check.example",
-      "confidentiality_warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
-    }
-  ],
-  "required_evidence": [
-    "domain_rep",
-    "disclosure"
-  ],
-  "glossary": [
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "overview"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "overview"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "login",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "domain_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "browser",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "confidential",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "token",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pcap",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "indicator",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reputation",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "timezone",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "detection",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "phishing",
-      "occurrences": [
-        {
-          "source_id": "domain_rep",
-          "section": "result"
-        }
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "Domain: {{input}}\n2026-08-18: phishing 13/16 feeds; last seen 00:00Z",
+        "terms": [
+          "host",
+          "timezone",
+          "detection",
+          "phishing"
+        ]
+      },
+      "submission": {
+        "type": "domain",
+        "warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
+        "terms": [
+          "url",
+          "host",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "url",
+        "host",
+        "reputation"
       ]
     }
   ],
-  "explanation": "照会先ドメインに現行のフィッシング報告が複数確認できるためアクセスを遮断します。未知ドメインだからという判断ではありません。",
-  "topic": "ドメインだけを送って既知の評判を確認する",
-  "summary": "ドメインだけを送って既知の評判を確認する",
   "learning_objectives": [
     "ドメインだけを送って既知の評判を確認する"
   ],
-  "decision_context": "before_access",
-  "scenario_type": "standard",
   "sources": [
     "https://docs.virustotal.com/reference/domain-info"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

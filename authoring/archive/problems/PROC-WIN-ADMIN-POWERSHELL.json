@@ -1,0 +1,329 @@
+{
+  "schema_version": 2,
+  "id": "PROC-WIN-ADMIN-POWERSHELL",
+  "category": "process",
+  "platform": "windows",
+  "title": "承認済み管理PowerShell",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "pe",
+    "script_hash",
+    "tcp",
+    "job"
+  ],
+  "ground_truth": "allow",
+  "explanation": "親エージェント・スクリプトのハッシュ・ユーザー・接続先が承認された棚卸しジョブと一致するため継続を許可します。PowerShell本体の署名だけでスクリプトの正当性を判断していません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "powershell.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "ASTER\\svc_inventory",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "powershell",
+      "user",
+      "service_account"
+    ]
+  },
+  "resources": [
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Parent: InventoryAgent.exe (1800)\nPID: 4200\nImage: {{fact:image}}\nCommand line: powershell.exe -NoProfile -File {{fact:script}}\nUser: ASTER\\svc_inventory\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
+        "information": [
+          {
+            "id": "image",
+            "label": "実体ファイル",
+            "value": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "data_type": "file"
+          },
+          {
+            "id": "script",
+            "label": "実行スクリプト",
+            "value": "C:\\Company\\Inventory.ps1",
+            "data_type": "file"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "powershell",
+          "user",
+          "service_account",
+          "parent",
+          "command",
+          "dll",
+          "file",
+          "path",
+          "script",
+          "image_process",
+          "agent"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "command",
+        "dll",
+        "tool_pe"
+      ]
+    },
+    {
+      "id": "sig",
+      "name": "Sigcheck",
+      "description": "署名の検証状態・発行元を確認します。PIDを入力した場合は対応する実体ファイルが対象です。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID 4200 のBacking Executable: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nVerified: Signed\nPublisher: Microsoft Windows",
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "powershell",
+          "path",
+          "image_process",
+          "signature",
+          "vendor"
+        ]
+      },
+      "terms": [
+        "executable",
+        "pid",
+        "image_process",
+        "signature",
+        "vendor",
+        "tool_sigcheck"
+      ]
+    },
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID 4200 のBacking Executable: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nAlgorithm: SHA256\nHash: {{fact:sha256}}",
+        "information": [
+          {
+            "id": "sha256",
+            "label": "実体ファイルのSHA-256",
+            "value": "53dadc40bb276161fbb4864750877d9641ebe8a5dee5ce338d2554171eebc6d1",
+            "data_type": "sha256"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "powershell",
+          "path",
+          "image_process",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "executable",
+        "pid",
+        "image_process",
+        "hash",
+        "sha256",
+        "tool_hash_win"
+      ]
+    },
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのソケットと相手IP・ポートを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "powershell.exe 4200 TCP 192.0.2.25:52200 {{fact:ip}}:443 ESTABLISHED",
+        "information": [
+          {
+            "id": "ip",
+            "label": "接続先IP",
+            "value": "192.0.2.80",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "powershell",
+          "tcp",
+          "ip",
+          "established",
+          "local_remote"
+        ]
+      },
+      "terms": [
+        "pid",
+        "socket",
+        "port",
+        "tcp",
+        "tool_tcpview"
+      ]
+    },
+    {
+      "id": "script_hash",
+      "name": "Get-FileHash（スクリプト）",
+      "description": "Process Explorerで取得したパスのSHA-256を計算します。プロセス本体のハッシュとは別です。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "pe",
+          "id": "script"
+        }
+      ],
+      "input_hint": "スクリプト",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Path: C:\\Company\\Inventory.ps1\nAlgorithm: SHA256\nHash: 5b941718bd08c55a019ad9f87d1f77673b4f06aa755f62da3b4b559bd1dfd50e",
+        "terms": [
+          "extension",
+          "path",
+          "script",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "process",
+        "path",
+        "script",
+        "hash",
+        "sha256",
+        "tool_hash_win"
+      ]
+    },
+    {
+      "id": "job",
+      "name": "管理スクリプト台帳",
+      "kind": "references",
+      "result": {
+        "content": {
+          "起動元": "InventoryAgent.exe",
+          "User": "ASTER\\svc_inventory",
+          "Script": "C:\\Company\\Inventory.ps1",
+          "SHA256": "5b941718bd08c55a019ad9f87d1f77673b4f06aa755f62da3b4b559bd1dfd50e",
+          "送信先": "192.0.2.80:443",
+          "頻度": "15分ごと",
+          "承認": "CHG-442"
+        },
+        "terms": [
+          "extension",
+          "executable",
+          "user",
+          "service_account",
+          "path",
+          "script",
+          "agent",
+          "hash",
+          "sha256",
+          "ip",
+          "ticket"
+        ]
+      },
+      "terms": [
+        "script"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "管理スクリプトの内容同一性と実行文脈を検証する"
+  ],
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ]
+}

@@ -1,28 +1,55 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-LINUX-CRON-PERSISTENCE",
   "category": "process",
   "platform": "linux",
-  "level": "applied",
-  "ground_truth": "block",
   "title": "cronによる永続化",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "update-cache",
-    "PID": 4200,
-    "User": "www-data",
-    "採取時点": "2026-08-18 09:10 / 起動済み"
+  "required_evidence": [
+    "ps",
+    "cron",
+    "service"
+  ],
+  "ground_truth": "block",
+  "explanation": "稼働イメージが/tmp配下にあり、www-dataのcrontabで毎分再起動する登録があるため、承認された静的Webサービスの運用から外れています。この継続・再起動を許可しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "update-cache",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "www-data",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "process",
+      "pid",
+      "user"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "ps",
       "name": "ps",
       "description": "選択PIDのユーザー・親PID・コマンドラインを確認します。",
-      "output": "USER PID PPID ELAPSED COMMAND\nwww-data 4200 3100 00:10 /tmp/.cache/update-cache --quiet",
       "accepted_information_types": [
         "pid"
       ],
@@ -36,13 +63,31 @@
       "platform_note": "Linux / procps-ng",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "USER PID PPID ELAPSED COMMAND\nwww-data 4200 3100 00:10 /tmp/.cache/update-cache --quiet",
+        "terms": [
+          "pid",
+          "user",
+          "command",
+          "path",
+          "temp",
+          "elapsed"
+        ]
+      },
+      "terms": [
+        "pid",
+        "user",
+        "parent",
+        "command",
+        "tool_ps"
       ]
     },
     {
       "id": "pstree",
       "name": "pstree",
       "description": "選択PIDの祖先プロセスの連鎖を確認します。",
-      "output": "systemd(1)---cron(800)---sh(3100)---update-cache(4200)\n表示: 選択PIDの祖先Chain",
       "accepted_information_types": [
         "pid"
       ],
@@ -56,13 +101,29 @@
       "platform_note": "Linux / psmisc",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "systemd(1)---cron(800)---sh(3100)---update-cache(4200)\n表示: 選択PIDの祖先Chain",
+        "terms": [
+          "pid",
+          "parent",
+          "service",
+          "shell",
+          "cron"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "tool_pstree"
       ]
     },
     {
       "id": "cron",
       "name": "crontab",
       "description": "選択PIDの実効ユーザーのcrontabを表示します。ユーザー選択は教材のラッパーで、起動原因の断定には別の観測も必要です。",
-      "output": "crontab -u www-data -l\n* * * * * /tmp/.cache/update-cache --quiet",
       "accepted_information_types": [
         "pid"
       ],
@@ -76,272 +137,49 @@
       "platform_note": "Linux / cron・cronie等のcrontab実装",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "crontab -u www-data -l\n* * * * * /tmp/.cache/update-cache --quiet",
+        "terms": [
+          "command",
+          "path",
+          "temp",
+          "cron"
+        ]
+      },
+      "terms": [
+        "pid",
+        "user",
+        "cron"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "service",
       "name": "サービス構成台帳",
-      "content": "www-dataの役割は静的Web配信のみ。crontab登録は空、実行ファイルは/opt/web以下。更新は管理ユーザーのCI経由のデプロイに限定。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "ps",
-    "cron",
-    "service"
-  ],
-  "glossary": [
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "pstree",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "ps",
-          "section": "overview"
-        },
-        {
-          "source_id": "ps",
-          "section": "result"
-        },
-        {
-          "source_id": "pstree",
-          "section": "overview"
-        },
-        {
-          "source_id": "pstree",
-          "section": "result"
-        },
-        {
-          "source_id": "cron",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "ps",
-          "section": "overview"
-        },
-        {
-          "source_id": "ps",
-          "section": "result"
-        },
-        {
-          "source_id": "cron",
-          "section": "overview"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "parent",
-      "occurrences": [
-        {
-          "source_id": "ps",
-          "section": "overview"
-        },
-        {
-          "source_id": "pstree",
-          "section": "overview"
-        },
-        {
-          "source_id": "pstree",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "command",
-      "occurrences": [
-        {
-          "source_id": "ps",
-          "section": "overview"
-        },
-        {
-          "source_id": "ps",
-          "section": "result"
-        },
-        {
-          "source_id": "cron",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_ps",
-      "occurrences": [
-        {
-          "source_id": "ps",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "ps",
-          "section": "result"
-        },
-        {
-          "source_id": "cron",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "temp",
-      "occurrences": [
-        {
-          "source_id": "ps",
-          "section": "result"
-        },
-        {
-          "source_id": "cron",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "elapsed",
-      "occurrences": [
-        {
-          "source_id": "ps",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_pstree",
-      "occurrences": [
-        {
-          "source_id": "pstree",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "service",
-      "occurrences": [
-        {
-          "source_id": "pstree",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "shell",
-      "occurrences": [
-        {
-          "source_id": "pstree",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "cron",
-      "occurrences": [
-        {
-          "source_id": "pstree",
-          "section": "result"
-        },
-        {
-          "source_id": "cron",
-          "section": "overview"
-        },
-        {
-          "source_id": "cron",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "static_analysis",
-      "occurrences": [
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ci",
-      "occurrences": [
-        {
-          "source_id": "service",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "www-dataの役割は静的Web配信のみ。crontab登録は空、実行ファイルは/opt/web以下。更新は管理ユーザーのCI経由のデプロイに限定。",
+        "terms": [
+          "user",
+          "path",
+          "cron",
+          "file",
+          "executable",
+          "static_analysis",
+          "ci"
+        ]
+      },
+      "terms": [
+        "service"
       ]
     }
   ],
-  "explanation": "稼働イメージが/tmp配下にあり、www-dataのcrontabで毎分再起動する登録があるため、承認された静的Webサービスの運用から外れています。この継続・再起動を許可しません。",
-  "topic": "稼働プロセスとcron登録を同一パスで結び付ける",
-  "summary": "稼働プロセスとcron登録を同一パスで結び付ける",
   "learning_objectives": [
     "稼働プロセスとcron登録を同一パスで結び付ける"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "real_world_inspired",
   "sources": [
     "https://attack.mitre.org/techniques/T1053/003/"
   ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "Cron Persistence"
 }

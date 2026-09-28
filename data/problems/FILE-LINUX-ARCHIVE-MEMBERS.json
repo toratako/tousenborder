@@ -1,26 +1,49 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-LINUX-ARCHIVE-MEMBERS",
   "category": "file",
   "platform": "linux",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "アーカイブ内の実行用スクリプト",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "/srv/inbox/manuals.tar.gz",
-    "申請内容": "PDF手順書をまとめた資料。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
+  "required_evidence": [
+    "archive",
+    "format"
+  ],
+  "ground_truth": "block",
+  "explanation": "一覧には手順書以外にsetup.shが含まれ、PDFのみという配布条件に反するため遮断します。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "/srv/inbox/manuals.tar.gz",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "PDF手順書をまとめた資料。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "pdf",
+      "path",
+      "archive"
+    ]
   },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "archive",
       "name": "tar",
       "description": "アーカイブを展開せず内容一覧を表示します。",
-      "output": "tar -tzf manuals.tar.gz\nmanuals/guide.pdf\nmanuals/setup.sh",
       "accepted_information_types": [
         "file"
       ],
@@ -34,125 +57,42 @@
       "platform_note": "Linux / GNU tar",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "tar -tzf manuals.tar.gz\nmanuals/guide.pdf\nmanuals/setup.sh",
+        "terms": [
+          "pdf",
+          "archive",
+          "extension",
+          "script"
+        ]
+      },
+      "terms": [
+        "file",
+        "archive",
+        "tool_archive"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "format",
       "name": "受入れ形式",
-      "content": "手順書の配布アーカイブはPDFのみ。実行スクリプトを含めない。"
+      "kind": "references",
+      "result": {
+        "content": "手順書の配布アーカイブはPDFのみ。実行スクリプトを含めない。",
+        "terms": [
+          "pdf",
+          "archive",
+          "script"
+        ]
+      }
     }
   ],
-  "external_references": [],
-  "required_evidence": [
-    "archive",
-    "format"
-  ],
-  "glossary": [
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "archive",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "pdf",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "archive",
-          "section": "result"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "archive",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "archive",
-          "section": "overview"
-        },
-        {
-          "source_id": "archive",
-          "section": "result"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_archive",
-      "occurrences": [
-        {
-          "source_id": "archive",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "archive",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "script",
-      "occurrences": [
-        {
-          "source_id": "archive",
-          "section": "result"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    }
-  ],
-  "explanation": "一覧には手順書以外にsetup.shが含まれ、PDFのみという配布条件に反するため遮断します。",
-  "topic": "tarの一覧を受入れ仕様と比較する",
-  "summary": "tarの一覧を受入れ仕様と比較する",
   "learning_objectives": [
     "tarの一覧を受入れ仕様と比較する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "standard",
   "sources": [
     "https://sourceware.org/binutils/docs/binutils/readelf.html",
     "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

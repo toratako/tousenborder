@@ -1,28 +1,55 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PROC-LINUX-SERVICE-UNIT",
   "category": "process",
   "platform": "linux",
-  "level": "beginner",
-  "ground_truth": "allow",
   "title": "承認済みのsystemdサービス",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Process": "metrics-agent",
-    "PID": 4200,
-    "User": "metrics",
-    "採取時点": "2026-08-18 09:10 / 起動済み"
+  "required_evidence": [
+    "systemctl",
+    "service"
+  ],
+  "ground_truth": "allow",
+  "explanation": "Unitのユーザー・ExecStart・配置が承認された監視サービス定義と一致するため継続を許可します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "metrics-agent",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "metrics",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "process",
+      "pid",
+      "user",
+      "agent"
+    ]
   },
-  "initial_information_types": {
-    "PID": "pid",
-    "User": "username"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "systemctl",
       "name": "systemctl",
       "description": "選択PIDの所属ユニット・状態・構成を表示します。",
-      "output": "metrics.service\nActive: active (running)\nMainPID: 4200\nUser: metrics\nExecStart=/opt/aster/metrics-agent --config /etc/aster/metrics.toml\nFragmentPath=/etc/systemd/system/metrics.service",
       "accepted_information_types": [
         "pid"
       ],
@@ -36,167 +63,50 @@
       "platform_note": "Linux / systemd",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "metrics.service\nActive: active (running)\nMainPID: 4200\nUser: metrics\nExecStart=/opt/aster/metrics-agent --config /etc/aster/metrics.toml\nFragmentPath=/etc/systemd/system/metrics.service",
+        "terms": [
+          "pid",
+          "user",
+          "agent",
+          "path",
+          "command",
+          "service",
+          "unit_fields"
+        ]
+      },
+      "terms": [
+        "pid",
+        "tool_systemctl"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "service",
       "name": "サービス構成台帳",
-      "content": "metrics.service / User=metrics / ExecStart=/opt/aster/metrics-agent --config /etc/aster/metrics.toml / /etc/systemd/system/metrics.service / CHG-502。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "systemctl",
-    "service"
-  ],
-  "glossary": [
-    {
-      "term_id": "process",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "pid",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "systemctl",
-          "section": "overview"
-        },
-        {
-          "source_id": "systemctl",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "systemctl",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "agent",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "systemctl",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_systemctl",
-      "occurrences": [
-        {
-          "source_id": "systemctl",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "systemctl",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "command",
-      "occurrences": [
-        {
-          "source_id": "systemctl",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "service",
-      "occurrences": [
-        {
-          "source_id": "systemctl",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "overview"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "unit_fields",
-      "occurrences": [
-        {
-          "source_id": "systemctl",
-          "section": "result"
-        },
-        {
-          "source_id": "service",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ticket",
-      "occurrences": [
-        {
-          "source_id": "service",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "metrics.service / User=metrics / ExecStart=/opt/aster/metrics-agent --config /etc/aster/metrics.toml / /etc/systemd/system/metrics.service / CHG-502。",
+        "terms": [
+          "user",
+          "agent",
+          "path",
+          "command",
+          "service",
+          "unit_fields",
+          "ticket"
+        ]
+      },
+      "terms": [
+        "service"
       ]
     }
   ],
-  "explanation": "Unitのユーザー・ExecStart・配置が承認された監視サービス定義と一致するため継続を許可します。",
-  "topic": "systemctlで確認したユニット構成を台帳と比較する",
-  "summary": "systemctlで確認したユニット構成を台帳と比較する",
   "learning_objectives": [
     "systemctlで確認したユニット構成を台帳と比較する"
   ],
-  "decision_context": "running_process",
-  "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

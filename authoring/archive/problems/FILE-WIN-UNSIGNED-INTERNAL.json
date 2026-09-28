@@ -1,0 +1,292 @@
+{
+  "schema_version": 2,
+  "id": "FILE-WIN-UNSIGNED-INTERNAL",
+  "category": "file",
+  "platform": "windows",
+  "title": "未署名の社内帳票ツール",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "hash",
+    "sig",
+    "approved",
+    "disclosure"
+  ],
+  "ground_truth": "allow",
+  "explanation": "未署名でも、ハッシュ・バージョン・配布経路が例外承認済みの社内版と一致するため許可します。社外秘ファイルのアップロードは不要で、外部送信方針にも反します。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "C:\\Company\\report-builder.exe",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "社外秘の帳票Templateを内蔵した社内版2.3。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      },
+      {
+        "id": "配布記録",
+        "label": "配布記録",
+        "value": "社内Software Center / 配布ID CHG-433 / report-builder 2.3 / 2026-08-18 08:55に取得。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "extension",
+      "executable",
+      "path",
+      "confidential",
+      "ticket",
+      "template",
+      "software_center"
+    ]
+  },
+  "resources": [
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応する実体ファイルが対象です。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Algorithm : SHA256\nHash : FFAD92B5B3FB8618BA277D6F1FEE69571075657EA61351ED06C337230C083F92\nPath : C:\\Company\\report-builder.exe",
+        "information": [
+          {
+            "id": "sha256",
+            "label": "対象ファイルのSHA-256",
+            "value": "ffad92b5b3fb8618ba277d6f1fee69571075657ea61351ed06c337230c083f92",
+            "data_type": "sha256"
+          }
+        ],
+        "terms": [
+          "file",
+          "extension",
+          "executable",
+          "path",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "file",
+        "executable",
+        "hash",
+        "sha256",
+        "pid",
+        "image_process",
+        "tool_hash_win"
+      ]
+    },
+    {
+      "id": "sig",
+      "name": "Sigcheck",
+      "description": "署名の検証状態・発行元を確認します。PID入力では実体ファイルが対象です。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "C:\\Company\\report-builder.exe:\n  Verified: Unsigned\n  Publisher: n/a",
+        "terms": [
+          "extension",
+          "executable",
+          "path",
+          "signature",
+          "vendor",
+          "unsigned",
+          "n_a"
+        ]
+      },
+      "terms": [
+        "file",
+        "executable",
+        "pid",
+        "image_process",
+        "signature",
+        "vendor",
+        "tool_sigcheck"
+      ]
+    },
+    {
+      "id": "strings",
+      "name": "Strings (Sysinternals)",
+      "description": "ファイル内の可読文字列を抽出します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "対象: C:\\Company\\report-builder.exe\n抽出文字列:\nReport Builder 2.3\nTemplateSet: Finance\nOutputFormat: PDF",
+        "terms": [
+          "extension",
+          "executable",
+          "path",
+          "template",
+          "static_analysis",
+          "pdf"
+        ]
+      },
+      "terms": [
+        "file",
+        "static_analysis",
+        "tool_strings"
+      ]
+    },
+    {
+      "id": "approved",
+      "name": "承認済みソフトウェア",
+      "kind": "references",
+      "result": {
+        "content": {
+          "製品": "report-builder 2.3",
+          "Path": "C:\\Company\\report-builder.exe",
+          "SHA256": "ffad92b5b3fb8618ba277d6f1fee69571075657ea61351ed06c337230c083f92",
+          "配布": "社内Software Center",
+          "署名": "未署名の内製版をCHG-433で例外承認",
+          "区分": "社外秘Template内蔵"
+        },
+        "terms": [
+          "extension",
+          "executable",
+          "path",
+          "confidential",
+          "ticket",
+          "template",
+          "software_center",
+          "hash",
+          "sha256",
+          "signature",
+          "unsigned"
+        ]
+      },
+      "terms": [
+        "approved"
+      ]
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "社外秘"
+        },
+        "terms": [
+          "file",
+          "path",
+          "confidential",
+          "hash",
+          "sha256",
+          "user",
+          "url",
+          "host",
+          "token",
+          "attachment",
+          "authentication",
+          "pcap",
+          "url_path",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
+    {
+      "id": "file_rep",
+      "name": "ファイルの評判照会",
+      "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "File"
+        }
+      ],
+      "input_hint": "ファイル",
+      "correct_usage": false,
+      "reason": "社外秘Templateを含むファイル本体は外部送信禁止です。",
+      "kind": "external_references",
+      "result": {
+        "content": "File received; analysis queued.",
+        "terms": [
+          "file",
+          "no_record"
+        ]
+      },
+      "submission": {
+        "type": "file",
+        "warning": "ファイル本体を送信します。内容や埋め込み情報がサービスに渡り、共有される場合があります。",
+        "terms": [
+          "file",
+          "extension",
+          "executable",
+          "path",
+          "upload"
+        ]
+      },
+      "terms": [
+        "file",
+        "reputation"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "未署名と機密性を承認台帳で判断する"
+  ],
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
+  ]
+}

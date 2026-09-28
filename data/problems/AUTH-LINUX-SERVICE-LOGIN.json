@@ -1,32 +1,90 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "AUTH-LINUX-SERVICE-LOGIN",
   "category": "account",
   "platform": "linux",
-  "level": "beginner",
-  "ground_truth": "block",
   "title": "サービスアカウントへの対話型SSHログイン",
   "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
-  "initial_information": {
-    "要求ID": "AUTH-901",
-    "User": "svc_backup",
-    "Source IP": "203.0.113.150",
-    "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
-    "認証方式": "SSH公開鍵認証",
-    "Gatewayの鍵検証": "SHA256:DEMO_APPROVED_KEY_17 と一致",
-    "GatewayのMFA": "確認済み"
+  "required_evidence": [
+    "lastlog",
+    "policy"
+  ],
+  "ground_truth": "block",
+  "explanation": "svc_backupはサービス専用アカウントで、対話型SSHを禁止しているため遮断します。lastlogに履歴がないことだけでなく、アカウントの用途も根拠としています。",
+  "initial": {
+    "information": [
+      {
+        "id": "要求ID",
+        "label": "要求ID",
+        "value": "AUTH-901",
+        "data_type": "text"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "svc_backup",
+        "data_type": "username"
+      },
+      {
+        "id": "Source IP",
+        "label": "Source IP",
+        "value": "203.0.113.150",
+        "data_type": "ip"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+        "data_type": "text"
+      },
+      {
+        "id": "認証方式",
+        "label": "認証方式",
+        "value": "SSH公開鍵認証",
+        "data_type": "text"
+      },
+      {
+        "id": "Gatewayの鍵検証",
+        "label": "Gatewayの鍵検証",
+        "value": "SHA256:DEMO_APPROVED_KEY_17 と一致",
+        "data_type": "text"
+      },
+      {
+        "id": "GatewayのMFA",
+        "label": "GatewayのMFA",
+        "value": "確認済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "hash",
+      "sha256",
+      "approved",
+      "user",
+      "ip",
+      "authentication",
+      "session",
+      "mfa",
+      "gateway",
+      "ssh",
+      "service_account",
+      "public_key",
+      "key_fingerprint",
+      "storage",
+      "source_ip"
+    ]
   },
-  "initial_information_types": {
-    "User": "username",
-    "Source IP": "ip"
-  },
-  "tools": [
+  "resources": [
     {
       "id": "lastlog",
       "name": "lastlog",
       "description": "アカウントの最終ログイン記録を表示します。",
-      "output": "Username Port From Latest\nsvc_backup **Never logged in**",
       "accepted_information_types": [
         "username"
       ],
@@ -40,267 +98,49 @@
       "platform_note": "Linux / shadow-utilsのlastlogを備える教材環境",
       "environments": [
         "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Username Port From Latest\nsvc_backup **Never logged in**",
+        "terms": [
+          "user",
+          "service_account",
+          "storage",
+          "terminal",
+          "never_logged_in"
+        ]
+      },
+      "terms": [
+        "user",
+        "login",
+        "tool_lastlog"
       ]
-    }
-  ],
-  "references": [
+    },
     {
       "id": "policy",
       "name": "ユーザー／アカウント方針",
-      "content": "svc_backup / systemdのバックアップサービス専用 / 対話型SSH・シェルセッションは禁止。"
-    }
-  ],
-  "external_references": [],
-  "required_evidence": [
-    "lastlog",
-    "policy"
-  ],
-  "glossary": [
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lastlog",
-          "section": "overview"
-        },
-        {
-          "source_id": "lastlog",
-          "section": "result"
-        },
-        {
-          "source_id": "policy",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "session",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "mfa",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "gateway",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "ssh",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "service_account",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lastlog",
-          "section": "result"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "public_key",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "key_fingerprint",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "storage",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "lastlog",
-          "section": "result"
-        },
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "source_ip",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "login",
-      "occurrences": [
-        {
-          "source_id": "lastlog",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "tool_lastlog",
-      "occurrences": [
-        {
-          "source_id": "lastlog",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "terminal",
-      "occurrences": [
-        {
-          "source_id": "lastlog",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "never_logged_in",
-      "occurrences": [
-        {
-          "source_id": "lastlog",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "policy",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "service",
-      "occurrences": [
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "shell",
-      "occurrences": [
-        {
-          "source_id": "policy",
-          "section": "result"
-        }
+      "kind": "references",
+      "result": {
+        "content": "svc_backup / systemdのバックアップサービス専用 / 対話型SSH・シェルセッションは禁止。",
+        "terms": [
+          "session",
+          "ssh",
+          "service_account",
+          "storage",
+          "service",
+          "shell"
+        ]
+      },
+      "terms": [
+        "user",
+        "policy"
       ]
     }
   ],
-  "explanation": "svc_backupはサービス専用アカウントで、対話型SSHを禁止しているため遮断します。lastlogに履歴がないことだけでなく、アカウントの用途も根拠としています。",
-  "topic": "lastlogの履歴とアカウントの対話利用許可を区別する",
-  "summary": "lastlogの履歴とアカウントの対話利用許可を区別する",
   "learning_objectives": [
     "lastlogの履歴とアカウントの対話利用許可を区別する"
   ],
-  "decision_context": "before_session",
-  "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

@@ -1,0 +1,289 @@
+{
+  "schema_version": 2,
+  "id": "NET-LINUX-CONFIDENTIAL-UPLOAD",
+  "category": "network",
+  "platform": "linux",
+  "title": "個人クラウドへの機密ファイル送信",
+  "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "ps",
+    "lsof_i",
+    "policy"
+  ],
+  "ground_truth": "block",
+  "explanation": "プロセスの引数は機密資料を個人クラウドへ転送する指定で、宛先・利用ツールとも送信方針に反するため遮断します。大量のTLS通信だけからファイル内容を読み取った判断ではありません。",
+  "initial": {
+    "information": [
+      {
+        "id": "接続ID",
+        "label": "接続ID",
+        "value": "CONNECT-701",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 5100,
+        "data_type": "pid"
+      },
+      {
+        "id": "Process表示名",
+        "label": "Process表示名",
+        "value": "cloud-copy",
+        "data_type": "text"
+      },
+      {
+        "id": "Remote IP",
+        "label": "Remote IP",
+        "value": "198.51.100.90",
+        "data_type": "ip"
+      },
+      {
+        "id": "Remote Port",
+        "label": "Remote Port",
+        "value": 443,
+        "data_type": "text"
+      },
+      {
+        "id": "Protocol",
+        "label": "Protocol",
+        "value": "TCP",
+        "data_type": "text"
+      },
+      {
+        "id": "端末",
+        "label": "端末",
+        "value": "192.0.2.30",
+        "data_type": "text"
+      },
+      {
+        "id": "保留中のLocal Port",
+        "label": "保留中のLocal Port",
+        "value": 52410,
+        "data_type": "text"
+      },
+      {
+        "id": "要求時刻",
+        "label": "要求時刻",
+        "value": "2026-08-18 09:10:00",
+        "data_type": "text"
+      },
+      {
+        "id": "保存PCAP",
+        "label": "保存PCAP",
+        "value": "flow-before-0910.pcap",
+        "data_type": "pcap"
+      },
+      {
+        "id": "観測範囲",
+        "label": "観測範囲",
+        "value": "PCAPは09:09:59まで。同じプロセスの既存接続を含む。今回の接続はまだ未許可。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "process",
+      "pid",
+      "ip",
+      "port",
+      "tcp",
+      "flow",
+      "device",
+      "pcap",
+      "local_remote",
+      "protocol"
+    ]
+  },
+  "resources": [
+    {
+      "id": "lsof_i",
+      "name": "lsof -i",
+      "description": "選択PIDが所有するインターネット接続のソケットを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / lsof",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "COMMAND PID USER FD TYPE NAME\ncloud-copy 5100 agent 5u IPv4 192.0.2.30:52400->{{fact:ip}}:443 (ESTABLISHED)",
+        "information": [
+          {
+            "id": "ip",
+            "label": "既存接続の接続先IP",
+            "value": "198.51.100.90",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "pid",
+          "ip",
+          "local_remote",
+          "command",
+          "user",
+          "established",
+          "fd",
+          "agent"
+        ]
+      },
+      "terms": [
+        "pid",
+        "socket",
+        "tool_lsof"
+      ]
+    },
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのユーザー・親PID・コマンドラインを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID PPID USER COMMAND\n5100 1 agent /home/user/bin/cloud-copy --source /srv/finance/forecast.csv --destination https://personal-cloud.example/u/demo",
+        "terms": [
+          "pid",
+          "command",
+          "user",
+          "agent",
+          "path",
+          "url",
+          "http",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "pid",
+        "command",
+        "user",
+        "parent",
+        "tool_ps"
+      ]
+    },
+    {
+      "id": "capture",
+      "name": "Wireshark",
+      "description": "保存済みPCAPのパケットや通信統計を表示します。所有プロセスはソケット調査ツールで照合します。",
+      "accepted_information_types": [
+        "pcap"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "保存PCAP"
+        }
+      ],
+      "input_hint": "保存PCAP",
+      "platform_note": "Windows / Linux版Wiresharkを導入済み",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "File: flow-before-0910.pcap\n09:05–09:09 192.0.2.30:52400 -> 198.51.100.90:443\nTCP conversation: sent 128 MiB; received 64 KiB\nTLS Application Data; 本文は暗号化",
+        "terms": [
+          "ip",
+          "tcp",
+          "flow",
+          "pcap",
+          "file",
+          "size",
+          "tls"
+        ]
+      },
+      "terms": [
+        "process",
+        "flow",
+        "pcap",
+        "socket",
+        "tool_capture"
+      ]
+    },
+    {
+      "id": "policy",
+      "name": "ファイル・通信方針",
+      "kind": "references",
+      "result": {
+        "content": {
+          "機密資料": "/srv/finance/forecast.csv",
+          "分類": "社外秘・財務予測",
+          "承認転送先": "192.0.2.85:443の法人管理Storageのみ",
+          "198.51.100.90": "personal-cloud.exampleの個人用Endpoint",
+          "転送Tool": "管理配布のcorp-transferのみ。cloud-copyは未承認。"
+        },
+        "terms": [
+          "ip",
+          "path",
+          "confidential",
+          "endpoint",
+          "storage"
+        ]
+      },
+      "terms": [
+        "file",
+        "policy"
+      ]
+    },
+    {
+      "id": "disclosure",
+      "name": "外部照会方針",
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "社外秘"
+        },
+        "terms": [
+          "pcap",
+          "user",
+          "path",
+          "url",
+          "url_path",
+          "file",
+          "confidential",
+          "hash",
+          "sha256",
+          "host",
+          "token",
+          "attachment",
+          "authentication",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "転送対象・宛先・用途を送信方針と照合する"
+  ],
+  "sources": [
+    "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
+  ]
+}

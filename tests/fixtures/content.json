@@ -1,310 +1,1505 @@
 {
-  "pack": {"schema_version": 1, "id": "test-fixtures", "title": "操作・入力契約の固定テストデータ", "categories": [{"id": "file", "label": "File"}, {"id": "process", "label": "Process"}, {"id": "web", "label": "Web"}, {"id": "network", "label": "Network"}, {"id": "email", "label": "Email"}, {"id": "account", "label": "Account / Authentication"}, {"id": "package", "label": "Package"}], "rules": [{"id": "fixture", "label": "操作確認", "value": "検証専用データです。通常の出題には使用しません。"}], "resource_groups": [{"id": "tools", "label": "Tool", "kind": "tools"}, {"id": "references", "label": "Reference", "kind": "references"}, {"id": "external_references", "label": "External Reference", "kind": "external_references"}, {"id": "attachment_tools", "label": "添付Fileの調査", "kind": "tools"}, {"id": "url_tools", "label": "URLの調査", "kind": "tools"}], "feedback": {"show_reason": true}, "problems": ["res://data/problems/FIX-VISIBLE-FILE.json", "res://data/problems/FIX-VISIBLE-WEB.json", "res://data/problems/FIX-FILE.json", "res://data/problems/FIX-HASH.json", "res://data/problems/FIX-PRIVATE-FILE.json", "res://data/problems/FIX-PROCESS.json", "res://data/problems/FIX-DNS.json", "res://data/problems/FIX-PRIVATE-URL.json", "res://data/problems/FIX-REFERENCES.json", "res://data/problems/FIX-PACKETS.json"]},
   "problems": [
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-VISIBLE-FILE",
       "category": "file",
       "platform": "windows",
-      "level": "very_beginner",
       "title": "FIX-VISIBLE-FILE",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"File名": "invoice.pdf.exe", "拡張子": ".exe", "Size": "188,416 bytes", "保存場所": "C:\\Users\\Aki\\Downloads", "入手元": "未契約の取引先からのメール"},
-      "tools": [],
-      "references": [],
-      "external_references": [],
+      "required_evidence": [
+        "initial_information"
+      ],
       "ground_truth": "block",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["initial_information"],
-      "decision_context": "before_execution",
-      "scenario_type": "standard",
-      "sources": [],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "initial_information_types": {"File名": "file", "Size": "file_size", "保存場所": "directory"}
+      "initial": {
+        "information": [
+          {
+            "id": "File名",
+            "label": "File名",
+            "value": "invoice.pdf.exe",
+            "data_type": "file"
+          },
+          {
+            "id": "拡張子",
+            "label": "拡張子",
+            "value": ".exe",
+            "data_type": "text"
+          },
+          {
+            "id": "Size",
+            "label": "Size",
+            "value": "188,416 bytes",
+            "data_type": "file_size"
+          },
+          {
+            "id": "保存場所",
+            "label": "保存場所",
+            "value": "C:\\Users\\Aki\\Downloads",
+            "data_type": "directory"
+          },
+          {
+            "id": "入手元",
+            "label": "入手元",
+            "value": "未契約の取引先からのメール",
+            "data_type": "text"
+          }
+        ]
+      },
+      "resources": [],
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "difficulty": "beginner"
     },
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-VISIBLE-WEB",
       "category": "web",
       "platform": "common",
-      "level": "very_beginner",
       "title": "FIX-VISIBLE-WEB",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"完全なURL": "https://microsoft.com.attacker.example/signin", "Link表示文字列": "https://microsoft.com/signin", "アクセス要求元": "アカウント確認メール"},
-      "tools": [],
-      "references": [],
-      "external_references": [],
+      "required_evidence": [
+        "initial_information"
+      ],
       "ground_truth": "block",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["initial_information"],
-      "decision_context": "before_access",
-      "scenario_type": "standard",
-      "sources": [],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "initial_information_types": {"完全なURL": "url"}
+      "initial": {
+        "information": [
+          {
+            "id": "完全なURL",
+            "label": "完全なURL",
+            "value": "https://microsoft.com.attacker.example/signin",
+            "data_type": "url"
+          },
+          {
+            "id": "Link表示文字列",
+            "label": "Link表示文字列",
+            "value": "https://microsoft.com/signin",
+            "data_type": "text"
+          },
+          {
+            "id": "アクセス要求元",
+            "label": "アクセス要求元",
+            "value": "アカウント確認メール",
+            "data_type": "text"
+          }
+        ]
+      },
+      "resources": [],
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "difficulty": "beginner"
     },
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-FILE",
       "category": "file",
       "platform": "linux",
-      "level": "beginner",
       "title": "FIX-FILE",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"File名": "shipping.pdf", "拡張子": ".pdf", "Size": "64,512 bytes", "保存場所": "/home/aki/Downloads", "入手元": "配送通知メール"},
-      "tools": [
-        {"id": "file", "name": "file", "description": "fileの入力と表示を確認します。", "output": "$ file shipping.pdf\nshipping.pdf: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File", "platform_note": "Linux / macOS", "environments": ["linux"]},
-        {"id": "readelf", "name": "readelf", "description": "readelfの入力と表示を確認します。", "output": "$ readelf -h shipping.pdf\nELF Header:\n  Class:                             ELF64\n  Type:                              DYN (Position-Independent Executable file)\n  Machine:                           Advanced Micro Devices X86-64", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File", "platform_note": "Linux（GNU Binutils）", "environments": ["linux"]},
-        {"id": "gnu_strings", "name": "strings（GNU）", "description": "strings（GNU）の入力と表示を確認します。", "environments": ["linux"], "platform_note": "Linux（GNU Binutils）", "output": "$ strings -a -n 8 shipping.pdf\n/lib64/ld-linux-x86-64.so.2\nlibc.so.6\nShipping Client", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File"}
+      "required_evidence": [
+        "file",
+        "document_format"
       ],
-      "references": [
-        {"id": "document_format", "name": "配送書類の仕様", "content": "検証用の照合資料: document_format"}
-      ],
-      "external_references": [],
       "ground_truth": "block",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["file", "document_format"],
-      "decision_context": "before_execution",
-      "scenario_type": "standard",
-      "sources": [],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "initial_information_types": {"File名": "file", "Size": "file_size", "保存場所": "directory"}
+      "initial": {
+        "information": [
+          {
+            "id": "File名",
+            "label": "File名",
+            "value": "shipping.pdf",
+            "data_type": "file"
+          },
+          {
+            "id": "拡張子",
+            "label": "拡張子",
+            "value": ".pdf",
+            "data_type": "text"
+          },
+          {
+            "id": "Size",
+            "label": "Size",
+            "value": "64,512 bytes",
+            "data_type": "file_size"
+          },
+          {
+            "id": "保存場所",
+            "label": "保存場所",
+            "value": "/home/aki/Downloads",
+            "data_type": "directory"
+          },
+          {
+            "id": "入手元",
+            "label": "入手元",
+            "value": "配送通知メール",
+            "data_type": "text"
+          }
+        ]
+      },
+      "resources": [
+        {
+          "id": "file",
+          "name": "file",
+          "description": "fileの入力と表示を確認します。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "platform_note": "Linux / macOS",
+          "environments": [
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "$ file shipping.pdf\nshipping.pdf: ELF 64-bit LSB pie executable, x86-64, dynamically linked, stripped"
+          }
+        },
+        {
+          "id": "readelf",
+          "name": "readelf",
+          "description": "readelfの入力と表示を確認します。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "platform_note": "Linux（GNU Binutils）",
+          "environments": [
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "$ readelf -h shipping.pdf\nELF Header:\n  Class:                             ELF64\n  Type:                              DYN (Position-Independent Executable file)\n  Machine:                           Advanced Micro Devices X86-64"
+          }
+        },
+        {
+          "id": "gnu_strings",
+          "name": "strings（GNU）",
+          "description": "strings（GNU）の入力と表示を確認します。",
+          "environments": [
+            "linux"
+          ],
+          "platform_note": "Linux（GNU Binutils）",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "kind": "tools",
+          "result": {
+            "content": "$ strings -a -n 8 shipping.pdf\n/lib64/ld-linux-x86-64.so.2\nlibc.so.6\nShipping Client"
+          }
+        },
+        {
+          "id": "document_format",
+          "name": "配送書類の仕様",
+          "kind": "references",
+          "result": {
+            "content": "検証用の照合資料: document_format"
+          }
+        }
+      ],
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "difficulty": "beginner"
     },
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-HASH",
       "category": "file",
       "platform": "linux",
-      "level": "beginner_external",
       "title": "FIX-HASH",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"File名": "northstar-cli-2.4.tar.gz", "拡張子": ".tar.gz", "Size": "245,760 bytes", "保存場所": "/home/aki/Downloads", "入手元": "https://downloads.vendor.example/northstar-cli-2.4.tar.gz"},
-      "tools": [
-        {"id": "sha256sum", "name": "sha256sum", "description": "sha256sumの入力と表示を確認します。", "output": "$ sha256sum northstar-cli-2.4.tar.gz\nfee00dc397959a0e83a9e3107d780640d50da76c79cb27ad7f7601846320a686  northstar-cli-2.4.tar.gz", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File", "output_information": [{"id": "sha256", "label": "SHA-256（次の調査に使用可能）", "value": "fee00dc397959a0e83a9e3107d780640d50da76c79cb27ad7f7601846320a686", "data_type": "sha256"}], "platform_note": "Linux（GNU Coreutils）", "environments": ["linux"]},
-        {"id": "tar", "name": "tar", "description": "tarの入力と表示を確認します。", "output": "$ tar -tf northstar-cli-2.4.tar.gz\nnorthstar-cli-2.4/\nnorthstar-cli-2.4/README\nnorthstar-cli-2.4/bin/northstar-cli", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File", "platform_note": "Linux（GNU tar）/ Windows（bsdtar）/ macOS", "environments": ["windows", "linux"], "output_by_environment": {"linux": "$ tar -tf northstar-cli-2.4.tar.gz\nnorthstar-cli-2.4/\nnorthstar-cli-2.4/README\nnorthstar-cli-2.4/bin/northstar-cli", "windows": "C:\\> tar -tf northstar-cli-2.4.tar.gz\nnorthstar-cli-2.4/\nnorthstar-cli-2.4/README\nnorthstar-cli-2.4/bin/northstar-cli"}}
-      ],
-      "references": [
-        {"id": "vendor_hash", "name": "Vendor公開Hash", "content": {"取得元": "契約済みVendorの別経路のRelease台帳", "File": "northstar-cli-2.4.tar.gz", "SHA256": "fee00dc397959a0e83a9e3107d780640d50da76c79cb27ad7f7601846320a686"}},
-        {"id": "approved_software", "name": "Approved Software", "content": "検証用の照合資料: approved_software"}
-      ],
-      "external_references": [
-        {"id": "vt_hash", "name": "VirusTotal / Hash検索", "description": "VirusTotal / Hash検索の入力と表示を確認します。", "submission_type": "hash", "submission_value": "fee00dc397959a0e83a9e3107d780640d50da76c79cb27ad7f7601846320a686", "output": "SHA-256 report lookup\nReport not found", "correct_usage": true, "confidentiality_warning": "File本体は送信しません。Hashも組織の外部照会方針に従って扱います。", "reason": "公開配布物のHash照会は許可されています。", "accepted_information_types": ["sha256"], "input_bindings": [{"source": "sha256sum", "id": "sha256"}], "input_hint": "SHA-256", "platform_note": "OS共通（VirusTotalのWeb / API）", "environments": ["windows", "linux"]},
-        {"id": "vt_upload", "name": "VirusTotal / File Upload", "description": "VirusTotal / File Uploadの入力と表示を確認します。", "submission_type": "file", "submission_value": "/home/aki/Downloads/northstar-cli-2.4.tar.gz (245,760 bytes / 公開配布物)", "output": "File analysis\nmalicious: 0\nundetected: 69", "correct_usage": true, "confidentiality_warning": "File本体を送信し、第三者と共有される場合があります。この公開配布物の送信は承認済みです。", "reason": "公開配布物の本体送信は許可されています。判定に必要なHashと承認記録は社内で確認できます。", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File", "platform_note": "OS共通（VirusTotalのWeb / API）", "environments": ["windows", "linux"]}
+      "required_evidence": [
+        "sha256sum",
+        "vendor_hash",
+        "approved_software"
       ],
       "ground_truth": "allow",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["sha256sum", "vendor_hash", "approved_software"],
-      "decision_context": "before_execution",
-      "scenario_type": "standard",
-      "sources": [],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "initial_information_types": {"File名": "file", "Size": "file_size", "保存場所": "directory"}
+      "initial": {
+        "information": [
+          {
+            "id": "File名",
+            "label": "File名",
+            "value": "northstar-cli-2.4.tar.gz",
+            "data_type": "file"
+          },
+          {
+            "id": "拡張子",
+            "label": "拡張子",
+            "value": ".tar.gz",
+            "data_type": "text"
+          },
+          {
+            "id": "Size",
+            "label": "Size",
+            "value": "245,760 bytes",
+            "data_type": "file_size"
+          },
+          {
+            "id": "保存場所",
+            "label": "保存場所",
+            "value": "/home/aki/Downloads",
+            "data_type": "directory"
+          },
+          {
+            "id": "入手元",
+            "label": "入手元",
+            "value": "https://downloads.vendor.example/northstar-cli-2.4.tar.gz",
+            "data_type": "text"
+          }
+        ]
+      },
+      "resources": [
+        {
+          "id": "sha256sum",
+          "name": "sha256sum",
+          "description": "sha256sumの入力と表示を確認します。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "platform_note": "Linux（GNU Coreutils）",
+          "environments": [
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "$ sha256sum northstar-cli-2.4.tar.gz\n{{fact:sha256}}  northstar-cli-2.4.tar.gz",
+            "information": [
+              {
+                "id": "sha256",
+                "label": "SHA-256（次の調査に使用可能）",
+                "value": "fee00dc397959a0e83a9e3107d780640d50da76c79cb27ad7f7601846320a686",
+                "data_type": "sha256"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tar",
+          "name": "tar",
+          "description": "tarの入力と表示を確認します。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "platform_note": "Linux（GNU tar）/ Windows（bsdtar）/ macOS",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "$ tar -tf northstar-cli-2.4.tar.gz\nnorthstar-cli-2.4/\nnorthstar-cli-2.4/README\nnorthstar-cli-2.4/bin/northstar-cli",
+            "by_environment": {
+              "linux": "$ tar -tf northstar-cli-2.4.tar.gz\nnorthstar-cli-2.4/\nnorthstar-cli-2.4/README\nnorthstar-cli-2.4/bin/northstar-cli",
+              "windows": "C:\\> tar -tf northstar-cli-2.4.tar.gz\nnorthstar-cli-2.4/\nnorthstar-cli-2.4/README\nnorthstar-cli-2.4/bin/northstar-cli"
+            }
+          }
+        },
+        {
+          "id": "vendor_hash",
+          "name": "Vendor公開Hash",
+          "kind": "references",
+          "result": {
+            "content": {
+              "取得元": "契約済みVendorの別経路のRelease台帳",
+              "File": "northstar-cli-2.4.tar.gz",
+              "SHA256": "fee00dc397959a0e83a9e3107d780640d50da76c79cb27ad7f7601846320a686"
+            }
+          }
+        },
+        {
+          "id": "approved_software",
+          "name": "Approved Software",
+          "kind": "references",
+          "result": {
+            "content": "検証用の照合資料: approved_software"
+          }
+        },
+        {
+          "id": "vt_hash",
+          "name": "VirusTotal / Hash検索",
+          "description": "VirusTotal / Hash検索の入力と表示を確認します。",
+          "correct_usage": true,
+          "reason": "公開配布物のHash照会は許可されています。",
+          "accepted_information_types": [
+            "sha256"
+          ],
+          "input_bindings": [
+            {
+              "source": "sha256sum",
+              "id": "sha256"
+            }
+          ],
+          "input_hint": "SHA-256",
+          "platform_note": "OS共通（VirusTotalのWeb / API）",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "external_references",
+          "result": {
+            "content": "SHA-256 report lookup\nReport not found"
+          },
+          "submission": {
+            "type": "hash",
+            "warning": "File本体は送信しません。Hashも組織の外部照会方針に従って扱います。"
+          }
+        },
+        {
+          "id": "vt_upload",
+          "name": "VirusTotal / File Upload",
+          "description": "VirusTotal / File Uploadの入力と表示を確認します。",
+          "correct_usage": true,
+          "reason": "公開配布物の本体送信は許可されています。判定に必要なHashと承認記録は社内で確認できます。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "platform_note": "OS共通（VirusTotalのWeb / API）",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "external_references",
+          "result": {
+            "content": "File analysis\nmalicious: 0\nundetected: 69"
+          },
+          "submission": {
+            "type": "file",
+            "warning": "File本体を送信し、第三者と共有される場合があります。この公開配布物の送信は承認済みです。"
+          }
+        }
+      ],
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "difficulty": "beginner"
     },
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-PRIVATE-FILE",
       "category": "file",
       "platform": "windows",
-      "level": "advanced",
       "title": "FIX-PRIVATE-FILE",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"File名": "report-tool.exe", "拡張子": ".exe", "Size": "92,160 bytes", "保存場所": "C:\\Company\\Tools", "入手元": "\\\\files.northstar.example\\approved", "情報区分": "社外秘", "配布Archive": "report-tool.tar.gz"},
-      "tools": [
-        {"id": "sigcheck", "name": "Sigcheck", "description": "Sigcheckの入力と表示を確認します。", "output": "sigcheck -nobanner report-tool.exe\nC:\\Company\\Tools\\report-tool.exe:\n        Verified:       Unsigned\n        Description:    Internal reporting utility", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File", "platform_note": "Windows（Microsoft Sysinternals・要インストール）", "environments": ["windows"]},
-        {"id": "get_filehash", "name": "Get-FileHash", "description": "Get-FileHashの入力と表示を確認します。", "output": "PS> Get-FileHash .\\report-tool.exe -Algorithm SHA256 | Format-List\nAlgorithm : SHA256\nHash      : 1E68E0EA1D3B87CA5B1BE8313E0FB559E3CE136FFA8E58739BDB9505F4F38338\nPath      : C:\\Company\\Tools\\report-tool.exe", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File", "output_information": [{"id": "sha256", "label": "SHA-256（次の調査に使用可能）", "value": "1E68E0EA1D3B87CA5B1BE8313E0FB559E3CE136FFA8E58739BDB9505F4F38338", "data_type": "sha256"}], "platform_note": "Windows（PowerShell）", "environments": ["windows"]},
-        {"id": "strings", "name": "Strings（Sysinternals）", "description": "Strings（Sysinternals）の入力と表示を確認します。", "output": "strings -n 8 report-tool.exe\nInternal Reporting Utility\nInput: monthly.csv\nOutput: summary.csv", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File", "platform_note": "Windows（Sysinternals Strings）。GNU stringsとは別のToolです。", "environments": ["windows"]},
-        {"id": "tar", "name": "tar", "description": "tarの入力と表示を確認します。", "output": "C:\\> tar -tf report-tool.tar.gz\nreport-tool/\nreport-tool/report-tool.exe\nreport-tool/README.txt", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "配布Archive"}], "input_hint": "配布Archive", "platform_note": "Linux（GNU tar）/ Windows（bsdtar）/ macOS", "environments": ["windows", "linux"], "output_by_environment": {"windows": "C:\\> tar -tf report-tool.tar.gz\nreport-tool/\nreport-tool/report-tool.exe\nreport-tool/README.txt", "linux": "$ tar -tf report-tool.tar.gz\nreport-tool/\nreport-tool/report-tool.exe\nreport-tool/README.txt"}}
-      ],
-      "references": [
-        {"id": "approved_software", "name": "Approved Software", "content": {"申請": "CHG-217", "署名": "社内限定の未署名版をレビュー済み、実行承認", "File": "report-tool.exe", "SHA256": "1e68e0ea1d3b87ca5b1be8313e0fb559e3ce136ffa8e58739bdb9505f4f38338", "情報区分": "社外秘・本体の外部Upload禁止", "外部照会": "Hash検索のみ許可。File本体の外部Uploadは禁止。"}}
-      ],
-      "external_references": [
-        {"id": "vt_upload", "name": "VirusTotal / File Upload", "description": "VirusTotal / File Uploadの入力と表示を確認します。", "submission_type": "file", "submission_value": "C:\\Company\\Tools\\report-tool.exe (92,160 bytes / 社外秘)", "output": "File analysis\nmalicious: 0\nundetected: 69", "correct_usage": false, "confidentiality_warning": "File本体を外部へ送ります。通常のUploadでは検体が第三者と共有され得ます。", "reason": "社外秘Fileの本体送信は禁止されています。検出0件でも送信による漏洩は取り消せません。", "accepted_information_types": ["file"], "input_bindings": [{"source": "initial_information", "id": "File名"}], "input_hint": "File", "platform_note": "OS共通（VirusTotalのWeb / API）", "environments": ["windows", "linux"]},
-        {"id": "vt_hash", "name": "VirusTotal / Hash検索", "description": "VirusTotal / Hash検索の入力と表示を確認します。", "submission_type": "hash", "submission_value": "1E68E0EA1D3B87CA5B1BE8313E0FB559E3CE136FFA8E58739BDB9505F4F38338", "output": "SHA-256 report lookup\nReport not found", "correct_usage": true, "confidentiality_warning": "Hashを送信します。組織の方針ではHash照会のみ許可されています。社外秘File本体は送信できません。", "reason": "このFileはHash照会のみ許可されています。本体のUploadは禁止です。", "accepted_information_types": ["sha256"], "input_bindings": [{"source": "get_filehash", "id": "sha256"}], "input_hint": "SHA-256", "platform_note": "OS共通（VirusTotalのWeb / API）", "environments": ["windows", "linux"]}
+      "required_evidence": [
+        "sigcheck",
+        "get_filehash",
+        "approved_software"
       ],
       "ground_truth": "allow",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["sigcheck", "get_filehash", "approved_software"],
-      "decision_context": "before_execution",
-      "scenario_type": "standard",
-      "sources": [],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "initial_information_types": {"File名": "file", "Size": "file_size", "保存場所": "directory", "配布Archive": "file"}
+      "initial": {
+        "information": [
+          {
+            "id": "File名",
+            "label": "File名",
+            "value": "report-tool.exe",
+            "data_type": "file"
+          },
+          {
+            "id": "拡張子",
+            "label": "拡張子",
+            "value": ".exe",
+            "data_type": "text"
+          },
+          {
+            "id": "Size",
+            "label": "Size",
+            "value": "92,160 bytes",
+            "data_type": "file_size"
+          },
+          {
+            "id": "保存場所",
+            "label": "保存場所",
+            "value": "C:\\Company\\Tools",
+            "data_type": "directory"
+          },
+          {
+            "id": "入手元",
+            "label": "入手元",
+            "value": "\\\\files.northstar.example\\approved",
+            "data_type": "text"
+          },
+          {
+            "id": "情報区分",
+            "label": "情報区分",
+            "value": "社外秘",
+            "data_type": "text"
+          },
+          {
+            "id": "配布Archive",
+            "label": "配布Archive",
+            "value": "report-tool.tar.gz",
+            "data_type": "file"
+          }
+        ]
+      },
+      "resources": [
+        {
+          "id": "sigcheck",
+          "name": "Sigcheck",
+          "description": "Sigcheckの入力と表示を確認します。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "platform_note": "Windows（Microsoft Sysinternals・要インストール）",
+          "environments": [
+            "windows"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "sigcheck -nobanner report-tool.exe\nC:\\Company\\Tools\\report-tool.exe:\n        Verified:       Unsigned\n        Description:    Internal reporting utility"
+          }
+        },
+        {
+          "id": "get_filehash",
+          "name": "Get-FileHash",
+          "description": "Get-FileHashの入力と表示を確認します。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "platform_note": "Windows（PowerShell）",
+          "environments": [
+            "windows"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "PS> Get-FileHash .\\report-tool.exe -Algorithm SHA256 | Format-List\nAlgorithm : SHA256\nHash      : {{fact:sha256}}\nPath      : C:\\Company\\Tools\\report-tool.exe",
+            "information": [
+              {
+                "id": "sha256",
+                "label": "SHA-256（次の調査に使用可能）",
+                "value": "1E68E0EA1D3B87CA5B1BE8313E0FB559E3CE136FFA8E58739BDB9505F4F38338",
+                "data_type": "sha256"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings",
+          "name": "Strings（Sysinternals）",
+          "description": "Strings（Sysinternals）の入力と表示を確認します。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "platform_note": "Windows（Sysinternals Strings）。GNU stringsとは別のToolです。",
+          "environments": [
+            "windows"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "strings -n 8 report-tool.exe\nInternal Reporting Utility\nInput: monthly.csv\nOutput: summary.csv"
+          }
+        },
+        {
+          "id": "tar",
+          "name": "tar",
+          "description": "tarの入力と表示を確認します。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "配布Archive"
+            }
+          ],
+          "input_hint": "配布Archive",
+          "platform_note": "Linux（GNU tar）/ Windows（bsdtar）/ macOS",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "C:\\> tar -tf report-tool.tar.gz\nreport-tool/\nreport-tool/report-tool.exe\nreport-tool/README.txt",
+            "by_environment": {
+              "windows": "C:\\> tar -tf report-tool.tar.gz\nreport-tool/\nreport-tool/report-tool.exe\nreport-tool/README.txt",
+              "linux": "$ tar -tf report-tool.tar.gz\nreport-tool/\nreport-tool/report-tool.exe\nreport-tool/README.txt"
+            }
+          }
+        },
+        {
+          "id": "approved_software",
+          "name": "Approved Software",
+          "kind": "references",
+          "result": {
+            "content": {
+              "申請": "CHG-217",
+              "署名": "社内限定の未署名版をレビュー済み、実行承認",
+              "File": "report-tool.exe",
+              "SHA256": "1e68e0ea1d3b87ca5b1be8313e0fb559e3ce136ffa8e58739bdb9505f4f38338",
+              "情報区分": "社外秘・本体の外部Upload禁止",
+              "外部照会": "Hash検索のみ許可。File本体の外部Uploadは禁止。"
+            }
+          }
+        },
+        {
+          "id": "vt_upload",
+          "name": "VirusTotal / File Upload",
+          "description": "VirusTotal / File Uploadの入力と表示を確認します。",
+          "correct_usage": false,
+          "reason": "社外秘Fileの本体送信は禁止されています。検出0件でも送信による漏洩は取り消せません。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "File名"
+            }
+          ],
+          "input_hint": "File",
+          "platform_note": "OS共通（VirusTotalのWeb / API）",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "external_references",
+          "result": {
+            "content": "File analysis\nmalicious: 0\nundetected: 69"
+          },
+          "submission": {
+            "type": "file",
+            "warning": "File本体を外部へ送ります。通常のUploadでは検体が第三者と共有され得ます。"
+          }
+        },
+        {
+          "id": "vt_hash",
+          "name": "VirusTotal / Hash検索",
+          "description": "VirusTotal / Hash検索の入力と表示を確認します。",
+          "correct_usage": true,
+          "reason": "このFileはHash照会のみ許可されています。本体のUploadは禁止です。",
+          "accepted_information_types": [
+            "sha256"
+          ],
+          "input_bindings": [
+            {
+              "source": "get_filehash",
+              "id": "sha256"
+            }
+          ],
+          "input_hint": "SHA-256",
+          "platform_note": "OS共通（VirusTotalのWeb / API）",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "external_references",
+          "result": {
+            "content": "SHA-256 report lookup\nReport not found"
+          },
+          "submission": {
+            "type": "hash",
+            "warning": "Hashを送信します。組織の方針ではHash照会のみ許可されています。社外秘File本体は送信できません。"
+          }
+        }
+      ],
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "difficulty": "advanced"
     },
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-PROCESS",
       "category": "process",
       "platform": "windows",
-      "level": "advanced",
       "title": "FIX-PROCESS",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"Process名": "powershell.exe", "PID": 5900, "User": "NORTHSTAR\\svc_inventory", "CPU": "3.0%", "Memory": "46 MiB"},
-      "tools": [
-        {"id": "task_manager", "name": "Task Manager", "description": "Task Managerの入力と表示を確認します。", "output": "Details\nName            PID   User name                 CPU  Memory\npowershell.exe  5900  NORTHSTAR\\svc_inventory    3%   47,104 K", "accepted_information_types": ["pid"], "input_bindings": [{"source": "initial_information", "id": "PID"}], "input_hint": "PID", "platform_note": "Windows標準（Task Manager）", "environments": ["windows"]},
-        {"id": "process_explorer", "name": "Process Explorer", "description": "Process Explorerの入力と表示を確認します。", "output": "Process tree / Properties\nInventoryAgent.exe (1800)\n  powershell.exe (5900)\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -File C:\\Company\\Inventory.ps1", "accepted_information_types": ["pid"], "input_bindings": [{"source": "initial_information", "id": "PID"}], "input_hint": "PID", "output_information": [{"id": "script_file", "label": "実行しているScript", "value": "C:\\Company\\Inventory.ps1", "data_type": "file"}, {"id": "image_file", "label": "Process本体", "value": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "data_type": "file"}], "platform_note": "Windows（Microsoft Sysinternals・要インストール）", "environments": ["windows"]},
-        {"id": "get_filehash", "name": "Get-FileHash", "description": "Get-FileHashの入力と表示を確認します。", "output": "PS> Get-FileHash C:\\Company\\Inventory.ps1 -Algorithm SHA256 | Format-List\nAlgorithm : SHA256\nHash      : FAB3C848BC7B12049222786E94A9571F4FD065B5F8E3838298D5606FA495F011\nPath      : C:\\Company\\Inventory.ps1", "accepted_information_types": ["file"], "input_bindings": [{"source": "process_explorer", "id": "script_file"}], "input_hint": "Script File", "output_information": [{"id": "sha256", "label": "ScriptのSHA-256", "value": "FAB3C848BC7B12049222786E94A9571F4FD065B5F8E3838298D5606FA495F011", "data_type": "sha256"}], "platform_note": "Windows（PowerShell）", "environments": ["windows"]},
-        {"id": "tcpview", "name": "TCPView", "description": "TCPViewの入力と表示を確認します。", "output": "Process         PID   Protocol  Local Address  Local Port  Remote Address  Remote Port  State\npowershell.exe  5900  TCP       192.0.2.25     52200       192.0.2.80      443          ESTABLISHED", "accepted_information_types": ["pid"], "input_bindings": [{"source": "initial_information", "id": "PID"}], "input_hint": "PID", "platform_note": "Windows（Microsoft Sysinternals・要インストール）", "environments": ["windows"]}
+      "required_evidence": [
+        "process_explorer",
+        "get_filehash",
+        "tcpview",
+        "approved_automation"
       ],
-      "references": [
-        {"id": "approved_automation", "name": "管理Script台帳", "content": {"起動元": "InventoryAgent.exe", "User": "NORTHSTAR\\svc_inventory", "Script": "C:\\Company\\Inventory.ps1", "SHA256": "fab3c848bc7b12049222786e94a9571f4fd065b5f8e3838298d5606fa495f011", "接続先": "192.0.2.80:443", "頻度": "15分ごと", "承認": "CHG-220"}}
-      ],
-      "external_references": [],
       "ground_truth": "allow",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["process_explorer", "get_filehash", "tcpview", "approved_automation"],
-      "decision_context": "running_process",
-      "scenario_type": "real_world_inspired",
-      "sources": ["https://example.test/fixture-source"],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "initial_information_types": {"PID": "pid", "User": "username", "Process名": "process_name"},
-      "inspired_by": "Metadata検証用"
+      "initial": {
+        "information": [
+          {
+            "id": "Process名",
+            "label": "Process名",
+            "value": "powershell.exe",
+            "data_type": "process_name"
+          },
+          {
+            "id": "PID",
+            "label": "PID",
+            "value": 5900,
+            "data_type": "pid"
+          },
+          {
+            "id": "User",
+            "label": "User",
+            "value": "NORTHSTAR\\svc_inventory",
+            "data_type": "username"
+          },
+          {
+            "id": "CPU",
+            "label": "CPU",
+            "value": "3.0%",
+            "data_type": "text"
+          },
+          {
+            "id": "Memory",
+            "label": "Memory",
+            "value": "46 MiB",
+            "data_type": "text"
+          }
+        ]
+      },
+      "resources": [
+        {
+          "id": "task_manager",
+          "name": "Task Manager",
+          "description": "Task Managerの入力と表示を確認します。",
+          "accepted_information_types": [
+            "pid"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "PID"
+            }
+          ],
+          "input_hint": "PID",
+          "platform_note": "Windows標準（Task Manager）",
+          "environments": [
+            "windows"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "Details\nName            PID   User name                 CPU  Memory\npowershell.exe  5900  NORTHSTAR\\svc_inventory    3%   47,104 K"
+          }
+        },
+        {
+          "id": "process_explorer",
+          "name": "Process Explorer",
+          "description": "Process Explorerの入力と表示を確認します。",
+          "accepted_information_types": [
+            "pid"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "PID"
+            }
+          ],
+          "input_hint": "PID",
+          "platform_note": "Windows（Microsoft Sysinternals・要インストール）",
+          "environments": [
+            "windows"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "Process tree / Properties\nInventoryAgent.exe (1800)\n  powershell.exe (5900)\nImage: {{fact:image_file}}\nCommand line: powershell.exe -NoProfile -File {{fact:script_file}}",
+            "information": [
+              {
+                "id": "script_file",
+                "label": "実行しているScript",
+                "value": "C:\\Company\\Inventory.ps1",
+                "data_type": "file"
+              },
+              {
+                "id": "image_file",
+                "label": "Process本体",
+                "value": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "data_type": "file"
+              }
+            ]
+          }
+        },
+        {
+          "id": "get_filehash",
+          "name": "Get-FileHash",
+          "description": "Get-FileHashの入力と表示を確認します。",
+          "accepted_information_types": [
+            "file"
+          ],
+          "input_bindings": [
+            {
+              "source": "process_explorer",
+              "id": "script_file"
+            }
+          ],
+          "input_hint": "Script File",
+          "platform_note": "Windows（PowerShell）",
+          "environments": [
+            "windows"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "PS> Get-FileHash C:\\Company\\Inventory.ps1 -Algorithm SHA256 | Format-List\nAlgorithm : SHA256\nHash      : {{fact:sha256}}\nPath      : C:\\Company\\Inventory.ps1",
+            "information": [
+              {
+                "id": "sha256",
+                "label": "ScriptのSHA-256",
+                "value": "FAB3C848BC7B12049222786E94A9571F4FD065B5F8E3838298D5606FA495F011",
+                "data_type": "sha256"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tcpview",
+          "name": "TCPView",
+          "description": "TCPViewの入力と表示を確認します。",
+          "accepted_information_types": [
+            "pid"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "PID"
+            }
+          ],
+          "input_hint": "PID",
+          "platform_note": "Windows（Microsoft Sysinternals・要インストール）",
+          "environments": [
+            "windows"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "Process         PID   Protocol  Local Address  Local Port  Remote Address  Remote Port  State\npowershell.exe  5900  TCP       192.0.2.25     52200       192.0.2.80      443          ESTABLISHED"
+          }
+        },
+        {
+          "id": "approved_automation",
+          "name": "管理Script台帳",
+          "kind": "references",
+          "result": {
+            "content": {
+              "起動元": "InventoryAgent.exe",
+              "User": "NORTHSTAR\\svc_inventory",
+              "Script": "C:\\Company\\Inventory.ps1",
+              "SHA256": "fab3c848bc7b12049222786e94a9571f4fd065b5f8e3838298d5606fa495f011",
+              "接続先": "192.0.2.80:443",
+              "頻度": "15分ごと",
+              "承認": "CHG-220"
+            }
+          }
+        }
+      ],
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "sources": [
+        "https://example.test/fixture-source"
+      ],
+      "inspired_by": "Metadata検証用",
+      "difficulty": "advanced"
     },
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-DNS",
       "category": "web",
       "platform": "common",
-      "level": "beginner",
       "title": "FIX-DNS",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"完全なURL": "https://training.northstar.example/course/intro", "Link表示文字列": "新研修ポータル", "アクセス要求元": "署名付き社内リリース通知CHG-301"},
-      "tools": [
-        {"id": "url_parse", "name": "Python / URL分解", "input_hint": "URL", "description": "Python / URL分解の入力と表示を確認します。", "output": "python -c \"from urllib.parse import urlsplit; print(urlsplit('https://training.northstar.example/course/intro').hostname)\"\ntraining.northstar.example", "accepted_information_types": ["url"], "input_bindings": [{"source": "initial_information", "id": "完全なURL"}], "output_information": [{"id": "host", "label": "Host（次の調査に使用可能）", "value": "training.northstar.example", "data_type": "domain"}], "platform_note": "Windows / Linux / macOS（Python 3）", "environments": ["windows", "linux"]},
-        {"id": "resolve_dnsname", "name": "Resolve-DnsName [Windows]", "platform_note": "Windows（DnsClientモジュールのPowerShellコマンド）", "description": "Resolve-DnsName [Windows]の入力と表示を確認します。", "output": "PS> Resolve-DnsName training.northstar.example -Type A\nName                       Type TTL Section IPAddress\ntraining.northstar.example  A    300 Answer  192.0.2.90", "accepted_information_types": ["domain"], "input_bindings": [{"source": "url_parse", "id": "host"}], "input_hint": "Host / Domain", "environments": ["windows"]},
-        {"id": "nslookup", "name": "nslookup", "platform_note": "Windows / Linux", "description": "nslookupの入力と表示を確認します。", "output": "C:\\> nslookup training.northstar.example\nServer:  dns.northstar.example\nAddress: 192.0.2.53\n\nName:    training.northstar.example\nAddress: 192.0.2.90", "accepted_information_types": ["domain"], "input_bindings": [{"source": "url_parse", "id": "host"}], "input_hint": "Host / Domain", "environments": ["windows", "linux"], "output_by_environment": {"windows": "C:\\> nslookup training.northstar.example\nServer:  dns.northstar.example\nAddress: 192.0.2.53\n\nName:    training.northstar.example\nAddress: 192.0.2.90", "linux": "$ nslookup training.northstar.example\nServer:\t\t192.0.2.53\nAddress:\t192.0.2.53#53\n\nName:\ttraining.northstar.example\nAddress: 192.0.2.90"}},
-        {"id": "dig", "name": "dig [Linux]", "platform_note": "Linux / macOS（出力はLinux）", "description": "dig [Linux]の入力と表示を確認します。", "output": "$ dig training.northstar.example A +noall +answer\ntraining.northstar.example. 300 IN A 192.0.2.90", "accepted_information_types": ["domain"], "input_bindings": [{"source": "url_parse", "id": "host"}], "input_hint": "Host / Domain", "environments": ["linux"]}
+      "required_evidence": [
+        "dns_lookup",
+        "official_domain",
+        "dns_snapshot"
       ],
-      "references": [
-        {"id": "official_domain", "name": "Official Domain", "content": {"所有": "Northstar研修部門", "承認Host": "training.northstar.example", "用途": "研修教材", "導入通知": "CHG-301で2026-09-15から運用", "登録Domain": "northstar.example"}, "output_information": [{"id": "registered_domain", "label": "台帳の登録Domain", "value": "northstar.example", "data_type": "domain"}]},
-        {"id": "dns_snapshot", "name": "承認済みDNS台帳", "content": "検証用の照合資料: dns_snapshot"}
-      ],
-      "external_references": [],
       "ground_truth": "allow",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["dns_lookup", "official_domain", "dns_snapshot"],
-      "decision_context": "before_access",
-      "scenario_type": "standard",
-      "sources": [],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "initial_information_types": {"完全なURL": "url"},
-      "evidence_alternatives": {"dns_lookup": {"label": "DNSの解決先", "any_of": ["resolve_dnsname", "nslookup", "dig"]}}
+      "initial": {
+        "information": [
+          {
+            "id": "完全なURL",
+            "label": "完全なURL",
+            "value": "https://training.northstar.example/course/intro",
+            "data_type": "url"
+          },
+          {
+            "id": "Link表示文字列",
+            "label": "Link表示文字列",
+            "value": "新研修ポータル",
+            "data_type": "text"
+          },
+          {
+            "id": "アクセス要求元",
+            "label": "アクセス要求元",
+            "value": "署名付き社内リリース通知CHG-301",
+            "data_type": "text"
+          }
+        ]
+      },
+      "resources": [
+        {
+          "id": "url_parse",
+          "name": "Python / URL分解",
+          "input_hint": "URL",
+          "description": "Python / URL分解の入力と表示を確認します。",
+          "accepted_information_types": [
+            "url"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "完全なURL"
+            }
+          ],
+          "platform_note": "Windows / Linux / macOS（Python 3）",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "python -c \"from urllib.parse import urlsplit; print(urlsplit('https://{{fact:host}}/course/intro').hostname)\"\n{{fact:host}}",
+            "information": [
+              {
+                "id": "host",
+                "label": "Host（次の調査に使用可能）",
+                "value": "training.northstar.example",
+                "data_type": "domain"
+              }
+            ]
+          }
+        },
+        {
+          "id": "resolve_dnsname",
+          "name": "Resolve-DnsName [Windows]",
+          "platform_note": "Windows（DnsClientモジュールのPowerShellコマンド）",
+          "description": "Resolve-DnsName [Windows]の入力と表示を確認します。",
+          "accepted_information_types": [
+            "domain"
+          ],
+          "input_bindings": [
+            {
+              "source": "url_parse",
+              "id": "host"
+            }
+          ],
+          "input_hint": "Host / Domain",
+          "environments": [
+            "windows"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "PS> Resolve-DnsName training.northstar.example -Type A\nName                       Type TTL Section IPAddress\ntraining.northstar.example  A    300 Answer  192.0.2.90"
+          }
+        },
+        {
+          "id": "nslookup",
+          "name": "nslookup",
+          "platform_note": "Windows / Linux",
+          "description": "nslookupの入力と表示を確認します。",
+          "accepted_information_types": [
+            "domain"
+          ],
+          "input_bindings": [
+            {
+              "source": "url_parse",
+              "id": "host"
+            }
+          ],
+          "input_hint": "Host / Domain",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "C:\\> nslookup training.northstar.example\nServer:  dns.northstar.example\nAddress: 192.0.2.53\n\nName:    training.northstar.example\nAddress: 192.0.2.90",
+            "by_environment": {
+              "windows": "C:\\> nslookup training.northstar.example\nServer:  dns.northstar.example\nAddress: 192.0.2.53\n\nName:    training.northstar.example\nAddress: 192.0.2.90",
+              "linux": "$ nslookup training.northstar.example\nServer:\t\t192.0.2.53\nAddress:\t192.0.2.53#53\n\nName:\ttraining.northstar.example\nAddress: 192.0.2.90"
+            }
+          }
+        },
+        {
+          "id": "dig",
+          "name": "dig [Linux]",
+          "platform_note": "Linux / macOS（出力はLinux）",
+          "description": "dig [Linux]の入力と表示を確認します。",
+          "accepted_information_types": [
+            "domain"
+          ],
+          "input_bindings": [
+            {
+              "source": "url_parse",
+              "id": "host"
+            }
+          ],
+          "input_hint": "Host / Domain",
+          "environments": [
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "$ dig training.northstar.example A +noall +answer\ntraining.northstar.example. 300 IN A 192.0.2.90"
+          }
+        },
+        {
+          "id": "official_domain",
+          "name": "Official Domain",
+          "kind": "references",
+          "result": {
+            "content": {
+              "所有": "Northstar研修部門",
+              "承認Host": "training.{{fact:registered_domain}}",
+              "用途": "研修教材",
+              "導入通知": "CHG-301で2026-09-15から運用",
+              "登録Domain": "{{fact:registered_domain}}"
+            },
+            "information": [
+              {
+                "id": "registered_domain",
+                "label": "台帳の登録Domain",
+                "value": "northstar.example",
+                "data_type": "domain"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dns_snapshot",
+          "name": "承認済みDNS台帳",
+          "kind": "references",
+          "result": {
+            "content": "検証用の照合資料: dns_snapshot"
+          }
+        }
+      ],
+      "evidence_alternatives": {
+        "dns_lookup": {
+          "label": "DNSの解決先",
+          "any_of": [
+            "resolve_dnsname",
+            "nslookup",
+            "dig"
+          ]
+        }
+      },
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "difficulty": "beginner"
     },
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-PRIVATE-URL",
       "category": "web",
       "platform": "common",
-      "level": "advanced",
       "title": "FIX-PRIVATE-URL",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"完全なURL": "https://accounts.northstar.example/reset?token=TRAINING-SECRET-ONLY", "Link表示文字列": "Passwordを再設定する", "アクセス要求元": "本人の申請REQ-908に対応する社内認証通知"},
-      "tools": [
-        {"id": "url_parse", "name": "Python / URL分解", "input_hint": "URL", "description": "Python / URL分解の入力と表示を確認します。", "output": "python -c \"from urllib.parse import urlsplit; print(urlsplit('https://accounts.northstar.example/reset?token=TRAINING-SECRET-ONLY').hostname)\"\naccounts.northstar.example", "accepted_information_types": ["url"], "input_bindings": [{"source": "initial_information", "id": "完全なURL"}], "output_information": [{"id": "host", "label": "Host（次の調査に使用可能）", "value": "accounts.northstar.example", "data_type": "domain"}], "platform_note": "Windows / Linux / macOS（Python 3）", "environments": ["windows", "linux"]}
-      ],
-      "references": [
-        {"id": "official_domain", "name": "Official Domain", "content": "検証用の照合資料: official_domain"},
-        {"id": "external_policy", "name": "外部照会方針", "content": "検証用の照合資料: external_policy"}
-      ],
-      "external_references": [
-        {"id": "vt_domain", "name": "VirusTotal / Domain検索", "description": "VirusTotal / Domain検索の入力と表示を確認します。", "submission_type": "domain", "submission_value": "accounts.northstar.example", "output": "Domain report\nmalicious: 0\nsuspicious: 0", "correct_usage": true, "confidentiality_warning": "送信するのは公開Domainだけです。PathとQueryは送信しません。", "reason": "公開Domainの照会は許可されています。", "accepted_information_types": ["domain"], "input_bindings": [{"source": "url_parse", "id": "host"}], "input_hint": "Domain", "platform_note": "OS共通（VirusTotalのWeb / API）", "environments": ["windows", "linux"]},
-        {"id": "urlscan_private", "name": "urlscan.io / 完全URL", "description": "urlscan.io / 完全URLの入力と表示を確認します。", "submission_type": "full_url", "submission_value": "https://accounts.northstar.example/reset?token=TRAINING-SECRET-ONLY", "output": "{\"visibility\":\"private\",\"page\":{\"domain\":\"accounts.northstar.example\"}}\nThe complete URL is disclosed to the service.", "correct_usage": false, "confidentiality_warning": "完全URLにはPassword再設定Tokenが含まれます。PrivateスキャンでもサービスへURLが渡ります。", "reason": "認証Tokenを含むURL全体は外部送信禁止です。公開範囲の設定だけでは情報漏洩を防げません。", "accepted_information_types": ["url"], "input_bindings": [{"source": "initial_information", "id": "完全なURL"}], "input_hint": "URL", "platform_note": "OS共通（urlscan.ioのWeb / API）", "environments": ["windows", "linux"]}
+      "required_evidence": [
+        "official_domain",
+        "external_policy"
       ],
       "ground_truth": "allow",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["official_domain", "external_policy"],
-      "decision_context": "before_access",
-      "scenario_type": "standard",
-      "sources": [],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "initial_information_types": {"完全なURL": "url"}
+      "initial": {
+        "information": [
+          {
+            "id": "完全なURL",
+            "label": "完全なURL",
+            "value": "https://accounts.northstar.example/reset?token=TRAINING-SECRET-ONLY",
+            "data_type": "url"
+          },
+          {
+            "id": "Link表示文字列",
+            "label": "Link表示文字列",
+            "value": "Passwordを再設定する",
+            "data_type": "text"
+          },
+          {
+            "id": "アクセス要求元",
+            "label": "アクセス要求元",
+            "value": "本人の申請REQ-908に対応する社内認証通知",
+            "data_type": "text"
+          }
+        ]
+      },
+      "resources": [
+        {
+          "id": "url_parse",
+          "name": "Python / URL分解",
+          "input_hint": "URL",
+          "description": "Python / URL分解の入力と表示を確認します。",
+          "accepted_information_types": [
+            "url"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "完全なURL"
+            }
+          ],
+          "platform_note": "Windows / Linux / macOS（Python 3）",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "python -c \"from urllib.parse import urlsplit; print(urlsplit('https://{{fact:host}}/reset?token=TRAINING-SECRET-ONLY').hostname)\"\n{{fact:host}}",
+            "information": [
+              {
+                "id": "host",
+                "label": "Host（次の調査に使用可能）",
+                "value": "accounts.northstar.example",
+                "data_type": "domain"
+              }
+            ]
+          }
+        },
+        {
+          "id": "official_domain",
+          "name": "Official Domain",
+          "kind": "references",
+          "result": {
+            "content": "検証用の照合資料: official_domain"
+          }
+        },
+        {
+          "id": "external_policy",
+          "name": "外部照会方針",
+          "kind": "references",
+          "result": {
+            "content": "検証用の照合資料: external_policy"
+          }
+        },
+        {
+          "id": "vt_domain",
+          "name": "VirusTotal / Domain検索",
+          "description": "VirusTotal / Domain検索の入力と表示を確認します。",
+          "correct_usage": true,
+          "reason": "公開Domainの照会は許可されています。",
+          "accepted_information_types": [
+            "domain"
+          ],
+          "input_bindings": [
+            {
+              "source": "url_parse",
+              "id": "host"
+            }
+          ],
+          "input_hint": "Domain",
+          "platform_note": "OS共通（VirusTotalのWeb / API）",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "external_references",
+          "result": {
+            "content": "Domain report\nmalicious: 0\nsuspicious: 0"
+          },
+          "submission": {
+            "type": "domain",
+            "warning": "送信するのは公開Domainだけです。PathとQueryは送信しません。"
+          }
+        },
+        {
+          "id": "urlscan_private",
+          "name": "urlscan.io / 完全URL",
+          "description": "urlscan.io / 完全URLの入力と表示を確認します。",
+          "correct_usage": false,
+          "reason": "認証Tokenを含むURL全体は外部送信禁止です。公開範囲の設定だけでは情報漏洩を防げません。",
+          "accepted_information_types": [
+            "url"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "完全なURL"
+            }
+          ],
+          "input_hint": "URL",
+          "platform_note": "OS共通（urlscan.ioのWeb / API）",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "external_references",
+          "result": {
+            "content": "{\"visibility\":\"private\",\"page\":{\"domain\":\"accounts.northstar.example\"}}\nThe complete URL is disclosed to the service."
+          },
+          "submission": {
+            "type": "full_url",
+            "warning": "完全URLにはPassword再設定Tokenが含まれます。PrivateスキャンでもサービスへURLが渡ります。"
+          }
+        }
+      ],
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "difficulty": "advanced"
     },
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-REFERENCES",
       "category": "package",
       "platform": "common",
-      "level": "advanced",
       "title": "FIX-REFERENCES",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"Package名": "@northstar-training/native-render", "Version": "3.2.0", "Registry": "npm Registry", "Install要求元": "承認済み変更申請DEP-720"},
-      "tools": [],
-      "references": [
-        {"id": "registry_metadata", "name": "npm Registry / Package Metadata", "content": {"name": "@northstar-training/native-render", "version": "3.2.0", "scripts": {"install": "node-gyp rebuild"}, "repository": "https://code.northstar.example/native-render", "dist": {"integrity": "sha512-KIGPgfNiTEBGPo3419nC4nOmvn5v+3Yade3rzypbRke3uNRuRkVB0goaXyZuHfTrRZpggtA2U32UcCM1d3dOWA=="}}},
-        {"id": "repository_review", "name": "Repository / Build Review", "content": "検証用の照合資料: repository_review"},
-        {"id": "lock_file", "name": "Lock file", "content": {"packages": {"node_modules/@northstar-training/native-render": {"version": "3.2.0", "resolved": "https://registry.npmjs.org/@northstar-training/native-render/-/native-render-3.2.0.tgz", "integrity": "sha512-KIGPgfNiTEBGPo3419nC4nOmvn5v+3Yade3rzypbRke3uNRuRkVB0goaXyZuHfTrRZpggtA2U32UcCM1d3dOWA==", "hasInstallScript": true}}}},
-        {"id": "osv", "name": "OSV", "content": {"照会": {"package": {"name": "@northstar-training/native-render", "ecosystem": "npm"}, "version": "3.2.0"}, "結果": {"vulns": []}, "注記": "照会時点の登録情報。"}}
+      "required_evidence": [
+        "registry_metadata",
+        "repository_review",
+        "lock_file",
+        "osv"
       ],
-      "external_references": [],
       "ground_truth": "allow",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["registry_metadata", "repository_review", "lock_file", "osv"],
-      "decision_context": "before_install",
-      "scenario_type": "standard",
-      "sources": [],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "ecosystem": "npm",
-      "initial_information_types": {"Package名": "package_name", "Version": "version"}
+      "initial": {
+        "information": [
+          {
+            "id": "Package名",
+            "label": "Package名",
+            "value": "@northstar-training/native-render",
+            "data_type": "package_name"
+          },
+          {
+            "id": "Version",
+            "label": "Version",
+            "value": "3.2.0",
+            "data_type": "version"
+          },
+          {
+            "id": "Registry",
+            "label": "Registry",
+            "value": "npm Registry",
+            "data_type": "text"
+          },
+          {
+            "id": "Install要求元",
+            "label": "Install要求元",
+            "value": "承認済み変更申請DEP-720",
+            "data_type": "text"
+          }
+        ]
+      },
+      "resources": [
+        {
+          "id": "registry_metadata",
+          "name": "npm Registry / Package Metadata",
+          "kind": "references",
+          "result": {
+            "content": {
+              "name": "@northstar-training/native-render",
+              "version": "3.2.0",
+              "scripts": {
+                "install": "node-gyp rebuild"
+              },
+              "repository": "https://code.northstar.example/native-render",
+              "dist": {
+                "integrity": "sha512-KIGPgfNiTEBGPo3419nC4nOmvn5v+3Yade3rzypbRke3uNRuRkVB0goaXyZuHfTrRZpggtA2U32UcCM1d3dOWA=="
+              }
+            }
+          }
+        },
+        {
+          "id": "repository_review",
+          "name": "Repository / Build Review",
+          "kind": "references",
+          "result": {
+            "content": "検証用の照合資料: repository_review"
+          }
+        },
+        {
+          "id": "lock_file",
+          "name": "Lock file",
+          "kind": "references",
+          "result": {
+            "content": {
+              "packages": {
+                "node_modules/@northstar-training/native-render": {
+                  "version": "3.2.0",
+                  "resolved": "https://registry.npmjs.org/@northstar-training/native-render/-/native-render-3.2.0.tgz",
+                  "integrity": "sha512-KIGPgfNiTEBGPo3419nC4nOmvn5v+3Yade3rzypbRke3uNRuRkVB0goaXyZuHfTrRZpggtA2U32UcCM1d3dOWA==",
+                  "hasInstallScript": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "osv",
+          "name": "OSV",
+          "kind": "references",
+          "result": {
+            "content": {
+              "照会": {
+                "package": {
+                  "name": "@northstar-training/native-render",
+                  "ecosystem": "npm"
+                },
+                "version": "3.2.0"
+              },
+              "結果": {
+                "vulns": []
+              },
+              "注記": "照会時点の登録情報。"
+            }
+          }
+        }
+      ],
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "difficulty": "advanced"
     },
     {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "FIX-PACKETS",
       "category": "network",
       "platform": "linux",
-      "level": "intermediate",
       "title": "FIX-PACKETS",
       "request": "固定データで調査・照合・判定の操作を確認します。",
-      "initial_information": {"Source IP": "192.0.2.40", "Destination IP": "203.0.113.66", "Source Port": 55002, "Destination Port": 8443, "Protocol": "TCP", "Direction": "outbound", "Packet / Flow size": "要求SYN 60 bytes（過去Flow約 700 bytes）"},
-      "tools": [
-        {"id": "tcpdump", "name": "tcpdump", "description": "tcpdumpの入力と表示を確認します。", "output": "$ tcpdump -nn -r previous-flows.pcap dst host 203.0.113.66\n08:58:00.000000 IP 192.0.2.40.55000 > 203.0.113.66.8443: Flags [S], seq 100, win 64240, length 0\n08:59:00.000000 IP 192.0.2.40.55001 > 203.0.113.66.8443: Flags [S], seq 200, win 64240, length 0", "accepted_information_types": ["ip"], "input_bindings": [{"source": "initial_information", "id": "Destination IP"}], "input_hint": "接続先IP", "platform_note": "Linux / macOS", "environments": ["linux"]},
-        {"id": "ss", "name": "ss", "description": "ssの入力と表示を確認します。", "output": "$ ss -ntp dst 203.0.113.66\nState    Recv-Q Send-Q Local Address:Port Peer Address:Port Process\nSYN-SENT 0      1      192.0.2.40:55002   203.0.113.66:8443 users:((\"training-client\",pid=4210,fd=5))", "accepted_information_types": ["ip"], "input_bindings": [{"source": "initial_information", "id": "Destination IP"}], "input_hint": "接続先IP", "output_information": [{"id": "owning_pid", "label": "Socketを所有するPID", "value": 4210, "data_type": "pid"}], "platform_note": "Linux（iproute2）", "environments": ["linux"]},
-        {"id": "ps", "name": "ps", "description": "psの入力と表示を確認します。", "output": "$ ps -p 4210 -o pid,ppid,user,args\n PID PPID USER     COMMAND\n4210 4200 www-data /tmp/.cache/training-client <NONEXECUTABLE-DEMO-ARGS>", "accepted_information_types": ["pid"], "input_bindings": [{"source": "ss", "id": "owning_pid"}], "input_hint": "PID", "platform_note": "Linux / macOS（出力はLinuxのps）", "environments": ["linux"]},
-        {"id": "wireshark", "name": "Wireshark", "platform_note": "Windows / Linux", "description": "Wiresharkの入力と表示を確認します。", "output": "Display filter: ip.dst == 203.0.113.66\nPacket list / previous flows\nNo. Time      Source      Destination    Protocol Length Info\n1   0.000000  192.0.2.40  203.0.113.66   TCP      60     55000 → 8443 [SYN]\n2   60.000000 192.0.2.40  203.0.113.66   TCP      60     55001 → 8443 [SYN]", "accepted_information_types": ["ip"], "input_bindings": [{"source": "initial_information", "id": "Destination IP"}], "input_hint": "接続先IP", "environments": ["windows", "linux"]}
+      "required_evidence": [
+        "traffic_pattern",
+        "ss",
+        "ps",
+        "approved_server",
+        "prior_incident"
       ],
-      "references": [
-        {"id": "approved_server", "name": "Approved Server", "content": "検証用の照合資料: approved_server"},
-        {"id": "prior_incident", "name": "組織内の調査記録", "content": "検証用の照合資料: prior_incident"}
-      ],
-      "external_references": [],
       "ground_truth": "block",
       "explanation": "検証用の判定と調査履歴を確認しました。",
-      "topic": "操作契約",
-      "summary": "出題用ではない固定テストデータ。",
-      "learning_objectives": ["入力契約の回帰確認"],
-      "required_evidence": ["traffic_pattern", "ss", "ps", "approved_server", "prior_incident"],
-      "decision_context": "before_connection",
-      "scenario_type": "standard",
-      "sources": [],
-      "fixture_note": "UIと入力契約の回帰確認専用。教材の問題文とは独立。",
-      "initial_information_types": {"Source IP": "ip", "Destination IP": "ip", "Source Port": "port", "Destination Port": "port"},
-      "evidence_alternatives": {"traffic_pattern": {"label": "接続先と通信間隔", "any_of": ["tcpdump", "wireshark"]}}
+      "initial": {
+        "information": [
+          {
+            "id": "Source IP",
+            "label": "Source IP",
+            "value": "192.0.2.40",
+            "data_type": "ip"
+          },
+          {
+            "id": "Destination IP",
+            "label": "Destination IP",
+            "value": "203.0.113.66",
+            "data_type": "ip"
+          },
+          {
+            "id": "Source Port",
+            "label": "Source Port",
+            "value": 55002,
+            "data_type": "port"
+          },
+          {
+            "id": "Destination Port",
+            "label": "Destination Port",
+            "value": 8443,
+            "data_type": "port"
+          },
+          {
+            "id": "Protocol",
+            "label": "Protocol",
+            "value": "TCP",
+            "data_type": "text"
+          },
+          {
+            "id": "Direction",
+            "label": "Direction",
+            "value": "outbound",
+            "data_type": "text"
+          },
+          {
+            "id": "Packet / Flow size",
+            "label": "Packet / Flow size",
+            "value": "要求SYN 60 bytes（過去Flow約 700 bytes）",
+            "data_type": "text"
+          }
+        ]
+      },
+      "resources": [
+        {
+          "id": "tcpdump",
+          "name": "tcpdump",
+          "description": "tcpdumpの入力と表示を確認します。",
+          "accepted_information_types": [
+            "ip"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "Destination IP"
+            }
+          ],
+          "input_hint": "接続先IP",
+          "platform_note": "Linux / macOS",
+          "environments": [
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "$ tcpdump -nn -r previous-flows.pcap dst host 203.0.113.66\n08:58:00.000000 IP 192.0.2.40.55000 > 203.0.113.66.8443: Flags [S], seq 100, win 64240, length 0\n08:59:00.000000 IP 192.0.2.40.55001 > 203.0.113.66.8443: Flags [S], seq 200, win 64240, length 0"
+          }
+        },
+        {
+          "id": "ss",
+          "name": "ss",
+          "description": "ssの入力と表示を確認します。",
+          "accepted_information_types": [
+            "ip"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "Destination IP"
+            }
+          ],
+          "input_hint": "接続先IP",
+          "platform_note": "Linux（iproute2）",
+          "environments": [
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "$ ss -ntp dst 203.0.113.66\nState    Recv-Q Send-Q Local Address:Port Peer Address:Port Process\nSYN-SENT 0      1      192.0.2.40:55002   203.0.113.66:8443 users:((\"training-client\",pid=4210,fd=5))",
+            "information": [
+              {
+                "id": "owning_pid",
+                "label": "Socketを所有するPID",
+                "value": 4210,
+                "data_type": "pid"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ps",
+          "name": "ps",
+          "description": "psの入力と表示を確認します。",
+          "accepted_information_types": [
+            "pid"
+          ],
+          "input_bindings": [
+            {
+              "source": "ss",
+              "id": "owning_pid"
+            }
+          ],
+          "input_hint": "PID",
+          "platform_note": "Linux / macOS（出力はLinuxのps）",
+          "environments": [
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "$ ps -p 4210 -o pid,ppid,user,args\n PID PPID USER     COMMAND\n4210 4200 www-data /tmp/.cache/training-client <NONEXECUTABLE-DEMO-ARGS>"
+          }
+        },
+        {
+          "id": "wireshark",
+          "name": "Wireshark",
+          "platform_note": "Windows / Linux",
+          "description": "Wiresharkの入力と表示を確認します。",
+          "accepted_information_types": [
+            "ip"
+          ],
+          "input_bindings": [
+            {
+              "source": "initial_information",
+              "id": "Destination IP"
+            }
+          ],
+          "input_hint": "接続先IP",
+          "environments": [
+            "windows",
+            "linux"
+          ],
+          "kind": "tools",
+          "result": {
+            "content": "Display filter: ip.dst == 203.0.113.66\nPacket list / previous flows\nNo. Time      Source      Destination    Protocol Length Info\n1   0.000000  192.0.2.40  203.0.113.66   TCP      60     55000 → 8443 [SYN]\n2   60.000000 192.0.2.40  203.0.113.66   TCP      60     55001 → 8443 [SYN]"
+          }
+        },
+        {
+          "id": "approved_server",
+          "name": "Approved Server",
+          "kind": "references",
+          "result": {
+            "content": "検証用の照合資料: approved_server"
+          }
+        },
+        {
+          "id": "prior_incident",
+          "name": "組織内の調査記録",
+          "kind": "references",
+          "result": {
+            "content": "検証用の照合資料: prior_incident"
+          }
+        }
+      ],
+      "evidence_alternatives": {
+        "traffic_pattern": {
+          "label": "接続先と通信間隔",
+          "any_of": [
+            "tcpdump",
+            "wireshark"
+          ]
+        }
+      },
+      "learning_objectives": [
+        "入力契約の回帰確認"
+      ],
+      "difficulty": "intermediate"
     }
   ]
 }

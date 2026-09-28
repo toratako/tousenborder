@@ -1,42 +1,92 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "WEB-URL-REPUTATION",
   "category": "web",
   "platform": "common",
-  "level": "beginner_external",
-  "ground_truth": "block",
   "title": "完全URLに対する検出履歴",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
-  "initial_information": {
-    "URL": "https://public-share.example/view/notice",
-    "URLのHost": "public-share.example",
-    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
-    "リンクの公開範囲": "一般公開の告知。トークン・ユーザーID・非公開パスなし。"
+  "required_evidence": [
+    "url_rep",
+    "disclosure"
+  ],
+  "ground_truth": "block",
+  "explanation": "公開URLの該当パスに現行のフィッシング報告があり、そのURLへのアクセスを遮断します。ドメイン全体の評判だけでは個別パスを評価できない場合があります。",
+  "initial": {
+    "information": [
+      {
+        "id": "URL",
+        "label": "URL",
+        "value": "https://public-share.example/view/notice",
+        "data_type": "url"
+      },
+      {
+        "id": "URLのHost",
+        "label": "URLのHost",
+        "value": "public-share.example",
+        "data_type": "domain"
+      },
+      {
+        "id": "受付状態",
+        "label": "受付状態",
+        "value": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+        "data_type": "text"
+      },
+      {
+        "id": "リンクの公開範囲",
+        "label": "リンクの公開範囲",
+        "value": "一般公開の告知。トークン・ユーザーID・非公開パスなし。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "user",
+      "url",
+      "host",
+      "token",
+      "http",
+      "url_path",
+      "browser"
+    ]
   },
-  "initial_information_types": {
-    "URL": "url",
-    "URLのHost": "domain"
-  },
-  "tools": [],
-  "references": [
+  "resources": [
     {
       "id": "disclosure",
       "name": "外部照会方針",
-      "content": {
-        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
-        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
-        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
-        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。"
-      }
-    }
-  ],
-  "external_references": [
+      "kind": "references",
+      "result": {
+        "content": {
+          "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+          "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+          "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
+          "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+          "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。"
+        },
+        "terms": [
+          "user",
+          "url",
+          "host",
+          "token",
+          "url_path",
+          "file",
+          "path",
+          "hash",
+          "sha256",
+          "confidential",
+          "attachment",
+          "authentication",
+          "pcap",
+          "indicator",
+          "email"
+        ]
+      },
+      "terms": [
+        "policy"
+      ]
+    },
     {
       "id": "url_rep",
       "name": "URLの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
-      "output": "URL: https://public-share.example/view/notice\n2026-08-18: phishing 10/14 engines; last observed 00:00Z",
       "accepted_information_types": [
         "url"
       ],
@@ -47,275 +97,39 @@
         }
       ],
       "input_hint": "URL",
-      "submission_type": "full_url",
-      "submission_value": "https://public-share.example/view/notice",
-      "confidentiality_warning": "パス・クエリを含む完全URLをサービスへ送信します。",
       "correct_usage": true,
-      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
-    }
-  ],
-  "required_evidence": [
-    "url_rep",
-    "disclosure"
-  ],
-  "glossary": [
-    {
-      "term_id": "user",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "url",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "url_rep",
-          "section": "overview"
-        },
-        {
-          "source_id": "url_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "url_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "host",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "token",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "http",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "url_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "url_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "url_path",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        },
-        {
-          "source_id": "url_rep",
-          "section": "result"
-        },
-        {
-          "source_id": "url_rep",
-          "section": "submission"
-        }
-      ]
-    },
-    {
-      "term_id": "browser",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
-      "term_id": "policy",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "file",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "path",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "hash",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "sha256",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "confidential",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "attachment",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "authentication",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pcap",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "indicator",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "email",
-      "occurrences": [
-        {
-          "source_id": "disclosure",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "reputation",
-      "occurrences": [
-        {
-          "source_id": "url_rep",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "timezone",
-      "occurrences": [
-        {
-          "source_id": "url_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "detection",
-      "occurrences": [
-        {
-          "source_id": "url_rep",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "phishing",
-      "occurrences": [
-        {
-          "source_id": "url_rep",
-          "section": "result"
-        }
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
+      "kind": "external_references",
+      "result": {
+        "content": "URL: {{input}}\n2026-08-18: phishing 10/14 engines; last observed 00:00Z",
+        "terms": [
+          "url",
+          "http",
+          "url_path",
+          "timezone",
+          "detection",
+          "phishing"
+        ]
+      },
+      "submission": {
+        "type": "full_url",
+        "warning": "パス・クエリを含む完全URLをサービスへ送信します。",
+        "terms": [
+          "url",
+          "http",
+          "url_path"
+        ]
+      },
+      "terms": [
+        "url",
+        "reputation"
       ]
     }
   ],
-  "explanation": "公開URLの該当パスに現行のフィッシング報告があり、そのURLへのアクセスを遮断します。ドメイン全体の評判だけでは個別パスを評価できない場合があります。",
-  "topic": "機密情報のない完全URLを照会する",
-  "summary": "機密情報のない完全URLを照会する",
   "learning_objectives": [
     "機密情報のない完全URLを照会する"
   ],
-  "decision_context": "before_access",
-  "scenario_type": "standard",
   "sources": [
     "https://docs.virustotal.com/reference/url-info"
-  ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
+  ]
 }
