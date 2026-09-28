@@ -305,7 +305,7 @@ func _select_license(index: int) -> void:
 func _close_licenses() -> void:
 	license_overlay.hide()
 	_refresh_selection()
-	tool_guide_button.disabled = false
+	tool_guide_button.disabled = not catalog.errors.is_empty()
 	license_button.disabled = false
 	license_button.grab_focus()
 
@@ -833,7 +833,7 @@ func _refresh_history() -> void:
 		history_list.remove_child(child)
 		child.queue_free()
 	var buttons: Array[Button] = [history_close]
-	var entries := history_store.list_entries()
+	var entries := history_store.list_summaries()
 	history_notice.text = "一部の履歴を読み込めませんでした。" if not history_store.warnings.is_empty() else ""
 	history_notice.tooltip_text = "\n".join(history_store.warnings)
 	if entries.is_empty(): Layout.list_label(history_list, "保存された勤務履歴はありません。")
