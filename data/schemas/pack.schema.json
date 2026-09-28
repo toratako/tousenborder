@@ -59,6 +59,10 @@
       },
       "required": [],
       "additionalProperties": false
+    },
+    "glossary_path": {
+      "type": "string",
+      "pattern": "^res://data/glossary/[A-Za-z0-9_-]+\\.json$"
     }
   },
   "required": [

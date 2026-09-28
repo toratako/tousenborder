@@ -92,6 +92,359 @@
     "ip_rep",
     "disclosure"
   ],
+  "glossary": [
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lsof_i",
+          "section": "overview"
+        },
+        {
+          "source_id": "lsof_i",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lsof_i",
+          "section": "result"
+        },
+        {
+          "source_id": "ip_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "ip_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "ip_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "tcp",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "flow",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "ip_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lsof_i",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "protocol",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "socket",
+      "occurrences": [
+        {
+          "source_id": "lsof_i",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_lsof",
+      "occurrences": [
+        {
+          "source_id": "lsof_i",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "lsof_i",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "lsof_i",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "lsof_i",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "fd",
+      "occurrences": [
+        {
+          "source_id": "lsof_i",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "lsof_i",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reputation",
+      "occurrences": [
+        {
+          "source_id": "ip_rep",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "endpoint",
+      "occurrences": [
+        {
+          "source_id": "ip_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "ip_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "detection",
+      "occurrences": [
+        {
+          "source_id": "ip_rep",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "対象Processの接続先IPには、現在も有効な悪性インフラとしての報告があるため新しい接続を遮断します。",
   "topic": "Socket所有ProcessとIP評判を確認する",
   "summary": "Socket所有ProcessとIP評判を確認する",

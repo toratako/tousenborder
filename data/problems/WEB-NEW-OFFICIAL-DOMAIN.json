@@ -143,6 +143,403 @@
     "rdap",
     "disclosure"
   ],
+  "glossary": [
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "dig",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "dig",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        },
+        {
+          "source_id": "rdap",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "browser",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "dns",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ttl",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_dns",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "result"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        },
+        {
+          "source_id": "change",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_records",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "result"
+        },
+        {
+          "source_id": "change",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_query",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_resolver",
+      "occurrences": [
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "rdap",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "rdap_domain_fields",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "transfer_lock",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reference",
+      "occurrences": [
+        {
+          "source_id": "change",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "release",
+      "occurrences": [
+        {
+          "source_id": "change",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "change",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "change",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "change",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reputation",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "no_record",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "登録日は新しいものの、承認済み移行通知・DNS・接続先が一致するため公開ページへのアクセスを許可します。RDAPで非公開の登録組織を推測していません。",
   "topic": "新規Domainを公式変更記録で検証する",
   "summary": "新規Domainを公式変更記録で検証する",

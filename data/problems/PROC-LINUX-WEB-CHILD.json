@@ -51,6 +51,130 @@
     "pstree",
     "service"
   ],
+  "glossary": [
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pstree",
+          "section": "overview"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "pstree",
+          "section": "overview"
+        },
+        {
+          "source_id": "pstree",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "pstree",
+          "section": "overview"
+        },
+        {
+          "source_id": "pstree",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_pstree",
+      "occurrences": [
+        {
+          "source_id": "pstree",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "pstree",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "shell",
+      "occurrences": [
+        {
+          "source_id": "pstree",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "static_analysis",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "Web Workerの子としてshが動作し、Shell起動を含まない承認構成に反するため停止します。親子関係だけからWebshellの侵入原因までは断定しません。",
   "topic": "pstreeの祖先関係をService仕様と照合する",
   "summary": "pstreeの祖先関係をService仕様と照合する",

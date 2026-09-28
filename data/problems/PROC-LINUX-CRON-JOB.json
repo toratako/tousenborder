@@ -53,6 +53,121 @@
     "cron",
     "job"
   ],
+  "glossary": [
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "cron",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "cron",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "cron",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "cron",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "shell",
+      "occurrences": [
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "cron",
+      "occurrences": [
+        {
+          "source_id": "cron",
+          "section": "overview"
+        },
+        {
+          "source_id": "cron",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "job",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "job",
+      "occurrences": [
+        {
+          "source_id": "job",
+          "section": "overview"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "現在のPID 4200はreports Userで09:10にcronの子Shellから起動され、完全なCommandもcrontab Entryと承認済みJOB-503に一致するため継続を許可します。",
   "topic": "crontabのScheduleとJob承認を照合する",
   "summary": "crontabのScheduleとJob承認を照合する",

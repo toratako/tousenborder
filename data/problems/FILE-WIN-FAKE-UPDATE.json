@@ -97,6 +97,328 @@
     "strings",
     "official"
   ],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "strings",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "browser",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "hash",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_hash_win",
+      "occurrences": [
+        {
+          "source_id": "hash",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "signature",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "vendor",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        },
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_sigcheck",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "unsigned",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "n_a",
+      "occurrences": [
+        {
+          "source_id": "sig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "static_analysis",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "overview"
+        },
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_strings",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "training_placeholder",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "strings",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "software_center",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "配布Fileは更新プログラムではなく外部Scriptを取得・実行するJavaScriptで、正規更新経路とも一致しないため遮断します。偽の更新案内による実行誘導を題材にしています。",
   "topic": "更新の主張をFile内容と公式更新経路で検証する",
   "summary": "更新の主張をFile内容と公式更新経路で検証する",

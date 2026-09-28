@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "glossary_path": "res://data/glossary/security.json",
   "id": "learning",
   "title": "セキュリティ判断の基礎 / Evidenceから判断する112問",
   "categories": [

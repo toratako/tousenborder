@@ -97,6 +97,29 @@ var external_preview_body: RichTextLabel
 var external_send: Button
 var external_skip: Button
 var pending_external: Dictionary = {}
+var glossary_button: Button
+var glossary_overlay: Panel
+var glossary_scroll: ScrollContainer
+var glossary_list: VBoxContainer
+var glossary_close: Button
+var glossary_search: LineEdit
+var glossary_count: Label
+var glossary_empty: Label
+var glossary_previous_focus: Control
+var glossary_viewed: Dictionary = {}
+var glossary_expanded: Dictionary = {}
+var glossary_scroll_position := 0
+var history_store := HistoryStore.new()
+var history_button: Button
+var history_overlay: Panel
+var history_list: VBoxContainer
+var history_close: Button
+var history_notice: Label
+var summary_save_notice: Label
+var summary_retry: Button
+var summary_snapshot: Dictionary = {}
+var completed_snapshot: Dictionary = {}
+var summary_from_history := false
 
 func _selected_cases() -> Array[Dictionary]:
 	return catalog.select_cases(difficulty_select.get_item_metadata(difficulty_select.selected), category_select.get_item_metadata(category_select.selected), platform_select.get_item_metadata(platform_select.selected))
@@ -104,16 +127,12 @@ func _selected_cases() -> Array[Dictionary]:
 func _refresh_selection(_index: int = 0) -> void:
 	var count := _selected_cases().size()
 	start_button.tooltip_text = "" if count > 0 else "該当する問題がありません。条件を変更してください。"
-	start_button.disabled = count == 0
+	start_button.disabled = count == 0 or not catalog.errors.is_empty()
 
 func _ready() -> void:
 	theme = Chrome.create(preload("res://assets/fonts/NotoSansCJK-Regular.ttc"))
 	_build()
-	if not catalog.load_pack(content_pack):
-		status.text = "問題データの読み込みエラー"
-		var error_label := Chrome.rich(workspace, Rect2(290, 150, 900, 530), PAPER, 20)
-		error_label.text = "\n".join(catalog.errors)
-		return
+	catalog.load_pack(content_pack)
 	_build_tools()
 	_build_actions()
 	_build_audit()
@@ -122,19 +141,28 @@ func _ready() -> void:
 	Layout.build_rules(self)
 	Layout.build_how_to(self)
 	Layout.build_external_preview(self)
+	Layout.build_glossary(self)
+	Layout.build_history(self)
 	shift.changed.connect(_refresh)
 	_show_start_screen()
+	if not catalog.errors.is_empty():
+		var error_label := Chrome.label(start_screen, Rect2(98, 530, 514, 60), "教材を読み込めません。勤務履歴は閲覧できます。", RED, 16)
+		error_label.tooltip_text = "\n".join(catalog.errors)
+		tool_guide_button.disabled = true
+
+func _investigation_paused() -> bool:
+	return pause_menu.visible or rules_overlay.visible or how_to_overlay.visible or external_preview.visible or glossary_overlay.visible
 
 func _process(delta: float) -> void:
 	_update_hover_drop_targets()
-	if not playing or pause_menu.visible or rules_overlay.visible or how_to_overlay.visible or external_preview.visible:
+	if not playing or _investigation_paused():
 		return
 	shift.tick(delta)
 	_refresh_elapsed_time()
 
 func _update_hover_drop_targets() -> void:
 	var payload: Dictionary = {}
-	if playing and not shift.finished() and not shift.judged and not pause_menu.visible and not rules_overlay.visible and not how_to_overlay.visible and not external_preview.visible and not get_viewport().gui_is_dragging():
+	if playing and not shift.finished() and not shift.judged and not _investigation_paused() and not get_viewport().gui_is_dragging():
 		var source := get_viewport().gui_get_hovered_control()
 		if source is StampTool and not source.disabled and not source.preview_only and source.is_visible_in_tree():
 			payload = source.payload()
@@ -146,6 +174,21 @@ func _update_hover_drop_targets() -> void:
 		button.hover_drop_ready = button.is_visible_in_tree() and button._can_drop_data(Vector2.ZERO, payload)
 
 func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		if glossary_overlay.visible:
+			_close_glossary()
+		elif summary_from_history and is_instance_valid(summary_overlay):
+			_back_to_history()
+		elif history_overlay.visible:
+			_close_history()
+		else:
+			_input_existing(event)
+			return
+		get_viewport().set_input_as_handled()
+		return
+	_input_existing(event)
+
+func _input_existing(event: InputEvent) -> void:
 	if is_instance_valid(how_to_overlay) and how_to_overlay.visible:
 		if event.is_action_pressed("ui_cancel"):
 			get_viewport().set_input_as_handled()
@@ -174,7 +217,7 @@ func _build_pause_menu() -> void:
 	Layout.build_pause_menu(self)
 
 func _toggle_menu() -> void:
-	if not playing or rules_overlay.visible or how_to_overlay.visible:
+	if not playing or rules_overlay.visible or how_to_overlay.visible or glossary_overlay.visible:
 		return
 	if pause_menu.visible:
 		_close_menu()
@@ -262,7 +305,7 @@ func _select_license(index: int) -> void:
 func _close_licenses() -> void:
 	license_overlay.hide()
 	_refresh_selection()
-	tool_guide_button.disabled = false
+	tool_guide_button.disabled = not catalog.errors.is_empty()
 	license_button.disabled = false
 	license_button.grab_focus()
 
@@ -273,6 +316,12 @@ func _close_summary() -> void:
 		summary_overlay = null
 
 func _show_start_screen() -> void:
+	_close_glossary(false)
+	glossary_viewed.clear()
+	glossary_expanded.clear()
+	glossary_search.set_text("")
+	glossary_scroll_position = 0
+	history_overlay.hide()
 	_close_how_to(false)
 	_close_rules(false)
 	_clear_external()
@@ -287,6 +336,9 @@ func _show_start_screen() -> void:
 	start_button.grab_focus()
 
 func _start_shift() -> void:
+	if not catalog.errors.is_empty() or history_overlay.visible:
+		return
+	completed_snapshot.clear()
 	if is_instance_valid(tool_guide) and tool_guide.visible:
 		return
 	if is_instance_valid(license_overlay) and license_overlay.visible:
@@ -346,6 +398,11 @@ func get_stamp(action_id: String) -> StampTool:
 	return null
 
 func _clear_desk() -> void:
+	_close_glossary(false)
+	glossary_viewed.clear()
+	glossary_expanded.clear()
+	glossary_search.set_text("")
+	glossary_scroll_position = 0
 	_close_how_to(false)
 	_close_rules(false)
 	_clear_external()
@@ -386,7 +443,7 @@ func _activate_card(card: DraggableCard) -> void:
 		entry.set_active(entry == card)
 
 func _open_how_to() -> void:
-	if not playing or shift.finished() or shift.judged or pause_menu.visible or rules_overlay.visible or external_preview.visible or how_to_overlay.visible:
+	if not playing or shift.finished() or shift.judged or _investigation_paused():
 		return
 	for card in cards:
 		card.dragging = false
@@ -429,7 +486,7 @@ func _close_how_to(restore_focus := true) -> void:
 	how_to_previous_focus = null
 
 func _open_rules() -> void:
-	if not playing or shift.finished() or shift.judged or pause_menu.visible or external_preview.visible or rules_overlay.visible or how_to_overlay.visible:
+	if not playing or shift.finished() or shift.judged or _investigation_paused():
 		return
 	for card in cards:
 		card.dragging = false
@@ -451,6 +508,7 @@ func _close_rules(restore_focus := true) -> void:
 	rules_previous_focus = null
 
 func _select_information(token: Dictionary) -> void:
+	if glossary_overlay.visible: return
 	selected_information = token.duplicate(true)
 	for card in cards:
 		for row in card.tokens:
@@ -459,7 +517,7 @@ func _select_information(token: Dictionary) -> void:
 		button.update_input(token)
 
 func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
-	if not playing or shift.finished() or shift.judged or pause_menu.visible or rules_overlay.visible or how_to_overlay.visible or not pending_external.is_empty():
+	if not playing or shift.finished() or shift.judged or _investigation_paused():
 		return
 	if not ToolRunner.supports_target(tool, shift.current()):
 		tool_message.text = "この調査環境では利用できません。"
@@ -483,6 +541,7 @@ func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
 			external_preview_body.text += "\n\n選んだ入力：" + actual_input.label + "\n" + Information.display(actual_input.value)
 		external_preview_body.scroll_to_line(0)
 		external_preview.show()
+		glossary_viewed[LearningGlossary.key(tool.id, "submission")] = true
 		external_skip.grab_focus()
 		return
 	var result := shift.inspect(tool, actual_input)
@@ -543,6 +602,10 @@ func _display_case(item: Dictionary) -> void:
 		"icon": _target_icon(item),
 		"information": information}, Vector2(20, 20))
 	_select_information({})
+	glossary_viewed[LearningGlossary.key("initial_information", "initial")] = true
+	for tool in active_tools:
+		if ToolRunner.supports_target(tool, item):
+			glossary_viewed[LearningGlossary.key(tool.id, "overview")] = true
 
 func _target_icon(item: Dictionary) -> String:
 	var icon: String = {"web": "web", "email": "email", "network": "packet",
@@ -567,6 +630,8 @@ func _target_icon(item: Dictionary) -> String:
 func _display_observations(item: Dictionary) -> void:
 	while displayed_observations < shift.observations.size():
 		var entry := shift.observations[displayed_observations]
+		if entry.ok and not entry.get("skipped", false):
+			glossary_viewed[LearningGlossary.key(entry.tool_id, "result")] = true
 		var info: Array = entry.get("information", [])
 		if info.is_empty():
 			info = [{"id": "status", "label": "調査の選択" if entry.get("skipped", false) else "取得不可", "value": entry.output, "tool_input": false}]
@@ -584,7 +649,7 @@ func _update_case_controls(item: Dictionary) -> void:
 		button.target_environment = ToolRunner.investigation_environment(item)
 		button.case_id = item.id
 		button.visible = ToolRunner.supports_target(tool, item)
-		button.disabled = shift.judged
+		button.disabled = shift.judged or glossary_overlay.visible
 		button.reviewed = reference_cards.has(tool.id)
 		button.update_input(selected_information)
 	for stamp in action_stamps:
@@ -597,7 +662,7 @@ func _update_case_controls(item: Dictionary) -> void:
 	tool_message.text = "必要に応じて調査し、判定してください。" if not active_tools.is_empty() else "基本情報を確認して判定してください。"
 
 func _can_stamp(data: Dictionary) -> bool:
-	return playing and not shift.finished() and not shift.judged and not pause_menu.visible and not rules_overlay.visible and not how_to_overlay.visible and pending_external.is_empty() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
+	return playing and not shift.finished() and not shift.judged and not _investigation_paused() and data.get("kind") == "stamp" and data.get("case_id") == displayed_case and data.get("generation") == desk_generation and is_instance_valid(get_stamp(data.get("action_id", "")))
 
 func _receive_stamp(card: DraggableCard, data: Dictionary) -> void:
 	if card != target_card or not _can_stamp(data):
@@ -620,16 +685,14 @@ func _build_audit() -> void:
 	Layout.build_audit(self)
 
 func _show_audit(record: Dictionary) -> void:
+	_close_glossary(false)
 	audit_heading.text = catalog.feedback.get("correct_heading", "監査結果：規則に適合") if record.correct else catalog.feedback.get("incorrect_heading", "SECURITY VIOLATION · 誤判定")
 	audit_heading.add_theme_color_override("font_color", Color("57edc2") if record.correct else Color("ff718b"))
 	audit_body.text = "案件番号：%s / %s\nあなたの判定：%s\n調査操作数：%d件" % [record.id, record.title, _verdict_label(record.verdict), record.observations.size()]
 	if catalog.feedback.get("show_expected", true):
 		audit_body.text += "\n正しい判定：" + _verdict_label(record.ground_truth)
 	if catalog.feedback.get("show_reason", true):
-		audit_body.text += "\n\n監査所見\n" + record.explanation
-		var investigation := InspectionShift.investigation_feedback(record)
-		if not investigation.is_empty():
-			audit_body.text += "\n\n調査手段の振り返り\n" + investigation
+		audit_body.text += "\n\n監査所見\n" + InspectionShift.review_text(record)
 	next.show()
 	audit_body.scroll_to_line(0)
 	next.text = "確認して勤務を終了  >" if shift.index == shift.cases.size() - 1 else "確認して次の案件へ  >"
@@ -637,6 +700,7 @@ func _show_audit(record: Dictionary) -> void:
 	next.grab_focus()
 
 func _show_summary() -> void:
+	_close_glossary(false)
 	_close_how_to(false)
 	_close_rules(false)
 	if is_instance_valid(summary_overlay):
@@ -644,20 +708,51 @@ func _show_summary() -> void:
 	_clear_external()
 	for button in tool_buttons:
 		button.disabled = true
-	Layout.build_summary(self)
-	for record in shift.records:
-		_summary_item(record.title, record.id, "正解" if record.correct else "誤判定",
-			"あなたの判定：" + _verdict_label(record.verdict)
-			+ (" / 正しい判定：" + _verdict_label(record.ground_truth) if catalog.feedback.get("show_expected", true) else "")
-			+ ("\n" + record.explanation + "\n" + InspectionShift.investigation_feedback(record) if catalog.feedback.get("show_reason", true) else ""),
-			Color("57edc2") if record.correct else Color("ff718b"))
-	Layout.build_summary_actions(self)
+	if completed_snapshot.is_empty():
+		var selection := {}
+		for pair in [["level", difficulty_select], ["category", category_select], ["platform", platform_select]]:
+			var option: OptionButton = pair[1]
+			selection[pair[0]] = {"id": option.get_item_metadata(option.selected), "label": option.get_item_text(option.selected)}
+		completed_snapshot = HistoryStore.snapshot(shift, {"id": catalog.pack_id, "title": catalog.title, "path": content_pack}, selection, catalog.feedback, catalog.actions)
+	if completed_snapshot.is_empty(): return
+	_display_summary(completed_snapshot, false)
+	_save_summary()
 	next.visible = false
 	for stamp in action_stamps:
 		stamp.hide()
 		stamp.disabled = true
 	tool_message.text = "勤務終了。案件を振り返るか、新しい勤務を開始してください。"
 	summary_restart.grab_focus()
+
+func _display_summary(snapshot: Dictionary, from_history: bool) -> void:
+	_close_summary()
+	summary_snapshot = snapshot.duplicate(true)
+	summary_from_history = from_history
+	Layout.build_summary(self)
+	_render_summary_records()
+	Layout.build_summary_actions(self)
+	if from_history:
+		summary_title.text = "勤務履歴 · " + HistoryStore.date_label(snapshot.completed_at)
+		summary_title.add_theme_font_size_override("font_size", 23)
+		summary_home.grab_focus()
+
+func _render_summary_records() -> void:
+	summary_review.clear()
+	var feedback: Dictionary = summary_snapshot.feedback
+	var labels: Dictionary = summary_snapshot.action_labels
+	for record in summary_snapshot.records:
+		_summary_item(record.title, record.id, "正解" if record.correct else "誤判定",
+			"あなたの判定：" + labels[record.verdict]
+			+ (" / 正しい判定：" + labels[record.ground_truth] if feedback.show_expected else "")
+			+ ("\n" + record.explanation + "\n" + InspectionShift.investigation_feedback(record) if feedback.show_reason else ""),
+			Color("57edc2") if record.correct else Color("ff718b"))
+
+func _save_summary() -> void:
+	if summary_from_history or completed_snapshot.is_empty(): return
+	var saved := history_store.save_completed(completed_snapshot)
+	summary_save_notice.text = "" if saved else "履歴を保存できませんでした。"
+	summary_save_notice.tooltip_text = history_store.error
+	summary_retry.visible = not saved
 
 func _summary_item(title: String, id: String, result: String, body: String, color: Color) -> void:
 	# 教材の文字列を装飾タグとして解釈せず、案件名だけを大きく表示する。
@@ -680,3 +775,95 @@ func _verdict_label(id: String) -> String:
 		if action.id == id:
 			return action.label
 	return id
+
+func _open_glossary() -> void:
+	if not playing or shift.finished() or shift.judged or _investigation_paused(): return
+	for card in cards: card.dragging = false
+	glossary_previous_focus = get_viewport().gui_get_focus_owner()
+	for child in glossary_list.get_children():
+		glossary_list.remove_child(child)
+		child.queue_free()
+	var terms := LearningGlossary.visible_terms(shift.current(), catalog.glossary_terms, active_tools, glossary_viewed)
+	for term in terms:
+		var entry := Layout.glossary_entry(glossary_list, term, glossary_expanded.has(term.id))
+		var button: Button = entry.button
+		button.toggled.connect(func(open: bool):
+			entry.body.visible = open
+			if open: glossary_expanded[term.id] = true
+			else: glossary_expanded.erase(term.id))
+	_filter_glossary(glossary_search.text)
+	move_child(glossary_overlay, -1)
+	glossary_overlay.show()
+	_update_case_controls(shift.current())
+	glossary_scroll.set_deferred("scroll_vertical", glossary_scroll_position)
+	glossary_search.grab_focus()
+
+func _filter_glossary(query: String) -> void:
+	var needle := query.strip_edges().to_lower()
+	var controls: Array[Control] = [glossary_close, glossary_search]
+	var count := 0
+	for entry in glossary_list.get_children():
+		entry.visible = needle.is_empty() or str(entry.get_meta("search_text", "")).contains(needle)
+		if entry.visible:
+			count += 1
+			controls.append(entry.get_child(0))
+	glossary_count.text = "%d / %d 語" % [count, glossary_list.get_child_count()] if not needle.is_empty() else "%d 語" % count
+	glossary_empty.text = "表示できる用語はありません。" if glossary_list.get_child_count() == 0 else "該当する用語はありません。"
+	glossary_empty.visible = count == 0
+	glossary_scroll.scroll_vertical = 0
+	Layout.focus_cycle(controls)
+
+func _close_glossary(restore_focus := true) -> void:
+	if not is_instance_valid(glossary_overlay) or not glossary_overlay.visible: return
+	glossary_scroll_position = glossary_scroll.scroll_vertical
+	glossary_overlay.hide()
+	if playing and not shift.finished(): _update_case_controls(shift.current())
+	if restore_focus:
+		if is_instance_valid(glossary_previous_focus) and glossary_previous_focus.is_visible_in_tree(): glossary_previous_focus.grab_focus()
+		else: glossary_button.grab_focus()
+	glossary_previous_focus = null
+
+func _show_history() -> void:
+	if playing or not start_screen.visible or (is_instance_valid(license_overlay) and license_overlay.visible): return
+	start_screen.hide()
+	_refresh_history()
+
+func _refresh_history() -> void:
+	for child in history_list.get_children():
+		history_list.remove_child(child)
+		child.queue_free()
+	var buttons: Array[Button] = [history_close]
+	var entries := history_store.list_summaries()
+	history_notice.text = "一部の履歴を読み込めませんでした。" if not history_store.warnings.is_empty() else ""
+	history_notice.tooltip_text = "\n".join(history_store.warnings)
+	if entries.is_empty(): Layout.list_label(history_list, "保存された勤務履歴はありません。")
+	for entry in entries:
+		var caption := "%s  ·  %d / %d 正解\n%s / %s / %s" % [HistoryStore.date_label(entry.completed_at), entry.stats.correct, entry.stats.answered, entry.selection.level.label, entry.selection.category.label, entry.selection.platform.label]
+		var button := Chrome.button(history_list, Rect2(0, 0, 860, 90), caption, PAPER)
+		button.custom_minimum_size.y = 90
+		button.clip_text = true
+		button.tooltip_text = caption
+		button.pressed.connect(_open_history_entry.bind(entry.session_id))
+		buttons.append(button)
+	Layout.focus_cycle(buttons)
+	history_overlay.show()
+	history_close.grab_focus()
+
+func _open_history_entry(id: String) -> void:
+	var snapshot := history_store.load_entry(id)
+	if snapshot.is_empty():
+		history_notice.text = "履歴を読み込めませんでした。"
+		history_notice.tooltip_text = history_store.error
+		return
+	history_overlay.hide()
+	_display_summary(snapshot, true)
+
+func _back_to_history() -> void:
+	_close_summary()
+	summary_from_history = false
+	_refresh_history()
+
+func _close_history() -> void:
+	history_overlay.hide()
+	start_screen.show()
+	history_button.grab_focus()

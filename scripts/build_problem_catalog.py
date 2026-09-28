@@ -19,7 +19,7 @@ LEVEL_LABELS = {
 }
 GROUP_KINDS = {"tools": "tools", "references": "references", "external_references": "external_references"}
 
-@lru_cache(maxsize=3)
+@lru_cache(maxsize=4)
 def schema_validator(name: str) -> Draft202012Validator:
     schema = read_json(ROOT / f"data/schemas/{name}.schema.json")
     Draft202012Validator.check_schema(schema)
@@ -161,6 +161,7 @@ def validate_authoring(item: dict, pack: dict) -> list[tuple[str, dict]]:
         raise ValueError(f"{item['id']}: beginner_reference requires Reference resources only")
     if item["level"] == "beginner_external" and not has_external:
         raise ValueError(f"{item['id']}: beginner_external requires External Reference")
+    validate_glossary(item, pack, entries)
     validate_inputs(item, entries)
     return entries
 
@@ -205,6 +206,32 @@ def display_value(value) -> str:
     if isinstance(value, list):
         return "、".join(display_value(part) for part in value) or "なし"
     return str(value)
+
+
+def validate_glossary(item: dict, pack: dict, entries: list[tuple[str, dict]]) -> None:
+    terms = {}
+    if 'glossary_path' in pack:
+        glossary = read_json(resource_path(pack['glossary_path']))
+        validate_schema(glossary, 'glossary')
+        terms = glossary['terms']
+        if any(not key.strip() for key in terms):
+            raise ValueError('Empty glossary term ID')
+    sources = {entry['id']: kind for kind, entry in entries}
+    seen = set()
+    for entry in item.get('glossary', []):
+        term_id = entry['term_id']
+        if term_id not in terms or term_id in seen:
+            raise ValueError(f'Unknown or duplicate glossary term: {term_id}')
+        seen.add(term_id)
+        for occurrence in entry['occurrences']:
+            source, section = occurrence['source_id'], occurrence['section']
+            if section == 'initial':
+                if source != 'initial_information':
+                    raise ValueError('Initial glossary source must be initial_information')
+            elif source not in sources:
+                raise ValueError(f'Unknown glossary source: {source}')
+            elif section == 'submission' and sources[source] != 'external_references':
+                raise ValueError('Submission glossary source must be external')
 
 
 def build(pack_path: Path) -> tuple[str, str]:

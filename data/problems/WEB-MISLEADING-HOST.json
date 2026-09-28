@@ -32,6 +32,83 @@
     "initial_information",
     "official"
   ],
+  "glossary": [
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "browser",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    }
+  ],
   "explanation": "実際のHostはverify-account.example側で、Official Service / Domainの正規Login Hostと一致しないため遮断します。正規名を先頭に含むだけでは正規サイトになりません。",
   "topic": "Host全体と正規Login先を比較する",
   "summary": "Host全体と正規Login先を比較する",

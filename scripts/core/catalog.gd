@@ -15,6 +15,8 @@ var cases: Array[Dictionary] = []
 var rules: Array[Dictionary] = []
 var errors: PackedStringArray = []
 var title := ""
+var pack_id := ""
+var glossary_terms: Dictionary = {}
 var actions: Array[Dictionary] = default_actions()
 var feedback: Dictionary = {}
 var categories: Array[Dictionary] = []
@@ -73,6 +75,16 @@ func load_pack(path: String = DEFAULT_PACK) -> bool:
 	var schema_errors := ContentSchema.validate(pack, ContentSchema.PACK)
 	for error in schema_errors: errors.append(path + ": " + error)
 	if not errors.is_empty(): return false
+	if pack.has("glossary_path"):
+		var glossary: Variant = _read(pack.glossary_path)
+		if not errors.is_empty(): return false
+		for error in ContentSchema.validate(glossary, ContentSchema.GLOSSARY):
+			errors.append(pack.glossary_path + ": " + error)
+		if not errors.is_empty(): return false
+		for id in glossary.terms:
+			if id.strip_edges().is_empty(): errors.append("用語IDは空にできません。")
+		if not errors.is_empty(): return false
+		glossary_terms = glossary.terms.duplicate(true)
 	for key in ["categories", "rules", "resource_groups"]:
 		var ids := {}
 		for entry in pack.get(key, []):
@@ -84,6 +96,7 @@ func load_pack(path: String = DEFAULT_PACK) -> bool:
 		resource_groups[group.id] = group.duplicate(true)
 	if not errors.is_empty(): return false
 	title = pack.title
+	pack_id = pack.id
 	feedback = pack.get("feedback", {}).duplicate(true)
 	categories.assign(pack.categories)
 	for rule in pack.rules:
@@ -115,6 +128,8 @@ func _reset() -> void:
 	rules.clear()
 	errors.clear()
 	title = ""
+	pack_id = ""
+	glossary_terms.clear()
 	feedback.clear()
 	categories.clear()
 	actions = default_actions()

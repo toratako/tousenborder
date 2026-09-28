@@ -61,6 +61,248 @@
     "bastion",
     "policy"
   ],
+  "glossary": [
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "bastion",
+          "section": "overview"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "last",
+          "section": "overview"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "last",
+          "section": "result"
+        },
+        {
+          "source_id": "bastion",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "last",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "mfa",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ssh",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "public_key",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "key_fingerprint",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "wtmp",
+      "occurrences": [
+        {
+          "source_id": "last",
+          "section": "overview"
+        },
+        {
+          "source_id": "last",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_last",
+      "occurrences": [
+        {
+          "source_id": "last",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "terminal",
+      "occurrences": [
+        {
+          "source_id": "last",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "bastion",
+      "occurrences": [
+        {
+          "source_id": "bastion",
+          "section": "overview"
+        },
+        {
+          "source_id": "bastion",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "bastion",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "certificate",
+      "occurrences": [
+        {
+          "source_id": "bastion",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "過去の保守LoginとUser・踏み台・時間帯が整合し、今回の鍵とMFAも要件を満たすためSession成立を許可します。",
   "topic": "lastを今回の認証情報と保守予定に照合する",
   "summary": "lastを今回の認証情報と保守予定に照合する",

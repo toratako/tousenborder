@@ -129,6 +129,561 @@
     "official",
     "disclosure"
   ],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reply_to",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "gateway",
+          "section": "overview"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "password",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "to_subject",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "quarantine",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "overview"
+        },
+        {
+          "source_id": "isolated",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "header",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "mime",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "rdap",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "spf",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dkim",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dmarc",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "received",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication_results",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "auth_mail_fields",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pass_fail",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "esmtps",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "href",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "rdap",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "rdap_domain_fields",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "transfer_lock",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "isolated",
+      "occurrences": [
+        {
+          "source_id": "isolated",
+          "section": "overview"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "isolated",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "form",
+      "occurrences": [
+        {
+          "source_id": "isolated",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "http_200",
+      "occurrences": [
+        {
+          "source_id": "isolated",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "SPF/DKIM/DMARCのPassは送信者自身のDomainについての結果です。隔離解析先は組織のPasswordを求める承認外Hostなのでメールの受入れを遮断します。",
   "topic": "Emailの認証とリンク先の正当性を別々に調べる",
   "summary": "Emailの認証とリンク先の正当性を別々に調べる",

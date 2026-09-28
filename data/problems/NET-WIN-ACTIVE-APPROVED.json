@@ -70,6 +70,231 @@
     "nettcp",
     "server"
   ],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "overview"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tcp",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "flow",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "protocol",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_tcpview",
+      "occurrences": [
+        {
+          "source_id": "nettcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "現在のPIDと既存接続の宛先が、管理台帳のAgent・承認Serverと一致するため同じ宛先への新しい接続を許可します。",
   "topic": "所有PIDと送信先を独立した台帳に照合する",
   "summary": "所有PIDと送信先を独立した台帳に照合する",

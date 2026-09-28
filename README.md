@@ -18,6 +18,7 @@ godot --path .
 - [作問・検証](docs/problem-data.md)：Schema、入力の接続例、一覧の再生成
 - [問題一覧](docs/problem-catalog.md)：全問題の初期情報・想定手順・決定的証拠・正解を確認する設計レビュー表
 - [学習設計](docs/learning-design.md)：判定時点、教材の制約、未実装の拡張計画
+- [学習支援](docs/learning-support.md)：用語集・勤務履歴の編集先
 - [実行時の処理](docs/runtime-flow.md)：OS条件、状態管理、変更箇所の索引
 
 Python 3.11以上を使います。ゲームの起動・エクスポートにPythonの開発用依存は不要です。

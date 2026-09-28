@@ -28,6 +28,92 @@
     "initial_information",
     "format"
   ],
+  "glossary": [
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pdf",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "script",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "shell",
+      "occurrences": [
+        {
+          "source_id": "format",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "完全名は.shであり、PDFだけを受け入れる条件と矛盾するため遮断します。",
   "topic": "Linuxでも完全なFile名と申請形式を比較する",
   "summary": "Linuxでも完全なFile名と申請形式を比較する",

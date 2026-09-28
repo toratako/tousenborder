@@ -126,6 +126,52 @@
         "pattern": "^https://[^/\\s]+(?:/\\S*)?$"
       },
       "uniqueItems": true
+    },
+    "glossary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "term_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "occurrences": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "section": {
+                  "enum": [
+                    "initial",
+                    "overview",
+                    "result",
+                    "submission"
+                  ]
+                }
+              },
+              "required": [
+                "source_id",
+                "section"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "term_id",
+          "occurrences"
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "required": [

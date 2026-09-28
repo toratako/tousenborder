@@ -61,6 +61,225 @@
     "device",
     "policy"
   ],
+  "glossary": [
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "mfa",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "device",
+          "section": "overview"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "password",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "logon_type",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "log",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_events",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "event_id",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reference",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "active_revoked",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "過去のLoginとUser・Device・Sourceが整合し、今回のGateway確認もMFAを含め要件を満たすためSession成立を許可します。過去のログオン成功記録（Event ID 4624）を今回の成功記録とは扱いません。",
   "topic": "過去Loginと今回の認証途中情報を区別する",
   "summary": "過去Loginと今回の認証途中情報を区別する",

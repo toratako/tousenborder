@@ -55,6 +55,242 @@
     "lastlog",
     "policy"
   ],
+  "glossary": [
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "overview"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "mfa",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "ssh",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "service_account",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "public_key",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "key_fingerprint",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "storage",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "lastlog",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_lastlog",
+      "occurrences": [
+        {
+          "source_id": "lastlog",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "terminal",
+      "occurrences": [
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "never_logged_in",
+      "occurrences": [
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "shell",
+      "occurrences": [
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "svc_backupはService専用で対話SSHを禁止しているため遮断します。lastlogに履歴がないことだけではなく、Accountの用途を根拠にしています。",
   "topic": "lastlogの履歴とAccountの対話利用許可を区別する",
   "summary": "lastlogの履歴とAccountの対話利用許可を区別する",

@@ -101,6 +101,310 @@
     "systemctl",
     "service"
   ],
+  "glossary": [
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "ss",
+          "section": "overview"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "overview"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_ps",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elapsed",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "socket",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_ss",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "fd",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_systemctl",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "overview"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "unit_fields",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tls",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "Service設定・実行引数・接続先が承認済み監視Agentに一致するため継続を許可します。Background動作や周期通信だけを根拠に遮断しません。",
   "topic": "監視Agentの構成と通信先を照合する",
   "summary": "監視Agentの構成と通信先を照合する",

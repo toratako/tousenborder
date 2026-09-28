@@ -51,6 +51,210 @@
     "autoruns",
     "startup"
   ],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "autoruns",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "autoruns",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "autoruns",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "autoruns",
+          "section": "result"
+        },
+        {
+          "source_id": "startup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "autoruns",
+          "section": "overview"
+        },
+        {
+          "source_id": "autoruns",
+          "section": "result"
+        },
+        {
+          "source_id": "startup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "image_process",
+      "occurrences": [
+        {
+          "source_id": "autoruns",
+          "section": "overview"
+        },
+        {
+          "source_id": "autoruns",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "autostart",
+      "occurrences": [
+        {
+          "source_id": "autoruns",
+          "section": "overview"
+        },
+        {
+          "source_id": "startup",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_autoruns",
+      "occurrences": [
+        {
+          "source_id": "autoruns",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "version",
+      "occurrences": [
+        {
+          "source_id": "autoruns",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "autoruns",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "temp",
+      "occurrences": [
+        {
+          "source_id": "autoruns",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "windows_registry",
+      "occurrences": [
+        {
+          "source_id": "autoruns",
+          "section": "result"
+        },
+        {
+          "source_id": "startup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "startup",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "startup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "startup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "startup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "startup",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "PID 4200のImageに対応するRun登録がTemp配下のhelper.exeを指定し、登録と稼働の許可条件に反するため停止します。この登録が今回の起動元だったとまでは断定しません。",
   "topic": "Autorunsの登録先を組織の自動起動規則と比較する",
   "summary": "Autorunsの登録先を組織の自動起動規則と比較する",

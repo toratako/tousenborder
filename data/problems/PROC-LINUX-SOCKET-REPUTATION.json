@@ -88,6 +88,301 @@
     "ip_rep",
     "disclosure"
   ],
+  "glossary": [
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ss",
+          "section": "overview"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "socket",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_ss",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "ip_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "ip_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "ip_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "fd",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "ip_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reputation",
+      "occurrences": [
+        {
+          "source_id": "ip_rep",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "endpoint",
+      "occurrences": [
+        {
+          "source_id": "ip_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "detection",
+      "occurrences": [
+        {
+          "source_id": "ip_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "malware",
+      "occurrences": [
+        {
+          "source_id": "ip_rep",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "Processの接続先IPに現行のMalware配布基盤としての報告があるため停止します。Port番号だけを根拠にしていません。",
   "topic": "ssから得たIPを外部評判に照会する",
   "summary": "ssから得たIPを外部評判に照会する",

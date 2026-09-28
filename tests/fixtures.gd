@@ -29,4 +29,8 @@ static func catalog() -> ContentCatalog:
 static func desk():
 	var instance = load("res://scenes/main.tscn").instantiate()
 	instance.catalog = catalog()
+	instance.history_store = history_store()
 	return instance
+
+static func history_store() -> HistoryStore:
+	return HistoryStore.new("res://build/test-history/" + Crypto.new().generate_random_bytes(16).hex_encode())

@@ -59,6 +59,293 @@
     "gateway",
     "directory"
   ],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "reply_to",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "gateway",
+          "section": "overview"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "to_subject",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "quarantine",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "header",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "mime",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "spf",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dkim",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "directory",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dmarc",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "directory",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "received",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication_results",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        },
+        {
+          "source_id": "gateway",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "auth_mail_fields",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pass_fail",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "esmtps",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "directory",
+      "occurrences": [
+        {
+          "source_id": "directory",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "signature",
+      "occurrences": [
+        {
+          "source_id": "directory",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "directory",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "直接配送されたメールは自社Domainの認証に失敗し、承認された転送経路にも一致しないため受入れを遮断します。正規の転送による認証変化とは区別しています。",
   "topic": "信頼するGatewayの認証結果を配送構成と比較する",
   "summary": "信頼するGatewayの認証結果を配送構成と比較する",

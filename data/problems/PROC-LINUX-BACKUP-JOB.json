@@ -123,6 +123,386 @@
     "systemctl",
     "job"
   ],
+  "glossary": [
+    {
+      "term_id": "size",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "lsof",
+          "section": "overview"
+        },
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "ss",
+          "section": "overview"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "overview"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "storage",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "parent",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        },
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_ps",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        },
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "elapsed",
+      "occurrences": [
+        {
+          "source_id": "ps",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_lsof",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "fd",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "socket",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_ss",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "ss",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_systemctl",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "unit_fields",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "job",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "job",
+      "occurrences": [
+        {
+          "source_id": "job",
+          "section": "overview"
+        },
+        {
+          "source_id": "job",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "観測された業務Fileの読取りと外部接続は、承認されたBackupの対象・時刻・保存先・Service構成に一致し、累積送信量12.4 GiBも上限30 GiB以内のため継続を許可します。",
   "topic": "業務Fileの読取りと外部通信をBackupの対象・時間帯・保存先・送信量の条件と照合する",
   "summary": "業務Fileの読取りと外部通信をBackupの対象・時間帯・保存先・送信量の条件と照合する",
