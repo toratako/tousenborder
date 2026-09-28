@@ -1,11 +1,11 @@
 extends Control
 ## 画面遷移と操作を調整する。教材・判定はcore、部品の配置はdesk_layoutが担当。
 
-const Layout = preload("res://scripts/ui/desk_layout.gd")
-const Chrome = preload("res://scripts/ui/cyber_theme.gd")
-const Analysis = preload("res://scripts/core/result_analysis.gd")
-const AnalysisView = preload("res://scripts/ui/result_analysis_view.gd")
-const WrongAnswerRetry = preload("res://scripts/core/wrong_answer_retry.gd")
+const Layout = preload("res://src/ui/inspection/desk_layout.gd")
+const Chrome = preload("res://src/ui/shared/game_theme.gd")
+const Analysis = preload("res://src/domain/result_analysis.gd")
+const AnalysisView = preload("res://src/ui/results/result_analysis_view.gd")
+const WrongAnswerRetry = preload("res://src/app/wrong_answer_retry.gd")
 
 @export_dir var content_root := "res://data"
 
@@ -389,7 +389,7 @@ func _show_licenses() -> void:
 	if playing or not start_screen.visible:
 		return
 	if not is_instance_valid(license_overlay):
-		license_sections = preload("res://scripts/core/license_notices.gd").sections()
+		license_sections = preload("res://src/ui/screens/license_notices.gd").sections()
 		Layout.build_licenses(self)
 	start_button.disabled = true
 	tool_guide_button.disabled = true

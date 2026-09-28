@@ -1,7 +1,7 @@
 class_name DraggableCard
 extends Panel
 ## すべての机上資料で共有。情報の意味や採点には依存しない。
-const Chrome = preload("res://scripts/ui/cyber_theme.gd")
+const Chrome = preload("res://src/ui/shared/game_theme.gd")
 
 signal information_selected(token: Dictionary)
 signal stamp_dropped(card: DraggableCard, data: Dictionary)

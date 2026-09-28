@@ -1,6 +1,6 @@
 extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
-const Retry = preload("res://scripts/core/wrong_answer_retry.gd")
+const Retry = preload("res://src/app/wrong_answer_retry.gd")
 var failures := 0
 
 

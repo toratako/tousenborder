@@ -1,6 +1,6 @@
 extends RefCounted
 ## 既存画面の部品生成・配置を担当する。部品と操作状態の所有者はdeskのままにする。
-const Chrome = preload("res://scripts/ui/cyber_theme.gd")
+const Chrome = preload("res://src/ui/shared/game_theme.gd")
 const TITLE_FONT = preload("res://assets/fonts/YuseiMagic-Regular.ttf")
 const GAME_TITLE := "とーせんぼ～だ～"
 const PAPER := Color("e4f5ff")
@@ -565,7 +565,7 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 		desk.tool_rack.add_child(heading)
 		for tool in entries:
 			var button := Chrome.button(desk.tool_rack, Rect2(0, 0, 240, 64), tool.label, PAPER)
-			button.set_script(preload("res://scripts/ui/tool_input.gd"))
+			button.set_script(preload("res://src/ui/inspection/tool_input.gd"))
 			button.tool = tool
 			button.custom_minimum_size = Vector2(0, 64)
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL

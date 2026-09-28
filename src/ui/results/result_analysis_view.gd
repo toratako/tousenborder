@@ -1,7 +1,7 @@
 extends RefCounted
-const Chrome = preload("res://scripts/ui/cyber_theme.gd")
-const Analysis = preload("res://scripts/core/result_analysis.gd")
-const Radar = preload("res://scripts/ui/result_radar.gd")
+const Chrome = preload("res://src/ui/shared/game_theme.gd")
+const Analysis = preload("res://src/domain/result_analysis.gd")
+const Radar = preload("res://src/ui/results/result_radar.gd")
 const MUTED := Color("b0c8da")
 const ORANGE := Color("ffbd73")
 const RED := Color("ff718b")

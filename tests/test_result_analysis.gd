@@ -1,8 +1,8 @@
 extends SceneTree
-const Analysis = preload("res://scripts/core/result_analysis.gd")
+const Analysis = preload("res://src/domain/result_analysis.gd")
 const Fixtures = preload("res://tests/fixtures.gd")
-const Radar = preload("res://scripts/ui/result_radar.gd")
-const View = preload("res://scripts/ui/result_analysis_view.gd")
+const Radar = preload("res://src/ui/results/result_radar.gd")
+const View = preload("res://src/ui/results/result_analysis_view.gd")
 var failures := 0
 
 
