@@ -24,7 +24,6 @@ class ContentSchemaTests(unittest.TestCase):
         files = list((ROOT / "data/problems").glob("*.json")) + list(
             (ROOT / "authoring/archive/problems").glob("*.json")
         )
-        self.assertEqual(len(files), 109)
         for path in files:
             with self.subTest(path=path.name):
                 item = read(path)

@@ -80,7 +80,7 @@ func _run() -> void:
 		desk._start_shift()
 		assert(desk.shift.cases.size() == selected.size())
 		desk._show_start_screen()
-	assert(all_ids.size() == 70)
+	assert(desk.library.cases.all(func(item): return all_ids.has(item.id)))
 	select_value(desk.start_screen.method_select, "")
 	select_value(desk.start_screen.category_select, "file")
 	select_value(desk.start_screen.platform_select, "linux")
@@ -93,13 +93,17 @@ func _run() -> void:
 				return c.category == "file" and c.platform in ["common", "linux"],
 		)
 	)
-	select_value(desk.start_screen.pack_select, desk.library.packs[0].key)
+	var pack: Dictionary = desk.library.packs[0]
+	select_value(desk.start_screen.pack_select, pack.key)
+	var expected_ids := []
+	for chapter in pack.chapters:
+		expected_ids.append_array(chapter.problems)
 	assert(
-		desk.start_screen.selected_cases().size() == 70
+		desk.start_screen.selected_cases().map(func(item): return item.id) == expected_ids
 		and desk.start_screen.category_select.disabled and desk.start_screen.method_select.disabled
 	)
 	desk.start_screen.start_button.pressed.emit()
-	assert(desk.shift.current().id == desk.library.packs[0].chapters[0].problems[0])
+	assert(desk.shift.current().id == pack.chapters[0].problems[0])
 	desk.queue_free()
 	await process_frame
 	print("Selection tests passed")

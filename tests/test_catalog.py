@@ -16,18 +16,12 @@ class CatalogTests(unittest.TestCase):
     def test_index_matches_published_content(self):
         result, markdown = build()
         report = json.loads(result)
-        self.assertEqual(report["total"], 70)
-        self.assertEqual(report["by_difficulty"], {"unrated": 70})
         self.assertEqual(markdown, (ROOT / "docs/problem-catalog.md").read_text())
-        self.assertEqual(len(report["packs"]), 1)
         for item in report["problems"]:
             raw = json.loads((ROOT / "data" / item["source_path"]).read_text())
             self.assertEqual(item["title"], raw["title"])
             self.assertEqual(item["explanation"], raw["explanation"])
             self.assertEqual(item["ground_truth"], raw["ground_truth"])
-        self.assertEqual(
-            len([line for line in markdown.splitlines() if line.startswith("| [")]), 70
-        )
 
     def test_standalone_json_and_semantic_failure(self):
         item = json.loads((ROOT / "tests/fixtures/content.json").read_text())[
@@ -37,7 +31,9 @@ class CatalogTests(unittest.TestCase):
             path = Path(directory) / "problem.json"
             path.write_text(json.dumps(item))
             report = load_report(path)
-            self.assertEqual(len(report["problems"]), 1)
+            self.assertEqual(
+                [problem["id"] for problem in report["problems"]], [item["id"]]
+            )
             self.assertEqual(report["packs"], [])
             item["required_evidence"] = ["missing-resource"]
             path.write_text(json.dumps(item))

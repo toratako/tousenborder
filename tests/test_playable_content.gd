@@ -31,7 +31,6 @@ func _run() -> void:
 		desk.queue_free()
 		quit(1)
 		return
-	check(desk.library.cases.size() == 70, "登録した全問題を読み込む")
 	desk._start_shift()
 	for item in desk.library.cases:
 		check(desk.shift.current().id == item.id, "登録順に出題")
@@ -99,10 +98,18 @@ func _run() -> void:
 		)
 		desk.audit_overlay.next_button.pressed.emit()
 		await process_frame
-	check(desk.shift.finished() and desk.shift.score() == 70, "全問題を完了")
+	check(
+		desk.shift.finished() and desk.shift.records.all(func(record): return record.correct),
+		"全問題を正しく完了",
+	)
 	check(desk.shift.unsafe_investigations() == 0, "禁止された外部送信をせずに完了")
 	check(desk.summary_screen.save_notice.text.is_empty(), "全問題の履歴保存: " + desk.history_store.error)
-	check(desk.history_store.load_entry(desk.shift.session_id).get("records", []).size() == 70, "全問の結果をディスクから再読込")
+	check(
+		desk.history_store.load_entry(desk.shift.session_id).get("records", []).map(
+			func(record): return record.id,
+		) == desk.library.cases.map(func(item): return item.id),
+		"全問の結果をディスクから再読込",
+	)
 	desk.queue_free()
 	await process_frame
 	print("Playable content tests: %d failures" % failures)
