@@ -12,11 +12,13 @@
     "URLのHost": "reset.aster.example",
     "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。",
     "申請記録": "本人が09:02にPassword再設定を申請。REQ-318。",
-    "判断時刻": "2026-08-18 09:10:00"
+    "判断時刻": "2026-08-18 09:10:00",
+    "登録Domain": "aster.example"
   },
   "initial_information_types": {
     "URL": "url",
-    "URLのHost": "domain"
+    "URLのHost": "domain",
+    "登録Domain": "domain"
   },
   "tools": [
     {
@@ -78,18 +80,6 @@
   ],
   "references": [
     {
-      "id": "rdap",
-      "name": "RDAP",
-      "content": {
-        "照会対象Domain": "aster.example",
-        "登録日": "2018-04-03",
-        "Registrar": "Example Registrar 1",
-        "Status": "client transfer prohibited",
-        "Registrant Organization": "非公開（redacted）。この応答から所有組織は特定できない。",
-        "注記": "登録日・登録者情報はサイト内容や安全性を保証しない。"
-      }
-    },
-    {
       "id": "official",
       "name": "Official Service / Domain",
       "content": "reset.aster.example / A=192.0.2.81 / Path=/recover / REQ-318に対応する認証基盤の発行通知。URLの有効期限09:17。"
@@ -98,15 +88,37 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
         "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
         "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
         "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "社外秘"
+        "今回の資料区分": "完全URLは社外秘。Domainは機密指定なし。",
+        "RDAP": "組織が承認した登録情報サービスへIP・登録Domainのみ送信可。"
       }
     }
   ],
   "external_references": [
+    {
+      "id": "rdap",
+      "name": "RDAP",
+      "description": "IPまたは登録Domainを外部の登録情報サービスへ照会します。",
+      "output": "照会対象Domain: aster.example\n登録日: 2018-04-03\nRegistrar: Example Registrar 1\nStatus: client transfer prohibited\nRegistrant Organization: 非公開（redacted）",
+      "accepted_information_types": [
+        "domain"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "登録Domain"
+        }
+      ],
+      "input_hint": "登録Domain",
+      "submission_type": "domain",
+      "submission_value": "aster.example",
+      "confidentiality_warning": "登録Domainを登録情報サービスへ送信します。URLのPath・Queryは送りません。",
+      "correct_usage": true,
+      "reason": "外部照会方針でこの対象のRDAP照会が許可されています。"
+    },
     {
       "id": "domain_rep",
       "name": "Domain Reputation",

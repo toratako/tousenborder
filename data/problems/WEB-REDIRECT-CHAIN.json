@@ -80,11 +80,11 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
         "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
-        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
+        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
         "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+        "今回の資料区分": "照会対象のIndicatorは機密指定なし。File本体・完全URLは上記に従う。照会対象URLは一般公開されている。"
       }
     },
     {
@@ -597,7 +597,7 @@
   "decision_context": "before_access",
   "scenario_type": "standard",
   "sources": [
-    "https://www.icann.org/rdap"
+    "https://urlscan.io/docs/api/"
   ],
   "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
 }

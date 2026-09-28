@@ -3,7 +3,7 @@
   "id": "FILE-LINUX-BEGINNER-002",
   "category": "file",
   "platform": "linux",
-  "level": "beginner",
+  "level": "beginner_external",
   "title": "northstar-cli-2.4.tar.gz",
   "request": "承認済みCLIの配布Archiveです。展開して導入してよいか判断してください。",
   "initial_information": {

@@ -11,19 +11,15 @@
     "接続ID": "CONNECT-701",
     "PID": 5100,
     "Process表示名": "agent.exe",
-    "Remote IP": "192.0.2.80",
     "Remote Port": 443,
     "Protocol": "TCP",
     "端末": "192.0.2.25",
     "保留中のLocal Port": 52410,
     "要求時刻": "2026-08-18 09:10:00",
-    "保存PCAP": "flow-before-0910.pcap",
-    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+    "接続状況": "同じProcessの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。"
   },
   "initial_information_types": {
-    "PID": "pid",
-    "Remote IP": "ip",
-    "保存PCAP": "pcap"
+    "PID": "pid"
   },
   "tools": [
     {
@@ -210,15 +206,6 @@
         {
           "source_id": "server",
           "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "pcap",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
         }
       ]
     },

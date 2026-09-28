@@ -23,7 +23,7 @@
 | last / lastlog | 教材はwtmp / shadow-utilsのlastlogを使うLinux環境。全環境で同じ記録があるとは限らない | [util-linux](https://github.com/util-linux/util-linux)、[shadow](https://github.com/shadow-maint/shadow) |
 | nslookup / dig | nslookupはWindowsにもUnix系にも存在。digはWindows標準ではない。教材の出力例のOSを区別 | [Microsoft nslookup](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup)、[BIND](https://bind9.readthedocs.io/en/stable/manpages.html) |
 | Wireshark | Windows/Linux/macOS等。Windows問題だけに出ることは対応OSを意味しない | [Wireshark](https://www.wireshark.org/about.html) |
-| RDAP | OS共通の登録・割当情報。Referenceに分類し、非公開の組織情報を推測しない | [ICANN RDAP](https://www.icann.org/rdap) |
+| RDAP | OS共通の登録・割当情報。IP・登録Domainを送るExternal Referenceに分類し、非公開の組織情報を推測しない | [ICANN RDAP](https://www.icann.org/rdap) |
 | Reputation / Isolated URL Analysis | OS共通のWeb/APIサービスを模したExternal Reference。Hash・File・Domain・IP・完全URLの送信を区別 | [VirusTotal](https://docs.virustotal.com/docs/how-it-works)、[urlscan.io](https://urlscan.io/docs/) |
 
 Raw HeaderはEmailの元Headerを表示する方法で、OS標準コマンド名ではありません。
@@ -49,7 +49,7 @@ WSL・コンテナ・リモートで使えることと、Windows本体のProcess
 | dig [Linux] | `dig`。対応OSはenvironmentsで指定 |
 | Strings（Sysinternals）、strings（GNU） | `Strings (Sysinternals)`、`strings (GNU)`。表記整理のみ、別実装として維持 |
 | lsof -i | 継続。FileのFDを調べる`lsof`の用途を追加 |
-| RDAP、RDAP / URL | Toolから削除し、Referenceの`RDAP`に統一 |
+| RDAP、RDAP / URL | External Referenceの`RDAP`に統一 |
 | Python / URL分解 | プレイヤー向けToolから削除。Hostは受付情報またはMIMEの抽出情報 |
 | Sigcheck、Get-NetTCPConnection、Process Explorer、TCPView、Task Manager、Wireshark、crontab、file、journalctl、last、lastlog、nslookup、ps、pstree、readelf、sha256sum、ss、systemctl、tar、tcpdump | 表示名を維持。旧問題の出力は引き継がず、新問題の対象・時系列に合わせて作成 |
 | なし | `Autoruns`を追加。自動起動の登録内容と方針を比較 |
@@ -57,7 +57,7 @@ WSL・コンテナ・リモートで使えることと、Windows本体のProcess
 
 ### Reference
 
-表示名は33種類から38種類へ整理。旧33種類の対応先と新規資料は次のとおりです。
+表示名は33種類から37種類へ整理。旧33種類の対応先と新規資料は次のとおりです。
 
 | 旧Reference | 新Reference・扱い |
 | --- | --- |
@@ -79,12 +79,12 @@ WSL・コンテナ・リモートで使えることと、Windows本体のProcess
 | OSV | Vulnerability Database。架空の脆弱性記録と利用条件を照合 |
 | 接続先の調査記録、組織内の調査記録 | 外部評判を内部資料で代用する構成を削除し、IP Reputation等をExternal Referenceに配置 |
 | 組織内の隔離調査レポート | 削除。Isolated URL AnalysisのExternal Referenceを実際に選ぶ問題へ置換 |
-| 旧ToolのRDAP | ReferenceのRDAPへ移動 |
+| 旧ToolのRDAP | External ReferenceのRDAPへ移動 |
 | なし | Trusted Publisher、Approved Bastion、Approved Administrative Path、Internal Package Reference、Past Thread、Mail Gateway構成、自動起動方針、通信方針、File / 通信方針、Component導入方針、振込手順を追加 |
 
 ### External Reference
 
-旧5種類を次の6種類に整理しました。サービス名ではなく、送信対象と用途を表示します。
+旧5種類を次の7種類に整理しました。サービス名ではなく、送信対象と用途を表示します。
 
 | 旧表示名 | 新表示名 | 送信対象 |
 | --- | --- | --- |
@@ -94,5 +94,6 @@ WSL・コンテナ・リモートで使えることと、Windows本体のProcess
 | なし | IP Reputation | IPのみ |
 | なし | URL Reputation | Path・Queryを含む完全URL |
 | urlscan.io / 公開URL、urlscan.io / 完全URL | Isolated URL Analysis | 完全URLを隔離環境へ送信し、アクセス結果を取得 |
+| RDAP（Tool / Reference） | RDAP | IPまたは登録Domain |
 
 公開Fileの送信が可能な問題と、社外秘File・Token付きURLの送信が禁止される問題を両方用意しています。PCAP・Email本体の外部解析サービスは追加せず、資料内の送信方針で機密情報を含む対象として区別しています。

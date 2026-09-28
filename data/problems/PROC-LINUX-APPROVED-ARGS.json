@@ -11,8 +11,7 @@
     "Process": "backup-agent",
     "PID": 4200,
     "User": "backup",
-    "採取時点": "2026-08-18 09:10 / 起動済み",
-    "端末監視の起動記録": "systemd(PID 1)がJOB-501のbackup-agentをPID 4200として起動。User=backup。管理配布Imageとの同一性は検証済み。"
+    "採取時点": "2026-08-18 09:10 / 起動済み"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -44,7 +43,7 @@
     {
       "id": "job",
       "name": "承認済みJob",
-      "content": "backup User / /opt/aster/backup-agent --config /etc/aster/backup.toml / systemdから起動 / JOB-501。"
+      "content": "backup User / /opt/aster/backup-agent --config /etc/aster/backup.toml / systemdから起動 / JOB-501。\n端末監視の起動記録: systemd(PID 1)がJOB-501のbackup-agentをPID 4200として起動。User=backup。管理配布Imageとの同一性は検証済み。"
     }
   ],
   "external_references": [],
@@ -83,10 +82,6 @@
       "term_id": "service",
       "occurrences": [
         {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
           "source_id": "job",
           "section": "result"
         }
@@ -114,30 +109,17 @@
       ]
     },
     {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        }
-      ]
-    },
-    {
       "term_id": "image_process",
       "occurrences": [
         {
-          "source_id": "initial_information",
-          "section": "initial"
+          "source_id": "job",
+          "section": "result"
         }
       ]
     },
     {
       "term_id": "job",
       "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
         {
           "source_id": "job",
           "section": "overview"
@@ -249,7 +231,7 @@
       ]
     }
   ],
-  "explanation": "端末監視の起動記録がPID 4200をsystemd起動のJOB-501に対応付けており、psで確認した実行User・Path・引数も登録内容に一致するため継続を許可します。PPIDが1であることだけを起動元の証明にはしません。",
+  "explanation": "端末監視の起動記録がPID 4200をsystemd起動のJOB-501に対応付けており、psで確認した実行User・Path・引数も登録内容に一致するため継続を許可します。",
   "topic": "psのUser・Path・引数をJob定義と比較する",
   "summary": "psのUser・Path・引数をJob定義と比較する",
   "learning_objectives": [

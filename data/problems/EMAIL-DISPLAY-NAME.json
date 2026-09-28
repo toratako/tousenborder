@@ -3,7 +3,7 @@
   "id": "EMAIL-DISPLAY-NAME",
   "category": "email",
   "platform": "common",
-  "level": "beginner",
+  "level": "beginner_reference",
   "ground_truth": "block",
   "title": "社内役員名の表示名偽装",
   "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",

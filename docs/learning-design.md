@@ -9,11 +9,15 @@
 | Level | 目的 |
 | --- | --- |
 | 超初級 | 提示情報と許可条件の単純な一致・不一致を判断する |
-| 初級 | 原則1つの主役Toolと必要なReference／External Referenceで調べる |
+| 初級：Referenceのみ | 複数のReferenceを照合して判断する |
+| 初級：Tool | 1つのToolで調べ、必要なReferenceと照合する |
+| 初級：External Referenceあり | 外部照会の選択肢を含み、送信内容と方針を確認して調べる |
 | 中級 | Category・OSに自然なTool候補から選び、複数Evidenceを組み合わせる |
 | 上級 | 攻撃と正常挙動で共通する特徴を文脈で区別し、外部送信の可否を含む調査手段も選ぶ |
 
-超初級はTool・External Referenceを使わず、初期情報のみ、または最大1つの単純なReferenceとの直接比較で判断できる構成にします。規則・正規連絡先・承認情報は難易度にかかわらず調査側のReferenceに置き、検査対象には対象の情報を表示します。PackageでもReferenceの申請名と対象名の明確な相違などを扱えます。初級のReference主体の問題では不要なToolを足しません。中級以上では調査手段の選択とEvidenceの統合を扱い、選択肢の出力も事実として成立させます。
+超初級はTool・External Referenceを使わず、初期情報のみ、または最大1つの単純なReferenceとの直接比較で判断できる構成にします。規則・正規連絡先・承認情報は難易度にかかわらず調査側のReferenceに置き、検査対象には対象の情報を表示します。PackageでもReferenceの申請名と対象名の明確な相違などを扱えます。中級以上では調査手段の選択とEvidenceの統合を扱い、選択肢の出力も事実として成立させます。
+
+初級の3区分は開始画面の難易度から選択します。External Referenceが1つでもあれば「あり」、それ以外は想定手順でToolを1つ使う問題とReferenceのみの問題に分けます。Toolの代替候補が複数あっても、使うのがいずれか1つなら「Tool」です。Referenceだけの問題に不要なToolは追加しません。
 
 適切な外部照会が必要な問題も認めます。一律の使用回数・順序や調査完了を回答条件にせず、同じ事実を得る代替Toolも認めます。ALLOWは現在のCheckpointの通過許可、BLOCKはその不許可であり、Malwareの証明とは限りません。
 
@@ -35,6 +39,8 @@ Accountでは今回のSession成立後のLog・操作を使いません。4624�
 
 ## 外部照会の判断
 
+RDAPはIP・登録Domainを外部へ送るExternal Referenceです。IPだけの照会も組織の許可が必要です。公開到達性だけで送信可とせず、送信先・対象の機密区分をReferenceの方針で確認します。[RDAP照会形式](https://www.rfc-editor.org/rfc/rfc9082.html)
+
 Hash検索とFile本体のUploadは別操作です。VirusTotalの通常のFile送信では検体がパートナーや顧客と共有され得ます。Hash照会も問題内の組織方針に従います。[Searching](https://docs.virustotal.com/docs/searching)、[How it works](https://docs.virustotal.com/docs/how-it-works)
 
 urlscan.ioのPublic・Unlisted・Privateは公開範囲であり、PrivateでもURLはサービスに渡ります。教材の組織方針ではToken付きURLの送信を禁止し、公開Domainだけの照会を別に用意します。[API](https://urlscan.io/docs/api/)
@@ -43,7 +49,7 @@ urlscan.ioのPublic・Unlisted・Privateは公開範囲であり、Privateでも
 
 出力はCLI・実フィールドの抜粋、GUIはPropertiesや列のテキスト表現とし、製品UI・ロゴを複製しません。Socketの所有ProcessはSocket/Process Toolで調べ、Wiresharkだけから示しません。Packet一覧から暗号化本文も推測しません。
 
-Hashは合成値、IPは文書用、組織・Domain・Packageは架空です。攻撃Commandは `<TRAINING-PLACEHOLDER>` 等に置換し、実行可能なPayloadを配布しません。Registry Metadata・OSVも保存済み模擬資料で、実在Packageの評判や現在の脆弱性情報を示しません。
+Hashは合成値、IPは文書用、組織・Domain・Package・脆弱性は架空です。脆弱性IDは `TRAINING-` とし、「（架空）」を個々のIDに付けません。Command・Sourceの編集箇所は `〔…を省略〕` と表示し、判断に必要な取得先・呼出しを残します。実行可能なPayloadは配布しません。Registry Metadata・OSVも保存済み模擬資料で、実在Packageの評判や現在の脆弱性情報を示しません。
 
 実例は攻撃名を知らなくてもEvidenceから解ける構成にし、各問題の `sources` に一次資料を残します。ClickFix・DLL Side-loading・Cron Persistence・BEC・Password Spraying・Package供給元の事例は [問題一覧](problem-catalog.md) から辿れます。
 
@@ -53,7 +59,7 @@ Hashは合成値、IPは文書用、組織・Domain・Packageは架空です。�
 
 問題数の目標は設けず、判断根拠・Tool選択・正常例との一貫性を優先します。旧24問は削除し、現行Packは新しい112問に置換しました。
 
-RDAPとVulnerability DatabaseはReference、Hash／File／Domain／IP／URL ReputationとIsolated URL AnalysisはExternal Referenceです。Referenceを含む調査結果は比較する事実を示し、攻撃名・ゲーム上の結論はTitle・Explanationへ置きます。外部サービス本来の検出数・分類の表示は可能です。
+Vulnerability DatabaseはReference、RDAP、Hash／File／Domain／IP／URL ReputationとIsolated URL AnalysisはExternal Referenceです。Referenceを含む調査結果は比較する事実を示し、攻撃名・ゲーム上の結論はTitle・Explanationへ置きます。外部サービス本来の検出数・分類の表示は可能です。
 
 RDAPの非公開Organizationを捏造しません。Hash・Domain・IP・Full URL・File・PCAP・Emailの送信内容を区別し、機密FileやToken付きURLの外部送信を必要証拠にしません。
 

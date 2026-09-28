@@ -3,7 +3,7 @@
   "id": "NET-WIN-IP-REPUTATION",
   "category": "network",
   "platform": "windows",
-  "level": "beginner",
+  "level": "beginner_external",
   "ground_truth": "block",
   "title": "接続先IPの既知検出",
   "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
@@ -11,19 +11,15 @@
     "接続ID": "CONNECT-701",
     "PID": 5100,
     "Process表示名": "cache-worker.exe",
-    "Remote IP": "203.0.113.100",
     "Remote Port": 443,
     "Protocol": "TCP",
     "端末": "192.0.2.25",
     "保留中のLocal Port": 52410,
     "要求時刻": "2026-08-18 09:10:00",
-    "保存PCAP": "flow-before-0910.pcap",
-    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+    "接続状況": "同じProcessの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。"
   },
   "initial_information_types": {
-    "PID": "pid",
-    "Remote IP": "ip",
-    "保存PCAP": "pcap"
+    "PID": "pid"
   },
   "tools": [
     {
@@ -60,11 +56,11 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
         "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
         "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
         "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+        "今回の資料区分": "照会対象のIndicatorは機密指定なし。File本体・完全URLは上記に従う。"
       }
     }
   ],
@@ -225,10 +221,6 @@
     {
       "term_id": "pcap",
       "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
         {
           "source_id": "disclosure",
           "section": "result"

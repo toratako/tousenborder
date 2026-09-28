@@ -13,8 +13,7 @@
     "User": "reports",
     "採取時点": "2026-08-18 09:10:05 / 起動済み",
     "起動時刻": "2026-08-18 09:10:00",
-    "実行Command": "/opt/reports/rotate-reports --days 30",
-    "端末監視の起動記録": "cron (PID 800) → /bin/sh (PID 3100) → rotate-reports (PID 4200)。User=reports。起動記録のCommand=/opt/reports/rotate-reports --days 30。"
+    "実行Command": "/opt/reports/rotate-reports --days 30"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -46,7 +45,7 @@
     {
       "id": "job",
       "name": "承認済みJob",
-      "content": "reports / 毎日09:10 / /opt/reports/rotate-reports --days 30 / JOB-503。"
+      "content": "reports / 毎日09:10 / /opt/reports/rotate-reports --days 30 / JOB-503。\n端末監視の起動記録: cron (PID 800) → /bin/sh (PID 3100) → rotate-reports (PID 4200)。User=reports。起動記録のCommand=/opt/reports/rotate-reports --days 30。"
     }
   ],
   "external_references": [],
@@ -128,8 +127,8 @@
       "term_id": "shell",
       "occurrences": [
         {
-          "source_id": "initial_information",
-          "section": "initial"
+          "source_id": "job",
+          "section": "result"
         }
       ]
     },
@@ -137,25 +136,12 @@
       "term_id": "cron",
       "occurrences": [
         {
-          "source_id": "initial_information",
-          "section": "initial"
-        },
-        {
           "source_id": "cron",
           "section": "overview"
         },
         {
           "source_id": "cron",
           "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "device",
-      "occurrences": [
-        {
-          "source_id": "initial_information",
-          "section": "initial"
         }
       ]
     },
@@ -182,7 +168,7 @@
       ]
     }
   ],
-  "explanation": "現在のPID 4200はreports Userで09:10にcronの子Shellから起動され、完全なCommandもcrontab Entryと承認済みJOB-503に一致するため継続を許可します。登録の存在だけで稼働Processの起動元を推定していません。",
+  "explanation": "現在のPID 4200はreports Userで09:10にcronの子Shellから起動され、完全なCommandもcrontab Entryと承認済みJOB-503に一致するため継続を許可します。",
   "topic": "crontabのScheduleとJob承認を照合する",
   "summary": "crontabのScheduleとJob承認を照合する",
   "learning_objectives": [

@@ -62,7 +62,7 @@
       "id": "vuln",
       "name": "Vulnerability Database",
       "content": {
-        "ID": "TRAINING-2026-TEMPLATE-02（架空）",
+        "ID": "TRAINING-2026-TEMPLATE-02",
         "Package": "PyPI / aster-template-engine",
         "Affected": "<1.7.3",
         "条件": "信頼しないTemplateの評価",

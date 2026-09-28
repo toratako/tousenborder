@@ -35,11 +35,11 @@
       "flow": [
         {
           "resource_id": "initial_information",
-          "action": "Imageの完全PathとOS配布File・起動登録の検証済み記録を見る"
+          "action": "Imageの完全Pathを確認する"
         },
         {
           "resource_id": "approved",
-          "action": "一つの許可Path規則と比較し、管理状態も一致することを確認する"
+          "action": "許可Path規則と比較し、資料内のPID 4200の管理記録でOS配布File・起動登録の検証を確認する"
         }
       ],
       "decisive_evidence": "実行PathがC:\\Windows\\System32\\svchost.exeに一致し、OS配布FileとService起動登録も検証済みである。"
@@ -343,14 +343,14 @@
       "flow": [
         {
           "resource_id": "autoruns",
-          "action": "対象Imageに対応するHKCU Run登録とTemp配下の起動Pathを確認する"
+          "action": "対象PID・Imageの対応と、Runキーの値OfficeHelperが指定するTemp配下のPathを確認する"
         },
         {
           "resource_id": "startup",
           "action": "管理配布Pathの承認Agentのみという登録条件と照合する"
         }
       ],
-      "decisive_evidence": "UserのRunキーがTemp配下のhelper.exeを指定し、その配置からの自動起動は規則で禁止されている。"
+      "decisive_evidence": "PID 4200のImageに対応するRun登録がTemp配下を指定し、その登録と対応Imageの稼働はいずれも方針で禁止されている。"
     },
     "PROC-WIN-BACKING-SIGNATURE": {
       "overview": "管理配布されたPrint Agentの実行本体をPIDから特定し、継続条件を確認する。",
@@ -431,7 +431,7 @@
         },
         {
           "resource_id": "disclosure",
-          "action": "公開IPだけの照会が許可されることを確認する"
+          "action": "照会対象IPだけの照会が許可されることを確認する"
         },
         {
           "resource_id": "ip_rep",
@@ -459,7 +459,7 @@
       "flow": [
         {
           "resource_id": "initial_information",
-          "action": "PID・User・起動時刻・完全Commandと、cronからの起動Chainを確認する"
+          "action": "PID・User・起動時刻・完全Commandを確認する"
         },
         {
           "resource_id": "cron",
@@ -467,7 +467,7 @@
         },
         {
           "resource_id": "job",
-          "action": "同じUser・時刻・CommandがJOB-503の承認内容に一致することを確認する"
+          "action": "資料内の起動記録でcronからPID 4200へのChainを確認し、User・時刻・CommandをJOB-503と照合する"
         }
       ],
       "decisive_evidence": "現在のPID 4200のcron起動記録、reports User、09:10の起動時刻、完全Commandがcrontabと承認Jobの双方に一致する。"
@@ -503,6 +503,10 @@
     "WEB-RDAP-ORGANIZATION": {
       "overview": "委託研修サイトについて、公開登録情報と独立した契約・公式Host記録を照合する。",
       "flow": [
+        {
+          "resource_id": "disclosure",
+          "action": "RDAPサービスへのIP・登録Domainの送信が許可されることを確認する"
+        },
         {
           "resource_id": "rdap",
           "action": "照会対象Domainと公開Registrant Organizationを確認する"
@@ -597,7 +601,7 @@
         },
         {
           "resource_id": "disclosure",
-          "action": "公開IPの照会が許可されることを確認する"
+          "action": "照会対象IPの照会が許可されることを確認する"
         },
         {
           "resource_id": "ip_rep",
@@ -626,6 +630,10 @@
         {
           "resource_id": "nettcp",
           "action": "対象PIDのRemote IP 198.51.100.70と443番を確認する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "RDAPサービスへのIP・登録Domainの送信が許可されることを確認する"
         },
         {
           "resource_id": "rdap",
@@ -661,7 +669,7 @@
         },
         {
           "resource_id": "disclosure",
-          "action": "公開IPの照会を認める方針を確認する"
+          "action": "照会対象IPの照会を認める方針を確認する"
         },
         {
           "resource_id": "ip_rep",
@@ -690,6 +698,10 @@
         {
           "resource_id": "ss",
           "action": "対象PIDの198.51.100.70:443への接続を確認する"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "RDAPサービスへのIP・登録Domainの送信が許可されることを確認する"
         },
         {
           "resource_id": "rdap",
@@ -800,7 +812,7 @@
           "action": "管理Device・承認Source・今回のPasswordとMFA確認が利用条件を満たすか照合する"
         }
       ],
-      "decisive_evidence": "現在のDevice・User・Sourceが承認に一致し、今回のGateway確認もPassword・MFAを満たしている。過去の4624だけに依存しない。"
+      "decisive_evidence": "現在のDevice・User・Sourceが承認に一致し、今回のGateway確認もPassword・MFAを満たしている。過去のログオン成功記録（Event ID 4624）だけに依存しない。"
     },
     "AUTH-WIN-REVOKED-DEVICE": {
       "overview": "以前は正常にLoginしていた端末について、現在の失効状態を確認する。",
@@ -951,14 +963,14 @@
       "flow": [
         {
           "resource_id": "strings",
-          "action": "外部payloadの取得先とWScript.Shellを含むScript内容を確認する"
+          "action": "HTTPのGET・sendとWScript.Shell.Runの呼出しを含むSourceの抜粋を確認する"
         },
         {
           "resource_id": "official",
           "action": "Software Center経由の公式更新手順と比較し、Web配布.jsの実行が手順外と確認する"
         }
       ],
-      "decisive_evidence": "受領物は外部内容を取得・実行するJavaScriptで、Software Centerのみを使う公式更新経路と矛盾する。"
+      "decisive_evidence": "JavaScriptのGET・sendとRun呼出しが外部内容の取得と起動を示し、Web配布.jsはSoftware Centerだけを使う公式更新手順にも反する。"
     },
     "FILE-LINUX-WRITABLE-RUNPATH": {
       "overview": "標準Report Agentとして導入予定のELFについて、共有ライブラリ探索先を確認する。",
@@ -1062,16 +1074,16 @@
           "action": "HostのAレコード198.51.100.60を取得する。nslookupでも代替可能"
         },
         {
+          "resource_id": "disclosure",
+          "action": "RDAPサービスへのIP・登録Domainの送信が許可されることを確認する"
+        },
+        {
           "resource_id": "rdap",
           "action": "親Domainの登録日と公開された運営組織を確認する"
         },
         {
           "resource_id": "official",
           "action": "CampaignのHost・A・運営・公開日・公開用途をCHG-604と照合する"
-        },
-        {
-          "resource_id": "disclosure",
-          "action": "公開Hostの照会が許可されることを確認する"
         },
         {
           "resource_id": "domain_rep",
@@ -1123,7 +1135,7 @@
         },
         {
           "resource_id": "disclosure",
-          "action": "公開IPのみの照会を認める方針を確認する"
+          "action": "照会対象IPのみの照会を認める方針を確認する"
         },
         {
           "resource_id": "ip_rep",
@@ -1175,7 +1187,7 @@
         },
         {
           "resource_id": "disclosure",
-          "action": "公開IPのみの照会が許可されることを確認する"
+          "action": "照会対象IPのみの照会が許可されることを確認する"
         },
         {
           "resource_id": "ip_rep",
@@ -1377,7 +1389,7 @@
         },
         {
           "resource_id": "source",
-          "action": "Installせずsetup.jsを読み、外部Binaryの取得・実行内容を確認する"
+          "action": "setup.jsのhttps.get、Fileへの保存、保存完了後のexecFile呼出しを静的に確認する"
         },
         {
           "resource_id": "official",
@@ -1630,6 +1642,10 @@
         {
           "resource_id": "dig",
           "action": "新HostのAレコード198.51.100.62を取得する。nslookupでも代替可能"
+        },
+        {
+          "resource_id": "disclosure",
+          "action": "RDAPサービスへのIP・登録Domainの送信が許可されることを確認する"
         },
         {
           "resource_id": "rdap",

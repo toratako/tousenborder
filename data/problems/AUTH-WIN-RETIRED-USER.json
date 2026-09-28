@@ -26,7 +26,7 @@
       "id": "events",
       "name": "Event Viewer / Windows Security Log",
       "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
-      "output": "2026-05-31 17:10 Event ID 4624 / TargetUserName: sato / LogonType: 10 / IpAddress: 192.0.2.42\n検索範囲2026-06-01〜08-18 09:09:59: 対象Userの4624は0件。",
+      "output": "2026-05-31 17:10 Event ID 4624 / TargetUserName: sato / LogonType: 10 / IpAddress: 192.0.2.42\n検索期間: 2026-06-01 00:00:00〜2026-08-18 09:09:59\n検索条件: Event ID = 4624、TargetUserName = sato\n検索結果: 0件",
       "accepted_information_types": [
         "username"
       ],

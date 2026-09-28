@@ -26,7 +26,7 @@
       "id": "events",
       "name": "Event Viewer / Windows Security Log",
       "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
-      "output": "2026-08-17 09:01 Event ID 4624 / TargetUserName: mori / LogonType: 10 / WorkstationName: WIN-017 / IpAddress: 192.0.2.41\n過去ログにWIN-044での成立Sessionなし。",
+      "output": "2026-08-17 09:01 Event ID 4624 / TargetUserName: mori / LogonType: 10 / WorkstationName: WIN-017 / IpAddress: 192.0.2.41\n検索対象: 今回の要求より前の保存済みSecurity Log\n検索条件: Event ID = 4624、WorkstationName = WIN-044\n検索結果: 0件",
       "accepted_information_types": [
         "username"
       ],
