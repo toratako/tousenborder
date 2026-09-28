@@ -2,10 +2,10 @@ extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
 ## 正式教材で判定の状態遷移、重複防止、経過時間を検証する。
 func _initialize() -> void:
-	var catalog := Fixtures.catalog()
-	assert(catalog.load_pack(), str(catalog.errors))
+	var library := Fixtures.library()
+	assert(library.load_builtin(), str(library.errors))
 	var shift := InspectionShift.new()
-	var cases := catalog.select_cases("very_beginner")
+	var cases := library.select_cases("", "", "", "initial")
 	assert(cases.size() == 2)
 	shift.start(cases)
 	assert(not shift.decide("unknown"))
@@ -43,6 +43,6 @@ func _initialize() -> void:
 	shift.start([])
 	shift.tick(20)
 	assert(shift.finished() and shift.elapsed_seconds == 0)
-	assert(not catalog.load_pack("res://data/missing.json") and not catalog.errors.is_empty())
+	assert(not ProblemLibrary.new().load_builtin("res://data/missing"))
 	print("Core state and timer tests passed")
 	quit()
