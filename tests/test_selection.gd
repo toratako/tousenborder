@@ -1,8 +1,10 @@
 extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
 
+
 func _initialize() -> void:
 	_run.call_deferred()
+
 
 func select_value(option: OptionButton, value: String) -> void:
 	for i in option.item_count:
@@ -12,20 +14,44 @@ func select_value(option: OptionButton, value: String) -> void:
 			return
 	assert(false, "Missing selection: " + value)
 
+
 func _run() -> void:
 	var library := Fixtures.library()
 	assert(library.load_builtin(), str(library.errors))
 	assert(library.select_cases().size() == Fixtures.count())
 	for difficulty in library.difficulties:
-		assert(library.select_cases(difficulty).all(func(c): return c.difficulty == difficulty))
+		assert(
+			library.select_cases(difficulty).all(
+				func(c):
+					return c.difficulty == difficulty,
+			)
+		)
 	for os in ["windows", "linux", "common"]:
-		assert(library.select_cases("", "", os).all(func(c): return c.platform in [os, "common"] and c.investigation_environment == ("linux" if c.platform == "common" else os)))
+		assert(
+			library
+			.select_cases("", "", os)
+			.all(
+				func(c):
+					return (
+						c.platform in [os, "common"]
+						and c.investigation_environment == (
+							"linux" if c.platform == "common" else os
+						)
+					),
+			)
+		)
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
 	select_value(desk.difficulty_select, "beginner")
 	desk.start_button.pressed.emit()
-	assert(desk.playing and desk.shift.cases.all(func(c): return c.difficulty == "beginner"))
+	assert(
+		desk.playing
+		and desk.shift.cases.all(
+			func(c):
+				return c.difficulty == "beginner",
+		)
+	)
 	desk._show_start_screen()
 	select_value(desk.method_select, "initial")
 	select_value(desk.category_select, "process")
@@ -39,7 +65,7 @@ func _run() -> void:
 	await process_frame
 	assert(desk.library.errors.is_empty(), str(desk.library.errors))
 	assert(desk.difficulty_select.item_count == 2 and desk.library.difficulties.has("unrated"))
-	var all_ids := {}
+	var all_ids := { }
 	for method in desk.library.methods:
 		select_value(desk.method_select, method)
 		var selected: Array = desk._selected_cases()
@@ -56,9 +82,19 @@ func _run() -> void:
 	select_value(desk.method_select, "")
 	select_value(desk.category_select, "file")
 	select_value(desk.platform_select, "linux")
-	assert(desk._selected_cases().all(func(c): return c.category == "file" and c.platform in ["common", "linux"]))
+	assert(
+		desk
+		._selected_cases()
+		.all(
+			func(c):
+				return c.category == "file" and c.platform in ["common", "linux"],
+		)
+	)
 	select_value(desk.pack_select, desk.library.packs[0].key)
-	assert(desk._selected_cases().size() == 70 and desk.category_select.disabled and desk.method_select.disabled)
+	assert(
+		desk._selected_cases().size() == 70
+		and desk.category_select.disabled and desk.method_select.disabled
+	)
 	desk.start_button.pressed.emit()
 	assert(desk.shift.current().id == desk.library.packs[0].chapters[0].problems[0])
 	desk.queue_free()

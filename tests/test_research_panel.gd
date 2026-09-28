@@ -1,17 +1,27 @@
 extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
 
+
 func _initialize() -> void:
 	_run.call_deferred()
+
 
 func _run() -> void:
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	desk._start_shift()
-	var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-REFERENCES")
-	var approved := {"製品": "帳票Tool", "Path": "C:\\Company\\report.exe",
-		"承認条件": {"Version": "2.3", "署名": "未署名の社内版"},
-		"接続先": ["192.0.2.80:443", "192.0.2.81:443"], "追加依存": {}, "例外": []}
+	var cases: Array[Dictionary] = desk.library.cases.filter(
+		func(c):
+			return c.id == "FIX-REFERENCES",
+	)
+	var approved := {
+		"製品": "帳票Tool",
+		"Path": "C:\\Company\\report.exe",
+		"承認条件": { "Version": "2.3", "署名": "未署名の社内版" },
+		"接続先": ["192.0.2.80:443", "192.0.2.81:443"],
+		"追加依存": { },
+		"例外": [],
+	}
 	var literal_json := "package.json抜粋:\n{\"dependencies\": {\"core\": \"2.5.0\"}}"
 	Fixtures.resources(cases[0], "references")[0].result.content = approved.duplicate(true)
 	Fixtures.resources(cases[0], "references")[1].result.content = literal_json
@@ -35,7 +45,11 @@ func _run() -> void:
 	assert(button.hint.text.begins_with("確認済み"))
 	var reference: DraggableCard = desk.active_card
 	var value_label: Label = reference.tokens[0].get_child(0).get_child(1)
-	assert(value_label.text == "製品: 帳票Tool\nPath: C:\\Company\\report.exe\n承認条件:\n  Version: 2.3\n  署名: 未署名の社内版\n接続先:\n  • 192.0.2.80:443\n  • 192.0.2.81:443\n追加依存: なし\n例外: なし", "資料はJSONの括弧・引用符・Pathのエスケープを付けずに表示")
+	assert(
+		value_label.text
+		== "製品: 帳票Tool\nPath: C:\\Company\\report.exe\n承認条件:\n  Version: 2.3\n  署名: 未署名の社内版\n接続先:\n  • 192.0.2.80:443\n  • 192.0.2.81:443\n追加依存: なし\n例外: なし",
+		"資料はJSONの括弧・引用符・Pathのエスケープを付けずに表示",
+	)
 	assert(reference.tokens[0].payload().value == approved, "表示の整形で元の情報値・型を変更しない")
 	assert(desk.shift.observations.back().output == "照合用情報: " + value_label.text, "調査記録もカードと同じ項目表示")
 	var observations: Array = desk.shift.observations.duplicate(true)
@@ -46,7 +60,10 @@ func _run() -> void:
 	var literal_label: Label = desk.active_card.tokens[0].get_child(0).get_child(1)
 	assert(literal_label.text == literal_json, "JSONそのものの抜粋は括弧を含めて保持")
 	button.pressed.emit()
-	assert(desk.active_card == reference and reference.get_index() == desk.card_layer.get_child_count() - 1)
+	assert(
+		desk.active_card == reference
+		and reference.get_index() == desk.card_layer.get_child_count() - 1
+	)
 	assert(desk.shift.observations.size() == observations.size() + 1)
 	assert(desk.cards.size() == card_count + 1)
 	reference.close_button.pressed.emit()
@@ -64,7 +81,12 @@ func _run() -> void:
 	desk._clear_desk()
 	desk.shift.start(cases)
 	assert(desk.reference_cards.is_empty())
-	assert(desk.tool_buttons.all(func(b): return not b.reviewed and b.hint.text.begins_with("未読")))
+	assert(
+		desk.tool_buttons.all(
+			func(b):
+				return not b.reviewed and b.hint.text.begins_with("未読"),
+		)
+	)
 	assert(desk.tool_panel.visible)
 	var beginner: Array[Dictionary] = desk.library.select_cases("", "file", "", "initial")
 	desk.shift.start(beginner)

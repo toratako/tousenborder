@@ -47,6 +47,7 @@ var close_button: Button
 var fit_pending := false
 var analysis_overflow := false
 
+
 func setup(data: Dictionary, origin: Vector2, dimensions := Vector2(380, 450)) -> void:
 	card_data = data.duplicate(true)
 	movable = data.get("category") != "target"
@@ -54,7 +55,12 @@ func setup(data: Dictionary, origin: Vector2, dimensions := Vector2(380, 450)) -
 	position = origin
 	size = dimensions
 	home_size = dimensions
-	accent = {"target": Color("57e4f2"), "analysis": Color("85b5ff"), "rule": Color("c5a1ff"), "log": Color("c5a1ff")}.get(data.get("category", ""), Color("57e4f2"))
+	accent = {
+		"target": Color("57e4f2"),
+		"analysis": Color("85b5ff"),
+		"rule": Color("c5a1ff"),
+		"log": Color("c5a1ff"),
+	}.get(data.get("category", ""), Color("57e4f2"))
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var paper := StyleBoxFlat.new()
 	paper.bg_color = Color("0d2332") if data.get("category") == "target" else Color("101e32")
@@ -82,6 +88,7 @@ func setup(data: Dictionary, origin: Vector2, dimensions := Vector2(380, 450)) -
 		get_parent_control().resized.connect(_queue_content_fit)
 		_queue_content_fit()
 
+
 func _build_header(data: Dictionary) -> void:
 	header = Panel.new()
 	header.position = Vector2(0, 0)
@@ -90,17 +97,30 @@ func _build_header(data: Dictionary) -> void:
 	header.tooltip_text = data.get("title", "資料") + ("\nドラッグして移動" if movable else "")
 	header.draw.connect(_draw_grip)
 	header.gui_input.connect(_header_input)
-	header.mouse_entered.connect(func(): _header_style(true))
-	header.mouse_exited.connect(func(): _header_style(false))
+	header.mouse_entered.connect(
+		func():
+			_header_style(true),
+	)
+	header.mouse_exited.connect(
+		func():
+			_header_style(false),
+	)
 	add_child(header)
 	_header_style(false)
-	title_icon = Chrome.icon(header, Rect2(28 if movable else 10, 10, 26, 26), data.get("icon", "res://assets/icons/document.svg"))
+	title_icon = Chrome.icon(
+		header,
+		Rect2(28 if movable else 10, 10, 26, 26),
+		data.get("icon", "res://assets/icons/document.svg"),
+	)
 	title_label = Label.new()
 	title_label.position = Vector2(62 if movable else 44, 10)
 	title_label.size = Vector2(size.x - 134, 28)
 	title_label.text = data.get("title", "資料")
 	title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	title_label.add_theme_font_size_override("font_size", 20 if data.get("category") == "target" else 18)
+	title_label.add_theme_font_size_override(
+		"font_size",
+		20 if data.get("category") == "target" else 18,
+	)
 	title_label.tooltip_text = title_label.text
 	title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	header.add_child(title_label)
@@ -109,11 +129,15 @@ func _build_header(data: Dictionary) -> void:
 	close_button.visible = data.get("category", "") != "target"
 	close_button.pressed.connect(hide)
 
+
 func _build_scroll(data: Dictionary) -> void:
 	source_label = Label.new()
 	source_label.position = Vector2(14, 52)
 	source_label.size = Vector2(size.x - 28, 24)
-	var kind: String = {"target": "審査対象", "analysis": "解析結果", "rule": "運用規則", "log": "調査記録"}.get(data.get("category", ""), "参考資料")
+	var kind: String = { "target": "審査対象", "analysis": "解析結果", "rule": "運用規則", "log": "調査記録" }.get(
+		data.get("category", ""),
+		"参考資料",
+	)
 	source_label.text = kind + "  /  " + data.get("source", "")
 	source_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	source_label.add_theme_color_override("font_color", Color("b0c8da"))
@@ -123,18 +147,25 @@ func _build_scroll(data: Dictionary) -> void:
 	source_label.visible = data.get("category") == "log"
 	scroll = ScrollContainer.new()
 	scroll.position = Vector2(10, 82 if source_label.visible else 58)
-	scroll.size = Vector2(size.x - 20, size.y - 146 if data.get("category") == "target" else size.y - 94)
+	scroll.size = Vector2(
+		size.x - 20,
+		size.y - 146 if data.get("category") == "target" else size.y - 94,
+	)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.gui_input.connect(_gui_input)
 	scroll.get_v_scroll_bar().gui_input.connect(_gui_input)
 	scroll.get_v_scroll_bar().changed.connect(_update_scroll_hint)
-	scroll.get_v_scroll_bar().value_changed.connect(func(_value): _update_scroll_hint())
+	scroll.get_v_scroll_bar().value_changed.connect(
+		func(_value):
+			_update_scroll_hint(),
+	)
 	add_child(scroll)
 	rows = VBoxContainer.new()
 	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rows.mouse_filter = Control.MOUSE_FILTER_PASS
 	rows.add_theme_constant_override("separation", 10)
 	scroll.add_child(rows)
+
 
 func _build_information(data: Dictionary) -> void:
 	if data.get("category") == "target":
@@ -148,12 +179,29 @@ func _build_information(data: Dictionary) -> void:
 		if data.get("category") == "target":
 			destination = request_section if is_request else basic_section
 		destination.add_child(token)
-		var show_label: bool = not is_request and not (data.get("category") == "analysis" and item.get("id", "") in ["content", "output"])
-		token.setup(item, {"case_id": data.get("case_id", ""), "card_id": data.get("id", ""), "card_category": data.get("category", "")}, show_label)
+		var show_label: bool = (
+			not is_request
+			and not (
+				data.get("category") == "analysis" and item.get("id", "") in ["content", "output"]
+			)
+		)
+		token.setup(
+			item,
+			{
+				"case_id": data.get("case_id", ""),
+				"card_id": data.get("id", ""),
+				"card_category": data.get("category", ""),
+			},
+			show_label,
+		)
 		token.touched.connect(bring_to_front)
-		token.selected.connect(func(value): information_selected.emit(value))
+		token.selected.connect(
+			func(value):
+				information_selected.emit(value),
+		)
 		token.set_drag_forwarding(token._get_drag_data, _can_drop_data, _drop_data)
 		tokens.append(token)
+
 
 func _build_stamp_plate() -> void:
 	stamp_plate = Panel.new()
@@ -172,11 +220,13 @@ func _build_stamp_plate() -> void:
 	stamp_plate.add_child(stamp_mark)
 	stamp_plate.set_drag_forwarding(Callable(), _can_drop_data, _drop_data)
 
+
 func _queue_content_fit() -> void:
 	if fit_pending:
 		return
 	fit_pending = true
 	_fit_content.call_deferred()
+
 
 func _fit_content() -> void:
 	fit_pending = false
@@ -188,6 +238,7 @@ func _fit_content() -> void:
 	size.y = minf(maxf(140.0, content_height + (92.0 if analysis_overflow else 70.0)), maximum)
 	_layout()
 	clamp_to_desk()
+
 
 func _section(caption: String) -> VBoxContainer:
 	var column := VBoxContainer.new()
@@ -208,12 +259,14 @@ func _section(caption: String) -> VBoxContainer:
 	column.set_drag_forwarding(Callable(), _can_drop_data, _drop_data)
 	return column
 
+
 func set_geometry(origin: Vector2, dimensions: Vector2) -> void:
 	dragging = false
 	position = origin
 	size = dimensions
 	_layout()
 	clamp_to_desk()
+
 
 func _layout() -> void:
 	header.size.x = size.x
@@ -222,7 +275,10 @@ func _layout() -> void:
 	source_label.size.x = size.x - 28
 	var target: bool = card_data.get("category") == "target"
 	if target:
-		var text_width := title_label.get_theme_font("font").get_string_size(title_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x
+		var text_width := title_label \
+				.get_theme_font("font") \
+				.get_string_size(title_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20) \
+				.x
 		var title_width := minf(ceilf(text_width), size.x - 84)
 		var left := (size.x - title_width - 36) / 2
 		title_icon.position = Vector2(left, 9)
@@ -247,6 +303,7 @@ func _layout() -> void:
 	scroll_hint.size = Vector2(size.x - 36, 20)
 	_update_scroll_hint()
 
+
 func _update_scroll_hint() -> void:
 	if not is_instance_valid(scroll_hint):
 		return
@@ -256,11 +313,13 @@ func _update_scroll_hint() -> void:
 	var bar := scroll.get_v_scroll_bar()
 	scroll_hint.text = "↓ 続きがあります · 本文をスクロール" if bar.value + bar.page < bar.max_value - 1 else ""
 
+
 func set_active(value: bool) -> void:
 	active = value
 	var paper := get_theme_stylebox("panel") as StyleBoxFlat
 	paper.border_color = accent.darkened(0.45) if active else Color("34556f")
 	_header_style(header_hovered)
+
 
 func _small_button(text: String, origin: Vector2) -> Button:
 	var button := Button.new()
@@ -272,6 +331,7 @@ func _small_button(text: String, origin: Vector2) -> Button:
 	header.add_child(button)
 	return button
 
+
 func _header_style(hovered: bool) -> void:
 	header_hovered = hovered
 	var style := StyleBoxFlat.new()
@@ -281,6 +341,7 @@ func _header_style(hovered: bool) -> void:
 		title_label.add_theme_color_override("font_color", accent if active else Chrome.TEXT)
 	header.queue_redraw()
 
+
 func _draw_grip() -> void:
 	if not movable:
 		return
@@ -289,18 +350,22 @@ func _draw_grip() -> void:
 		for y in [17, 23, 29]:
 			header.draw_circle(Vector2(x, y), 1.5, color, true, -1, true)
 
+
 func bring_to_front() -> void:
 	# 検査対象は操作しても他の資料より背面に保つ。
 	get_parent().move_child(self, 0 if card_data.get("category") == "target" else -1)
 	activated.emit(self)
 
+
 func clamp_to_desk() -> void:
 	var maximum := (get_parent_control().size - size).max(Vector2.ZERO)
 	position = position.clamp(Vector2.ZERO, maximum)
 
+
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		bring_to_front()
+
 
 func _header_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -313,6 +378,7 @@ func _header_input(event: InputEvent) -> void:
 			dragging = false
 		header.accept_event()
 
+
 func _process(_delta: float) -> void:
 	if dragging:
 		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or not is_visible_in_tree():
@@ -321,13 +387,19 @@ func _process(_delta: float) -> void:
 		position = get_parent_control().get_local_mouse_position() - drag_offset
 		clamp_to_desk()
 
+
 func _can_drop_data(_position: Vector2, data: Variant) -> bool:
-	return card_data.get("category") == "target" and data is Dictionary and data.get("kind") == "stamp" and stamp_validator.is_valid() and stamp_validator.call(data)
+	return (
+		card_data.get("category") == "target" and data is Dictionary and data.get("kind") == "stamp"
+		and stamp_validator.is_valid() and stamp_validator.call(data)
+	)
+
 
 func _drop_data(_position: Vector2, data: Variant) -> void:
 	if _can_drop_data(_position, data):
 		bring_to_front()
 		stamp_dropped.emit(self, data)
+
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_BEGIN and is_instance_valid(header):
@@ -337,9 +409,11 @@ func _notification(what: int) -> void:
 		drop_available = false
 		queue_redraw()
 
+
 func _draw() -> void:
 	if drop_available or hover_drop_available:
 		draw_rect(Rect2(Vector2(3, 3), size - Vector2(6, 6)), Color("57edc2"), false, 4)
+
 
 func show_imprint(caption: String, color: Color) -> void:
 	imprint = true
@@ -357,4 +431,7 @@ func show_imprint(caption: String, color: Color) -> void:
 	stamp_plate.rotation = -0.04
 	stamp_plate.scale = Vector2(1.14, 1.14)
 	var tween := create_tween()
-	tween.tween_property(stamp_plate, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween \
+			.tween_property(stamp_plate, "scale", Vector2.ONE, 0.18) \
+			.set_trans(Tween.TRANS_BACK) \
+			.set_ease(Tween.EASE_OUT)

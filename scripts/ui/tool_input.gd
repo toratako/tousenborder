@@ -9,7 +9,7 @@ var case_id := ""
 var heading: Label
 var hint: Label
 var base_tooltip := ""
-var selected: Dictionary = {}
+var selected: Dictionary = { }
 var ready_for_input := false
 var drop_ready := false
 var hover_drop_ready := false:
@@ -19,6 +19,7 @@ var hover_drop_ready := false:
 			queue_redraw()
 var reviewed := false
 var reference_icon: TextureRect
+
 
 func setup_presentation() -> void:
 	base_tooltip = tooltip_text
@@ -57,25 +58,36 @@ func setup_presentation() -> void:
 	_layout_labels()
 	mouse_entered.connect(queue_redraw)
 	mouse_exited.connect(queue_redraw)
-	update_input({})
+	update_input({ })
+
 
 func _layout_labels() -> void:
 	# 折り返しの幅を確定してから、実際の行数に必要な高さを確保する。
 	heading.size.x = maxf(1.0, size.x - heading.position.x - 22)
 	var line_count := clampi(heading.get_line_count(), 1, heading.max_lines_visible)
-	heading.size.y = heading.get_line_height() * line_count + heading.get_theme_constant("line_spacing") * (line_count - 1)
+	heading.size.y = heading.get_line_height() * line_count + heading.get_theme_constant(
+		"line_spacing"
+	) * (line_count - 1)
 	hint.size = Vector2(size.x - 24, 20)
 	hint.position.y = heading.get_rect().end.y + 4.0
-	custom_minimum_size.y = maxf(44.0, heading.get_rect().end.y + 10.0) if not hint.visible else maxf(64.0, hint.get_rect().end.y + 8.0)
+	custom_minimum_size.y = maxf(44.0, heading.get_rect().end.y + 10.0) if not hint.visible else maxf(
+		64.0,
+		hint.get_rect().end.y + 8.0,
+	)
+
 
 func _resting_color() -> Color:
 	return Color("19394d", 0.55) if tool.get("kind") == "tools" else Color.TRANSPARENT
+
 
 func update_input(input: Dictionary) -> void:
 	selected = input.duplicate(true)
 	if not is_instance_valid(hint):
 		return
-	var compatible: bool = not input.is_empty() and input.get("case_id") == case_id and Information.accepts(tool, input)
+	var compatible: bool = (
+		not input.is_empty() and input.get("case_id") == case_id
+		and Information.accepts(tool, input)
+	)
 	ready_for_input = compatible
 	var color := Color("e4f5ff")
 	if tool.get("kind", "") == "references":
@@ -90,7 +102,9 @@ func update_input(input: Dictionary) -> void:
 		hint.text = "対象全体を調べる"
 	else:
 		hint.text = "入力：" + Information.input_hint(tool)
-	tooltip_text = tool.label + "\n" + base_tooltip + "\n" + hint.text + ("\n選択中: " + input.get("label", "") if compatible else "")
+	tooltip_text = tool.label + "\n" + base_tooltip + "\n" + hint.text + (
+		"\n選択中: " + input.get("label", "") if compatible else ""
+	)
 	if not input.is_empty() and not compatible and not tool.accepted_information_types.is_empty():
 		tooltip_text += "\n選択した情報は、このToolの調査対象に対応していません。"
 	heading.add_theme_color_override("font_color", color)
@@ -99,6 +113,7 @@ func update_input(input: Dictionary) -> void:
 	style.bg_color = Color("164255") if compatible else _resting_color()
 	add_theme_stylebox_override("normal", style)
 	queue_redraw()
+
 
 func _draw() -> void:
 	if not is_instance_valid(heading):
@@ -109,17 +124,33 @@ func _draw() -> void:
 		draw_line(Vector2(1, 10), Vector2(1, size.y - 10), Color("57edc2"), 2)
 	elif reviewed:
 		var point := Vector2(size.x - 12, 22)
-		draw_polyline(PackedVector2Array([point + Vector2(-4, 0), point + Vector2(-1, 3), point + Vector2(5, -4)]), Color("57edc2"), 1.5, true)
+		draw_polyline(
+			PackedVector2Array(
+				[point + Vector2(-4, 0), point + Vector2(-1, 3), point + Vector2(5, -4)]
+			),
+			Color("57edc2"),
+			1.5,
+			true,
+		)
 	elif tool.get("kind") == "external_references":
 		var point := Vector2(size.x - 12, 18)
 		draw_line(point + Vector2(-4, 4), point + Vector2(4, -4), Color("b0c8da"), 1.5, true)
-		draw_polyline(PackedVector2Array([point + Vector2(-3, -4), point + Vector2(4, -4), point + Vector2(4, 3)]), Color("b0c8da"), 1.5, true)
+		draw_polyline(
+			PackedVector2Array(
+				[point + Vector2(-3, -4), point + Vector2(4, -4), point + Vector2(4, 3)]
+			),
+			Color("b0c8da"),
+			1.5,
+			true,
+		)
+
 
 func _drop_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("164255")
 	style.set_corner_radius_all(4)
 	return style
+
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_BEGIN and is_instance_valid(hint):
@@ -132,10 +163,18 @@ func _notification(what: int) -> void:
 		drop_ready = false
 		update_input(selected)
 
+
 func _can_drop_data(_position: Vector2, data: Variant) -> bool:
-	if disabled or not data is Dictionary or data.get("kind") != "information" or not data.get("information") is Dictionary:
+	if (
+		disabled or not data is Dictionary or data.get("kind") != "information"
+		or not data.get("information") is Dictionary
+	):
 		return false
-	return data.information.get("case_id") == case_id and Information.accepts(tool, data.information) and ToolRunner.supports_target(tool, {"platform": target_environment})
+	return (
+		data.information.get("case_id") == case_id and Information.accepts(tool, data.information)
+		and ToolRunner.supports_target(tool, { "platform": target_environment })
+	)
+
 
 func _drop_data(_position: Vector2, data: Variant) -> void:
 	if _can_drop_data(_position, data):

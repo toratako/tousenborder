@@ -29,6 +29,7 @@ Python 3.11以上を使います。ゲームの起動・エクスポートにPyt
 python3 -m pip install -r requirements-dev.txt
 just validate # 共通ローダで教材と生成一覧を検証
 just test     # Python・Godotの全テスト
+just format   # GDScript（gdscript-formatter がある場合）と Python を整形
 ```
 
 実行ファイルは `GODOT` / `PYTHON` 環境変数で指定できます。

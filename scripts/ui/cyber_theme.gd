@@ -6,6 +6,7 @@ const TEXT := Color("e4f5ff")
 const CYAN := Color("57e4f2")
 const BORDER := Color("34556f")
 
+
 static func box(fill: Color, border: Color, padding: int = 8) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = fill
@@ -17,6 +18,7 @@ static func box(fill: Color, border: Color, padding: int = 8) -> StyleBoxFlat:
 	style.content_margin_top = 4
 	style.content_margin_bottom = 4
 	return style
+
 
 static func create(font: Font) -> Theme:
 	var result := Theme.new()
@@ -45,7 +47,13 @@ static func create(font: Font) -> Theme:
 		result.set_stylebox("grabber_pressed", kind, box(CYAN, CYAN, 4))
 	return result
 
-static func panel(parent: Node, rect: Rect2, color: Color, border: Color = Color.TRANSPARENT) -> Panel:
+
+static func panel(
+	parent: Node,
+	rect: Rect2,
+	color: Color,
+	border: Color = Color.TRANSPARENT,
+) -> Panel:
 	var panel := Panel.new()
 	panel.position = rect.position
 	panel.size = rect.size
@@ -57,6 +65,7 @@ static func panel(parent: Node, rect: Rect2, color: Color, border: Color = Color
 	panel.add_theme_stylebox_override("panel", style)
 	parent.add_child(panel)
 	return panel
+
 
 static func label(parent: Node, rect: Rect2, value: String, color: Color, font_size: int) -> Label:
 	var label := Label.new()
@@ -70,6 +79,7 @@ static func label(parent: Node, rect: Rect2, value: String, color: Color, font_s
 	parent.add_child(label)
 	return label
 
+
 static func rich(parent: Node, rect: Rect2, color: Color, font_size: int) -> RichTextLabel:
 	var label := RichTextLabel.new()
 	label.position = rect.position
@@ -79,6 +89,7 @@ static func rich(parent: Node, rect: Rect2, color: Color, font_size: int) -> Ric
 	label.selection_enabled = true
 	parent.add_child(label)
 	return label
+
 
 static func button(parent: Node, rect: Rect2, value: String, color: Color) -> Button:
 	var button := Button.new()
@@ -104,6 +115,7 @@ static func button(parent: Node, rect: Rect2, value: String, color: Color) -> Bu
 	button.add_theme_color_override("font_disabled_color", Color("8297ac"))
 	parent.add_child(button)
 	return button
+
 
 static func icon(parent: Node, rect: Rect2, path: String) -> TextureRect:
 	var image := TextureRect.new()

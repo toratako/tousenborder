@@ -1,7 +1,9 @@
 extends SceneTree
 
+
 func _initialize() -> void:
 	_run.call_deferred()
+
 
 func _run() -> void:
 	var desk = load("res://scenes/main.tscn").instantiate()
@@ -11,11 +13,24 @@ func _run() -> void:
 	for item in desk.library.cases:
 		var cases: Array[Dictionary] = [item]
 		desk.shift.start(cases)
-		for frame in range(8): await process_frame
+		for frame in range(8):
+			await process_frame
 		for button in desk.tool_buttons:
-			if not button.visible: continue
-			if button.heading.text != button.tool.label or button.heading.size.y < button.heading.get_line_height() or button.heading.size.x <= 0:
-				printerr("Missing heading: ", item.id, " / ", button.tool.id, " size=", button.heading.size)
+			if not button.visible:
+				continue
+			if (
+				button.heading.text != button.tool.label
+				or button.heading.size.y < button.heading.get_line_height()
+				or button.heading.size.x <= 0
+			):
+				printerr(
+					"Missing heading: ",
+					item.id,
+					" / ",
+					button.tool.id,
+					" size=",
+					button.heading.size,
+				)
 				failures += 1
 			if button.hint.visible and button.hint.position.y < button.heading.get_rect().end.y:
 				printerr("Overlapping tool hint: ", item.id, " / ", button.tool.id)

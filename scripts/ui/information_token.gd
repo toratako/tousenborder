@@ -10,10 +10,14 @@ var highlighted := false
 var hovered := false
 var show_drag_grip := false
 
+
 func setup(item: Dictionary, card_context: Dictionary, show_label: bool = true) -> void:
 	information = item.duplicate(true)
 	context = card_context.duplicate(true)
-	show_drag_grip = context.get("card_category") == "target" and item.get("category") != "request" and item.draggable and item.tool_input
+	show_drag_grip = (
+		context.get("card_category") == "target" and item.get("category") != "request"
+		and item.draggable and item.tool_input
+	)
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	mouse_default_cursor_shape = Control.CURSOR_DRAG if show_drag_grip else Control.CURSOR_POINTING_HAND
@@ -41,22 +45,29 @@ func setup(item: Dictionary, card_context: Dictionary, show_label: bool = true) 
 	value.add_theme_color_override("font_color", Color("e4f5ff"))
 	value.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(value)
-	mouse_entered.connect(func():
-		hovered = true
-		_style(true))
-	mouse_exited.connect(func():
-		hovered = false
-		_style(false))
+	mouse_entered.connect(
+		func():
+			hovered = true
+			_style(true),
+	)
+	mouse_exited.connect(
+		func():
+			hovered = false
+			_style(false),
+	)
 	_style(hovered)
+
 
 func payload() -> Dictionary:
 	var token := information.duplicate(true)
 	token.merge(context, true)
 	return token
 
+
 func set_selected(value: bool) -> void:
 	highlighted = value
 	_style(hovered)
+
 
 func _style(hovered: bool) -> void:
 	var style := StyleBoxFlat.new()
@@ -71,6 +82,7 @@ func _style(hovered: bool) -> void:
 	add_theme_stylebox_override("panel", style)
 	queue_redraw()
 
+
 func _draw() -> void:
 	if show_drag_grip:
 		var color := Color("e4f5ff") if hovered or highlighted else Color("8297ac")
@@ -78,12 +90,19 @@ func _draw() -> void:
 			for offset in [-6, 0, 6]:
 				draw_circle(Vector2(x, size.y / 2 + offset), 1.5, color, true, -1, true)
 	if context.get("card_category") == "rule":
-		draw_line(Vector2(10, size.y - 1), Vector2(size.x - 8, size.y - 1), Color(0.69, 0.78, 0.85, 0.18), 1)
+		draw_line(
+			Vector2(10, size.y - 1),
+			Vector2(size.x - 8, size.y - 1),
+			Color(0.69, 0.78, 0.85, 0.18),
+			1,
+		)
+
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		touched.emit()
 		selected.emit(payload())
+
 
 func _get_drag_data(_position: Vector2) -> Variant:
 	if not information.draggable or not information.tool_input:
@@ -105,4 +124,4 @@ func _get_drag_data(_position: Vector2) -> Variant:
 	label.add_theme_color_override("font_color", Color("e4f5ff"))
 	preview.add_child(label)
 	set_drag_preview(preview)
-	return {"kind": "information", "information": payload()}
+	return { "kind": "information", "information": payload() }

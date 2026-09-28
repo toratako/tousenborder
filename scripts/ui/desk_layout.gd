@@ -9,6 +9,7 @@ const MUTED := Color("b0c8da")
 const GREEN := Color("57edc2")
 const RED := Color("ff718b")
 
+
 static func build_workspace(desk) -> void:
 	desk.workspace = Control.new()
 	desk.workspace.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -28,7 +29,12 @@ static func build_workspace(desk) -> void:
 	desk.glossary_button.pressed.connect(desk._open_glossary)
 	for button in [desk.menu_button, desk.how_to_button, desk.rules_button, desk.glossary_button]:
 		for state in ["normal", "hover", "pressed", "disabled"]:
-			button.add_theme_stylebox_override(state, header_pill_style(Color("19394d") if state in ["hover", "pressed"] else Color("101e32")))
+			button.add_theme_stylebox_override(
+				state,
+				header_pill_style(
+					Color("19394d") if state in ["hover", "pressed"] else Color("101e32")
+				),
+			)
 	var rules_focus := header_pill_style(Color.TRANSPARENT)
 	rules_focus.border_color = PAPER
 	desk.rules_button.add_theme_stylebox_override("focus", rules_focus)
@@ -37,7 +43,13 @@ static func build_workspace(desk) -> void:
 	for rect in [Rect2(624, 12, 128, 46), Rect2(768, 12, 128, 46)]:
 		var pill := Chrome.panel(desk.workspace, rect, Color.TRANSPARENT)
 		pill.add_theme_stylebox_override("panel", header_pill_style(Color("101e32")))
-	desk.elapsed_time = Chrome.label(desk.workspace, Rect2(640, 12, 96, 46), "00:00", Color("57e4f2"), 26)
+	desk.elapsed_time = Chrome.label(
+		desk.workspace,
+		Rect2(640, 12, 96, 46),
+		"00:00",
+		Color("57e4f2"),
+		26,
+	)
 	desk.status = Chrome.label(desk.workspace, Rect2(784, 12, 96, 46), "準備中", PAPER, 15)
 	for label in [desk.elapsed_time, desk.status]:
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -49,16 +61,23 @@ static func build_workspace(desk) -> void:
 	desk.card_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	desk.workspace.add_child(desk.card_layer)
 
+
 static func header_pill_style(fill: Color) -> StyleBoxFlat:
 	var style := Chrome.box(fill, Color("34556f"), 16)
 	style.set_corner_radius_all(23)
 	return style
 
+
 static func build_pause_menu(desk) -> void:
 	desk.pause_menu = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.78))
 	desk.pause_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.pause_menu.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sheet := Chrome.panel(desk.pause_menu, Rect2(330, 155, 620, 490), Color("101e32"), Color("34556f"))
+	var sheet := Chrome.panel(
+		desk.pause_menu,
+		Rect2(330, 155, 620, 490),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	var menu_title := Chrome.label(sheet, Rect2(36, 28, 548, 45), GAME_TITLE, INK, 30)
 	menu_title.add_theme_font_override("font", TITLE_FONT)
 	desk.menu_resume = Chrome.button(sheet, Rect2(36, 151, 548, 52), "ゲームに戻る  [ESC]", PAPER)
@@ -81,11 +100,17 @@ static func build_pause_menu(desk) -> void:
 		button.focus_neighbor_right = next_path
 	desk.pause_menu.hide()
 
+
 static func build_rules(desk) -> void:
 	desk.rules_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.78))
 	desk.rules_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.rules_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	var book := Chrome.panel(desk.rules_overlay, Rect2(200, 55, 880, 690), Color("101e32"), Color("34556f"))
+	var book := Chrome.panel(
+		desk.rules_overlay,
+		Rect2(200, 55, 880, 690),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	Chrome.icon(book, Rect2(30, 24, 40, 40), "res://assets/icons/ui/book.svg")
 	Chrome.label(book, Rect2(86, 22, 764, 45), "セキュリティ運用規則", INK, 30)
 	Chrome.panel(book, Rect2(30, 86, 820, 2), Color("34556f"))
@@ -112,11 +137,17 @@ static func build_rules(desk) -> void:
 		control.focus_neighbor_bottom = path
 	desk.rules_overlay.hide()
 
+
 static func build_how_to(desk) -> void:
 	desk.how_to_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.9))
 	desk.how_to_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.how_to_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sheet := Chrome.panel(desk.how_to_overlay, Rect2(40, 24, 1200, 752), Color("101e32"), Color("34556f"))
+	var sheet := Chrome.panel(
+		desk.how_to_overlay,
+		Rect2(40, 24, 1200, 752),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	Chrome.label(sheet, Rect2(28, 16, 500, 40), "遊び方", INK, 26)
 	desk.how_to_close = Chrome.button(sheet, Rect2(980, 16, 192, 40), "閉じる  [ESC]", PAPER)
 	desk.how_to_close.pressed.connect(desk._close_how_to)
@@ -135,6 +166,7 @@ static func build_how_to(desk) -> void:
 	desk.how_to_counter.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desk.how_to_counter.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	desk.how_to_overlay.hide()
+
 
 static func build_start_screen(desk) -> void:
 	desk.start_screen = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color("070e1b"))
@@ -158,29 +190,81 @@ static func build_start_screen(desk) -> void:
 	title_bottom.rotation = deg_to_rad(2.0)
 	Chrome.label(desk.start_screen, Rect2(98, 338, 530, 38), "そのアクセスを、許可しますか。", MUTED, 22)
 	Chrome.label(desk.start_screen, Rect2(98, 373, 514, 24), "出題", PAPER, 15)
-	desk.pack_select = selection_option(desk, Vector2(98, 400), [{"id": "", "label": "自由演習"}], 514)
+	desk.pack_select = selection_option(
+		desk,
+		Vector2(98, 400),
+		[{ "id": "", "label": "自由演習" }],
+		514,
+	)
 	Chrome.label(desk.start_screen, Rect2(98, 447, 250, 24), "問題カテゴリ", PAPER, 15)
 	Chrome.label(desk.start_screen, Rect2(362, 447, 250, 24), "調査環境", PAPER, 15)
-	desk.category_select = selection_option(desk, Vector2(98, 475), [{"id": "", "label": "すべて"}], 250)
-	desk.platform_select = selection_option(desk, Vector2(362, 475), [{"id": "", "label": "すべて"}], 250)
+	desk.category_select = selection_option(
+		desk,
+		Vector2(98, 475),
+		[{ "id": "", "label": "すべて" }],
+		250,
+	)
+	desk.platform_select = selection_option(
+		desk,
+		Vector2(362, 475),
+		[{ "id": "", "label": "すべて" }],
+		250,
+	)
 	Chrome.label(desk.start_screen, Rect2(98, 528, 250, 24), "難易度", PAPER, 15)
 	Chrome.label(desk.start_screen, Rect2(362, 528, 250, 24), "調査形式", PAPER, 15)
-	desk.difficulty_select = selection_option(desk, Vector2(98, 556), [{"id": "", "label": "すべて"}], 250)
-	desk.method_select = selection_option(desk, Vector2(362, 556), [{"id": "", "label": "すべて"}], 250)
+	desk.difficulty_select = selection_option(
+		desk,
+		Vector2(98, 556),
+		[{ "id": "", "label": "すべて" }],
+		250,
+	)
+	desk.method_select = selection_option(
+		desk,
+		Vector2(362, 556),
+		[{ "id": "", "label": "すべて" }],
+		250,
+	)
 	desk.platform_select.tooltip_text = "OSを選ぶと、そのOSと環境共通の問題を出題します。"
-	var briefing := Chrome.panel(desk.start_screen, Rect2(711, 189, 439, 280), Color("101e32"), Color("34556f"))
+	var briefing := Chrome.panel(
+		desk.start_screen,
+		Rect2(711, 189, 439, 280),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	Chrome.label(briefing, Rect2(26, 20, 387, 23), "勤務前の手引き", Color("b0c8da"), 13)
 	Chrome.label(briefing, Rect2(26, 64, 387, 40), "調査 → 判定 → 監査", INK, 24)
-	Chrome.label(briefing, Rect2(26, 115, 387, 155), "01  情報を選択・ドラッグしてToolへ渡す\n\n02  調査結果をReferenceと照合\n       必要なら結果を次のToolへ渡す\n\n03  ALLOW / BLOCKを対象へ押印", INK, 16)
+	Chrome.label(
+		briefing,
+		Rect2(26, 115, 387, 155),
+		"01  情報を選択・ドラッグしてToolへ渡す\n\n02  調査結果をReferenceと照合\n       必要なら結果を次のToolへ渡す\n\n03  ALLOW / BLOCKを対象へ押印",
+		INK,
+		16,
+	)
 	desk.start_button = Chrome.button(desk.start_screen, Rect2(98, 622, 514, 52), "勤務を開始  >", PAPER)
 	desk.start_button.add_theme_font_size_override("font_size", 22)
 	desk.start_button.pressed.connect(desk._start_shift)
-	desk.tool_guide_button = Chrome.button(desk.start_screen, Rect2(711, 578, 439, 40), "ツール一覧  >", PAPER)
+	desk.tool_guide_button = Chrome.button(
+		desk.start_screen,
+		Rect2(711, 578, 439, 40),
+		"ツール一覧  >",
+		PAPER,
+	)
 	desk.tool_guide_button.pressed.connect(desk._show_tool_guide)
-	desk.license_button = Chrome.button(desk.start_screen, Rect2(711, 630, 439, 40), "ライセンス・著作権表記", MUTED)
+	desk.license_button = Chrome.button(
+		desk.start_screen,
+		Rect2(711, 630, 439, 40),
+		"ライセンス・著作権表記",
+		MUTED,
+	)
 	desk.license_button.pressed.connect(desk._show_licenses)
-	desk.history_button = Chrome.button(desk.start_screen, Rect2(711, 526, 439, 40), "勤務履歴  >", PAPER)
+	desk.history_button = Chrome.button(
+		desk.start_screen,
+		Rect2(711, 526, 439, 40),
+		"勤務履歴  >",
+		PAPER,
+	)
 	desk.history_button.pressed.connect(desk._show_history)
+
 
 static func build_tools(desk) -> void:
 	desk.tool_panel = Chrome.panel(desk.workspace, Rect2(996, 72, 284, 712), Color("0c1829"))
@@ -208,6 +292,7 @@ static func build_tools(desk) -> void:
 	desk.tool_panel.visibility_changed.connect(desk._queue_tools_fit)
 	desk.workspace.resized.connect(desk._queue_tools_fit)
 
+
 static func build_actions(desk) -> void:
 	desk.stamp_rack = HBoxContainer.new()
 	desk.stamp_rack.position = Vector2(20 + (480 - desk.actions.size() * 142) / 2.0, 710)
@@ -221,22 +306,37 @@ static func build_actions(desk) -> void:
 		stamp.configure(action)
 		desk.action_stamps.append(stamp)
 
+
 static func build_audit(desk) -> void:
 	# 画面全体で入力を受け止め、監査中の背面操作を防ぐ。
 	desk.audit_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.78))
 	desk.audit_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.audit_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	Chrome.panel(desk.audit_overlay, Rect2(312, 131, 680, 540), Color("050a12"))
-	var sheet := Chrome.panel(desk.audit_overlay, Rect2(300, 119, 680, 540), Color("101e32"), Color("34556f"))
+	var sheet := Chrome.panel(
+		desk.audit_overlay,
+		Rect2(300, 119, 680, 540),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	Chrome.label(sheet, Rect2(28, 28, 624, 43), "審査結果  監査票", INK, 30)
 	Chrome.panel(sheet, Rect2(28, 84, 624, 2), Color("34556f"))
 	desk.audit_heading = Chrome.label(sheet, Rect2(28, 101, 624, 34), "", INK, 22)
 	desk.audit_body = Chrome.rich(sheet, Rect2(28, 152, 624, 300), INK, 17)
 	desk.next = Chrome.button(sheet, Rect2(28, 475, 624, 42), "確認して次の案件へ  >", PAPER)
-	desk.next.pressed.connect(func(): desk.shift.advance())
+	desk.next.pressed.connect(
+		func():
+			desk.shift.advance(),
+	)
 	desk.audit_overlay.visible = false
 
-static func selection_option(desk, origin: Vector2, entries: Array, width: float = 245) -> OptionButton:
+
+static func selection_option(
+	desk,
+	origin: Vector2,
+	entries: Array,
+	width: float = 245,
+) -> OptionButton:
 	var option := OptionButton.new()
 	option.position = origin
 	option.size = Vector2(width, 42)
@@ -250,7 +350,14 @@ static func selection_option(desk, origin: Vector2, entries: Array, width: float
 	option.item_selected.connect(desk._refresh_selection)
 	return option
 
-static func icon_button(desk, rect: Rect2, icon_name: String, caption: String, tooltip: String) -> Button:
+
+static func icon_button(
+	desk,
+	rect: Rect2,
+	icon_name: String,
+	caption: String,
+	tooltip: String,
+) -> Button:
 	var button := Chrome.button(desk.workspace, rect, caption, PAPER)
 	button.icon = load("res://assets/icons/ui/" + icon_name + ".svg")
 	button.expand_icon = true
@@ -260,11 +367,17 @@ static func icon_button(desk, rect: Rect2, icon_name: String, caption: String, t
 	button.tooltip_text = tooltip
 	return button
 
+
 static func build_tool_guide(desk) -> void:
 	desk.tool_guide = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color("070e1b"))
 	desk.tool_guide.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.tool_guide.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sheet := Chrome.panel(desk.tool_guide, Rect2(80, 55, 1120, 690), Color("101e32"), Color("34556f"))
+	var sheet := Chrome.panel(
+		desk.tool_guide,
+		Rect2(80, 55, 1120, 690),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	Chrome.label(sheet, Rect2(30, 22, 1060, 45), "調査ツール詳細", INK, 30)
 	var scroll := ScrollContainer.new()
 	scroll.position = Vector2(30, 125)
@@ -294,14 +407,25 @@ static func build_tool_guide(desk) -> void:
 	desk.tool_guide_close = Chrome.button(sheet, Rect2(30, 620, 1060, 42), "タイトル画面に戻る", PAPER)
 	desk.tool_guide_close.pressed.connect(desk._close_tool_guide)
 
+
 static func build_licenses(desk) -> void:
 	desk.license_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.85))
 	desk.license_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.license_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sheet := Chrome.panel(desk.license_overlay, Rect2(180, 55, 920, 690), Color("101e32"), Color("34556f"))
+	var sheet := Chrome.panel(
+		desk.license_overlay,
+		Rect2(180, 55, 920, 690),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	Chrome.label(sheet, Rect2(30, 22, 860, 45), "ライセンス・著作権表記", INK, 30)
 	for i in range(desk.license_sections.size()):
-		var tab := Chrome.button(sheet, Rect2(30 + i * 217, 120, 209, 40), desk.license_sections[i].title, PAPER)
+		var tab := Chrome.button(
+			sheet,
+			Rect2(30 + i * 217, 120, 209, 40),
+			desk.license_sections[i].title,
+			PAPER,
+		)
 		tab.toggle_mode = true
 		tab.pressed.connect(desk._select_license.bind(i))
 		desk.license_tabs.append(tab)
@@ -309,20 +433,37 @@ static func build_licenses(desk) -> void:
 	desk.license_close = Chrome.button(sheet, Rect2(30, 620, 860, 42), "タイトル画面に戻る", PAPER)
 	desk.license_close.pressed.connect(desk._close_licenses)
 
+
 static func build_summary(desk) -> void:
 	desk.summary_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.82))
 	desk.summary_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.summary_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	desk.summary = Chrome.panel(desk.summary_overlay, Rect2(140, 40, 1000, 720), Color("101e32"), Color("34556f"))
+	desk.summary = Chrome.panel(
+		desk.summary_overlay,
+		Rect2(140, 40, 1000, 720),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	desk.summary_title = Chrome.label(desk.summary, Rect2(30, 18, 940, 45), "勤務結果", INK, 30)
 	var stats: Dictionary = desk.summary_snapshot.stats
-	desk.summary_stats = Chrome.label(desk.summary, Rect2(30, 65, 940, 30), "正解 %d件  /  誤判定 %d件" % [stats.correct, stats.answered - stats.correct], MUTED, 18)
+	desk.summary_stats = Chrome.label(
+		desk.summary,
+		Rect2(30, 65, 940, 30),
+		"正解 %d件  /  誤判定 %d件" % [stats.correct, stats.answered - stats.correct],
+		MUTED,
+		18,
+	)
 	desk.summary_stats.text += "  /  不適切な調査 %d件" % stats.unsafe
 	desk.summary_stats.add_theme_font_size_override("font_size", 16)
 	desk.summary_stats.hide()
 	desk.summary_tabs.clear()
 	for i in 2:
-		var tab := Chrome.button(desk.summary, Rect2(30 + i * 475, 72, 465, 40), ["分析", "問題ごとの振り返り"][i], PAPER)
+		var tab := Chrome.button(
+			desk.summary,
+			Rect2(30 + i * 475, 72, 465, 40),
+			["分析", "問題ごとの振り返り"][i],
+			PAPER,
+		)
 		tab.toggle_mode = true
 		tab.pressed.connect(desk._select_summary_tab.bind(i))
 		desk.summary_tabs.append(tab)
@@ -340,10 +481,16 @@ static func build_summary(desk) -> void:
 	desk.summary_retry.pressed.connect(desk._save_summary)
 	desk.summary_retry.hide()
 
+
 static func build_summary_actions(desk) -> void:
 	desk.summary_home = Chrome.button(desk.summary, Rect2(30, 660, 230, 45), "スタート画面へ", MUTED)
 	var plan: Dictionary = desk.WrongAnswerRetry.plan(desk.summary_snapshot, desk.library)
-	desk.summary_retry_wrong = Chrome.button(desk.summary, Rect2(276, 660, 370, 45), "誤った問題に再挑戦（%d問）" % plan.cases.size(), PAPER)
+	desk.summary_retry_wrong = Chrome.button(
+		desk.summary,
+		Rect2(276, 660, 370, 45),
+		"誤った問題に再挑戦（%d問）" % plan.cases.size(),
+		PAPER,
+	)
 	desk.summary_retry_wrong.add_theme_font_size_override("font_size", 19)
 	desk.summary_retry_wrong.disabled = plan.cases.is_empty()
 	desk.summary_retry_wrong.tooltip_text = plan.reason
@@ -356,11 +503,17 @@ static func build_summary_actions(desk) -> void:
 	desk.summary_restart = Chrome.button(desk.summary, Rect2(662, 660, 308, 45), "同じ問題に再挑戦", PAPER)
 	desk.summary_restart.pressed.connect(desk._retry_same_cases)
 
+
 static func build_external_preview(desk) -> void:
 	desk.external_preview = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.9))
 	desk.external_preview.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.external_preview.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sheet := Chrome.panel(desk.external_preview, Rect2(280, 120, 720, 560), Color("101e32"), Color("34556f"))
+	var sheet := Chrome.panel(
+		desk.external_preview,
+		Rect2(280, 120, 720, 560),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	Chrome.label(sheet, Rect2(28, 24, 664, 44), "External Reference · 送信前の確認", INK, 25)
 	desk.external_preview_body = Chrome.rich(sheet, Rect2(28, 90, 664, 350), INK, 18)
 	desk.external_skip = Chrome.button(sheet, Rect2(28, 480, 320, 48), "送信を見送る  [ESC]", PAPER)
@@ -377,6 +530,7 @@ static func build_external_preview(desk) -> void:
 		button.focus_neighbor_bottom = button.get_path_to(other)
 	desk.external_preview.hide()
 
+
 static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 	var groups := ProblemLibrary.groups_for(available)
 	if available.is_empty():
@@ -386,7 +540,10 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 		empty.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		desk.tool_rack.add_child(empty)
 	for group in groups:
-		var entries := available.filter(func(tool): return tool.get("group", "tools") == group)
+		var entries := available.filter(
+			func(tool):
+				return tool.get("group", "tools") == group,
+		)
 		if entries.is_empty():
 			continue
 		if groups[group].kind == "external_references":
@@ -414,14 +571,23 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			button.tooltip_text = tool.description
 			if groups[group].kind == "external_references":
-				button.tooltip_text += "\n送信する情報: " + tool.submission.type + "\n" + tool.submission.warning
-			button.pressed.connect(func(): desk._inspect(tool, desk.selected_information))
+				button.tooltip_text += "\n送信する情報: " + tool.submission.type + "\n" + tool \
+						.submission \
+						.warning
+			button.pressed.connect(
+				func():
+					desk._inspect(tool, desk.selected_information),
+			)
 			button.information_dropped.connect(desk._inspect)
 			button.setup_presentation()
 			desk.tool_buttons.append(button)
 
+
 static func fit_tools(desk) -> void:
-	var message_height: float = desk.tool_message.get_minimum_size().y if not desk.tool_message.text.is_empty() else 0.0
+	var message_height: float = desk.tool_message.get_minimum_size().y if not desk \
+			.tool_message \
+			.text \
+			.is_empty() else 0.0
 	var footer := 12.0 + (message_height + 10.0 if message_height > 0 else 0.0)
 	desk.tool_panel.size = desk.workspace.size - desk.tool_panel.position - Vector2(0, 16)
 	desk.tool_scroll.size.x = desk.tool_panel.size.x - 28.0
@@ -431,12 +597,14 @@ static func fit_tools(desk) -> void:
 	desk.tool_message.position.y = 50.0 + desk.tool_scroll.size.y + 10.0
 	desk.tool_message.size.y = message_height
 
+
 static func draw_background(desk) -> void:
 	desk.draw_rect(Rect2(0, 0, 1280, 800), Color("070e1b"))
 	for y in range(16, 800, 32):
 		desk.draw_line(Vector2(0, y), Vector2(1280, y), Color("112336"), 1)
 	for x in range(0, 1280, 32):
 		desk.draw_line(Vector2(x, 0), Vector2(x, 800), Color("112336"), 1)
+
 
 static func list_overlay(desk, title: String) -> Dictionary:
 	var overlay := Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.85))
@@ -457,7 +625,8 @@ static func list_overlay(desk, title: String) -> Dictionary:
 	scroll.add_child(list)
 	var close := Chrome.button(sheet, Rect2(30, 620, 860, 42), "閉じる", PAPER)
 	overlay.hide()
-	return {"overlay": overlay, "scroll": scroll, "list": list, "close": close, "notice": notice}
+	return { "overlay": overlay, "scroll": scroll, "list": list, "close": close, "notice": notice }
+
 
 static func build_glossary(desk) -> void:
 	var parts := list_overlay(desk, "用語集")
@@ -477,8 +646,14 @@ static func build_glossary(desk) -> void:
 	desk.glossary_search.add_theme_color_override("font_color", INK)
 	desk.glossary_search.add_theme_color_override("font_placeholder_color", MUTED)
 	desk.glossary_search.add_theme_color_override("caret_color", Chrome.CYAN)
-	desk.glossary_search.add_theme_stylebox_override("normal", Chrome.box(Chrome.BACKGROUND, Chrome.BORDER, 16))
-	desk.glossary_search.add_theme_stylebox_override("focus", Chrome.box(Color.TRANSPARENT, Chrome.CYAN, 16))
+	desk.glossary_search.add_theme_stylebox_override(
+		"normal",
+		Chrome.box(Chrome.BACKGROUND, Chrome.BORDER, 16),
+	)
+	desk.glossary_search.add_theme_stylebox_override(
+		"focus",
+		Chrome.box(Color.TRANSPARENT, Chrome.CYAN, 16),
+	)
 	sheet.add_child(desk.glossary_search)
 	desk.glossary_search.text_changed.connect(desk._filter_glossary)
 	desk.glossary_count = Chrome.label(sheet, Rect2(730, 90, 160, 30), "", MUTED, 16)
@@ -490,6 +665,7 @@ static func build_glossary(desk) -> void:
 	desk.glossary_empty.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desk.glossary_empty.hide()
 
+
 static func build_history(desk) -> void:
 	var parts := list_overlay(desk, "勤務履歴")
 	desk.history_overlay = parts.overlay
@@ -499,10 +675,12 @@ static func build_history(desk) -> void:
 	desk.history_close.text = "タイトル画面へ戻る"
 	desk.history_close.pressed.connect(desk._close_history)
 
+
 static func list_label(parent: Control, text: String) -> Label:
 	var label := Chrome.label(parent, Rect2(0, 0, 820, 30), text, INK, 17)
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return label
+
 
 static func glossary_entry(parent: Control, term: Dictionary, expanded: bool) -> Dictionary:
 	var column := VBoxContainer.new()
@@ -515,7 +693,11 @@ static func glossary_entry(parent: Control, term: Dictionary, expanded: bool) ->
 	button.add_theme_font_size_override("font_size", 19)
 	for state in ["normal", "hover", "pressed", "focus"]:
 		var fill := Color("19394d") if state in ["hover", "pressed"] else Color("14263b")
-		var style := Chrome.box(Color.TRANSPARENT if state == "focus" else fill, Chrome.CYAN if state == "focus" else Chrome.BORDER, 18)
+		var style := Chrome.box(
+			Color.TRANSPARENT if state == "focus" else fill,
+			Chrome.CYAN if state == "focus" else Chrome.BORDER,
+			18,
+		)
 		style.content_margin_top = 12
 		style.content_margin_bottom = 12
 		button.add_theme_stylebox_override(state, style)
@@ -531,19 +713,31 @@ static func glossary_entry(parent: Control, term: Dictionary, expanded: bool) ->
 	body.add_theme_stylebox_override("normal", body_style)
 	body.visible = expanded
 	button.text = ("▾   " if expanded else "▸   ") + str(term.label)
-	button.toggled.connect(func(open: bool): button.text = ("▾   " if open else "▸   ") + str(term.label))
-	return {"button": button, "body": body}
+	button.toggled.connect(
+		func(open: bool):
+			button.text = ("▾   " if open else "▸   ") + str(term.label),
+	)
+	return { "button": button, "body": body }
+
 
 static func focus_cycle(buttons: Array) -> void:
 	for i in buttons.size():
 		var button: Control = buttons[i]
-		button.focus_previous = button.get_path_to(buttons[(i - 1 + buttons.size()) % buttons.size()])
+		button.focus_previous = button.get_path_to(
+			buttons[(i - 1 + buttons.size()) % buttons.size()]
+		)
 		button.focus_next = button.get_path_to(buttons[(i + 1) % buttons.size()])
 		button.focus_neighbor_top = button.focus_previous
 		button.focus_neighbor_bottom = button.focus_next
 
+
 static func build_content_import(desk) -> void:
-	desk.import_button = Chrome.button(desk.start_screen, Rect2(711, 474, 439, 40), "問題ZIP / JSONを追加", PAPER)
+	desk.import_button = Chrome.button(
+		desk.start_screen,
+		Rect2(711, 474, 439, 40),
+		"問題ZIP / JSONを追加",
+		PAPER,
+	)
 	desk.content_notice = Chrome.label(desk.start_screen, Rect2(98, 687, 1052, 28), "", MUTED, 14)
 	desk.content_dialog = FileDialog.new()
 	desk.content_dialog.title = "教材を追加"
@@ -552,13 +746,22 @@ static func build_content_import(desk) -> void:
 	desk.content_dialog.filters = PackedStringArray(["*.zip ; 問題ZIP", "*.json ; 問題JSON"])
 	desk.add_child(desk.content_dialog)
 	desk.content_dialog.file_selected.connect(desk._import_content)
-	desk.import_button.pressed.connect(func(): desk.content_dialog.popup_centered_ratio(0.75))
+	desk.import_button.pressed.connect(
+		func():
+			desk.content_dialog.popup_centered_ratio(0.75),
+	)
+
 
 static func build_chapter(desk) -> void:
 	desk.chapter_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.85))
 	desk.chapter_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.chapter_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sheet := Chrome.panel(desk.chapter_overlay, Rect2(260, 120, 760, 560), Color("101e32"), Color("34556f"))
+	var sheet := Chrome.panel(
+		desk.chapter_overlay,
+		Rect2(260, 120, 760, 560),
+		Color("101e32"),
+		Color("34556f"),
+	)
 	desk.chapter_body = Chrome.rich(sheet, Rect2(30, 28, 700, 430), INK, 20)
 	desk.chapter_continue = Chrome.button(sheet, Rect2(30, 480, 700, 48), "審査を始める", PAPER)
 	desk.chapter_continue.pressed.connect(desk._close_chapter)

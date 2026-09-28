@@ -31,9 +31,7 @@ class TemplateInstallTests(unittest.TestCase):
         installer.install_archive(
             self.archive, self.destination, "4.7.2.stable", self.digest
         )
-        self.assertTrue(
-            installer.is_installed(self.destination, "4.7.2.stable")
-        )
+        self.assertTrue(installer.is_installed(self.destination, "4.7.2.stable"))
         self.assertTrue((self.destination / "icudt77l.dat").exists())
         self.assertFalse((self.root / "unexpected").exists())
         self.assertFalse((self.destination / "android_release.apk").exists())
@@ -64,9 +62,7 @@ class TemplateInstallTests(unittest.TestCase):
             installer.install_archive(
                 self.archive, self.destination, "4.7.2.stable", self.digest
             )
-        self.assertEqual(
-            (self.destination / "existing").read_text(), "preserve"
-        )
+        self.assertEqual((self.destination / "existing").read_text(), "preserve")
         self.assertEqual(
             list(self.destination.iterdir()), [self.destination / "existing"]
         )
