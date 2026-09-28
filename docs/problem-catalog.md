@@ -1,8 +1,7 @@
-# Problem index
+# 問題一覧
 
-公開教材 70問。問題JSONから生成した開発者用の索引（正解を含む）。
-`python3 scripts/build_problem_catalog.py` で再生成、`--check` で差分を検証。
-分類・到達性の検証はゲームと同じ `ProblemLoader` を使用する。手書きのCatalogは持たない。
+公開教材 70問．問題JSONから生成した開発者用の索引．
+`python3 scripts/build_problem_catalog.py` で再生成．`--check` で差分を検証．
 
 | ID | 分野 | OS | 難易度 | 調査形式 | Title | 正解 |
 | --- | --- | --- | --- | --- | --- | --- |

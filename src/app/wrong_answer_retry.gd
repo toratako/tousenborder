@@ -13,7 +13,7 @@ static func plan(snapshot: Dictionary, library: ProblemLibrary) -> Dictionary:
 		if record.correct:
 			continue
 		var source: String = record.get("source_id", "")
-		# Version 2 predates imports; only the shipped learning pack can be identified.
+		# History version 2 predates imports; only the shipped learning pack can be identified.
 		if source.is_empty() and snapshot.get("pack", { }).get("id", "") == "learning":
 			source = "builtin"
 		var key: String = record.id if source == "builtin" else source + "/" + record.id

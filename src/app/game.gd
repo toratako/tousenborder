@@ -25,8 +25,6 @@ const PauseMenu = preload("res://src/ui/inspection/pause_menu.gd")
 var pause_menu: PauseMenu
 const AuditPanel = preload("res://src/ui/inspection/audit_panel.gd")
 var audit_overlay: AuditPanel
-const ChapterPanel = preload("res://src/ui/inspection/chapter_panel.gd")
-var chapter_overlay: ChapterPanel
 const ExternalPreview = preload("res://src/ui/inspection/external_preview.gd")
 var external_preview: ExternalPreview
 
@@ -40,7 +38,6 @@ var feedback := {
 	"show_expected": true,
 }
 var rules: Array[Dictionary] = []
-var shown_chapters := { }
 var shift := InspectionShift.new()
 var rules_previous_focus: Control
 var how_to_previous_focus: Control
@@ -98,10 +95,6 @@ func _ready() -> void:
 	start_screen.licenses_requested.connect(_show_licenses)
 	start_screen.history_requested.connect(_show_history)
 	start_screen.import_requested.connect(_import_content)
-	chapter_overlay = ChapterPanel.new()
-	add_child(chapter_overlay)
-	chapter_overlay.setup()
-	chapter_overlay.continued.connect(_close_chapter)
 	pause_menu = PauseMenu.new()
 	add_child(pause_menu)
 	pause_menu.setup()
@@ -139,7 +132,7 @@ func _ready() -> void:
 func _investigation_paused() -> bool:
 	return (
 		pause_menu.visible or rules_overlay.visible or how_to_overlay.visible
-		or external_preview.visible or glossary_overlay.visible or chapter_overlay.visible
+		or external_preview.visible or glossary_overlay.visible
 	)
 
 
@@ -152,11 +145,6 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if is_instance_valid(chapter_overlay) and chapter_overlay.visible:
-		if event.is_action_pressed("ui_cancel") and not event.is_echo():
-			_close_chapter()
-			get_viewport().set_input_as_handled()
-		return
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
 		if glossary_overlay.visible:
 			_close_glossary()
@@ -207,7 +195,7 @@ func _handle_inspection_input(event: InputEvent) -> void:
 func _toggle_menu() -> void:
 	if (
 		not workspace.playing or rules_overlay.visible or how_to_overlay.visible
-		or glossary_overlay.visible or chapter_overlay.visible
+		or glossary_overlay.visible
 	):
 		return
 	if pause_menu.visible:
@@ -286,7 +274,6 @@ func _close_summary() -> void:
 
 
 func _show_start_screen() -> void:
-	chapter_overlay.hide()
 	retry_cases.clear()
 	retry_source_id = ""
 	summary_from_history = false
@@ -336,8 +323,6 @@ func _retry_same_cases() -> void:
 
 
 func _begin_shift(selected: Array[Dictionary]) -> void:
-	shown_chapters.clear()
-	chapter_overlay.hide()
 	workspace.displayed_index = -1
 	completed_snapshot.clear()
 	summary_from_history = false
@@ -351,8 +336,7 @@ func _begin_shift(selected: Array[Dictionary]) -> void:
 	workspace.playing = true
 	workspace.clear_case()
 	shift.start(selected)
-	if not chapter_overlay.visible:
-		workspace.menu_button.grab_focus()
+	workspace.menu_button.grab_focus()
 
 
 func _draw() -> void:
@@ -593,13 +577,6 @@ func _session_pack() -> Dictionary:
 	return { "id": "freeplay", "title": "自由演習", "path": content_root }
 
 
-func _close_chapter() -> void:
-	chapter_overlay.hide()
-	workspace.menu_button.grab_focus()
-	if workspace.playing and not shift.finished():
-		workspace.refresh_controls(shift.current())
-
-
 func _display_summary(snapshot: Dictionary, from_history: bool) -> void:
 	_close_summary()
 	summary_from_history = from_history
@@ -631,10 +608,6 @@ func _on_case_presented(item: Dictionary) -> void:
 	for tool in workspace.active_tools:
 		if ProblemContext.supports_target(tool, item):
 			glossary_overlay.viewed[LearningGlossary.key(tool.id, "overview")] = true
-	if item.has("chapter") and not shown_chapters.has(item.chapter.id):
-		shown_chapters[item.chapter.id] = true
-		if not item.chapter.intro.is_empty():
-			chapter_overlay.present(item.chapter)
 
 
 func _on_result_viewed(tool_id: String) -> void:

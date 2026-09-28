@@ -3,7 +3,7 @@
   "properties": {
     "schema_version": {
       "type": "integer",
-      "const": 2
+      "const": 3
     },
     "id": {
       "$ref": "#/$defs/text"
@@ -11,10 +11,9 @@
     "title": {
       "$ref": "#/$defs/text"
     },
-    "chapters": {
+    "problems": {
       "type": "array",
       "minItems": 1,
-      "uniqueItems": true,
       "items": {
         "$ref": "#/$defs/text"
       }
@@ -24,7 +23,7 @@
     "schema_version",
     "id",
     "title",
-    "chapters"
+    "problems"
   ],
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema",

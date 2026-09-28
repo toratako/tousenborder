@@ -22,7 +22,7 @@
 | --- | --- |
 | ディレクトリ・ZIP・単独JSONの読込，容量・パス制限 | [content_source.gd](../src/content/content_source.gd) |
 | 読込元単位の検証・登録・絞込 | [problem_library.gd](../src/content/problem_library.gd) |
-| Pack・章参照，追加教材の保存 | [pack_loader.gd](../src/content/pack_loader.gd)，[content_import_store.gd](../src/persistence/content_import_store.gd) |
+| Packの問題参照，追加教材の保存 | [pack_loader.gd](../src/content/pack_loader.gd)，[content_import_store.gd](../src/persistence/content_import_store.gd) |
 | Schemaと意味検証，実行時データへの変換 | [content_schema.gd](../src/validation/content_schema.gd)，[problem_loader.gd](../src/content/problem_loader.gd) |
 | 表示テンプレート・入力の接続，到達性・必要証拠 | [information.gd](../src/domain/information.gd)，[investigation_inputs.gd](../src/domain/investigation_inputs.gd) |
 | 案件ID・調査OSの共通ルール | [problem_context.gd](../src/domain/problem_context.gd)．検証と実行から参照し，ローダ・実行器には依存しない |

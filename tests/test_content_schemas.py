@@ -35,9 +35,8 @@ class ContentSchemaTests(unittest.TestCase):
             read(ROOT / "tests/fixtures/learning-support/problem.json")
         )
         for path in (ROOT / "data/packs").rglob("*.json"):
-            schemas["pack" if path.name == "pack.json" else "chapter"].validate(
-                read(path)
-            )
+            self.assertEqual(path.name, "pack.json")
+            schemas["pack"].validate(read(path))
         schemas["glossary"].validate(read(ROOT / "data/glossary/security.json"))
 
     def test_equivalent_packet_views_agree(self):

@@ -95,15 +95,12 @@ func _run() -> void:
 	)
 	var pack: Dictionary = desk.library.packs[0]
 	select_value(desk.start_screen.pack_select, pack.key)
-	var expected_ids := []
-	for chapter in pack.chapters:
-		expected_ids.append_array(chapter.problems)
 	assert(
-		desk.start_screen.selected_cases().map(func(item): return item.id) == expected_ids
+		desk.start_screen.selected_cases().map(func(item): return item.id) == pack.problems
 		and desk.start_screen.category_select.disabled and desk.start_screen.method_select.disabled
 	)
 	desk.start_screen.start_button.pressed.emit()
-	assert(desk.shift.current().id == pack.chapters[0].problems[0])
+	assert(desk.shift.current().id == pack.problems[0])
 	desk.queue_free()
 	await process_frame
 	print("Selection tests passed")

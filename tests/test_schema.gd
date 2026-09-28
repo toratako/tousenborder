@@ -92,12 +92,16 @@ func _initialize() -> void:
 	changed.initial.terms = ["file", "file"]
 	check(not ContentSchema.validate(changed, ContentSchema.PROBLEM).is_empty(), "表示箇所の用語重複を拒否")
 	var pack := {
-		"schema_version": 2,
+		"schema_version": 3,
 		"id": "test",
 		"title": "Test",
-		"chapters": ["chapters/01.json"],
+		"problems": ["FIX-FILE"],
 	}
+	changed = pack.duplicate(true)
+	changed.schema_version = 2
+	check(not ContentSchema.validate(changed, ContentSchema.PACK).is_empty(), "旧Pack版を拒否")
 	for key in [
+		"chapters",
 		"cases",
 		"tools",
 		"actions",

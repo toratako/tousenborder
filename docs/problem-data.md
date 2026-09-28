@@ -1,6 +1,6 @@
 # 教材データ
 
-正本は問題JSON．形式は [Problem v2](../data/schemas/problem.schema.json)，[Pack v2](../data/schemas/pack.schema.json)，[Chapter v1](../data/schemas/chapter.schema.json)．公開教材は `data/problems/`，出題・配布対象外は [authoring/archive/](../authoring/archive/README.md)．
+正本は問題JSON．形式は [Problem v2](../data/schemas/problem.schema.json)，[Pack v3](../data/schemas/pack.schema.json)．公開教材は `data/problems/`，出題・配布対象外は [authoring/archive/](../authoring/archive/README.md)．
 
 ## 追加・変更の手順
 
@@ -45,18 +45,16 @@
 
 OS別出力・代替証拠の例は [対象OSと調査OS](runtime-flow.md#対象osと調査os)．
 
-## Pack・章・ZIP
+## Pack・ZIP
 
-Packは任意の出題順・章の導入だけを管理する．ZIPでは次の構成を直下に置く．
+Packは問題IDによる出題順だけを管理する．ZIPでは次の構成を直下に置く．
 
 ```text
 problems/first.json
 packs/story/pack.json
-packs/story/chapters/01.json
 ```
 
-`pack.json` は `{ "schema_version": 2, "id": "story", "title": "物語", "chapters": ["chapters/01.json"] }`．
-章は `{ "schema_version": 1, "id": "first", "title": "第一章", "intro": "朝の審査を始めます．", "problems": ["EXAMPLE-FILE"] }`．章パスはPackディレクトリからの相対パス，問題IDは同じ読込元を参照する．別章で同じ問題を使える．
+`pack.json` は `{ "schema_version": 3, "id": "story", "title": "物語", "problems": ["EXAMPLE-FILE"] }`．問題IDは同じ読込元を参照し，同じIDを複数回指定できる．旧章付きPackは v3 への変換が必要．
 
 タイトルの「問題ZIP / JSONを追加」でZIPまたは単独のProblem JSONを読み込む．全体の検証・保存成功後に登録し，無効な読込元があっても他の教材は維持する．保存先は `user://content/`，内容のSHA-256が識別子．同じ内容の再追加は重複せず，内容変更は別の読込元になる．削除UIは未実装で，不要な教材はアプリ終了後に保存先から削除する．
 

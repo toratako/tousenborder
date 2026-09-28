@@ -138,46 +138,35 @@ func _run() -> void:
 		not Information.validate_template("{{fact:missing}}", facts, true).is_empty(),
 		"欠けた表示参照を拒否",
 	)
-	# A pack owns only sequencing. Multiple chapter files can repeat a standalone problem.
+	# A pack owns only sequencing and may repeat a standalone problem.
 	source_files["packs/story/pack.json"] = {
-		"schema_version": 2,
+		"schema_version": 3,
 		"id": "story",
 		"title": "物語",
-		"chapters": ["chapters/01.json", "chapters/02.json"],
-	}
-	source_files["packs/story/chapters/01.json"] = {
-		"schema_version": 1,
-		"id": "first",
-		"title": "一章",
-		"intro": "朝の審査",
-		"problems": [raw.id],
-	}
-	source_files["packs/story/chapters/02.json"] = {
-		"schema_version": 1,
-		"id": "second",
-		"title": "二章",
-		"intro": "夕方の審査",
-		"problems": [raw.id],
+		"problems": [raw.id, raw.id],
 	}
 	var story_path := directory.path_join("story.zip")
 	archive(story_path, source_files)
 	var story := ContentSource.open_file(story_path)
-	check(library.add_source(story), "章を複数JSONで読込: " + str(library.errors))
+	check(library.add_source(story), "PackをZIPで読込: " + str(library.errors))
 	var pack: Dictionary = library.packs[0]
 	var ordered := library.pack_cases(pack.key)
-	check(ordered.size() == 2 and ordered[0].chapter.id != ordered[1].chapter.id, "章の順序と同じ問題の再使用")
+	check(ordered.map(func(c): return c.id) == [raw.id, raw.id], "Packの順序と同じ問題の再使用")
+	ordered[0].title = "セッション側の変更"
 	check(
-		not library.cases.filter(
+		ordered[1].title == raw.title and library.cases.filter(
 			func(c):
 				return c.source_id == story.id,
-		)[0].has("chapter"),
-		"問題本体に章情報を混ぜない",
+		)[0].title == raw.title,
+		"出題用コピーの変更を問題本体や次の出題に混ぜない",
 	)
 	var missing := ContentSource.new()
-	missing.id = "missing-chapter"
+	missing.id = "missing-problem"
 	missing.files = story.files.duplicate(true)
-	missing.files.erase("packs/story/chapters/02.json")
-	check(not library.add_source(missing), "欠けた章を含むPackを拒否")
+	var invalid_pack: Dictionary = source_files["packs/story/pack.json"].duplicate(true)
+	invalid_pack.problems = ["unknown-problem"]
+	missing.files["packs/story/pack.json"] = JSON.stringify(invalid_pack).to_utf8_buffer()
+	check(not library.add_source(missing), "存在しない問題を参照するPackを拒否")
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	await process_frame
@@ -206,41 +195,19 @@ func _run() -> void:
 	desk.tool_guide.close_button.pressed.emit()
 	desk.start_screen.pack_select.select(1)
 	desk._start_shift()
-	check(
-		desk.chapter_overlay.visible and desk.chapter_overlay.continue_button.has_focus(),
-		"最初の章の導入を表示",
-	)
-	desk._toggle_menu()
-	check(not desk.pause_menu.visible, "章の導入中にメニューを重ねない")
-	var elapsed: float = desk.shift.elapsed_seconds
-	desk._process(5)
-	check(
-		desk.shift.elapsed_seconds == elapsed
-		and not desk.workspace._can_stamp(desk.workspace.get_stamp("allow").payload()),
-		"章の導入中は時計・判定を停止",
-	)
-	desk.chapter_overlay.continue_button.pressed.emit()
-	check(not desk.chapter_overlay.visible, "導入から問題へ")
+	check(desk.shift.current().id == raw.id, "Packの最初の問題を出題")
 	desk.shift.decide(raw.ground_truth)
 	desk.audit_overlay.next_button.pressed.emit()
 	check(
-		desk.chapter_overlay.visible
-		and desk.chapter_overlay.body.get_parsed_text().contains("夕方") and not desk.shift.judged,
-		"同じ問題IDでも次の章を再表示: %s / %s / %s / %s"
-		% [
-			desk.chapter_overlay.visible,
-			desk.chapter_overlay.body.get_parsed_text(),
-			desk.shift.judged,
-			desk.shift.index,
-		],
+		desk.shift.current().id == raw.id and desk.shift.index == 1 and not desk.shift.judged,
+		"同じ問題IDを次の問題として再出題",
 	)
-	desk.chapter_overlay.continue_button.pressed.emit()
 	desk.shift.decide(raw.ground_truth)
 	desk.audit_overlay.next_button.pressed.emit()
 	check(
 		desk.completed_snapshot.records.size() == 2
 		and HistoryStore.validate(desk.completed_snapshot).is_empty(),
-		"複数章の履歴を保存",
+		"重複出題の履歴を保存",
 	)
 	var saved: Dictionary = desk.completed_snapshot.duplicate(true)
 	var version_two := saved.duplicate(true)
@@ -265,5 +232,5 @@ func _run() -> void:
 	check(desk.summary_screen.review.get_parsed_text().contains(raw.explanation), "教材がなくても履歴を表示")
 	desk.queue_free()
 	await process_frame
-	print("Content imports and chapters: %d failures" % failures)
+	print("Content imports and packs: %d failures" % failures)
 	quit(1 if failures else 0)

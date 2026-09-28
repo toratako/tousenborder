@@ -159,18 +159,8 @@ func pack_cases(key: String) -> Array[Dictionary]:
 	for pack in packs:
 		if pack.key != key:
 			continue
-		for chapter in pack.chapters:
-			for index in chapter.problems.size():
-				var item: Dictionary = _sources[pack.source_id] \
-						.problems[chapter.problems[index]] \
-						.duplicate(true)
-				if index == 0:
-					item.chapter = {
-						"id": pack.key + "/" + chapter.id,
-						"title": chapter.title,
-						"intro": chapter.get("intro", ""),
-					}
-				result.append(item)
+		for id in pack.problems:
+			result.append(_sources[pack.source_id].problems[id].duplicate(true))
 	return result
 
 
