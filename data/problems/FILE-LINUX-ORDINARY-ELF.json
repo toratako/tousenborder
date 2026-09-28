@@ -6,7 +6,7 @@
   "level": "beginner_external",
   "ground_truth": "block",
   "title": "普通のELFに含まれる外部URL",
-  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "File": "/tmp/report-converter",
     "申請内容": "公開サイトで配布されたLinux用帳票変換プログラムを初回実行する。",
@@ -20,7 +20,7 @@
     {
       "id": "strings",
       "name": "strings (GNU)",
-      "description": "File内の可読文字列を抽出します。実行時の動作は観測しません。",
+      "description": "ファイル内の可読文字列を抽出します。実行時の動作は観測しません。",
       "output": "対象: /tmp/report-converter\n静的文字列の抜粋:\nReport Converter 1.0\nhttps://compute-assets.example/bootstrap.bin\n--quiet",
       "accepted_information_types": [
         "file"
@@ -31,7 +31,7 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "platform_note": "Linux / GNU binutils",
       "environments": [
         "linux"
@@ -39,7 +39,7 @@
       "output_information": [
         {
           "id": "domain",
-          "label": "文字列中の公開Domain",
+          "label": "文字列中の公開ドメイン",
           "value": "compute-assets.example",
           "data_type": "domain"
         }
@@ -51,18 +51,18 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
-        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
-        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
-        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象のIndicatorは機密指定なし。File本体・完全URLは上記に従う。"
+        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
       }
     }
   ],
   "external_references": [
     {
       "id": "domain_rep",
-      "name": "Domain Reputation",
+      "name": "ドメインの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
       "output": "Domain: compute-assets.example\nLast analysis: 2026-08-18 00:00Z\nReports: 9/12 feeds\nClassification: malware-distribution\nLast seen: 2026-08-18",
       "accepted_information_types": [
@@ -74,12 +74,12 @@
           "id": "domain"
         }
       ],
-      "input_hint": "domain",
+      "input_hint": "ドメイン",
       "submission_type": "domain",
       "submission_value": "compute-assets.example",
-      "confidentiality_warning": "Domain名のみを送信します。URLのPath・Queryは送りません。",
+      "confidentiality_warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
     }
   ],
   "required_evidence": [
@@ -388,16 +388,16 @@
       ]
     }
   ],
-  "explanation": "ELFであること自体には問題はありませんが、GNU stringsで抽出したURLのDomainが外部評判で現行のMalware配布先として報告されているため実行を遮断します。静的文字列だけから通信や実行が起きたとは断定しません。",
-  "topic": "GNU stringsで静的文字列から公開Domainを取得し、外部評判と照合する。文字列と実際の通信は区別する",
-  "summary": "GNU stringsで静的文字列から公開Domainを取得し、外部評判と照合する。文字列と実際の通信は区別する",
+  "explanation": "ELFであること自体には問題はありませんが、GNU stringsで抽出したURLのドメインが外部評判で現行のマルウェア配布先として報告されているため実行を遮断します。静的文字列だけから通信や実行が起きたとは断定しません。",
+  "topic": "GNU stringsで静的文字列から公開ドメインを取得し、外部評判と照合する。文字列と実際の通信は区別する",
+  "summary": "GNU stringsで静的文字列から公開ドメインを取得し、外部評判と照合する。文字列と実際の通信は区別する",
   "learning_objectives": [
-    "GNU stringsで静的文字列から公開Domainを取得し、外部評判と照合する。文字列と実際の通信は区別する"
+    "GNU stringsで静的文字列から公開ドメインを取得し、外部評判と照合する。文字列と実際の通信は区別する"
   ],
   "decision_context": "before_execution",
   "scenario_type": "standard",
   "sources": [
     "https://sourceware.org/binutils/docs/binutils/strings.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

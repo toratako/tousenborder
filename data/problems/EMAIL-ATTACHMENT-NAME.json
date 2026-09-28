@@ -6,7 +6,7 @@
   "level": "very_beginner",
   "ground_truth": "block",
   "title": "PDFと説明された.exe添付",
-  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Email": "quarantine/message-1075.eml",
     "From": "sales@cedar.example",
@@ -14,7 +14,7 @@
     "Subject": "請求書PDF",
     "本文": "添付したPDF請求書を確認してください。",
     "受信時刻": "2026-08-18 09:10",
-    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。",
+    "状態": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。",
     "添付完全名": "invoice.pdf.exe"
   },
   "initial_information_types": {
@@ -25,7 +25,7 @@
     {
       "id": "format",
       "name": "受入れ形式",
-      "content": "請求書の添付はPDFのみ。実行File不可。"
+      "content": "請求書の添付はPDFのみ。実行ファイル不可。"
     }
   ],
   "external_references": [],
@@ -138,15 +138,15 @@
     }
   ],
   "explanation": "添付の完全名は.exeで、PDFという説明と受入れ条件に反するため遮断します。",
-  "topic": "Emailでも添付の完全名を確認する",
-  "summary": "Emailでも添付の完全名を確認する",
+  "topic": "メールでも添付の完全名を確認する",
+  "summary": "メールでも添付の完全名を確認する",
   "learning_objectives": [
-    "Emailでも添付の完全名を確認する"
+    "メールでも添付の完全名を確認する"
   ],
   "decision_context": "before_delivery",
   "scenario_type": "standard",
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc8601"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

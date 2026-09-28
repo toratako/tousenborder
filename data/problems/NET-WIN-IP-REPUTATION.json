@@ -16,7 +16,7 @@
     "端末": "192.0.2.25",
     "保留中のLocal Port": 52410,
     "要求時刻": "2026-08-18 09:10:00",
-    "接続状況": "同じProcessの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。"
+    "接続状況": "同じプロセスの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。"
   },
   "initial_information_types": {
     "PID": "pid"
@@ -25,7 +25,7 @@
     {
       "id": "tcp",
       "name": "TCPView",
-      "description": "選択PIDのSocketと相手IP・Portを確認します。",
+      "description": "選択PIDのソケットと相手IP・ポートを確認します。",
       "output": "Process: C:\\Users\\mori\\Downloads\\cache-worker.exe\n192.0.2.25:52400 -> 203.0.113.100:443 ESTABLISHED / PID 5100 / cache-worker.exe",
       "accepted_information_types": [
         "pid"
@@ -44,7 +44,7 @@
       "output_information": [
         {
           "id": "ip",
-          "label": "既存接続のRemote IP",
+          "label": "既存接続の接続先IP",
           "value": "203.0.113.100",
           "data_type": "ip"
         }
@@ -56,18 +56,18 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
-        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
-        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
-        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象のIndicatorは機密指定なし。File本体・完全URLは上記に従う。"
+        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。"
       }
     }
   ],
   "external_references": [
     {
       "id": "ip_rep",
-      "name": "IP Reputation",
+      "name": "IPの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
       "output": "IP: 203.0.113.100\nDedicated endpoint; malicious-infrastructure 12/16 feeds\nLast confirmed: 2026-08-18 00:00Z",
       "accepted_information_types": [
@@ -79,12 +79,12 @@
           "id": "ip"
         }
       ],
-      "input_hint": "ip",
+      "input_hint": "IP",
       "submission_type": "ip",
       "submission_value": "203.0.113.100",
-      "confidentiality_warning": "IP Addressをサービスへ送信します。PCAPや通信本文は送りません。",
+      "confidentiality_warning": "IPアドレスをサービスへ送信します。PCAPや通信本文は送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
     }
   ],
   "required_evidence": [
@@ -460,16 +460,16 @@
       ]
     }
   ],
-  "explanation": "対象Processの接続先IPには、現在も有効な悪性インフラとしての報告があるため新しい接続を遮断します。",
-  "topic": "Socket所有ProcessとIP評判を確認する",
-  "summary": "Socket所有ProcessとIP評判を確認する",
+  "explanation": "対象プロセスの接続先IPには、現在も有効な悪性インフラとしての報告があるため新しい接続を遮断します。",
+  "topic": "ソケットを所有するプロセスとIPアドレスの評判を確認する",
+  "summary": "ソケットを所有するプロセスとIPアドレスの評判を確認する",
   "learning_objectives": [
-    "Socket所有ProcessとIP評判を確認する"
+    "ソケットを所有するプロセスとIPアドレスの評判を確認する"
   ],
   "decision_context": "before_connection",
   "scenario_type": "standard",
   "sources": [
     "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

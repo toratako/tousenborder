@@ -5,7 +5,7 @@
   "platform": "windows",
   "level": "beginner_external",
   "ground_truth": "allow",
-  "title": "割当Netblockと承認Server",
+  "title": "割当アドレスブロックと承認サーバー",
   "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "接続ID": "CONNECT-701",
@@ -16,7 +16,7 @@
     "端末": "192.0.2.25",
     "保留中のLocal Port": 52410,
     "要求時刻": "2026-08-18 09:10:00",
-    "接続状況": "同じProcessの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。"
+    "接続状況": "同じプロセスの既存接続あり。今回の要求は同じ宛先への再接続で、まだ未許可。"
   },
   "initial_information_types": {
     "PID": "pid"
@@ -44,7 +44,7 @@
       "output_information": [
         {
           "id": "ip",
-          "label": "既存接続のRemote IP",
+          "label": "既存接続の接続先IP",
           "value": "198.51.100.70",
           "data_type": "ip"
         }
@@ -54,16 +54,16 @@
   "references": [
     {
       "id": "server",
-      "name": "Approved Servers",
-      "content": "report-client.exe / PID 5100 / 198.51.100.70:443 / 委託先Aster Hosting Ltd. / 委託契約H-770の専用帳票受信Server / NET-703。"
+      "name": "承認済みサーバー",
+      "content": "report-client.exe / PID 5100 / 198.51.100.70:443 / 委託先Aster Hosting Ltd. / 委託契約H-770の専用帳票受信サーバー / NET-703。"
     },
     {
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPは照会可。",
-        "今回の資料区分": "照会対象のIPは機密指定なし。",
-        "RDAP": "組織が承認した登録情報サービスへIP・登録Domainのみ送信可。"
+        "照会対象": "機密指定のないドメイン・IPは照会可。",
+        "今回の資料区分": "照会対象のIPアドレスに機密指定はありません。",
+        "RDAP": "組織が承認した登録情報サービスへIP・登録ドメインのみ送信可。"
       }
     }
   ],
@@ -71,7 +71,7 @@
     {
       "id": "rdap",
       "name": "RDAP",
-      "description": "IPまたは登録Domainを外部の登録情報サービスへ照会します。",
+      "description": "IPまたは登録ドメインを外部の登録情報サービスへ照会します。",
       "output": "照会IP: 198.51.100.70\nstartAddress: 198.51.100.64\nendAddress: 198.51.100.79\n割当組織: Aster Hosting Ltd.",
       "accepted_information_types": [
         "ip"
@@ -307,16 +307,16 @@
       ]
     }
   ],
-  "explanation": "RDAPの割当先と委託先が一致し、個別IP・Port・用途も承認Server台帳に一致するため許可します。",
-  "topic": "IPの割当組織と個別Service承認を区別する",
-  "summary": "IPの割当組織と個別Service承認を区別する",
+  "explanation": "RDAPの割当先と委託先が一致し、個別IP・ポート・用途も承認サーバー台帳に一致するため許可します。",
+  "topic": "IPの割当組織と個別サービス承認を区別する",
+  "summary": "IPの割当組織と個別サービス承認を区別する",
   "learning_objectives": [
-    "IPの割当組織と個別Service承認を区別する"
+    "IPの割当組織と個別サービス承認を区別する"
   ],
   "decision_context": "before_connection",
   "scenario_type": "standard",
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc9082.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

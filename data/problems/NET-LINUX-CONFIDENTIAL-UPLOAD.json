@@ -5,7 +5,7 @@
   "platform": "linux",
   "level": "advanced",
   "ground_truth": "block",
-  "title": "個人Cloudへの機密File送信",
+  "title": "個人クラウドへの機密ファイル送信",
   "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "接続ID": "CONNECT-701",
@@ -18,7 +18,7 @@
     "保留中のLocal Port": 52410,
     "要求時刻": "2026-08-18 09:10:00",
     "保存PCAP": "flow-before-0910.pcap",
-    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+    "観測範囲": "PCAPは09:09:59まで。同じプロセスの既存接続を含む。今回の接続はまだ未許可。"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -29,7 +29,7 @@
     {
       "id": "lsof_i",
       "name": "lsof -i",
-      "description": "選択PIDが所有するInternet Socketを確認します。",
+      "description": "選択PIDが所有するインターネット接続のソケットを確認します。",
       "output": "COMMAND PID USER FD TYPE NAME\ncloud-copy 5100 agent 5u IPv4 192.0.2.30:52400->198.51.100.90:443 (ESTABLISHED)",
       "accepted_information_types": [
         "pid"
@@ -48,7 +48,7 @@
       "output_information": [
         {
           "id": "ip",
-          "label": "既存接続のRemote IP",
+          "label": "既存接続の接続先IP",
           "value": "198.51.100.90",
           "data_type": "ip"
         }
@@ -57,7 +57,7 @@
     {
       "id": "ps",
       "name": "ps",
-      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "description": "選択PIDのユーザー・親PID・コマンドラインを確認します。",
       "output": "PID PPID USER COMMAND\n5100 1 agent /home/user/bin/cloud-copy --source /srv/finance/forecast.csv --destination https://personal-cloud.example/u/demo",
       "accepted_information_types": [
         "pid"
@@ -77,7 +77,7 @@
     {
       "id": "capture",
       "name": "Wireshark",
-      "description": "保存済みPCAPのPacketやConversation統計を表示します。所有ProcessはSocket Toolで照合します。",
+      "description": "保存済みPCAPのパケットや通信統計を表示します。所有プロセスはソケット調査ツールで照合します。",
       "output": "File: flow-before-0910.pcap\n09:05–09:09 192.0.2.30:52400 -> 198.51.100.90:443\nTCP conversation: sent 128 MiB; received 64 KiB\nTLS Application Data; 本文は暗号化",
       "accepted_information_types": [
         "pcap"
@@ -98,7 +98,7 @@
   "references": [
     {
       "id": "policy",
-      "name": "File / 通信方針",
+      "name": "ファイル・通信方針",
       "content": {
         "機密資料": "/srv/finance/forecast.csv",
         "分類": "社外秘・財務予測",
@@ -111,10 +111,10 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
-        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
-        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
-        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
         "今回の資料区分": "社外秘"
       }
     }
@@ -598,7 +598,7 @@
       ]
     }
   ],
-  "explanation": "Processの引数は機密資料を個人Cloudへ転送する指定で、宛先・利用Toolとも送信方針に反するため遮断します。大量のTLS通信だけからFile内容を読み取った判断ではありません。",
+  "explanation": "プロセスの引数は機密資料を個人クラウドへ転送する指定で、宛先・利用ツールとも送信方針に反するため遮断します。大量のTLS通信だけからファイル内容を読み取った判断ではありません。",
   "topic": "転送対象・宛先・用途を送信方針と照合する",
   "summary": "転送対象・宛先・用途を送信方針と照合する",
   "learning_objectives": [
@@ -609,5 +609,5 @@
   "sources": [
     "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

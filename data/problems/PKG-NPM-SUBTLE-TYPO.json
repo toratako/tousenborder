@@ -5,13 +5,13 @@
   "platform": "common",
   "level": "intermediate",
   "ground_truth": "block",
-  "title": "Subtle Typosquatting",
-  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "見分けにくいタイポスクワッティング",
+  "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Package": "@aster-iu/calendar",
     "Version": "2.4.0",
     "Ecosystem": "npm",
-    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。",
+    "状態": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。",
     "業務用途": "社内Calendar UI",
     "申請Ticket": "COMP-1007"
   },
@@ -22,7 +22,7 @@
   "references": [
     {
       "id": "metadata",
-      "name": "npm Registry / Package Metadata",
+      "name": "npmレジストリのパッケージ情報",
       "content": {
         "Name": "@aster-iu/calendar",
         "Version": "2.4.0",
@@ -35,26 +35,26 @@
     },
     {
       "id": "official",
-      "name": "Official Repository / Approved Component",
+      "name": "公式リポジトリ・承認済みコンポーネント",
       "content": "COMP-1007 / @aster-ui/calendar 2.4.0 / https://git.aster.example/components/calendar / Maintainer=aster-release。"
     },
     {
       "id": "lock",
-      "name": "Lock File",
+      "name": "ロックファイル",
       "content": {
         "現行依存": "@aster-ui/calendar@2.3.0",
         "Registry": "https://registry.npmjs.org",
-        "更新申請": "Versionを2.4.0へ。Package名の変更なし。"
+        "更新申請": "Versionを2.4.0へ。パッケージ名の変更なし。"
       }
     },
     {
       "id": "release",
-      "name": "Release / Change Reference",
-      "content": "公式Calendar 2.4.0は表示修正。Package名・Maintainer・Repositoryの変更なし。"
+      "name": "リリース・変更承認記録",
+      "content": "公式Calendar 2.4.0は表示修正。パッケージ名・メンテナー・リポジトリの変更なし。"
     },
     {
       "id": "vuln",
-      "name": "Vulnerability Database",
+      "name": "脆弱性データベース",
       "content": "@aster-iu/calendar 2.4.0: 該当する脆弱性登録なし。照会時点2026-08-18。公式性の情報は含まれない。"
     }
   ],
@@ -374,18 +374,18 @@
       ]
     }
   ],
-  "explanation": "スコープを含むPackage名・Maintainer・Repositoryが公式Calendar Componentと異なるため導入を遮断します。ダウンロード数や似た説明文は公式性の根拠になりません。",
-  "topic": "似たPackageのMetadataを公式Componentと比較する",
-  "summary": "似たPackageのMetadataを公式Componentと比較する",
+  "explanation": "スコープを含むパッケージ名・メンテナー・リポジトリが公式のCalendarコンポーネントと異なるため導入を遮断します。ダウンロード数や似た説明文は公式性の根拠になりません。",
+  "topic": "似たパッケージのメタデータを公式コンポーネントと比較する",
+  "summary": "似たパッケージのメタデータを公式コンポーネントと比較する",
   "learning_objectives": [
-    "似たPackageのMetadataを公式Componentと比較する"
+    "似たパッケージのメタデータを公式コンポーネントと比較する"
   ],
   "decision_context": "before_install",
   "scenario_type": "real_world_inspired",
   "sources": [
     "https://github.com/ossf/malicious-packages"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "Subtle Typosquatting",
   "ecosystem": "npm"
 }

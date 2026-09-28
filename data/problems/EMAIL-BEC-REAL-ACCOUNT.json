@@ -5,8 +5,8 @@
   "platform": "common",
   "level": "advanced",
   "ground_truth": "block",
-  "title": "BEC — 正規Mailboxの振込先変更",
-  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "title": "BEC — 取引先アドレスからの振込先変更",
+  "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Email": "quarantine/message-1084.eml",
     "From": "Cedar請求 <billing@cedar.example>",
@@ -14,7 +14,7 @@
     "Subject": "Re: PO-821 請求書",
     "本文": "前回の振込先は使わず、口座末尾9912へ本日中に振り込んでください。電話確認は省略してください。",
     "受信時刻": "2026-08-18 09:10",
-    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。"
+    "状態": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。"
   },
   "initial_information_types": {
     "Email": "email"
@@ -22,8 +22,8 @@
   "tools": [
     {
       "id": "header",
-      "name": "Raw Header / View Source",
-      "description": "信頼する受信GatewayのHeaderと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "name": "メールの原文を表示",
+      "description": "信頼する受信ゲートウェイのヘッダーと保存MIMEを表示し、URL・添付を選べるようにします。",
       "output": "Received: from outbound.cedar.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=cedar.example; dkim=pass header.d=cedar.example; dmarc=pass header.from=cedar.example\nFrom: Cedar請求 <billing@cedar.example>\nTo: mori@aster.example\nReply-To: Cedar請求 <billing@cedar.example>\nReturn-Path: <bounce@cedar.example>\nSubject: Re: PO-821 請求書\nIn-Reply-To: <PO-821-0817@cedar.example>\nMIME本文の抜粋:\n前回の振込先は使わず、口座末尾9912へ本日中に振り込んでください。電話確認は省略してください。",
       "accepted_information_types": [
         "email"
@@ -34,7 +34,7 @@
           "id": "Email"
         }
       ],
-      "input_hint": "Email",
+      "input_hint": "メール",
       "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
       "environments": [
         "linux"
@@ -44,32 +44,32 @@
   "references": [
     {
       "id": "gateway",
-      "name": "Mail Gateway構成",
-      "content": "信頼する受信Gatewayはmx.aster.example。自Gatewayが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+      "name": "メールゲートウェイ構成",
+      "content": "信頼する受信ゲートウェイはmx.aster.example。自組織のゲートウェイが付けた最上部のReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除し、別記録に保存する。通常の転送経路はforward.aster.exampleのみ。"
     },
     {
       "id": "vendor",
-      "name": "Vendor Directory",
+      "name": "取引先台帳",
       "content": "請求窓口=billing@cedar.example / 配信元198.51.100.110 / DKIM d=cedar.example / 登録口座末尾2048。"
     },
     {
       "id": "thread",
-      "name": "Past Thread",
+      "name": "過去の取引メール",
       "content": "2026-08-17 PO-821 / billing@cedar.example / 同額請求・口座末尾2048。変更予告なし。"
     },
     {
       "id": "procedure",
       "name": "口座変更手順",
-      "content": "変更Ticket、登録番号への折返し確認、経理2名承認が必須。今回の変更Ticket・独立確認・承認はいずれも未登録。メール内の電話番号への確認だけでは代替不可。"
+      "content": "口座変更には、変更チケットの発行、登録番号への折り返し確認、経理2名の承認が必須。今回の変更チケット・独立確認・承認はいずれも記録されていない。メール内の電話番号への確認だけでは代替できない。"
     },
     {
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
-        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
-        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
-        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "照会対象": "機密指定のないドメイン・IPアドレスと公開配布ファイルのSHA-256値は、承認済みの外部サービスで照会できます。",
+        "ファイル本体": "社外秘ファイルは送信できません。公開配布物は送信できます。",
+        "URL": "トークン・ユーザーID・内部ホスト名・機密パスを含むURL全体は送信できません。",
+        "メール・PCAP": "本文、添付、認証情報を含むため、本教材の案件では外部送信できません。",
         "今回の資料区分": "社外秘"
       }
     }
@@ -498,17 +498,17 @@
       ]
     }
   ],
-  "explanation": "登録Mailboxで認証もPassしていますが、口座変更の必須手続と過去の取引先口座に一致しないため受入れを遮断します。この証拠だけではMailbox侵害の有無までは断定できません。",
-  "topic": "正規Accountの認証と業務依頼の妥当性を区別する",
-  "summary": "正規Accountの認証と業務依頼の妥当性を区別する",
+  "explanation": "差出人アドレスは取引先台帳に登録されており、送信ドメイン認証にも成功しています。しかし、口座変更の必須手続を満たさず、指定口座も過去の取引先口座と一致しないため、メールの受け入れを拒否します。この証拠だけではメールボックス侵害の有無までは断定できません。",
+  "topic": "送信ドメイン認証と業務依頼の妥当性を区別する",
+  "summary": "送信ドメイン認証と業務依頼の妥当性を区別する",
   "learning_objectives": [
-    "正規Accountの認証と業務依頼の妥当性を区別する"
+    "送信ドメイン認証と業務依頼の妥当性を区別する"
   ],
   "decision_context": "before_delivery",
   "scenario_type": "real_world_inspired",
   "sources": [
     "https://www.fbi.gov/how-we-can-help-you/common-frauds-and-scams/business-email-compromise"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
-  "inspired_by": "BEC — Compromised Real Accountを想定した変更依頼"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
+  "inspired_by": "BEC — 侵害された正規アカウントを想定した変更依頼"
 }

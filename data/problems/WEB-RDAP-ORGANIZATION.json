@@ -5,12 +5,12 @@
   "platform": "common",
   "level": "beginner_external",
   "ground_truth": "allow",
-  "title": "公開RDAPと公式Serviceの照合",
-  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "公開RDAPと公式サービスの照合",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "URL": "https://aster-training.example/",
     "URLのHost": "aster-training.example",
-    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。"
+    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。"
   },
   "initial_information_types": {
     "URL": "url",
@@ -20,16 +20,16 @@
   "references": [
     {
       "id": "official",
-      "name": "Official Service / Domain",
-      "content": "委託先Aster Training Foundationの公開研修Hostはaster-training.example。契約TR-601で掲載。個人情報の入力は不要。"
+      "name": "公式サービス・ドメイン",
+      "content": "委託先Aster Training Foundationの公開研修ホストはaster-training.example。契約TR-601で掲載。個人情報の入力は不要。"
     },
     {
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPは照会可。",
-        "今回の資料区分": "照会対象の登録Domainは機密指定なし。",
-        "RDAP": "組織が承認した登録情報サービスへIP・登録Domainのみ送信可。"
+        "照会対象": "機密指定のないドメイン・IPは照会可。",
+        "今回の資料区分": "照会対象の登録ドメインに機密指定はありません。",
+        "RDAP": "組織が承認した登録情報サービスへIP・登録ドメインのみ送信可。"
       }
     }
   ],
@@ -37,7 +37,7 @@
     {
       "id": "rdap",
       "name": "RDAP",
-      "description": "IPまたは登録Domainを外部の登録情報サービスへ照会します。",
+      "description": "IPまたは登録ドメインを外部の登録情報サービスへ照会します。",
       "output": "照会対象Domain: aster-training.example\n登録日: 2018-04-03\nRegistrar: Example Registrar 1\nStatus: client transfer prohibited\nRegistrant Organization: Aster Training Foundation",
       "accepted_information_types": [
         "domain"
@@ -48,10 +48,10 @@
           "id": "URLのHost"
         }
       ],
-      "input_hint": "登録Domain",
+      "input_hint": "登録ドメイン",
       "submission_type": "domain",
       "submission_value": "aster-training.example",
-      "confidentiality_warning": "登録Domainを登録情報サービスへ送信します。URLのPath・Queryは送りません。",
+      "confidentiality_warning": "登録ドメインを登録情報サービスへ送信します。URLのパス・クエリは送りません。",
       "correct_usage": true,
       "reason": "外部照会方針でこの対象のRDAP照会が許可されています。"
     }
@@ -147,7 +147,7 @@
       ]
     }
   ],
-  "explanation": "公開された登録組織情報と、別途管理された公式Service記録のHostが一致するため公開ページへのアクセスを許可します。",
+  "explanation": "公開された登録組織情報と、別途管理された公式サービス記録のホストが一致するため公開ページへのアクセスを許可します。",
   "topic": "取得可能なRDAP情報を公式資料の補助に使う",
   "summary": "取得可能なRDAP情報を公式資料の補助に使う",
   "learning_objectives": [
@@ -158,5 +158,5 @@
   "sources": [
     "https://www.icann.org/rdap"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

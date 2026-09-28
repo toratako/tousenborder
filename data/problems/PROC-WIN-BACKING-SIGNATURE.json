@@ -5,14 +5,14 @@
   "platform": "windows",
   "level": "beginner",
   "ground_truth": "allow",
-  "title": "実行中Imageの署名照合",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "実行中イメージの署名照合",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "print-agent.exe",
     "PID": 4200,
     "User": "ASTER\\svc_print",
     "採取時点": "2026-08-18 09:10 / 起動済み",
-    "端末管理記録": "Print Agent 6.1 / Software Center配布 / CHG-440"
+    "端末管理記録": "Print エージェント 6.1 / Software Center配布 / CHG-440"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -22,7 +22,7 @@
     {
       "id": "sig",
       "name": "Sigcheck",
-      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "description": "署名の検証状態・発行元を確認します。PIDを入力した場合は対応する実体ファイルが対象です。",
       "output": "PID 4200 のBacking Executable: C:\\Program Files\\AsterPrint\\print-agent.exe\nVerified: Signed\nPublisher: Aster Devices Ltd.",
       "accepted_information_types": [
         "pid"
@@ -43,8 +43,8 @@
   "references": [
     {
       "id": "publisher",
-      "name": "Trusted Publisher",
-      "content": "Print Agent 6.1 / Publisher=Aster Devices Ltd. / C:\\Program Files\\AsterPrint\\print-agent.exe / ASTER\\svc_print / Signedであること。"
+      "name": "信頼できる発行元",
+      "content": "Print エージェント 6.1 / Publisher=Aster Devices Ltd. / C:\\Program Files\\AsterPrint\\print-agent.exe / ASTER\\svc_print / Signedであること。"
     }
   ],
   "external_references": [],
@@ -274,16 +274,16 @@
       ]
     }
   ],
-  "explanation": "PIDに対応する実行Imageの署名・Publisher・配置が台帳と一致し、管理されたPrint Agentの継続条件を満たすため許可します。",
-  "topic": "PIDからBacking Executableの署名を直接確認する",
-  "summary": "PIDからBacking Executableの署名を直接確認する",
+  "explanation": "PIDに対応する実行イメージの署名・発行元・配置が台帳と一致し、管理されたPrint Agentの継続条件を満たすため許可します。",
+  "topic": "PIDから実体ファイルの署名を直接確認する",
+  "summary": "PIDから実体ファイルの署名を直接確認する",
   "learning_objectives": [
-    "PIDからBacking Executableの署名を直接確認する"
+    "PIDから実体ファイルの署名を直接確認する"
   ],
   "decision_context": "running_process",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

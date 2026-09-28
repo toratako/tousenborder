@@ -5,16 +5,16 @@
   "platform": "windows",
   "level": "beginner",
   "ground_truth": "allow",
-  "title": "通常端末からのMFA済みLogin",
-  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "通常端末からのMFA確認済みログイン",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "initial_information": {
     "要求ID": "AUTH-901",
     "User": "mori",
     "Source IP": "192.0.2.41",
     "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
     "要求Logon Type": "10 / RemoteInteractive",
-    "Gatewayの認証確認": "Password確認済み / MFA確認済み",
+    "Gatewayの認証確認": "パスワード確認済み / MFA確認済み",
     "Device ID": "WIN-017"
   },
   "initial_information_types": {
@@ -25,7 +25,7 @@
     {
       "id": "events",
       "name": "Event Viewer / Windows Security Log",
-      "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
+      "description": "今回の要求より前のセキュリティログを調べます。接続元別・ユーザー別の集計は、保存ログから抽出して表示します。",
       "output": "2026-08-17 09:01 Event ID 4624\nTargetUserName: mori\nLogonType: 10\nIpAddress: 192.0.2.41\nWorkstationName: WIN-017\n2026-08-17 18:02 Event ID 4634 / TargetUserName: mori",
       "accepted_information_types": [
         "username"
@@ -36,7 +36,7 @@
           "id": "User"
         }
       ],
-      "input_hint": "User",
+      "input_hint": "ユーザー",
       "platform_note": "Windows標準 / Event Viewer",
       "environments": [
         "windows"
@@ -46,13 +46,13 @@
   "references": [
     {
       "id": "device",
-      "name": "Device Reference",
-      "content": "WIN-017 / 所有者mori / 管理登録済み / Active / 固定管理IP192.0.2.41。"
+      "name": "端末登録情報",
+      "content": "WIN-017 / 所有者mori / 管理登録済み / 有効 / 固定管理IP192.0.2.41。"
     },
     {
       "id": "policy",
-      "name": "User / Account Policy",
-      "content": "moriは業務用RemoteInteractive可。管理Device、承認Source、GatewayのMFA確認が必要。"
+      "name": "アカウント利用方針",
+      "content": "moriは業務目的のRemoteInteractiveログオンを許可。管理端末と承認済み接続元を使い、ゲートウェイでMFAを確認する必要がある。"
     }
   ],
   "external_references": [],
@@ -280,16 +280,16 @@
       ]
     }
   ],
-  "explanation": "過去のLoginとUser・Device・Sourceが整合し、今回のGateway確認もMFAを含め要件を満たすためSession成立を許可します。過去のログオン成功記録（Event ID 4624）を今回の成功記録とは扱いません。",
-  "topic": "過去Loginと今回の認証途中情報を区別する",
-  "summary": "過去Loginと今回の認証途中情報を区別する",
+  "explanation": "過去のログイン記録にあるユーザー・端末・接続元が今回の要求と一致し、今回のゲートウェイ認証でもMFAを確認できたため、セッションの確立を許可します。過去のログオン成功記録（Event ID 4624）は、今回の要求が成功した記録としては扱いません。",
+  "topic": "過去のログインと今回の認証途中の情報を区別する",
+  "summary": "過去のログインと今回の認証途中の情報を区別する",
   "learning_objectives": [
-    "過去Loginと今回の認証途中情報を区別する"
+    "過去のログインと今回の認証途中の情報を区別する"
   ],
   "decision_context": "before_session",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

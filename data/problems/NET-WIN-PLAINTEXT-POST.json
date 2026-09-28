@@ -18,7 +18,7 @@
     "保留中のLocal Port": 52410,
     "要求時刻": "2026-08-18 09:10:00",
     "保存PCAP": "flow-before-0910.pcap",
-    "観測範囲": "PCAPは09:09:59まで。同じProcessの既存接続を含む。今回の接続はまだ未許可。"
+    "観測範囲": "PCAPは09:09:59まで。同じプロセスの既存接続を含む。今回の接続はまだ未許可。"
   },
   "initial_information_types": {
     "PID": "pid",
@@ -29,7 +29,7 @@
     {
       "id": "capture",
       "name": "Wireshark",
-      "description": "保存済みPCAPのPacketやConversation統計を表示します。所有ProcessはSocket Toolで照合します。",
+      "description": "保存済みPCAPのパケットや通信統計を表示します。所有プロセスはソケット調査ツールで照合します。",
       "output": "File: flow-before-0910.pcap\n09:09:30 192.0.2.25:52400 -> 203.0.113.101:80 HTTP POST /session\nHost: sync-endpoint.example\nContent-Type: application/x-www-form-urlencoded\nusername=demo-user&password=DEMO-SECRET",
       "accepted_information_types": [
         "pcap"
@@ -51,7 +51,7 @@
     {
       "id": "policy",
       "name": "通信方針",
-      "content": "認証情報はlogin.aster.exampleの192.0.2.82:443に限りTLSで送信。平文HTTPおよび外部Hostへの送信は禁止。"
+      "content": "認証情報はlogin.aster.exampleの192.0.2.82:443に限りTLSで送信。平文HTTPおよび外部ホストへの送信は禁止。"
     }
   ],
   "external_references": [],
@@ -381,16 +381,16 @@
       ]
     }
   ],
-  "explanation": "直前の同一宛先へのFlowには平文HTTPの認証情報が含まれ、送信先・暗号化の規則にも反するため新しい接続を遮断します。今回の保留中接続で送信済みとは扱いません。",
-  "topic": "Packet本文を送信方針と比較する",
-  "summary": "Packet本文を送信方針と比較する",
+  "explanation": "直前の同一宛先への通信フローには平文HTTPの認証情報が含まれ、送信先・暗号化の規則にも反するため新しい接続を遮断します。今回の保留中接続で送信済みとは扱いません。",
+  "topic": "パケット本文を送信方針と比較する",
+  "summary": "パケット本文を送信方針と比較する",
   "learning_objectives": [
-    "Packet本文を送信方針と比較する"
+    "パケット本文を送信方針と比較する"
   ],
   "decision_context": "before_connection",
   "scenario_type": "standard",
   "sources": [
     "https://www.wireshark.org/docs/wsug_html_chunked/ChStatConversations.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

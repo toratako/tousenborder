@@ -6,7 +6,7 @@
   "level": "advanced",
   "ground_truth": "allow",
   "title": "緊急でも正当な資料再送",
-  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Email": "quarantine/message-1085.eml",
     "From": "Aster研修 <training@aster.example>",
@@ -14,7 +14,7 @@
     "Subject": "本日研修の会場変更",
     "本文": "本日10時の研修はB会議室です。公開資料PDFと会場ページを再送します。",
     "受信時刻": "2026-08-18 09:10",
-    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。"
+    "状態": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。"
   },
   "initial_information_types": {
     "Email": "email"
@@ -22,8 +22,8 @@
   "tools": [
     {
       "id": "header",
-      "name": "Raw Header / View Source",
-      "description": "信頼する受信GatewayのHeaderと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "name": "メールの原文を表示",
+      "description": "信頼する受信ゲートウェイのヘッダーと保存MIMEを表示し、URL・添付を選べるようにします。",
       "output": "Received: from outbound.aster.example ([192.0.2.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=aster.example; dkim=pass header.d=aster.example; dmarc=pass header.from=aster.example\nFrom: Aster研修 <training@aster.example>\nTo: mori@aster.example\nReply-To: Aster研修 <training@aster.example>\nReturn-Path: <bounce@aster.example>\nSubject: 本日研修の会場変更\nIn-Reply-To: <TR-810@aster.example>\nMIME本文の抜粋:\nContent-Disposition: attachment; filename=\"training-guide.pdf\"\n<a href=\"https://training.aster.example/venue\">会場</a>\nGatewayがMIMEから抽出して保存した添付: /quarantine/attachments/training-guide.pdf",
       "accepted_information_types": [
         "email"
@@ -34,7 +34,7 @@
           "id": "Email"
         }
       ],
-      "input_hint": "Email",
+      "input_hint": "メール",
       "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
       "environments": [
         "linux"
@@ -42,7 +42,7 @@
       "output_information": [
         {
           "id": "attachment",
-          "label": "抽出済み添付File",
+          "label": "抽出済み添付ファイル",
           "value": "/quarantine/attachments/training-guide.pdf",
           "data_type": "file"
         },
@@ -54,7 +54,7 @@
         },
         {
           "id": "host",
-          "label": "会場URLのHost",
+          "label": "会場URLのホスト",
           "value": "training.aster.example",
           "data_type": "domain"
         }
@@ -64,22 +64,22 @@
   "references": [
     {
       "id": "gateway",
-      "name": "Mail Gateway構成",
-      "content": "信頼する受信Gatewayはmx.aster.example。自Gatewayが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+      "name": "メールゲートウェイ構成",
+      "content": "信頼する受信ゲートウェイはmx.aster.example。自社ゲートウェイが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
     },
     {
       "id": "directory",
-      "name": "Company Directory",
+      "name": "社内連絡先台帳",
       "content": "training@aster.example / 社内配信元192.0.2.110 / DKIM d=aster.example。"
     },
     {
       "id": "thread",
-      "name": "Past Thread",
+      "name": "過去のメールスレッド",
       "content": "TR-810 / 本人申込済みの本日10:00研修 / 添付=training-guide.pdf / 会場変更を後送予定。"
     },
     {
       "id": "approved",
-      "name": "公開資料 / Change Reference",
+      "name": "公開資料・変更承認記録",
       "content": {
         "変更承認": "CHG-811 / 08:45 / A会議室からB会議室へ",
         "添付SHA256": "bf049860dc027c8518e96f67838076dc7f6ccb8641fc9397559f0d0fe2258361",
@@ -546,24 +546,24 @@
       ]
     }
   ],
-  "explanation": "緊急の連絡ですが、送信経路・既存Thread・会場変更の承認・添付Hash・URLが一致するため受け入れます。急ぎという表現だけで不正と判断しません。",
-  "topic": "緊急メールをHeader・添付・URL・業務記録で検証する",
-  "summary": "緊急メールをHeader・添付・URL・業務記録で検証する",
+  "explanation": "緊急の連絡ですが、送信経路・既存スレッド・会場変更の承認・添付ハッシュ・URLが一致するため受け入れます。急ぎという表現だけで不正と判断しません。",
+  "topic": "緊急メールをヘッダー・添付・URL・業務記録で検証する",
+  "summary": "緊急メールをヘッダー・添付・URL・業務記録で検証する",
   "learning_objectives": [
-    "緊急メールをHeader・添付・URL・業務記録で検証する"
+    "緊急メールをヘッダー・添付・URL・業務記録で検証する"
   ],
   "decision_context": "before_delivery",
   "scenario_type": "standard",
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc8601"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "resources": {
     "attachment_tools": [
       {
         "id": "attachment_hash",
         "name": "7-Zip / SHA-256",
-        "description": "抽出済み添付Fileを実行せずSHA-256を計算します。",
+        "description": "抽出済み添付ファイルを実行せずSHA-256を計算します。",
         "output": "7z h -scrcSHA256 training-guide.pdf\nSHA256: bf049860dc027c8518e96f67838076dc7f6ccb8641fc9397559f0d0fe2258361",
         "accepted_information_types": [
           "file"
@@ -585,7 +585,7 @@
       {
         "id": "dig",
         "name": "dig",
-        "description": "選択したHostのDNSレコードとTTLを表示します。",
+        "description": "選択したホストのDNSレコードとTTLを表示します。",
         "output": ";; ANSWER SECTION:\ntraining.aster.example. 300 IN A 198.51.100.20",
         "accepted_information_types": [
           "domain"
@@ -613,7 +613,7 @@
       {
         "id": "nslookup",
         "name": "nslookup",
-        "description": "選択したHostのDNS応答を表示します。",
+        "description": "選択したホストのDNS応答を表示します。",
         "output": "Server: 192.0.2.53\nName: training.aster.example\nAddress: 198.51.100.20\n",
         "accepted_information_types": [
           "domain"
@@ -642,7 +642,7 @@
   },
   "evidence_alternatives": {
     "dns": {
-      "label": "会場Hostの解決先",
+      "label": "会場ホストの解決先",
       "any_of": [
         "dig",
         "nslookup"

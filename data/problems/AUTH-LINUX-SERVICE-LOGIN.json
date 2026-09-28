@@ -5,15 +5,15 @@
   "platform": "linux",
   "level": "beginner",
   "ground_truth": "block",
-  "title": "Service Userへの対話SSH",
-  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "サービスアカウントへの対話型SSHログイン",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "initial_information": {
     "要求ID": "AUTH-901",
     "User": "svc_backup",
     "Source IP": "203.0.113.150",
     "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
-    "認証方式": "SSH publickey",
+    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+    "認証方式": "SSH公開鍵認証",
     "Gatewayの鍵検証": "SHA256:DEMO_APPROVED_KEY_17 と一致",
     "GatewayのMFA": "確認済み"
   },
@@ -25,7 +25,7 @@
     {
       "id": "lastlog",
       "name": "lastlog",
-      "description": "Accountの過去の最終Login記録を表示します。",
+      "description": "アカウントの最終ログイン記録を表示します。",
       "output": "Username Port From Latest\nsvc_backup **Never logged in**",
       "accepted_information_types": [
         "username"
@@ -36,7 +36,7 @@
           "id": "User"
         }
       ],
-      "input_hint": "User",
+      "input_hint": "ユーザー",
       "platform_note": "Linux / shadow-utilsのlastlogを備える教材環境",
       "environments": [
         "linux"
@@ -46,8 +46,8 @@
   "references": [
     {
       "id": "policy",
-      "name": "User / Account Policy",
-      "content": "svc_backup / systemd Backup Service専用 / 対話SSH・Shell Sessionは禁止。"
+      "name": "ユーザー／アカウント方針",
+      "content": "svc_backup / systemdのバックアップサービス専用 / 対話型SSH・シェルセッションは禁止。"
     }
   ],
   "external_references": [],
@@ -291,16 +291,16 @@
       ]
     }
   ],
-  "explanation": "svc_backupはService専用で対話SSHを禁止しているため遮断します。lastlogに履歴がないことだけではなく、Accountの用途を根拠にしています。",
-  "topic": "lastlogの履歴とAccountの対話利用許可を区別する",
-  "summary": "lastlogの履歴とAccountの対話利用許可を区別する",
+  "explanation": "svc_backupはサービス専用アカウントで、対話型SSHを禁止しているため遮断します。lastlogに履歴がないことだけでなく、アカウントの用途も根拠としています。",
+  "topic": "lastlogの履歴とアカウントの対話利用許可を区別する",
+  "summary": "lastlogの履歴とアカウントの対話利用許可を区別する",
   "learning_objectives": [
-    "lastlogの履歴とAccountの対話利用許可を区別する"
+    "lastlogの履歴とアカウントの対話利用許可を区別する"
   ],
   "decision_context": "before_session",
   "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

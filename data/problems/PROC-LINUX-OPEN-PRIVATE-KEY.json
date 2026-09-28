@@ -5,8 +5,8 @@
   "platform": "linux",
   "level": "beginner",
   "ground_truth": "block",
-  "title": "業務外の秘密鍵を開くProcess",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "業務外の秘密鍵を開くプロセス",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "thumbnail-worker",
     "PID": 4200,
@@ -21,7 +21,7 @@
     {
       "id": "lsof",
       "name": "lsof",
-      "description": "選択PIDが開いているFile・FDを確認します。",
+      "description": "選択PIDが開いているファイル・FDを確認します。",
       "output": "COMMAND PID USER FD TYPE NAME\nthumbnail-worker 4200 media txt REG /opt/media/thumbnail-worker\nthumbnail-worker 4200 media 7r REG /home/media/.ssh/id_ed25519",
       "accepted_information_types": [
         "pid"
@@ -42,8 +42,8 @@
   "references": [
     {
       "id": "service",
-      "name": "Service構成台帳",
-      "content": "thumbnail-workerは/srv/media以下の画像を処理するService。User=media。/home/media/.ssh/id_ed25519はmedia所有・0600の保守用秘密鍵で、画像処理でのアクセスは業務上認められていない。"
+      "name": "サービス構成台帳",
+      "content": "thumbnail-workerは/srv/media以下の画像を処理するサービス。User=media。/home/media/.ssh/id_ed25519はmedia所有・0600の保守用秘密鍵で、画像処理でのアクセスは業務上認められていない。"
     }
   ],
   "external_references": [],
@@ -197,16 +197,16 @@
       ]
     }
   ],
-  "explanation": "thumbnail-workerがmedia Userの保守用SSH秘密鍵を開いており、画像処理だけを認める業務範囲から外れるため停止します。鍵は同じUserが読めるFileであり、権限昇格は仮定していません。lsofが示すのはFileを開いた事実で、送信の証拠ではありません。",
-  "topic": "lsofのOpen Fileを処理権限・用途と比較する",
-  "summary": "lsofのOpen Fileを処理権限・用途と比較する",
+  "explanation": "thumbnail-workerがmedia ユーザーの保守用SSH秘密鍵を開いており、画像処理だけを認める業務範囲から外れるため停止します。鍵は同じユーザーが読めるファイルであり、権限昇格は仮定していません。lsofが示すのはファイルを開いた事実で、送信の証拠ではありません。",
+  "topic": "lsofで確認した開いているファイルを処理権限・用途と比較する",
+  "summary": "lsofで確認した開いているファイルを処理権限・用途と比較する",
   "learning_objectives": [
-    "lsofのOpen Fileを処理権限・用途と比較する"
+    "lsofで確認した開いているファイルを処理権限・用途と比較する"
   ],
   "decision_context": "running_process",
   "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }
