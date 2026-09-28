@@ -33,11 +33,11 @@ static func validate_template(value: Variant, facts: Array, accepts_input: bool)
 			var id := token.get_string(1)
 			if id == "input" and accepts_input:
 				continue
-			if id.begins_with("fact:")
+			if (id.begins_with("fact:")
 				and facts.any(
 					func(fact):
 						return fact.id == id.substr(5),
-				):
+				)):
 				continue
 			return "表示テンプレートの参照が存在しません: " + id
 	return ""
