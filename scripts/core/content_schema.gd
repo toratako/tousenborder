@@ -7,6 +7,8 @@ const KEYWORDS := ["$schema", "title", "description", "$defs", "$ref", "type", "
 	"minimum", "maximum", "pattern", "uniqueItems", "allOf", "anyOf", "if", "then", "else"]
 const PACK := "res://data/schemas/pack.schema.json"
 const PROBLEM := "res://data/schemas/problem.schema.json"
+const GLOSSARY := "res://data/schemas/glossary.schema.json"
+const HISTORY := "res://data/schemas/history.schema.json"
 
 static func read_schema(path: String) -> Variant:
 	return JSON.parse_string(FileAccess.get_file_as_string(path))

@@ -79,6 +79,235 @@
     "rdap",
     "server"
   ],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "executable",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "overview"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        },
+        {
+          "source_id": "rdap",
+          "section": "result"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tcp",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "flow",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "local_remote",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "protocol",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "server",
+          "section": "overview"
+        },
+        {
+          "source_id": "server",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_tcpview",
+      "occurrences": [
+        {
+          "source_id": "nettcp",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "established",
+      "occurrences": [
+        {
+          "source_id": "nettcp",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "rdap",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "netblock",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tenant",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "server",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "RDAPの割当先と委託先が一致し、個別IP・Port・用途も承認Server台帳に一致するため許可します。Netblockの所属だけでTenantや安全性を判断していません。",
   "topic": "IPの割当組織と個別Service承認を区別する",
   "summary": "IPの割当組織と個別Service承認を区別する",

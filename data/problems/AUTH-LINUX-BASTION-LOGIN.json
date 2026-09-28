@@ -103,6 +103,423 @@
     "bastion",
     "admin"
   ],
+  "glossary": [
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "bastion",
+          "section": "overview"
+        },
+        {
+          "source_id": "admin",
+          "section": "overview"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "overview"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "last",
+          "section": "overview"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "overview"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        },
+        {
+          "source_id": "bastion",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "last",
+          "section": "result"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        },
+        {
+          "source_id": "bastion",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "last",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "mfa",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "ssh",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "overview"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "bastion",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "public_key",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "key_fingerprint",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "bastion",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "bastion",
+          "section": "overview"
+        },
+        {
+          "source_id": "bastion",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "log",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_journal",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "port",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ed25519",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "auth_result",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pam",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "journal",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "wtmp",
+      "occurrences": [
+        {
+          "source_id": "last",
+          "section": "overview"
+        },
+        {
+          "source_id": "last",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_last",
+      "occurrences": [
+        {
+          "source_id": "last",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "terminal",
+      "occurrences": [
+        {
+          "source_id": "last",
+          "section": "result"
+        },
+        {
+          "source_id": "lastlog",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "lastlog",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_lastlog",
+      "occurrences": [
+        {
+          "source_id": "lastlog",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "vpn",
+      "occurrences": [
+        {
+          "source_id": "bastion",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "root",
+      "occurrences": [
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "踏み台経路・個人Account・鍵・今回のMFA・保守時間が承認記録と一致するため許可します。共有の出口IPでもGatewayの本人確認と紐付けを確認しています。",
   "topic": "踏み台の共有IPと個人認証を組み合わせる",
   "summary": "踏み台の共有IPと個人認証を組み合わせる",

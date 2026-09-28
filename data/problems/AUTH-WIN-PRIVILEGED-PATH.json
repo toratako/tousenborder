@@ -62,6 +62,252 @@
     "admin",
     "device"
   ],
+  "glossary": [
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "device",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "mfa",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        },
+        {
+          "source_id": "device",
+          "section": "overview"
+        },
+        {
+          "source_id": "device",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "password",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "logon_type",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "rdp",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "log",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_events",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "event_id",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "paw",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "admin",
+          "section": "result"
+        },
+        {
+          "source_id": "device",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "approved",
+      "occurrences": [
+        {
+          "source_id": "admin",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "reference",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "active_revoked",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "privilege",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "管理Accountには専用Deviceと管理Gateway経由が必須ですが、今回のDevice・Source・接続経路はいずれも一致しないため遮断します。MFAだけで経路制約を代替できません。",
   "topic": "特権Accountの経路とDeviceの条件を確認する",
   "summary": "特権Accountの経路とDeviceの条件を確認する",

@@ -66,6 +66,255 @@
     "change",
     "policy"
   ],
+  "glossary": [
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "session",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "mfa",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "device",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "device",
+          "section": "overview"
+        },
+        {
+          "source_id": "change",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "password",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "login",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        },
+        {
+          "source_id": "policy",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "logon_type",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "source_ip",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "log",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "overview"
+        },
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_events",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "event_id",
+      "occurrences": [
+        {
+          "source_id": "events",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reference",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "overview"
+        },
+        {
+          "source_id": "change",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "result"
+        },
+        {
+          "source_id": "change",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "active_revoked",
+      "occurrences": [
+        {
+          "source_id": "device",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "release",
+      "occurrences": [
+        {
+          "source_id": "change",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "policy",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "新しいDeviceですが、交換申請・登録状態・利用者・今回のMFA確認が整合するため許可します。過去Logに端末がないことだけを理由に遮断しません。",
   "topic": "新端末を交換記録と認証結果で検証する",
   "summary": "新端末を交換記録と認証結果で検証する",

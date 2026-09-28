@@ -1,0 +1,98 @@
+{
+    "schema_version":  1,
+    "id":  "learning",
+    "title":  "セキュリティ判断の基礎 / 代表24問",
+    "categories":  [
+                       {
+                           "id":  "file",
+                           "label":  "File"
+                       },
+                       {
+                           "id":  "process",
+                           "label":  "Process"
+                       },
+                       {
+                           "id":  "web",
+                           "label":  "Web"
+                       },
+                       {
+                           "id":  "network",
+                           "label":  "Network"
+                       },
+                       {
+                           "id":  "email",
+                           "label":  "Email"
+                       },
+                       {
+                           "id":  "account",
+                           "label":  "Account / Authentication"
+                       },
+                       {
+                           "id":  "package",
+                           "label":  "Package"
+                       }
+                   ],
+    "resource_groups":  [
+                            {
+                                "id":  "tools",
+                                "label":  "Tool",
+                                "kind":  "tools"
+                            },
+                            {
+                                "id":  "references",
+                                "label":  "Reference",
+                                "kind":  "references"
+                            },
+                            {
+                                "id":  "external_references",
+                                "label":  "External Reference",
+                                "kind":  "external_references"
+                            },
+                            {
+                                "id":  "attachment_tools",
+                                "label":  "添付Fileの調査",
+                                "kind":  "tools"
+                            },
+                            {
+                                "id":  "url_tools",
+                                "label":  "URLの調査",
+                                "kind":  "tools"
+                            }
+                        ],
+    "rules":  [
+                  {
+                      "id":  "workflow",
+                      "label":  "調査の進め方",
+                      "value":  "情報を選択・ドラッグしてToolへ渡し、結果をReferenceと照合します。取得した情報は次のToolにも使えます。"
+                  },
+                  {
+                      "id":  "context",
+                      "label":  "判断する時点",
+                      "value":  "Processは実行の継続／停止を判断します。他の対象は実行・アクセス・接続・受入れ・Session成立・Installの前に判断します。"
+                  },
+                  {
+                      "id":  "evidence",
+                      "label":  "情報の解釈",
+                      "value":  "Toolで得た情報を、Referenceの承認記録や仕様と照合して判断します。"
+                  },
+                  {
+                      "id":  "external",
+                      "label":  "外部への送信",
+                      "value":  "送信内容と組織の方針を確認します。Hash検索とFile Uploadを区別し、Token付きURLや社外秘Fileの外部送信を避けます。"
+                  },
+                  {
+                      "id":  "web",
+                      "label":  "Web・Emailの調査",
+                      "value":  "不審なURLは通常Browserで直接開かず、保存資料や隔離解析を利用します。EmailはHeader・添付・URLをそれぞれ確認します。"
+                  }
+              ],
+    "feedback":  {
+                     "correct_heading":  "対象の判定：正解",
+                     "incorrect_heading":  "対象の判定：誤判定",
+                     "show_reason":  true
+                 },
+    "problems":  [
+                     "res://data/problems/FILE-LINUX-BEGINNER-002.json"
+                 ],
+    "glossary_path":  "res://data/glossary/security.json"
+}

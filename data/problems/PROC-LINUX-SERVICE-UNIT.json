@@ -51,6 +51,142 @@
     "systemctl",
     "service"
   ],
+  "glossary": [
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "overview"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "agent",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_systemctl",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "overview"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "unit_fields",
+      "occurrences": [
+        {
+          "source_id": "systemctl",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "UnitのUser・ExecStart・配置が承認された監視Service定義と一致するため継続を許可します。",
   "topic": "systemctlのUnit構成を台帳と比較する",
   "summary": "systemctlのUnit構成を台帳と比較する",

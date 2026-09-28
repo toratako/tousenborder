@@ -60,7 +60,10 @@ func setup_presentation() -> void:
 	update_input({})
 
 func _layout_labels() -> void:
-	heading.size = Vector2(size.x - heading.position.x - 22, 0)
+	# 折り返しの幅を確定してから、実際の行数に必要な高さを確保する。
+	heading.size.x = maxf(1.0, size.x - heading.position.x - 22)
+	var line_count := clampi(heading.get_line_count(), 1, heading.max_lines_visible)
+	heading.size.y = heading.get_line_height() * line_count + heading.get_theme_constant("line_spacing") * (line_count - 1)
 	hint.size = Vector2(size.x - 24, 20)
 	hint.position.y = heading.get_rect().end.y + 4.0
 	custom_minimum_size.y = maxf(44.0, heading.get_rect().end.y + 10.0) if not hint.visible else maxf(64.0, hint.get_rect().end.y + 8.0)

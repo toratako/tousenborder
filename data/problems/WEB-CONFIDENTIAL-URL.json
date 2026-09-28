@@ -176,6 +176,473 @@
     "official",
     "disclosure"
   ],
+  "glossary": [
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        },
+        {
+          "source_id": "url_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "resolve",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        },
+        {
+          "source_id": "isolated",
+          "section": "overview"
+        },
+        {
+          "source_id": "isolated",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        },
+        {
+          "source_id": "url_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "url_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "url_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "resolve",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        },
+        {
+          "source_id": "rdap",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "token",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        },
+        {
+          "source_id": "url_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "password",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        },
+        {
+          "source_id": "url_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        },
+        {
+          "source_id": "domain_rep",
+          "section": "submission"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        },
+        {
+          "source_id": "url_rep",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "browser",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "dns",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_dns",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "overview"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "result"
+        },
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ttl",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_records",
+      "occurrences": [
+        {
+          "source_id": "resolve",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_resolver",
+      "occurrences": [
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "server",
+      "occurrences": [
+        {
+          "source_id": "nslookup",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "rdap",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "rdap_domain_fields",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "transfer_lock",
+      "occurrences": [
+        {
+          "source_id": "rdap",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "result"
+        },
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "policy",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "hash",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "sha256",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "confidential",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pcap",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "indicator",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "disclosure",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "reputation",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "overview"
+        },
+        {
+          "source_id": "url_rep",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "detection",
+      "occurrences": [
+        {
+          "source_id": "domain_rep",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "isolated",
+      "occurrences": [
+        {
+          "source_id": "isolated",
+          "section": "overview"
+        },
+        {
+          "source_id": "isolated",
+          "section": "submission"
+        }
+      ]
+    },
+    {
+      "term_id": "no_record",
+      "occurrences": [
+        {
+          "source_id": "isolated",
+          "section": "result"
+        },
+        {
+          "source_id": "url_rep",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "本人のREQ-318に対応する発行通知があり、Host・Path・DNSが正規再設定先に一致し、判断時刻09:10も有効期限09:17より前なのでアクセスを許可します。TokenとUser IDを含む完全URLは外部解析へ送りません。",
   "topic": "機密URLを内部申請とDomain・DNSで確認する",
   "summary": "機密URLを内部申請とDomain・DNSで確認する",

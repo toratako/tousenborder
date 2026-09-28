@@ -51,6 +51,152 @@
     "lsof",
     "service"
   ],
+  "glossary": [
+    {
+      "term_id": "process",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "pid",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lsof",
+          "section": "overview"
+        },
+        {
+          "source_id": "lsof",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "user",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "file",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_lsof",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "path",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "command",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ssh",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "private_key",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ed25519",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "result"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "fd",
+      "occurrences": [
+        {
+          "source_id": "lsof",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "service",
+      "occurrences": [
+        {
+          "source_id": "service",
+          "section": "overview"
+        },
+        {
+          "source_id": "service",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "thumbnail-workerがmedia Userの保守用SSH秘密鍵を開いており、画像処理だけを認める業務範囲から外れるため停止します。鍵は同じUserが読めるFileであり、権限昇格は仮定していません。lsofが示すのはFileを開いた事実で、送信の証拠ではありません。",
   "topic": "lsofのOpen Fileを処理権限・用途と比較する",
   "summary": "lsofのOpen Fileを処理権限・用途と比較する",

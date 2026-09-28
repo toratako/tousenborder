@@ -53,6 +53,252 @@
     "header",
     "vendor"
   ],
+  "glossary": [
+    {
+      "term_id": "extension",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "reply_to",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "attachment",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "gateway",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "email",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "to_subject",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "quarantine",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "header",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "mime",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "overview"
+        },
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ttl",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "spf",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dkim",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dmarc",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "timezone",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "received",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "authentication_results",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "auth_mail_fields",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "pass_fail",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "esmtps",
+      "occurrences": [
+        {
+          "source_id": "header",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "vendor",
+      "occurrences": [
+        {
+          "source_id": "vendor",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "directory",
+      "occurrences": [
+        {
+          "source_id": "vendor",
+          "section": "overview"
+        }
+      ]
+    }
+  ],
   "explanation": "Reply-Toは取引先の承認Addressではなく外部Domainを指し、口座資料の返信先として許可されていないため遮断します。Reply-Toの差だけでなく依頼内容と照合しています。",
   "topic": "返信先と情報の送付先の正当性を確認する",
   "summary": "返信先と情報の送付先の正当性を確認する",

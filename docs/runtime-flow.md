@@ -43,4 +43,6 @@ Toolの `environments` は省略時両OS対応。表示・ドラッグ・直接�
 
 ## 教材の境界
 
-全資料・外部照会はローカルJSONの模擬です。実コマンド、外部API、ブラウザー起動、File Uploadは実行しません。任意File解析・自由入力の照会はなく、NPC対話・自動比較・日ごとの進行・永続保存は未実装です。値・出典の制約は [Tool Outputと実例](learning-design.md#tool-outputと実例)。
+全資料・外部照会はローカルJSONの模擬です。実コマンド、外部API、ブラウザー起動、File Uploadは実行しません。任意File解析・自由入力の照会はなく、NPC対話・自動比較・日ごとの進行・勤務途中の再開は未実装です。値・出典の制約は [Tool Outputと実例](learning-design.md#tool-outputと実例)。
+
+勤務終了時の永続保存とタイトルからの履歴閲覧、用語集の閲覧状態は [学習支援](learning-support.md) を参照。

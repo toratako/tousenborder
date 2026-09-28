@@ -58,6 +58,136 @@
     "dig",
     "official"
   ],
+  "glossary": [
+    {
+      "term_id": "url",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "dig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "host",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        },
+        {
+          "source_id": "dig",
+          "section": "overview"
+        },
+        {
+          "source_id": "official",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "http",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "url_path",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "browser",
+      "occurrences": [
+        {
+          "source_id": "initial_information",
+          "section": "initial"
+        }
+      ]
+    },
+    {
+      "term_id": "dns",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ttl",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "tool_dns",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "overview"
+        }
+      ]
+    },
+    {
+      "term_id": "ip",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_records",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "result"
+        },
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "dns_query",
+      "occurrences": [
+        {
+          "source_id": "dig",
+          "section": "result"
+        }
+      ]
+    },
+    {
+      "term_id": "ticket",
+      "occurrences": [
+        {
+          "source_id": "official",
+          "section": "result"
+        }
+      ]
+    }
+  ],
   "explanation": "HostとAレコードが承認済みの公開マニュアルServerに一致するため許可します。DNSで得たIPだけが安全性を保証するわけではありません。",
   "topic": "digの結果をService台帳と照合する",
   "summary": "digの結果をService台帳と照合する",
