@@ -44,7 +44,7 @@ just build            # 教材検証後、Linux / Windowsを出力
 just clean            # build/ 以下を削除
 ```
 
-出力は `build/linux/packets-please.x86_64` と `build/windows/packets-please.exe`。PCK・ライセンス表記を内包し、Windows版は署名なしです。
+出力は `build/linux/tousenborder.x86_64` と `build/windows/tousenborder.exe`。PCK・ライセンス表記を内包し、Windows版は署名なしです。
 
 `v1.2.3` 形式のタグをpushすると、[Releaseワークフロー](.github/workflows/release.yml)がテスト・ビルド後にGitHub Releaseを公開し、Linux版（tar.gz）とWindows版（zip）を添付します。`v1.2.3-rc.1` などの接尾辞付きタグはプレリリースになります。
 

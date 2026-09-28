@@ -53,11 +53,11 @@ jobs:
         run: just build-linux build-windows
 
       - name: Package Linux
-        run: tar -czf build/packets-please-linux-x86_64.tar.gz -C build/linux .
+        run: tar -czf build/tousenborder-linux-x86_64.tar.gz -C build/linux .
 
       - name: Package Windows
         working-directory: build/windows
-        run: zip -r ../packets-please-windows-x86_64.zip .
+        run: zip -r ../tousenborder-windows-x86_64.zip .
 
       - name: Publish release
         uses: softprops/action-gh-release@v3
@@ -66,5 +66,5 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }}
           fail_on_unmatched_files: true
           files: |
-            build/packets-please-linux-x86_64.tar.gz
-            build/packets-please-windows-x86_64.zip
+            build/tousenborder-linux-x86_64.tar.gz
+            build/tousenborder-windows-x86_64.zip

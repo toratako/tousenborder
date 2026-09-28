@@ -62,7 +62,7 @@ def is_installed(destination, version):
 def request(url):
     return urllib.request.urlopen(
         urllib.request.Request(
-            url, headers={"User-Agent": "packets-please-template-installer"}
+            url, headers={"User-Agent": "tousenborder-template-installer"}
         ),
         timeout=60,
     )

@@ -27,11 +27,11 @@ clean:
 
 build-linux: _validate
     mkdir -p build/linux
-    "{{ godot }}" --headless --path . --export-release "Linux" build/linux/packets-please.x86_64
+    "{{ godot }}" --headless --path . --export-release "Linux" build/linux/tousenborder.x86_64
 
 build-windows: _validate
     mkdir -p build/windows
-    "{{ godot }}" --headless --path . --export-release "Windows" build/windows/packets-please.exe
+    "{{ godot }}" --headless --path . --export-release "Windows" build/windows/tousenborder.exe
 
 [private]
 _validate: _import
