@@ -222,11 +222,10 @@ static func build_audit(desk) -> void:
 	desk.audit_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	Chrome.panel(desk.audit_overlay, Rect2(312, 131, 680, 540), Color("050a12"))
 	var sheet := Chrome.panel(desk.audit_overlay, Rect2(300, 119, 680, 540), Color("101e32"), Color("34556f"))
-	Chrome.label(sheet, Rect2(28, 21, 624, 24), "電子入境管理局  /  内部監査課", INK, 14)
-	Chrome.label(sheet, Rect2(28, 53, 624, 43), "審査結果  監査票", INK, 30)
-	Chrome.panel(sheet, Rect2(28, 109, 624, 2), Color("34556f"))
-	desk.audit_heading = Chrome.label(sheet, Rect2(28, 126, 624, 34), "", INK, 22)
-	desk.audit_body = Chrome.rich(sheet, Rect2(28, 177, 624, 275), INK, 17)
+	Chrome.label(sheet, Rect2(28, 28, 624, 43), "審査結果  監査票", INK, 30)
+	Chrome.panel(sheet, Rect2(28, 84, 624, 2), Color("34556f"))
+	desk.audit_heading = Chrome.label(sheet, Rect2(28, 101, 624, 34), "", INK, 22)
+	desk.audit_body = Chrome.rich(sheet, Rect2(28, 152, 624, 300), INK, 17)
 	desk.next = Chrome.button(sheet, Rect2(28, 475, 624, 42), "確認して次の案件へ  >", PAPER)
 	desk.next.pressed.connect(func(): desk.shift.advance())
 	desk.audit_overlay.visible = false
