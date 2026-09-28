@@ -13,6 +13,10 @@ validate: _validate
 test: _import
     GODOT="{{ godot }}" "{{ python }}" scripts/run_tests.py
 
+format:
+    if command -v gdscript-formatter >/dev/null 2>&1; then gdscript-formatter scripts tests; fi
+    ruff format scripts tests
+
 build: clean build-linux build-windows
 
 install-templates:
