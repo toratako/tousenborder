@@ -1,6 +1,8 @@
 extends RefCounted
 ## 既存画面の部品生成・配置を担当する。部品と操作状態の所有者はdeskのままにする。
 const Chrome = preload("res://scripts/ui/cyber_theme.gd")
+const TITLE_FONT = preload("res://assets/fonts/YuseiMagic-Regular.ttf")
+const GAME_TITLE := "とーせんぼ～だ～"
 const PAPER := Color("e4f5ff")
 const INK := Color("e4f5ff")
 const MUTED := Color("b0c8da")
@@ -11,7 +13,8 @@ static func build_workspace(desk) -> void:
 	desk.workspace = Control.new()
 	desk.workspace.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.add_child(desk.workspace)
-	desk.menu_button = Chrome.button(desk.workspace, Rect2(20, 12, 208, 46), "電子入境管理", PAPER)
+	desk.menu_button = Chrome.button(desk.workspace, Rect2(20, 12, 208, 46), GAME_TITLE, PAPER)
+	desk.menu_button.add_theme_font_override("font", TITLE_FONT)
 	desk.menu_button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	desk.menu_button.add_theme_color_override("font_focus_color", GREEN)
 	desk.menu_button.add_theme_font_size_override("font_size", 23)
@@ -56,7 +59,8 @@ static func build_pause_menu(desk) -> void:
 	desk.pause_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	desk.pause_menu.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sheet := Chrome.panel(desk.pause_menu, Rect2(330, 155, 620, 490), Color("101e32"), Color("34556f"))
-	Chrome.label(sheet, Rect2(36, 28, 548, 45), "電子入境管理", INK, 30)
+	var menu_title := Chrome.label(sheet, Rect2(36, 28, 548, 45), GAME_TITLE, INK, 30)
+	menu_title.add_theme_font_override("font", TITLE_FONT)
 	desk.menu_resume = Chrome.button(sheet, Rect2(36, 151, 548, 52), "ゲームに戻る  [ESC]", PAPER)
 	desk.menu_resume.pressed.connect(desk._close_menu)
 	desk.menu_restart = Chrome.button(sheet, Rect2(36, 225, 548, 52), "勤務を最初からやり直す", PAPER)
@@ -139,10 +143,20 @@ static func build_start_screen(desk) -> void:
 	Chrome.panel(desk.start_screen, Rect2(56, 60, 1168, 680), Color("101e32"), Color("29495f"))
 	for origin in [Vector2(56, 60), Vector2(1152, 60), Vector2(56, 738), Vector2(1152, 738)]:
 		Chrome.panel(desk.start_screen, Rect2(origin, Vector2(72, 2)), GREEN)
-	Chrome.label(desk.start_screen, Rect2(94, 92, 1092, 25), "電子入境管理", MUTED, 16)
+	Chrome.label(desk.start_screen, Rect2(94, 92, 1092, 25), "セキュリティ審査ゲーム", MUTED, 16)
 	Chrome.panel(desk.start_screen, Rect2(94, 135, 1092, 2), Color("29495f"))
-	Chrome.label(desk.start_screen, Rect2(94, 189, 550, 70), "電子入境管理", PAPER, 44)
-	Chrome.label(desk.start_screen, Rect2(98, 283, 530, 50), "そのアクセスを、許可しますか。", GREEN, 24)
+	var title_top := Chrome.label(desk.start_screen, Rect2(98, 162, 470, 92), "とーせん", PAPER, 66)
+	var title_bottom := Chrome.label(desk.start_screen, Rect2(188, 235, 456, 92), "ぼ～だ～", GREEN, 66)
+	for title_label in [title_top, title_bottom]:
+		title_label.add_theme_font_override("font", TITLE_FONT)
+		title_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+		title_label.add_theme_color_override("font_shadow_color", Color("020713"))
+		title_label.add_theme_constant_override("shadow_offset_x", 3)
+		title_label.add_theme_constant_override("shadow_offset_y", 5)
+		title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title_top.rotation = deg_to_rad(-3.0)
+	title_bottom.rotation = deg_to_rad(2.0)
+	Chrome.label(desk.start_screen, Rect2(98, 338, 530, 38), "そのアクセスを、許可しますか。", MUTED, 22)
 	Chrome.label(desk.start_screen, Rect2(98, 385, 514, 28), "難易度", PAPER, 16)
 	Chrome.label(desk.start_screen, Rect2(98, 480, 250, 28), "問題カテゴリ", PAPER, 16)
 	Chrome.label(desk.start_screen, Rect2(362, 480, 250, 28), "調査環境", PAPER, 16)
