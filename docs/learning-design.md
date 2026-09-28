@@ -8,16 +8,15 @@
 
 | Level | 目的 |
 | --- | --- |
-| 超初級 | 提示情報と許可条件の単純な一致・不一致を判断する |
-| 初級：Referenceのみ | 複数のReferenceを照合して判断する |
-| 初級：Tool | 1つのToolで調べ、必要なReferenceと照合する |
-| 初級：External Referenceあり | 外部照会の選択肢を含み、送信内容と方針を確認して調べる |
-| 中級 | Category・OSに自然なTool候補から選び、複数Evidenceを組み合わせる |
-| 上級 | 攻撃と正常挙動で共通する特徴を文脈で区別し、外部送信の可否を含む調査手段も選ぶ |
+| 入門 | 提示情報と許可条件の単純な一致・不一致を判断する |
+| Referenceのみ | 複数のReferenceを照合して判断する |
+| Tool | 1つのToolで調べ、必要なReferenceと照合する |
+| External Referenceあり | 外部照会の選択肢を含み、送信内容と方針を確認して調べる |
+| 応用 | 実攻撃を基にした事例で調査手段を選び、複数Evidenceを組み合わせて判断する |
 
-超初級はTool・External Referenceを使わず、初期情報のみ、または最大1つの単純なReferenceとの直接比較で判断できる構成にします。規則・正規連絡先・承認情報は難易度にかかわらず調査側のReferenceに置き、検査対象には対象の情報を表示します。PackageでもReferenceの申請名と対象名の明確な相違などを扱えます。中級以上では調査手段の選択とEvidenceの統合を扱い、選択肢の出力も事実として成立させます。
+入門はTool・External Referenceを使わず、初期情報のみ、または最大1つの単純なReferenceとの直接比較で判断できる構成にします。規則・正規連絡先・承認情報は難易度にかかわらず調査側のReferenceに置き、検査対象には対象の情報を表示します。PackageでもReferenceの申請名と対象名の明確な相違などを扱えます。応用では調査手段の選択とEvidenceの統合を扱い、選択肢の出力も事実として成立させます。
 
-初級の3区分は開始画面の難易度から選択します。External Referenceが1つでもあれば「あり」、それ以外は想定手順でToolを1つ使う問題とReferenceのみの問題に分けます。Toolの代替候補が複数あっても、使うのがいずれか1つなら「Tool」です。Referenceだけの問題に不要なToolは追加しません。
+Referenceのみ・Tool・External Referenceありの3区分は開始画面の難易度から選択します。External Referenceが1つでもあれば「あり」、それ以外は想定手順でToolを1つ使う問題とReferenceのみの問題に分けます。Toolの代替候補が複数あっても、使うのがいずれか1つなら「Tool」です。Referenceだけの問題に不要なToolは追加しません。
 
 適切な外部照会が必要な問題も認めます。一律の使用回数・順序や調査完了を回答条件にせず、同じ事実を得る代替Toolも認めます。ALLOWは現在のCheckpointの通過許可、BLOCKはその不許可であり、Malwareの証明とは限りません。
 
@@ -39,7 +38,7 @@ Accountでは今回のSession成立後のLog・操作を使いません。4624�
 
 ## 外部照会の判断
 
-RDAPはIP・登録Domainを外部へ送るExternal Referenceです。IPだけの照会も組織の許可が必要です。公開到達性だけで送信可とせず、送信先・対象の機密区分をReferenceの方針で確認します。[RDAP照会形式](https://www.rfc-editor.org/rfc/rfc9082.html)
+外部照会では公開到達性だけで送信可とせず、送信先・対象の機密区分をReferenceの方針で確認します。
 
 Hash検索とFile本体のUploadは別操作です。VirusTotalの通常のFile送信では検体がパートナーや顧客と共有され得ます。Hash照会も問題内の組織方針に従います。[Searching](https://docs.virustotal.com/docs/searching)、[How it works](https://docs.virustotal.com/docs/how-it-works)
 
@@ -57,10 +56,10 @@ Hashは合成値、IPは文書用、組織・Domain・Package・脆弱性は架�
 
 ## 現行教材の方針
 
-問題数の目標は設けず、判断根拠・Tool選択・正常例との一貫性を優先します。旧24問は削除し、現行Packは新しい112問に置換しました。
+問題数の目標は設けず、判断根拠・Tool選択・正常例との一貫性を優先します。現行Packは70問です。RDAPは判断への寄与が小さいため扱わず、専用の3問と付随する調査資料を削除しています。旧中級・上級の実攻撃ベース11問を応用に統合し、実攻撃ベースでない39問は出題対象から外しています。除外問題のJSONとレビュー（`data/catalog/excluded.json`）は保管し、標準Packには登録しません。
 
-Vulnerability DatabaseはReference、RDAP、Hash／File／Domain／IP／URL ReputationとIsolated URL AnalysisはExternal Referenceです。Referenceを含む調査結果は比較する事実を示し、攻撃名・ゲーム上の結論はTitle・Explanationへ置きます。外部サービス本来の検出数・分類の表示は可能です。
+Vulnerability DatabaseはReference、Hash／File／Domain／IP／URL ReputationとIsolated URL AnalysisはExternal Referenceです。Referenceを含む調査結果は比較する事実を示し、攻撃名・ゲーム上の結論はTitle・Explanationへ置きます。外部サービス本来の検出数・分類の表示は可能です。
 
-RDAPの非公開Organizationを捏造しません。Hash・Domain・IP・Full URL・File・PCAP・Emailの送信内容を区別し、機密FileやToken付きURLの外部送信を必要証拠にしません。
+Hash・Domain・IP・Full URL・File・PCAP・Emailの送信内容を区別し、機密FileやToken付きURLの外部送信を必要証拠にしません。
 
 Real-world inspiredはFake Update、ClickFix／Fake CAPTCHA（Windows Process）、DLL Side-loading、LOLBin、Cron Persistence、BEC、Windows／SSH Password Spraying、Typosquatting、Dependency Confusionの範囲とします。出典と観測Evidenceが支えない原因・攻撃名を断定せず、正常例も残します。

@@ -20,7 +20,7 @@ Toolの `environments` は省略時両OS対応。表示・ドラッグ・直接�
 
 `output_by_environment` のキーは明示した `environments` と一致させ、共有の `output_information` と対象・値を揃えます。Pathや対象が違うなら別問題・別Toolにします。両対応の宣言だけでは別OSの問題や出力は増えません。
 
-代替証拠の例は [Web中級の `dns`](../data/problems/WEB-UNKNOWN-CAMPAIGN.json)。同じ証拠とする出力は事実を一致させます（[Linux NetworkのWireshark/tcpdump](../data/problems/NET-LINUX-SECURITY-TELEMETRY.json)も同じ過去Flowを表示）。
+代替証拠の例は [出題対象外のWeb問題の `dns`](../data/problems/WEB-UNKNOWN-CAMPAIGN.json)。同じ証拠とする出力は事実を一致させます（[Linux NetworkのWireshark/tcpdump](../data/problems/NET-LINUX-SECURITY-TELEMETRY.json)も同じ過去Flowを表示）。
 
 ## 画面と責務
 

@@ -9,7 +9,8 @@
 - 初級の `level` は `beginner_reference`（Referenceのみ）、`beginner`（Tool）、`beginner_external`（External Referenceあり）。追加グループも含む資料種別で分類を検証し、`beginner` のレビュー手順ではToolをちょうど1つ使うことを確認します。代替Toolの選択肢は複数登録できます。
 - 標準の `tools / references / external_references` は問題のトップレベル、追加グループだけを `resources` に置きます。標準グループのkindは変更できません。
 - `initial_information_types` は初期情報のキーと型名の対応。未指定は `text` で、値から型を推測しません。型名は追加できます。
-- 超初級はReferenceを調査欄で閲覧できます。Tool・External Referenceは追加グループを含め使用不可。`required_evidence` には初期情報と必要なReference（代替証拠も可）を指定します。Referenceは閲覧後に証拠へ加わります。調査充足は進行条件ではありません（[判定・履歴](runtime-flow.md#調査から判定まで)）。
+- `applied`（応用）は `scenario_type: real_world_inspired`、攻撃手法を示す `inspired_by`、出典 `sources` が必須です。旧 `intermediate` / `advanced` は除外問題とテスト資料の読み取り用に残しています。
+- 入門はReferenceを調査欄で閲覧できます。Tool・External Referenceは追加グループを含め使用不可。`required_evidence` には初期情報と必要なReference（代替証拠も可）を指定します。Referenceは閲覧後に証拠へ加わります。調査充足は進行条件ではありません（[判定・履歴](runtime-flow.md#調査から判定まで)）。
 
 ## 資料と情報の接続
 
@@ -42,10 +43,10 @@ Referenceは入力不要の `content` を表示します。Tool・External Refer
 | --- | --- |
 | File → SHA-256 → 外部Hash検索 | [FILE-LINUX-KNOWN-HASH](../data/problems/FILE-LINUX-KNOWN-HASH.json) |
 | PID → 実行ScriptのPath → Hash（Process本体と区別） | [PROC-WIN-ADMIN-POWERSHELL](../data/problems/PROC-WIN-ADMIN-POWERSHELL.json) |
-| 受付済みHost → DNS、登録Domain → 外部RDAP照会 | [WEB-UNKNOWN-CAMPAIGN](../data/problems/WEB-UNKNOWN-CAMPAIGN.json) |
+| 受付済みHost → DNS → 承認記録との照合 | [WEB-UNKNOWN-CAMPAIGN](../data/problems/WEB-UNKNOWN-CAMPAIGN.json) |
 | Email内でHeader・添付・URLを調査する追加グループ | [EMAIL-GENUINE-URGENT](../data/problems/EMAIL-GENUINE-URGENT.json) |
 
-入力は値・案件・適切な調査で取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも区別します。RDAPはExternal Referenceとし、入力値・送信値・出力の照会対象を一致させます。登録DomainがHostと異なる場合は別の型付き情報を用意し、送信前に外部照会方針を確認する手順を記載します。
+入力は値・案件・適切な調査で取得済みかも照合します。同じFile型でもProcess本体と実行Script、同じHashでもVendor公開値と手元の取得値は別です。Hostと登録Domainも区別します。
 
 ProcessのBacking Executableを直接調査する場合は、初期情報のPIDを入力にし、対象Pathと結果をoutputに明記できます。ScriptのHashとは別資料にします。Windows用DNS Toolを使う問題はplatformをwindowsにし、commonの調査OSはLinuxのままとします。
 

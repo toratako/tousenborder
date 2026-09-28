@@ -45,12 +45,14 @@ func _run() -> void:
 	assert(not desk.playing)
 	desk.queue_free()
 	await process_frame
-	# 実際の教材で初級の各区分を選び、勤務開始・再開始・既存フィルタを確認する。
+	# 実際の教材で各区分を選び、勤務開始・再開始・既存フィルタを確認する。
 	desk = load("res://scenes/main.tscn").instantiate()
 	root.add_child(desk)
 	await process_frame
 	assert(desk.catalog.errors.is_empty(), str(desk.catalog.errors))
 	var all_ids := {}
+	assert(desk.difficulty_select.item_count == 6)
+	assert(desk.catalog.difficulties.values().map(func(d): return d.label) == ["入門", "Referenceのみ", "Tool", "External Referenceあり", "応用"])
 	for level in ContentCatalog.DIFFICULTIES:
 		select_value(desk.difficulty_select, level)
 		var selected: Array = desk._selected_cases()
@@ -71,6 +73,8 @@ func _run() -> void:
 				assert(not resources.is_empty() and resources.all(func(r): return r.resource_kind == "references"))
 			elif level == "beginner_external":
 				assert(has_external)
+			elif level == "applied":
+				assert(item.scenario_type == "real_world_inspired" and not item.sources.is_empty() and not item.inspired_by.is_empty())
 		desk.start_button.pressed.emit()
 		assert(desk.playing and desk.shift.cases.size() == selected.size())
 		assert(desk.shift.cases.all(func(c): return c.level == level))

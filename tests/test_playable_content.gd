@@ -35,7 +35,7 @@ func _run() -> void:
 		check(desk.target_card.title_label.text == "検査対象", "回答前は問題Titleを隠す")
 		check(not desk.target_card.card_data.has("ground_truth"), "判定情報を対象カードに渡さない")
 		if item.level == "very_beginner":
-			check(desk.active_tools.all(func(resource): return resource.resource_kind == "references" and resource.accepted_information_types.is_empty()), "超初級は入力不要のReferenceだけを調査できる")
+			check(desk.active_tools.all(func(resource): return resource.resource_kind == "references" and resource.accepted_information_types.is_empty()), "入門は入力不要のReferenceだけを調査できる")
 			for id in item.required_evidence:
 				if id != "initial_information":
 					check(id in desk.shift.missing_evidence(), "Referenceは閲覧前に証拠へ加えない: " + item.id + "/" + id)

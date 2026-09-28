@@ -3,6 +3,8 @@ extends RefCounted
 ## Schema検証後の問題に実行時の表示情報だけを付加する。別名変換は行わない。
 
 static func normalize(item: Dictionary, catalog: ContentCatalog, schema: Dictionary) -> String:
+	if item.level == "applied" and (item.scenario_type != "real_world_inspired" or item.get("inspired_by", "").strip_edges().is_empty() or item.sources.is_empty()):
+		return "応用には実攻撃ベースの事例・攻撃手法・出典が必要です。"
 	if not catalog.categories.any(func(category): return category.id == item.category):
 		return "未登録のcategory: " + item.category
 	for key in item.initial_information:
@@ -27,7 +29,7 @@ static func normalize(item: Dictionary, catalog: ContentCatalog, schema: Diction
 			var errors := ContentSchema.check(resource, resource_schema)
 			if not errors.is_empty(): return group + ": " + "; ".join(errors)
 			if item.level == "very_beginner" and kind != "references":
-				return "超初級の調査にはReferenceのみ使用できます。"
+				return "入門の調査にはReferenceのみ使用できます。"
 			if ids.has(resource.id): return "資料IDが重複しています: " + resource.id
 			ids[resource.id] = true
 			resource.merge({"label": resource.name, "description": "資料を表示します。",

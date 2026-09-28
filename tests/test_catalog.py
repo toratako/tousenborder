@@ -16,6 +16,7 @@ from build_problem_catalog import (
     read_json,
     resource_path,
     validate_authoring,
+    validate_glossary,
     validate_pack,
     validate_review,
     validate_schema,
@@ -60,33 +61,36 @@ class CatalogTests(unittest.TestCase):
                         "Reason", "Learning Objective", "Real-world Inspiration"]:
             self.assertIn(heading, markdown)
 
-    def test_rdap_queries_bind_the_actual_ip_or_registered_domain(self):
+    def test_applied_selection_excludes_non_attack_cases(self):
+        pack = read_json(ROOT / "data/packs/learning.json")
+        cases = [read_json(resource_path(path)) for path in pack["problems"]]
+        self.assertFalse(any(p["level"] in ("intermediate", "advanced") for p in cases))
+        applied = [p for p in cases if p["level"] == "applied"]
+        self.assertEqual(len(applied), 11)
+        excluded = read_json(ROOT / "data/catalog/excluded.json")["reviews"]
+        self.assertEqual(len(excluded), 39)
+        self.assertTrue(set(excluded).isdisjoint(p["id"] for p in cases))
+        for item in applied:
+            self.assertEqual(item["scenario_type"], "real_world_inspired")
+            for field, invalid in [("scenario_type", "standard"), ("inspired_by", ""), ("sources", [])]:
+                invalid_item = copy.deepcopy(item)
+                invalid_item[field] = invalid
+                with self.subTest(problem=item["id"], field=field), self.assertRaises(ValueError):
+                    validate_authoring(invalid_item, pack)
+
+    def test_rdap_is_not_available_in_problem_resources(self):
         pack = read_json(ROOT / "data/packs/learning.json")
         reviews = read_json(ROOT / "data/catalog/learning.json")["reviews"]
-        found = []
-        for path in pack["problems"]:
-            item = read_json(resource_path(path))
-            entries = [(kind, r) for kind in ("tools", "references", "external_references") for r in item[kind]]
-            for kind, r in entries:
-                if r["id"] != "rdap":
-                    continue
-                found.append(item["id"])
-                with self.subTest(problem=item["id"]):
-                    self.assertEqual(kind, "external_references")
-                    self.assertIn(r["submission_type"], ("ip", "domain"))
-                    self.assertEqual(r["accepted_information_types"], [r["submission_type"]])
-                    facts = {("initial_information", key): value for key, value in item["initial_information"].items()}
-                    facts.update({(entry["id"], info["id"]): info["value"]
-                                  for _, entry in entries for info in entry.get("output_information", [])})
-                    for binding in r["input_bindings"]:
-                        self.assertEqual(facts[(binding["source"], binding["id"])], r["submission_value"])
-                    self.assertIn(r["submission_value"], r["output"])
-                    flow = [s["resource_id"] for s in reviews[item["id"]]["flow"]]
-                    if "rdap" in flow:
-                        self.assertLess(flow.index("disclosure"), flow.index("rdap"))
-                    if "rdap" in item["required_evidence"]:
-                        self.assertIn("disclosure", item["required_evidence"])
-        self.assertTrue(found)
+        reviews.update(read_json(ROOT / "data/catalog/excluded.json")["reviews"])
+        for path in (ROOT / "data/problems").glob("*.json"):
+            item = read_json(path)
+            with self.subTest(problem=item["id"]):
+                entries = validate_authoring(item, pack)
+                validate_glossary(item, pack, entries)
+                validate_review(item, entries, reviews[item["id"]])
+                self.assertFalse(any(r["id"] == "rdap" for _, r in entries))
+                self.assertNotIn("rdap", item["required_evidence"])
+        self.assertFalse(any("RDAP" in path for path in pack["problems"]))
 
     def test_review_flow_requires_inputs_before_dependent_investigation(self):
         item = read_json(ROOT / "data/problems/PROC-WIN-DLL-SIDELOAD.json")
@@ -102,7 +106,7 @@ class CatalogTests(unittest.TestCase):
         item = read_json(ROOT / "data/problems/WEB-UNKNOWN-CAMPAIGN.json")
         pack = read_json(ROOT / "data/packs/learning.json")
         entries = validate_authoring(item, pack)
-        review = copy.deepcopy(read_json(ROOT / "data/catalog/learning.json")["reviews"][item["id"]])
+        review = copy.deepcopy(read_json(ROOT / "data/catalog/excluded.json")["reviews"][item["id"]])
         review["flow"][0]["resource_id"] = "nslookup"
         validate_review(item, entries, review)
         review["flow"] = [step for step in review["flow"] if step["resource_id"] != "official"]
@@ -112,6 +116,7 @@ class CatalogTests(unittest.TestCase):
     def test_review_flow_rejects_unsafe_or_unavailable_investigation(self):
         pack = read_json(ROOT / "data/packs/learning.json")
         reviews = read_json(ROOT / "data/catalog/learning.json")["reviews"]
+        reviews.update(read_json(ROOT / "data/catalog/excluded.json")["reviews"])
         for problem_id, resource in [("FILE-WIN-UNSIGNED-INTERNAL", "file_rep"),
                                      ("WEB-LINUX-DNS", "dig")]:
             with self.subTest(problem=problem_id):
@@ -162,9 +167,12 @@ class CatalogTests(unittest.TestCase):
                         build(ROOT / "data/packs/learning.json")
 
     def test_review_text_regenerates_and_markdown_preserves_literal_content(self):
-        source_path = ROOT / "data/problems/FILE-WIN-DOUBLE-EXTENSION.json"
+        source_path = ROOT / "data/problems/FILE-LINUX-KNOWN-HASH.json"
         review_path = ROOT / "data/catalog/learning.json"
         item = copy.deepcopy(read_json(source_path))
+        unsafe = copy.deepcopy(item["external_references"][0])
+        unsafe.update(id="unsafe_render_example", correct_usage=False, reason="送信不可の資料")
+        item["external_references"].append(unsafe)
         value = 'C:\\Temp\\_literal_ | <TRAINING-PLACEHOLDER>\n**text** [link](target)'
         item["initial_information"]["Render check"] = value
         reviews = copy.deepcopy(read_json(review_path))
@@ -178,7 +186,7 @@ class CatalogTests(unittest.TestCase):
             return read_json(path)
         with patch("build_problem_catalog.read_json", side_effect=reader):
             generated, markdown = build(ROOT / "data/packs/learning.json")
-        row = json.loads(generated)["problems"][0]
+        row = next(p for p in json.loads(generated)["problems"] if p["id"] == item["id"])
         self.assertEqual(row["initial_information"]["Render check"], value)
         self.assertEqual(row["overview"], "Changed review overview")
         self.assertEqual(row["review_notes"], "Review note for rendering test")
