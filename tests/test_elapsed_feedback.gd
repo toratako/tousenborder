@@ -12,7 +12,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func submit_external(desk, item: Dictionary) -> void:
-	var tool: Dictionary = item.external_references[0]
+	var tool: Dictionary = Fixtures.resources(item, "external_references")[0]
 	var button: ToolInput = desk.tool_buttons.filter(func(b): return b.tool.id == tool.id)[0]
 	var input: Dictionary = {}
 	for card in desk.cards:
@@ -35,11 +35,11 @@ func _run() -> void:
 	await process_frame
 	desk.set_process(false)
 	# 異なる案件を使い、調査所見が他の案件に混入しないことを確認する。
-	var item: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-FILE")[0]
-	var future: Dictionary = desk.catalog.cases.filter(func(c): return c.id == "FIX-VISIBLE-FILE")[0]
+	var item: Dictionary = desk.library.cases.filter(func(c): return c.id == "FIX-PRIVATE-FILE")[0]
+	var future: Dictionary = desk.library.cases.filter(func(c): return c.id == "FIX-VISIBLE-FILE")[0]
 	var cases: Array[Dictionary] = [item, future]
 	for hide_reason in [false, true]:
-		desk.catalog.feedback = {"show_reason": not hide_reason, "show_expected": false}
+		desk.feedback = {"show_reason": not hide_reason, "show_expected": false}
 		desk._start_shift()
 		desk.shift.start(cases)
 		submit_external(desk, item)
@@ -57,9 +57,9 @@ func _run() -> void:
 		check(not review.contains("正しい判定"), "正解表示設定を保持")
 		check(not review.substr(review.find(future.title)).contains("不適切な利用"), "他の案件に調査所見を転記しない")
 		if not hide_reason:
-			check(review.contains(item.external_references[0].reason), "実施した不適切な調査の理由を表示")
+			check(review.contains(Fixtures.resources(item, "external_references")[0].reason), "実施した不適切な調査の理由を表示")
 	# 判定済みの履歴と現在の調査を二重計上しない。
-	desk.catalog.feedback = {}
+	desk.feedback = {}
 	desk._start_shift()
 	var judged_item := item.duplicate(true)
 	judged_item.required_evidence = []

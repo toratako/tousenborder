@@ -12,7 +12,7 @@ func _run() -> void:
 	var desk = Fixtures.desk()
 	root.add_child(desk)
 	desk._start_shift()
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-FILE")
+	var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-FILE")
 	desk.shift.start(cases)
 	# パネルは固定し、案内の高さに応じて一覧のスクロール領域だけを縮める。
 	desk.tool_message.text = ""
@@ -31,7 +31,7 @@ func _run() -> void:
 	desk.tool_message.text = ""
 	await _settle()
 	assert(is_equal_approx(desk.tool_scroll.size.y, scroll_height))
-	var dense_cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-FILE")
+	var dense_cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-PRIVATE-FILE")
 	desk.shift.start(dense_cases)
 	for button in desk.tool_buttons:
 		button.heading.text = (button.tool.label + " Extended description ").repeat(3)

@@ -46,7 +46,7 @@ func _run() -> void:
 	root.add_child(desk)
 	await process_frame
 	await click(desk.start_button.get_global_rect().get_center())
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-FILE")
+	var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-FILE")
 	desk.shift.start(cases)
 	assert(desk.playing and desk.tool_panel.visible)
 	await motion(desk.menu_button.get_global_rect().get_center())
@@ -146,7 +146,7 @@ func _run() -> void:
 	assert(root.gui_get_hovered_control() == movable_card.header)
 	result_grab = movable_card.header.global_position + Vector2(15, 23)
 	await drag(result_grab, desk.card_layer.global_position + result_position + Vector2(15, 23))
-	var reference: Dictionary = desk.catalog.tools_for(desk.shift.current()).filter(func(t): return t.resource_kind == "references")[0]
+	var reference: Dictionary = desk.library.tools_for(desk.shift.current()).filter(func(t): return t.kind == "references")[0]
 	desk._inspect(reference)
 	var stamp: StampTool = desk.get_stamp("block")
 	assert(stamp.get_class() == "Control")

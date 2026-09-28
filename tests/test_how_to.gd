@@ -24,7 +24,7 @@ func _run() -> void:
 	desk._open_how_to()
 	assert(not desk.how_to_overlay.visible)
 	desk._start_shift()
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-FILE")
+	var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-FILE")
 	desk.shift.start(cases)
 	await process_frame
 	var token: InformationToken = desk.target_card.tokens.filter(func(t): return t.information.id == "File名")[0]

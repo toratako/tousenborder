@@ -17,7 +17,7 @@ func _capture() -> void:
 	await process_frame
 	desk._start_shift()
 	desk.set_process(false)
-	var cases: Array[Dictionary] = desk.catalog.cases.filter(func(c): return c.id == "FIX-FILE")
+	var cases: Array[Dictionary] = desk.library.cases.filter(func(c): return c.id == "FIX-FILE")
 	desk.shift.start(cases)
 	await _save("target")
 	var token: InformationToken = desk.target_card.tokens.filter(func(t): return t.information.id == "File名")[0]
@@ -34,7 +34,7 @@ func _capture() -> void:
 	desk.target_card._drop_data(Vector2.ZERO, desk.get_stamp("block").payload())
 	await create_timer(0.5).timeout
 	await _save("audit")
-	cases = desk.catalog.cases.filter(func(c): return c.id == "FIX-PRIVATE-URL")
+	cases = desk.library.cases.filter(func(c): return c.id == "FIX-PRIVATE-URL")
 	desk.shift.start(cases)
 	var url: InformationToken = desk.target_card.tokens.filter(func(t): return t.information.data_type == "url")[0]
 	desk._select_information(url.payload())

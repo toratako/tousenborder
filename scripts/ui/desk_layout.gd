@@ -92,7 +92,7 @@ static func build_rules(desk) -> void:
 	desk.rules_body = Chrome.rich(book, Rect2(30, 110, 820, 480), INK, 20)
 	desk.rules_body.focus_mode = Control.FOCUS_ALL
 	desk.rules_body.get_v_scroll_bar().focus_mode = Control.FOCUS_NONE
-	for rule in desk.catalog.rules:
+	for rule in desk.rules:
 		desk.rules_body.push_font_size(22)
 		desk.rules_body.push_color(GREEN)
 		desk.rules_body.add_text(rule.label + "\n")
@@ -157,33 +157,29 @@ static func build_start_screen(desk) -> void:
 	title_top.rotation = deg_to_rad(-3.0)
 	title_bottom.rotation = deg_to_rad(2.0)
 	Chrome.label(desk.start_screen, Rect2(98, 338, 530, 38), "そのアクセスを、許可しますか。", MUTED, 22)
-	Chrome.label(desk.start_screen, Rect2(98, 385, 514, 28), "難易度", PAPER, 16)
-	Chrome.label(desk.start_screen, Rect2(98, 480, 250, 28), "問題カテゴリ", PAPER, 16)
-	Chrome.label(desk.start_screen, Rect2(362, 480, 250, 28), "調査環境", PAPER, 16)
-	var difficulties: Array = [{"id": "", "label": "すべて"}]
-	for id in desk.catalog.difficulties:
-		difficulties.append({"id": id, "label": desk.catalog.difficulties[id].label})
-	desk.difficulty_select = selection_option(desk, Vector2(98, 420), difficulties, 514)
-	var categories: Array = [{"id": "", "label": "すべて"}]
-	categories.append_array(desk.catalog.categories)
-	desk.category_select = selection_option(desk, Vector2(98, 518), categories, 250)
-	var platforms: Array = [{"id": "", "label": "すべて"}]
-	for id in desk.catalog.platforms:
-		platforms.append({"id": id, "label": desk.catalog.platforms[id].label})
-	desk.platform_select = selection_option(desk, Vector2(362, 518), platforms, 250)
+	Chrome.label(desk.start_screen, Rect2(98, 373, 514, 24), "出題", PAPER, 15)
+	desk.pack_select = selection_option(desk, Vector2(98, 400), [{"id": "", "label": "自由演習"}], 514)
+	Chrome.label(desk.start_screen, Rect2(98, 447, 250, 24), "問題カテゴリ", PAPER, 15)
+	Chrome.label(desk.start_screen, Rect2(362, 447, 250, 24), "調査環境", PAPER, 15)
+	desk.category_select = selection_option(desk, Vector2(98, 475), [{"id": "", "label": "すべて"}], 250)
+	desk.platform_select = selection_option(desk, Vector2(362, 475), [{"id": "", "label": "すべて"}], 250)
+	Chrome.label(desk.start_screen, Rect2(98, 528, 250, 24), "難易度", PAPER, 15)
+	Chrome.label(desk.start_screen, Rect2(362, 528, 250, 24), "調査形式", PAPER, 15)
+	desk.difficulty_select = selection_option(desk, Vector2(98, 556), [{"id": "", "label": "すべて"}], 250)
+	desk.method_select = selection_option(desk, Vector2(362, 556), [{"id": "", "label": "すべて"}], 250)
 	desk.platform_select.tooltip_text = "OSを選ぶと、そのOSと環境共通の問題を出題します。"
-	var briefing := Chrome.panel(desk.start_screen, Rect2(711, 189, 439, 328), Color("101e32"), Color("34556f"))
+	var briefing := Chrome.panel(desk.start_screen, Rect2(711, 189, 439, 280), Color("101e32"), Color("34556f"))
 	Chrome.label(briefing, Rect2(26, 20, 387, 23), "勤務前の手引き", Color("b0c8da"), 13)
 	Chrome.label(briefing, Rect2(26, 64, 387, 40), "調査 → 判定 → 監査", INK, 24)
-	Chrome.label(briefing, Rect2(26, 120, 387, 180), "01  情報を選択・ドラッグしてToolへ渡す\n\n02  調査結果をReferenceと照合\n       必要なら結果を次のToolへ渡す\n\n03  ALLOW / BLOCKを対象へ押印", INK, 16)
-	desk.start_button = Chrome.button(desk.start_screen, Rect2(98, 602, 514, 60), "勤務を開始  >", PAPER)
+	Chrome.label(briefing, Rect2(26, 115, 387, 155), "01  情報を選択・ドラッグしてToolへ渡す\n\n02  調査結果をReferenceと照合\n       必要なら結果を次のToolへ渡す\n\n03  ALLOW / BLOCKを対象へ押印", INK, 16)
+	desk.start_button = Chrome.button(desk.start_screen, Rect2(98, 622, 514, 52), "勤務を開始  >", PAPER)
 	desk.start_button.add_theme_font_size_override("font_size", 22)
 	desk.start_button.pressed.connect(desk._start_shift)
-	desk.tool_guide_button = Chrome.button(desk.start_screen, Rect2(711, 588, 439, 44), "ツール一覧  >", PAPER)
+	desk.tool_guide_button = Chrome.button(desk.start_screen, Rect2(711, 578, 439, 40), "ツール一覧  >", PAPER)
 	desk.tool_guide_button.pressed.connect(desk._show_tool_guide)
-	desk.license_button = Chrome.button(desk.start_screen, Rect2(711, 648, 439, 44), "ライセンス・著作権表記", MUTED)
+	desk.license_button = Chrome.button(desk.start_screen, Rect2(711, 630, 439, 40), "ライセンス・著作権表記", MUTED)
 	desk.license_button.pressed.connect(desk._show_licenses)
-	desk.history_button = Chrome.button(desk.start_screen, Rect2(711, 533, 439, 44), "勤務履歴  >", PAPER)
+	desk.history_button = Chrome.button(desk.start_screen, Rect2(711, 526, 439, 40), "勤務履歴  >", PAPER)
 	desk.history_button.pressed.connect(desk._show_history)
 
 static func build_tools(desk) -> void:
@@ -214,11 +210,11 @@ static func build_tools(desk) -> void:
 
 static func build_actions(desk) -> void:
 	desk.stamp_rack = HBoxContainer.new()
-	desk.stamp_rack.position = Vector2(20 + (480 - desk.catalog.actions.size() * 142) / 2.0, 710)
-	desk.stamp_rack.size = Vector2(desk.catalog.actions.size() * 142, 90)
+	desk.stamp_rack.position = Vector2(20 + (480 - desk.actions.size() * 142) / 2.0, 710)
+	desk.stamp_rack.size = Vector2(desk.actions.size() * 142, 90)
 	desk.stamp_rack.add_theme_constant_override("separation", 0)
 	desk.workspace.add_child(desk.stamp_rack)
-	for action in desk.catalog.actions:
+	for action in desk.actions:
 		var stamp := StampTool.new()
 		stamp.custom_minimum_size = Vector2(142, 90)
 		desk.stamp_rack.add_child(stamp)
@@ -346,7 +342,7 @@ static func build_summary(desk) -> void:
 
 static func build_summary_actions(desk) -> void:
 	desk.summary_home = Chrome.button(desk.summary, Rect2(30, 660, 230, 45), "スタート画面へ", MUTED)
-	var plan: Dictionary = desk.WrongAnswerRetry.plan(desk.summary_snapshot, desk.catalog)
+	var plan: Dictionary = desk.WrongAnswerRetry.plan(desk.summary_snapshot, desk.library)
 	desk.summary_retry_wrong = Chrome.button(desk.summary, Rect2(276, 660, 370, 45), "誤った問題に再挑戦（%d問）" % plan.cases.size(), PAPER)
 	desk.summary_retry_wrong.add_theme_font_size_override("font_size", 19)
 	desk.summary_retry_wrong.disabled = plan.cases.is_empty()
@@ -382,17 +378,18 @@ static func build_external_preview(desk) -> void:
 	desk.external_preview.hide()
 
 static func build_case_tools(desk, available: Array[Dictionary]) -> void:
+	var groups := ProblemLibrary.groups_for(available)
 	if available.is_empty():
 		var empty := Label.new()
 		empty.text = "この案件は基本情報のみで判定できます。"
 		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		empty.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		desk.tool_rack.add_child(empty)
-	for group in desk.catalog.resource_groups:
+	for group in groups:
 		var entries := available.filter(func(tool): return tool.get("group", "tools") == group)
 		if entries.is_empty():
 			continue
-		if desk.catalog.resource_groups[group].kind == "external_references":
+		if groups[group].kind == "external_references":
 			var gap := MarginContainer.new()
 			gap.add_theme_constant_override("margin_top", 14)
 			gap.add_theme_constant_override("margin_bottom", 2)
@@ -404,7 +401,7 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 			divider.add_theme_stylebox_override("separator", line)
 			gap.add_child(divider)
 		var heading := Label.new()
-		heading.text = "外部照会" if desk.catalog.resource_groups[group].kind == "external_references" else desk.catalog.resource_groups[group].label
+		heading.text = groups[group].label
 		heading.add_theme_font_size_override("font_size", 13)
 		heading.custom_minimum_size.y = 32
 		heading.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
@@ -416,8 +413,8 @@ static func build_case_tools(desk, available: Array[Dictionary]) -> void:
 			button.custom_minimum_size = Vector2(0, 64)
 			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			button.tooltip_text = tool.description
-			if desk.catalog.resource_groups[group].kind == "external_references":
-				button.tooltip_text += "\n送信する情報: " + tool.get("submission_type", "未指定") + "\n" + tool.get("confidentiality_warning", "")
+			if groups[group].kind == "external_references":
+				button.tooltip_text += "\n送信する情報: " + tool.submission.type + "\n" + tool.submission.warning
 			button.pressed.connect(func(): desk._inspect(tool, desk.selected_information))
 			button.information_dropped.connect(desk._inspect)
 			button.setup_presentation()
@@ -544,3 +541,27 @@ static func focus_cycle(buttons: Array) -> void:
 		button.focus_next = button.get_path_to(buttons[(i + 1) % buttons.size()])
 		button.focus_neighbor_top = button.focus_previous
 		button.focus_neighbor_bottom = button.focus_next
+
+static func build_content_import(desk) -> void:
+	desk.import_button = Chrome.button(desk.start_screen, Rect2(711, 474, 439, 40), "問題ZIP / JSONを追加", PAPER)
+	desk.content_notice = Chrome.label(desk.start_screen, Rect2(98, 687, 1052, 28), "", MUTED, 14)
+	desk.content_dialog = FileDialog.new()
+	desk.content_dialog.title = "教材を追加"
+	desk.content_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	desk.content_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	desk.content_dialog.filters = PackedStringArray(["*.zip ; 問題ZIP", "*.json ; 問題JSON"])
+	desk.add_child(desk.content_dialog)
+	desk.content_dialog.file_selected.connect(desk._import_content)
+	desk.import_button.pressed.connect(func(): desk.content_dialog.popup_centered_ratio(0.75))
+
+static func build_chapter(desk) -> void:
+	desk.chapter_overlay = Chrome.panel(desk, Rect2(0, 0, 1280, 800), Color(0.02, 0.04, 0.09, 0.85))
+	desk.chapter_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	desk.chapter_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	var sheet := Chrome.panel(desk.chapter_overlay, Rect2(260, 120, 760, 560), Color("101e32"), Color("34556f"))
+	desk.chapter_body = Chrome.rich(sheet, Rect2(30, 28, 700, 430), INK, 20)
+	desk.chapter_continue = Chrome.button(sheet, Rect2(30, 480, 700, 48), "審査を始める", PAPER)
+	desk.chapter_continue.pressed.connect(desk._close_chapter)
+	desk.chapter_body.focus_mode = Control.FOCUS_ALL
+	focus_cycle([desk.chapter_body, desk.chapter_continue])
+	desk.chapter_overlay.hide()

@@ -7,14 +7,29 @@ const Analysis = preload("res://scripts/core/result_analysis.gd")
 const AnalysisView = preload("res://scripts/ui/result_analysis_view.gd")
 const WrongAnswerRetry = preload("res://scripts/core/wrong_answer_retry.gd")
 
-@export_file("*.json") var content_pack := "res://data/packs/learning.json"
+@export_dir var content_root := "res://data"
 
 const PAPER = Layout.PAPER
 const INK = Layout.INK
 const MUTED = Layout.MUTED
 const GREEN = Layout.GREEN
 const RED = Layout.RED
-var catalog := ContentCatalog.new()
+var library := ProblemLibrary.new()
+var import_store := ContentImportStore.new()
+var actions: Array[Dictionary] = ContentLabels.actions()
+var feedback := {"correct_heading": "対象の判定：正解", "incorrect_heading": "対象の判定：誤判定", "show_reason": true, "show_expected": true}
+var rules: Array[Dictionary] = []
+var glossary_terms := LearningGlossary.common_terms()
+var pack_select: OptionButton
+var method_select: OptionButton
+var content_dialog: FileDialog
+var import_button: Button
+var content_notice: Label
+var chapter_overlay: Panel
+var chapter_body: RichTextLabel
+var chapter_continue: Button
+var shown_chapters := {}
+var displayed_index := -1
 var shift := InspectionShift.new()
 var workspace: Control
 var tool_buttons: Array[Button] = []
@@ -132,21 +147,34 @@ var retry_cases: Array[Dictionary] = []
 var retry_source_id := ""
 
 func _selected_cases() -> Array[Dictionary]:
-	return catalog.select_cases(difficulty_select.get_item_metadata(difficulty_select.selected), category_select.get_item_metadata(category_select.selected), platform_select.get_item_metadata(platform_select.selected))
+	var pack: String = pack_select.get_item_metadata(pack_select.selected)
+	if not pack.is_empty(): return library.pack_cases(pack)
+	return library.select_cases(difficulty_select.get_item_metadata(difficulty_select.selected), category_select.get_item_metadata(category_select.selected), platform_select.get_item_metadata(platform_select.selected), method_select.get_item_metadata(method_select.selected))
 
 func _refresh_selection(_index: int = 0) -> void:
 	var count := _selected_cases().size()
 	start_button.tooltip_text = "" if count > 0 else "該当する問題がありません。条件を変更してください。"
-	start_button.disabled = count == 0 or not catalog.errors.is_empty()
+	start_button.disabled = count == 0
+	for option in [difficulty_select, category_select, platform_select, method_select]:
+		option.disabled = not str(pack_select.get_item_metadata(pack_select.selected)).is_empty()
 
 func _ready() -> void:
 	theme = Chrome.create(preload("res://assets/fonts/NotoSansCJK-Regular.ttc"))
 	_build()
-	catalog.load_pack(content_pack)
+	rules.assign(JSON.parse_string(FileAccess.get_file_as_string("res://data/help/rules.json")))
+	library.load_builtin(content_root)
+	var import_errors := library.errors.duplicate()
+	for source in import_store.sources():
+		var prepared := library.prepare_source(source)
+		if prepared.errors.is_empty(): library.commit_source(prepared)
+		else: import_errors.append_array(prepared.errors)
 	_build_tools()
 	_build_actions()
 	_build_audit()
 	_build_start_screen()
+	Layout.build_content_import(self)
+	Layout.build_chapter(self)
+	_refresh_content_options()
 	_build_pause_menu()
 	Layout.build_rules(self)
 	Layout.build_how_to(self)
@@ -155,13 +183,13 @@ func _ready() -> void:
 	Layout.build_history(self)
 	shift.changed.connect(_refresh)
 	_show_start_screen()
-	if not catalog.errors.is_empty():
-		var error_label := Chrome.label(start_screen, Rect2(98, 530, 514, 60), "教材を読み込めません。勤務履歴は閲覧できます。", RED, 16)
-		error_label.tooltip_text = "\n".join(catalog.errors)
-		tool_guide_button.disabled = true
+	if not library.errors.is_empty() or not import_errors.is_empty():
+		content_notice.text = "一部の教材を読み込めませんでした。"
+		content_notice.tooltip_text = "\n".join(import_errors)
+	tool_guide_button.disabled = library.cases.is_empty()
 
 func _investigation_paused() -> bool:
-	return pause_menu.visible or rules_overlay.visible or how_to_overlay.visible or external_preview.visible or glossary_overlay.visible
+	return pause_menu.visible or rules_overlay.visible or how_to_overlay.visible or external_preview.visible or glossary_overlay.visible or chapter_overlay.visible
 
 func _process(delta: float) -> void:
 	_update_hover_drop_targets()
@@ -184,6 +212,11 @@ func _update_hover_drop_targets() -> void:
 		button.hover_drop_ready = button.is_visible_in_tree() and button._can_drop_data(Vector2.ZERO, payload)
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(chapter_overlay) and chapter_overlay.visible:
+		if event.is_action_pressed("ui_cancel") and not event.is_echo():
+			_close_chapter()
+			get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
 		if glossary_overlay.visible:
 			_close_glossary()
@@ -227,7 +260,7 @@ func _build_pause_menu() -> void:
 	Layout.build_pause_menu(self)
 
 func _toggle_menu() -> void:
-	if not playing or rules_overlay.visible or how_to_overlay.visible or glossary_overlay.visible:
+	if not playing or rules_overlay.visible or how_to_overlay.visible or glossary_overlay.visible or chapter_overlay.visible:
 		return
 	if pause_menu.visible:
 		_close_menu()
@@ -266,7 +299,7 @@ func _show_tool_guide() -> void:
 	if playing or not start_screen.visible or (is_instance_valid(license_overlay) and license_overlay.visible):
 		return
 	if not is_instance_valid(tool_guide):
-		guide_tools = catalog.guide_tools()
+		guide_tools = library.guide_tools()
 		Layout.build_tool_guide(self)
 		if not guide_tools.is_empty():
 			_select_tool_guide(0)
@@ -315,7 +348,7 @@ func _select_license(index: int) -> void:
 func _close_licenses() -> void:
 	license_overlay.hide()
 	_refresh_selection()
-	tool_guide_button.disabled = not catalog.errors.is_empty()
+	tool_guide_button.disabled = library.cases.is_empty()
 	license_button.disabled = false
 	license_button.grab_focus()
 
@@ -326,6 +359,7 @@ func _close_summary() -> void:
 		summary_overlay = null
 
 func _show_start_screen() -> void:
+	chapter_overlay.hide()
 	retry_cases.clear()
 	retry_source_id = ""
 	summary_from_history = false
@@ -349,7 +383,7 @@ func _show_start_screen() -> void:
 	start_button.grab_focus()
 
 func _start_shift() -> void:
-	if not catalog.errors.is_empty() or history_overlay.visible:
+	if library.cases.is_empty() or history_overlay.visible:
 		return
 	if is_instance_valid(tool_guide) and tool_guide.visible:
 		return
@@ -361,7 +395,7 @@ func _start_shift() -> void:
 	_begin_shift(selected)
 
 func _retry_wrong_answers() -> void:
-	var plan := WrongAnswerRetry.plan(summary_snapshot, catalog)
+	var plan := WrongAnswerRetry.plan(summary_snapshot, library)
 	if plan.cases.is_empty(): return
 	retry_cases.assign(plan.cases)
 	retry_source_id = summary_snapshot.session_id
@@ -373,6 +407,9 @@ func _retry_same_cases() -> void:
 	_start_shift()
 
 func _begin_shift(selected: Array[Dictionary]) -> void:
+	shown_chapters.clear()
+	chapter_overlay.hide()
+	displayed_index = -1
 	completed_snapshot.clear()
 	summary_from_history = false
 	history_overlay.hide()
@@ -385,7 +422,7 @@ func _begin_shift(selected: Array[Dictionary]) -> void:
 	playing = true
 	_clear_desk()
 	shift.start(selected)
-	menu_button.grab_focus()
+	if not chapter_overlay.visible: menu_button.grab_focus()
 
 func _draw() -> void:
 	Layout.draw_background(self)
@@ -398,7 +435,7 @@ func _build_tools() -> void:
 	_queue_tools_fit()
 
 func _set_case_tools(item: Dictionary) -> void:
-	var available := catalog.tools_for(item).filter(func(tool): return ToolRunner.supports_target(tool, item))
+	var available := library.tools_for(item).filter(func(tool): return ToolRunner.supports_target(tool, item))
 	active_tools = available
 	tool_buttons.clear()
 	for child in tool_rack.get_children():
@@ -445,6 +482,7 @@ func _clear_desk() -> void:
 	tool_message.text = ""
 	target_card = null
 	displayed_case = ""
+	displayed_index = -1
 	displayed_observations = 0
 	selected_information.clear()
 	stamp_pending = false
@@ -552,7 +590,7 @@ func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
 	if not ToolRunner.supports_target(tool, shift.current()):
 		tool_message.text = "この調査環境では利用できません。"
 		return
-	if tool.resource_kind == "references" and tool.get("case_id") == displayed_case and reference_cards.has(tool.id):
+	if tool.kind == "references" and tool.get("case_id") == displayed_case and reference_cards.has(tool.id):
 		var card: DraggableCard = reference_cards[tool.id]
 		card.show()
 		card.bring_to_front()
@@ -564,9 +602,9 @@ func _inspect(tool: Dictionary, input: Dictionary = {}) -> void:
 	if not tool.accepted_information_types.is_empty() and (input.is_empty() or not Information.accepts(tool, input)):
 		tool_message.text = "「" + tool.label + "」の入力：" + Information.input_hint(tool) + "。情報を選択するか、ボタンへドラッグ。"
 		return
-	if tool.resource_kind == "external_references":
+	if tool.kind == "external_references":
 		pending_external = {"tool": tool, "input": actual_input.duplicate(true), "generation": desk_generation}
-		external_preview_body.text = tool.label + "\n\n送信する情報：" + tool.get("submission_type", "未指定") + "\n送信内容：" + tool.get("submission_value", "未指定") + "\n\n" + tool.get("confidentiality_warning", "送信内容と組織の調査方針を確認してください。")
+		external_preview_body.text = tool.label + "\n\n送信する情報：" + tool.submission.type + "\n送信内容：" + Information.display(actual_input.value) + "\n\n" + tool.submission.warning
 		if not actual_input.is_empty():
 			external_preview_body.text += "\n\n選んだ入力：" + actual_input.label + "\n" + Information.display(actual_input.value)
 		external_preview_body.scroll_to_line(0)
@@ -607,7 +645,7 @@ func _refresh() -> void:
 		_show_summary()
 		return
 	var item := shift.current()
-	if displayed_case != item.id:
+	if displayed_case != ProblemLoader.identity(item) or displayed_index != shift.index:
 		_display_case(item)
 	_display_observations(item)
 	_update_case_controls(item)
@@ -618,7 +656,8 @@ func _refresh() -> void:
 
 func _display_case(item: Dictionary) -> void:
 	_clear_desk()
-	displayed_case = item.id
+	displayed_case = ProblemLoader.identity(item)
+	displayed_index = shift.index
 	_set_case_tools(item)
 	var information: Array = [{"id": "_request", "label": "申請内容", "value": item.request,
 		"category": "request", "tool_input": false, "draggable": false}]
@@ -627,7 +666,7 @@ func _display_case(item: Dictionary) -> void:
 		displayed.draggable = fact.draggable and active_tools.any(func(tool):
 			return ToolRunner.supports_target(tool, item) and Information.accepts(tool, fact))
 		information.append(displayed)
-	target_card = add_information_card({"id": item.id, "case_id": item.id, "title": "検査対象",
+	target_card = add_information_card({"id": item.id, "case_id": displayed_case, "title": "検査対象",
 		"category": "target", "source": _type_label(item.category) + " / " + item.id,
 		"icon": _target_icon(item),
 		"information": information}, Vector2(20, 20))
@@ -636,6 +675,13 @@ func _display_case(item: Dictionary) -> void:
 	for tool in active_tools:
 		if ToolRunner.supports_target(tool, item):
 			glossary_viewed[LearningGlossary.key(tool.id, "overview")] = true
+	if item.has("chapter") and not shown_chapters.has(item.chapter.id):
+		shown_chapters[item.chapter.id] = true
+		if not item.chapter.intro.is_empty():
+			chapter_body.clear()
+			chapter_body.add_text(item.chapter.title + "\n\n" + item.chapter.intro)
+			chapter_overlay.show()
+			chapter_continue.grab_focus()
 
 func _target_icon(item: Dictionary) -> String:
 	var icon: String = {"web": "web", "email": "email", "network": "packet",
@@ -665,10 +711,10 @@ func _display_observations(item: Dictionary) -> void:
 		var info: Array = entry.get("information", [])
 		if info.is_empty():
 			info = [{"id": "status", "label": "調査の選択" if entry.get("skipped", false) else "取得不可", "value": entry.output, "tool_input": false}]
-		var card := add_information_card({"id": "result_%d" % displayed_observations, "case_id": item.id,
+		var card := add_information_card({"id": "result_%d" % displayed_observations, "case_id": ProblemLoader.identity(item),
 			"title": entry.tool + ("" if entry.ok else " · 取得不可"), "category": "analysis",
 			"source": entry.tool, "information": info}, Vector2(524 + (displayed_observations % 3) * 18, 116 + (displayed_observations % 3) * 24))
-		if entry.ok and active_tools.any(func(tool): return tool.id == entry.tool_id and tool.resource_kind == "references"):
+		if entry.ok and active_tools.any(func(tool): return tool.id == entry.tool_id and tool.kind == "references"):
 			reference_cards[entry.tool_id] = card
 		displayed_observations += 1
 
@@ -677,17 +723,17 @@ func _update_case_controls(item: Dictionary) -> void:
 		var button = tool_buttons[i]
 		var tool: Dictionary = button.tool
 		button.target_environment = ToolRunner.investigation_environment(item)
-		button.case_id = item.id
+		button.case_id = ProblemLoader.identity(item)
 		button.visible = ToolRunner.supports_target(tool, item)
-		button.disabled = shift.judged or glossary_overlay.visible
+		button.disabled = shift.judged or _investigation_paused()
 		button.reviewed = reference_cards.has(tool.id)
 		button.update_input(selected_information)
 	for stamp in action_stamps:
 		stamp.visible = not shift.judged
-		stamp.disabled = shift.judged
+		stamp.disabled = shift.judged or _investigation_paused()
 		stamp.modulate.a = 0.4 if stamp.disabled else 1.0
 		stamp.tooltip_text = ""
-		stamp.case_id = item.id
+		stamp.case_id = ProblemLoader.identity(item)
 		stamp.generation = desk_generation
 	tool_message.text = "必要に応じて調査し、判定してください。" if not active_tools.is_empty() else ""
 
@@ -716,12 +762,12 @@ func _build_audit() -> void:
 
 func _show_audit(record: Dictionary) -> void:
 	_close_glossary(false)
-	audit_heading.text = catalog.feedback.get("correct_heading", "監査結果：規則に適合") if record.correct else catalog.feedback.get("incorrect_heading", "SECURITY VIOLATION · 誤判定")
+	audit_heading.text = feedback.get("correct_heading", "監査結果：規則に適合") if record.correct else feedback.get("incorrect_heading", "SECURITY VIOLATION · 誤判定")
 	audit_heading.add_theme_color_override("font_color", Color("57edc2") if record.correct else Color("ff718b"))
 	audit_body.text = "案件番号：%s / %s\nあなたの判定：%s\n調査操作数：%d件" % [record.id, record.title, _verdict_label(record.verdict), record.observations.size()]
-	if catalog.feedback.get("show_expected", true):
+	if feedback.get("show_expected", true):
 		audit_body.text += "\n正しい判定：" + _verdict_label(record.ground_truth)
-	if catalog.feedback.get("show_reason", true):
+	if feedback.get("show_reason", true):
 		audit_body.text += "\n\n監査所見\n" + InspectionShift.review_text(record)
 	next.show()
 	audit_body.scroll_to_line(0)
@@ -743,8 +789,9 @@ func _show_summary() -> void:
 		for pair in [["level", difficulty_select], ["category", category_select], ["platform", platform_select]]:
 			var option: OptionButton = pair[1]
 			selection[pair[0]] = {"id": option.get_item_metadata(option.selected), "label": option.get_item_text(option.selected)}
-		if not retry_source_id.is_empty(): selection = WrongAnswerRetry.selection(shift.cases, catalog)
-		completed_snapshot = HistoryStore.snapshot(shift, {"id": catalog.pack_id, "title": catalog.title, "path": content_pack}, selection, catalog.feedback, catalog.actions)
+		if not retry_source_id.is_empty() or not str(pack_select.get_item_metadata(pack_select.selected)).is_empty():
+			selection = WrongAnswerRetry.selection(shift.cases, library)
+		completed_snapshot = HistoryStore.snapshot(shift, _session_pack(), selection, feedback, actions)
 		if not retry_source_id.is_empty() and not completed_snapshot.is_empty(): completed_snapshot.retry_of = retry_source_id
 	if completed_snapshot.is_empty(): return
 	_display_summary(completed_snapshot, false)
@@ -838,13 +885,13 @@ func _summary_item(title: String, id: String, result: String, body: String, colo
 	summary_review.add_text(body + "\n\n")
 
 func _type_label(id: String) -> String:
-	for category in catalog.categories:
+	for category in library.categories:
 		if category.id == id:
 			return category.label
 	return id
 
 func _verdict_label(id: String) -> String:
-	for action in catalog.actions:
+	for action in actions:
 		if action.id == id:
 			return action.label
 	return id
@@ -856,7 +903,7 @@ func _open_glossary() -> void:
 	for child in glossary_list.get_children():
 		glossary_list.remove_child(child)
 		child.queue_free()
-	var terms := LearningGlossary.visible_terms(shift.current(), catalog.glossary_terms, active_tools, glossary_viewed)
+	var terms := LearningGlossary.visible_terms(shift.current(), glossary_terms, active_tools, glossary_viewed)
 	for term in terms:
 		var entry := Layout.glossary_entry(glossary_list, term, glossary_expanded.has(term.id))
 		var button: Button = entry.button
@@ -941,3 +988,52 @@ func _close_history() -> void:
 	history_overlay.hide()
 	start_screen.show()
 	history_button.grab_focus()
+
+func _refresh_content_options() -> void:
+	_fill_option(pack_select, library.packs.map(func(pack): return {"id": pack.key, "label": pack.title}), "自由演習")
+	_fill_option(difficulty_select, library.difficulties.values(), "すべて")
+	_fill_option(category_select, library.categories, "すべて")
+	_fill_option(platform_select, library.platforms.values(), "すべて")
+	_fill_option(method_select, library.methods.values(), "すべて")
+	_refresh_selection()
+
+func _fill_option(option: OptionButton, choices: Array, all_label: String) -> void:
+	var previous: Variant = option.get_item_metadata(option.selected) if option.selected >= 0 else ""
+	option.clear()
+	option.add_item(all_label)
+	option.set_item_metadata(0, "")
+	for entry in choices:
+		option.add_item(entry.label)
+		option.set_item_metadata(option.item_count - 1, entry.id)
+		if entry.id == previous: option.select(option.item_count - 1)
+
+func _import_content(path: String) -> void:
+	if playing: return
+	var source := ContentSource.open_file(path)
+	var prepared := library.prepare_source(source)
+	var errors: PackedStringArray = prepared.errors
+	if errors.is_empty() and not import_store.save(source): errors.append(import_store.error)
+	if not errors.is_empty():
+		content_notice.text = "教材を追加できませんでした。"
+		content_notice.tooltip_text = "\n".join(errors)
+		return
+	library.commit_source(prepared)
+	content_notice.text = "教材を追加しました。"
+	content_notice.tooltip_text = path.get_file()
+	_refresh_content_options()
+	tool_guide_button.disabled = false
+	if is_instance_valid(tool_guide):
+		tool_guide.queue_free()
+		tool_guide = null
+		tool_guide_tabs.clear()
+
+func _session_pack() -> Dictionary:
+	var key: String = pack_select.get_item_metadata(pack_select.selected)
+	for pack in library.packs:
+		if pack.key == key: return {"id": pack.key, "title": pack.title, "path": pack.source_id + "/" + pack.path}
+	return {"id": "freeplay", "title": "自由演習", "path": content_root}
+
+func _close_chapter() -> void:
+	chapter_overlay.hide()
+	menu_button.grab_focus()
+	if playing and not shift.finished(): _update_case_controls(shift.current())
