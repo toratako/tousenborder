@@ -5,8 +5,8 @@
   "platform": "windows",
   "level": "intermediate",
   "ground_truth": "block",
-  "title": "DLL Side-loading",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "DLLサイドローディング",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "AsterViewer.exe",
     "PID": 4200,
@@ -21,7 +21,7 @@
     {
       "id": "pe",
       "name": "Process Explorer",
-      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
       "output": "Parent: explorer.exe (1800)\nPID: 4200\nImage: C:\\Program Files\\AsterViewer\\AsterViewer.exe\nCommand line: AsterViewer.exe\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nName: render.dll\nPath: C:\\Users\\mori\\Downloads\\viewer\\render.dll",
       "accepted_information_types": [
         "pid"
@@ -40,7 +40,7 @@
       "output_information": [
         {
           "id": "image",
-          "label": "Backing Executable",
+          "label": "実体ファイル",
           "value": "C:\\Program Files\\AsterViewer\\AsterViewer.exe",
           "data_type": "file"
         },
@@ -55,7 +55,7 @@
     {
       "id": "sig",
       "name": "Sigcheck",
-      "description": "署名の検証状態・Publisher・Version・SHA-256（-h）を確認します。PID入力ではBacking Executableが対象です。",
+      "description": "署名の検証状態・発行元・バージョン・SHA-256（-h）を確認します。PIDを入力した場合は対応する実体ファイルが対象です。",
       "output": "PID 4200 のBacking Executable: C:\\Program Files\\AsterViewer\\AsterViewer.exe\nVerified: Signed\nPublisher: Aster Software Ltd.\nFile version: 7.0\nSHA256: 8a485d0ef8b3d0a949d72631324a9c67515e1e80aa9920e47417f84c9bea981e",
       "accepted_information_types": [
         "pid"
@@ -74,8 +74,8 @@
     },
     {
       "id": "dll_hash",
-      "name": "Get-FileHash / DLL",
-      "description": "Process Explorerで取得したPathのSHA-256を計算します。Process本体のHashとは別です。",
+      "name": "Get-FileHash（DLL）",
+      "description": "Process Explorerで取得したパスのSHA-256を計算します。プロセス本体のハッシュとは別です。",
       "output": "Path: C:\\Users\\mori\\Downloads\\viewer\\render.dll\nAlgorithm: SHA256\nHash: 3c94190d9f2003f7331423f5e3bc81f762dfe0c2962c3ee2058337f13b225131",
       "accepted_information_types": [
         "file"
@@ -86,7 +86,7 @@
           "id": "dll"
         }
       ],
-      "input_hint": "dll",
+      "input_hint": "DLL",
       "platform_note": "Windows / PowerShell標準",
       "environments": [
         "windows"
@@ -96,7 +96,7 @@
   "references": [
     {
       "id": "approved",
-      "name": "Approved Software",
+      "name": "承認済みソフトウェア",
       "content": {
         "製品": "AsterViewer 7.0",
         "Publisher": "Aster Software Ltd.",
@@ -105,7 +105,7 @@
         "AsterViewer.exeのロード対象DLL名": "render.dll",
         "render.dll Path": "C:\\Program Files\\AsterViewer\\render.dll",
         "render.dll SHA256": "4d377710ebd81c302aa213167ef0417221add5d5d4557daf705246e42804ea2a",
-        "条件": "Viewerとrender.dllを承認配置・Hashの組で管理。User配下の差替DLLは不可。"
+        "条件": "Viewerとrender.dllを承認配置・ハッシュの組で管理。ユーザー配下の差替DLLは不可。"
       }
     }
   ],
@@ -470,7 +470,7 @@
       ]
     }
   ],
-  "explanation": "Viewer本体の署名・Publisher・Version・配置・Hashは承認記録と一致します。一方、実際にロードした同名のrender.dllは承認配置C:\\Program Files\\AsterViewer\\render.dllではなくUserのDownloads配下にあり、Hashも承認版と異なるため停止します。DLL Side-loadingを題材に、実行本体と読み込むDLLを別々に検証します。",
+  "explanation": "Viewer本体の署名・発行元・バージョン・配置・ハッシュは承認記録と一致します。一方、実際にロードした同名のrender.dllは承認配置C:\\Program Files\\AsterViewer\\render.dllではなくユーザーのDownloads配下にあり、ハッシュも承認版と異なるため停止します。DLLサイドローディングを題材に、実行本体と読み込むDLLを別々に検証します。",
   "topic": "実行本体とロード済みDLLを別々に検証する",
   "summary": "実行本体とロード済みDLLを別々に検証する",
   "learning_objectives": [
@@ -481,6 +481,6 @@
   "sources": [
     "https://attack.mitre.org/techniques/T1574/001/"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "DLL Side-loading"
 }

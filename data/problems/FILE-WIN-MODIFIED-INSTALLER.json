@@ -5,8 +5,8 @@
   "platform": "windows",
   "level": "beginner",
   "ground_truth": "block",
-  "title": "承認配布物とのHash不一致",
-  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "承認配布物とのハッシュ不一致",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "File": "C:\\Downloads\\AsterEditor-4.2-repack.exe",
     "申請内容": "Editor 4.2の同一配布物として申請。",
@@ -19,7 +19,7 @@
     {
       "id": "hash",
       "name": "Get-FileHash",
-      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "description": "SHA-256を計算します。PID入力では対応する実体ファイルが対象です。",
       "output": "Algorithm : SHA256\nHash : 5CB2E74CC760F375F824970F0783FDBB610E6BE7E5971D7809C1376008FDDAF1\nPath : C:\\Downloads\\AsterEditor-4.2-repack.exe",
       "accepted_information_types": [
         "file"
@@ -30,7 +30,7 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "platform_note": "Windows / PowerShell標準",
       "environments": [
         "windows"
@@ -38,7 +38,7 @@
       "output_information": [
         {
           "id": "sha256",
-          "label": "対象FileのSHA-256",
+          "label": "対象ファイルのSHA-256",
           "value": "5cb2e74cc760f375f824970f0783fdbb610e6be7e5971d7809c1376008fddaf1",
           "data_type": "sha256"
         }
@@ -48,11 +48,11 @@
   "references": [
     {
       "id": "vendor",
-      "name": "Vendor Published Hash",
+      "name": "ベンダー公開ハッシュ",
       "content": {
         "製品": "AsterEditor 4.2",
         "SHA256": "6c802508e44474d13e2f5df5c7555cb76580b77325f70f4b4bd8326ca62fd609",
-        "条件": "このHashの配布物のみ承認。再梱包は未承認。"
+        "条件": "このハッシュの配布物のみ承認。再梱包は未承認。"
       }
     }
   ],
@@ -197,7 +197,7 @@
       ]
     }
   ],
-  "explanation": "計算したSHA-256が承認されたEditor 4.2の公開Hashと一致しないため、この配布物の実行を遮断します。Hash不一致だけから改ざん原因やMalware性を断定しません。",
+  "explanation": "計算したSHA-256が承認されたEditor 4.2の公開ハッシュと一致しないため、この配布物の実行を遮断します。ハッシュ不一致だけから改ざん原因やマルウェア性を断定しません。",
   "topic": "署名の一致と配布物の同一性を区別する",
   "summary": "署名の一致と配布物の同一性を区別する",
   "learning_objectives": [
@@ -208,5 +208,5 @@
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

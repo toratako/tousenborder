@@ -5,12 +5,12 @@
   "platform": "common",
   "level": "very_beginner",
   "ground_truth": "block",
-  "title": "正規Domainに見せた別Host",
-  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "正規ドメインに見せた別ホスト",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "URL": "https://login.aster.example.verify-account.example/signin",
     "URLのHost": "login.aster.example.verify-account.example",
-    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。",
+    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
     "案内文": "Asterのアカウント確認"
   },
   "initial_information_types": {
@@ -21,7 +21,7 @@
   "references": [
     {
       "id": "official",
-      "name": "Official Service / Domain",
+      "name": "公式サービス・ドメイン",
       "content": {
         "正規Login Host": "login.aster.example"
       }
@@ -109,16 +109,16 @@
       ]
     }
   ],
-  "explanation": "実際のHostはverify-account.example側で、Official Service / Domainの正規Login Hostと一致しないため遮断します。正規名を先頭に含むだけでは正規サイトになりません。",
-  "topic": "Host全体と正規Login先を比較する",
-  "summary": "Host全体と正規Login先を比較する",
+  "explanation": "実際のホストはverify-account.example側で、公式サービスの正規ログイン先と一致しないため遮断します。正規名を先頭に含むだけでは正規サイトになりません。",
+  "topic": "ホスト全体と正規ログイン先を比較する",
+  "summary": "ホスト全体と正規ログイン先を比較する",
   "learning_objectives": [
-    "Host全体と正規Login先を比較する"
+    "ホスト全体と正規ログイン先を比較する"
   ],
   "decision_context": "before_access",
   "scenario_type": "standard",
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc3986.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

@@ -5,16 +5,16 @@
   "platform": "windows",
   "level": "beginner",
   "ground_truth": "block",
-  "title": "退職済みUserへのLogin要求",
-  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "退職済みユーザーへのログイン要求",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "initial_information": {
     "要求ID": "AUTH-901",
     "User": "sato",
     "Source IP": "192.0.2.42",
     "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
     "要求Logon Type": "10 / RemoteInteractive",
-    "Gatewayの認証確認": "Password確認済み / MFA確認済み",
+    "Gatewayの認証確認": "パスワード確認済み / MFA確認済み",
     "Device ID": "WIN-017"
   },
   "initial_information_types": {
@@ -25,7 +25,7 @@
     {
       "id": "events",
       "name": "Event Viewer / Windows Security Log",
-      "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
+      "description": "今回の要求より前のセキュリティログを調べます。接続元別・ユーザー別の集計は、保存ログから抽出して表示します。",
       "output": "2026-05-31 17:10 Event ID 4624 / TargetUserName: sato / LogonType: 10 / IpAddress: 192.0.2.42\n検索期間: 2026-06-01 00:00:00〜2026-08-18 09:09:59\n検索条件: Event ID = 4624、TargetUserName = sato\n検索結果: 0件",
       "accepted_information_types": [
         "username"
@@ -36,7 +36,7 @@
           "id": "User"
         }
       ],
-      "input_hint": "User",
+      "input_hint": "ユーザー",
       "platform_note": "Windows標準 / Event Viewer",
       "environments": [
         "windows"
@@ -46,8 +46,8 @@
   "references": [
     {
       "id": "policy",
-      "name": "User / Account Policy",
-      "content": "sato / 雇用終了2026-05-31 / Login利用許可終了2026-06-01 / IdP上の無効化作業は未反映でもGatewayで拒否する。"
+      "name": "アカウント利用方針",
+      "content": "sato / 雇用終了2026-05-31 / ログイン利用許可終了2026-06-01 / IdP上の無効化が未反映でも、ゲートウェイで拒否する。"
     }
   ],
   "external_references": [],
@@ -241,16 +241,16 @@
       ]
     }
   ],
-  "explanation": "Account台帳では退職によりLogin権限を失っているため、Passwordが検証できてもSession成立を遮断します。長期間未使用というだけの判断ではありません。",
-  "topic": "未使用期間と現行のAccount権限を区別する",
-  "summary": "未使用期間と現行のAccount権限を区別する",
+  "explanation": "アカウント台帳では、退職に伴いログイン権限が失効しています。パスワードを検証できても、セッションの確立を遮断します。長期間未使用であることだけを理由にした判断ではありません。",
+  "topic": "未使用期間と現行のアカウント権限を区別する",
+  "summary": "未使用期間と現行のアカウント権限を区別する",
   "learning_objectives": [
-    "未使用期間と現行のAccount権限を区別する"
+    "未使用期間と現行のアカウント権限を区別する"
   ],
   "decision_context": "before_session",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

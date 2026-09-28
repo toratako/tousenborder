@@ -5,15 +5,15 @@
   "platform": "linux",
   "level": "beginner",
   "ground_truth": "allow",
-  "title": "踏み台からの通常SSH Login",
-  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "踏み台からの通常のSSHログイン",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "initial_information": {
     "要求ID": "AUTH-901",
     "User": "ops-mori",
     "Source IP": "192.0.2.150",
     "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
-    "認証方式": "SSH publickey",
+    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
+    "認証方式": "SSH公開鍵認証",
     "Gatewayの鍵検証": "SHA256:DEMO_APPROVED_KEY_17 と一致",
     "GatewayのMFA": "確認済み"
   },
@@ -25,7 +25,7 @@
     {
       "id": "last",
       "name": "last",
-      "description": "保存wtmpから過去に成立したSessionを表示します。",
+      "description": "wtmpに記録された過去のログインセッションを表示します。",
       "output": "ops-mori pts/0 192.0.2.150 Mon Aug 17 09:01 - 10:00 (00:59)\nwtmp begins Sat Aug 1 00:00:00 2026",
       "accepted_information_types": [
         "username"
@@ -36,7 +36,7 @@
           "id": "User"
         }
       ],
-      "input_hint": "User",
+      "input_hint": "ユーザー",
       "platform_note": "Linux / util-linux",
       "environments": [
         "linux"
@@ -46,13 +46,13 @@
   "references": [
     {
       "id": "bastion",
-      "name": "Approved Bastion",
+      "name": "承認済み踏み台",
       "content": "192.0.2.150 / bastion-01 / ops-moriの管理端末証明書を検証済み。"
     },
     {
       "id": "policy",
-      "name": "User / Account Policy",
-      "content": "ops-mori / 保守09:00–10:00 / bastion-01経由 / 鍵SHA256:DEMO_APPROVED_KEY_17 / Gateway MFA必須。"
+      "name": "ユーザー／アカウント方針",
+      "content": "ops-mori / 保守09:00–10:00 / bastion-01経由 / 鍵SHA256:DEMO_APPROVED_KEY_17 / ゲートウェイでのMFA必須。"
     }
   ],
   "external_references": [],
@@ -303,16 +303,16 @@
       ]
     }
   ],
-  "explanation": "過去の保守LoginとUser・踏み台・時間帯が整合し、今回の鍵とMFAも要件を満たすためSession成立を許可します。",
-  "topic": "lastを今回の認証情報と保守予定に照合する",
-  "summary": "lastを今回の認証情報と保守予定に照合する",
+  "explanation": "過去の保守ログイン履歴が今回のユーザー・踏み台・時間帯と整合し、今回の鍵とMFAも要件を満たすため、セッションの確立を許可します。",
+  "topic": "lastの出力を今回の認証情報・保守予定と照らし合わせる",
+  "summary": "lastの出力を今回の認証情報・保守予定と照らし合わせる",
   "learning_objectives": [
-    "lastを今回の認証情報と保守予定に照合する"
+    "lastの出力を今回の認証情報・保守予定と照らし合わせる"
   ],
   "decision_context": "before_session",
   "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

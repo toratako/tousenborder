@@ -5,8 +5,8 @@
   "platform": "common",
   "level": "intermediate",
   "ground_truth": "block",
-  "title": "メール内で添付Archiveを調べる",
-  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "title": "添付されたアーカイブの内容を調べる",
+  "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Email": "quarantine/message-1083.eml",
     "From": "取引窓口 <orders@cedar.example>",
@@ -14,7 +14,7 @@
     "Subject": "発注資料",
     "本文": "PDFだけのArchiveを添付しました。",
     "受信時刻": "2026-08-18 09:10",
-    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。"
+    "状態": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。"
   },
   "initial_information_types": {
     "Email": "email"
@@ -22,8 +22,8 @@
   "tools": [
     {
       "id": "header",
-      "name": "Raw Header / View Source",
-      "description": "信頼する受信GatewayのHeaderと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "name": "メールの原文を表示",
+      "description": "信頼する受信ゲートウェイのヘッダーと保存MIMEを表示し、URL・添付を選べるようにします。",
       "output": "Received: from outbound.cedar.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=cedar.example; dkim=pass header.d=cedar.example; dmarc=pass header.from=cedar.example\nFrom: 取引窓口 <orders@cedar.example>\nTo: mori@aster.example\nReply-To: 取引窓口 <orders@cedar.example>\nReturn-Path: <bounce@cedar.example>\nSubject: 発注資料\n\nMIME本文の抜粋:\nContent-Type: application/zip\nContent-Disposition: attachment; filename=\"order-docs.zip\"\nGatewayがMIMEから抽出して保存した添付: /quarantine/attachments/order-docs.zip",
       "accepted_information_types": [
         "email"
@@ -34,7 +34,7 @@
           "id": "Email"
         }
       ],
-      "input_hint": "Email",
+      "input_hint": "メール",
       "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
       "environments": [
         "linux"
@@ -42,7 +42,7 @@
       "output_information": [
         {
           "id": "attachment",
-          "label": "抽出済み添付File",
+          "label": "抽出済み添付ファイル",
           "value": "/quarantine/attachments/order-docs.zip",
           "data_type": "file"
         }
@@ -52,13 +52,13 @@
   "references": [
     {
       "id": "gateway",
-      "name": "Mail Gateway構成",
-      "content": "信頼する受信Gatewayはmx.aster.example。自Gatewayが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+      "name": "メールゲートウェイ構成",
+      "content": "信頼する受信ゲートウェイはmx.aster.example。自社ゲートウェイが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
     },
     {
       "id": "format",
       "name": "受入れ形式",
-      "content": "Cedar社との発注資料はPDFのみ。Script・Shortcutを含むArchiveは受け入れない。"
+      "content": "Cedar社との発注資料はPDFのみ。スクリプト・ショートカットを含むアーカイブは受け入れない。"
     }
   ],
   "external_references": [],
@@ -415,7 +415,7 @@
       ]
     }
   ],
-  "explanation": "配送認証がPassでも、ArchiveにはScriptとShortcutが含まれ、PDFだけという受入れ条件に反するため遮断します。",
+  "explanation": "配送時の認証に成功していても、アーカイブにはスクリプトとショートカットが含まれ、PDFだけという受入れ条件に反するため遮断します。",
   "topic": "メール認証と添付の受入れ形式を分ける",
   "summary": "メール認証と添付の受入れ形式を分ける",
   "learning_objectives": [
@@ -426,13 +426,13 @@
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc8601"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "resources": {
     "attachment_tools": [
       {
         "id": "archive",
         "name": "7-Zip",
-        "description": "Archiveを実行せず内容一覧を表示します。",
+        "description": "アーカイブを展開せずに内容の一覧を表示します。",
         "output": "7z l order-docs.zip\nType = zip\norder.pdf\nreview.vbs\nopen-order.lnk",
         "accepted_information_types": [
           "file"
@@ -452,7 +452,7 @@
       {
         "id": "attachment_hash",
         "name": "sha256sum",
-        "description": "選択したFileのSHA-256を計算します。",
+        "description": "選択したファイルのSHA-256を計算します。",
         "output": "5eac4697f6cf2c6bf69965aa421d6efb47a941baa7e4c7e6406ba12cfaf89460  /quarantine/attachments/order-docs.zip",
         "accepted_information_types": [
           "file"
@@ -472,7 +472,7 @@
       {
         "id": "unzip",
         "name": "unzip",
-        "description": "ZIPを実行せず内容一覧を表示します。",
+        "description": "ZIPを展開せずに内容の一覧を表示します。",
         "output": "unzip -l order-docs.zip\nLength  Name\n18240   order.pdf\n1240    review.vbs\n912     open-order.lnk",
         "accepted_information_types": [
           "file"
@@ -493,7 +493,7 @@
   },
   "evidence_alternatives": {
     "archive_listing": {
-      "label": "添付Archiveの一覧",
+      "label": "添付アーカイブの一覧",
       "any_of": [
         "archive",
         "unzip"

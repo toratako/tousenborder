@@ -2,15 +2,15 @@
   "schema_version": 1,
   "glossary_path": "res://data/glossary/security.json",
   "id": "learning",
-  "title": "セキュリティ判断の基礎 / Evidenceから判断する112問",
+  "title": "セキュリティ判断の基礎 / 根拠を確かめて判断する112問",
   "categories": [
     {
       "id": "file",
-      "label": "File"
+      "label": "ファイル"
     },
     {
       "id": "process",
-      "label": "Process"
+      "label": "プロセス"
     },
     {
       "id": "web",
@@ -18,40 +18,40 @@
     },
     {
       "id": "network",
-      "label": "Network"
+      "label": "ネットワーク"
     },
     {
       "id": "email",
-      "label": "Email"
+      "label": "メール"
     },
     {
       "id": "account",
-      "label": "Account / Authentication"
+      "label": "アカウント・認証"
     },
     {
       "id": "package",
-      "label": "Package"
+      "label": "パッケージ"
     }
   ],
   "resource_groups": [
     {
       "id": "tools",
-      "label": "Tool",
+      "label": "調査ツール",
       "kind": "tools"
     },
     {
       "id": "references",
-      "label": "Reference",
+      "label": "参照資料",
       "kind": "references"
     },
     {
       "id": "external_references",
-      "label": "External Reference",
+      "label": "外部照会",
       "kind": "external_references"
     },
     {
       "id": "attachment_tools",
-      "label": "添付Fileの調査",
+      "label": "添付ファイルの調査",
       "kind": "tools"
     },
     {
@@ -64,27 +64,27 @@
     {
       "id": "workflow",
       "label": "調査の進め方",
-      "value": "情報を選択・ドラッグしてToolへ渡し、結果をReferenceと照合します。取得した情報は次のToolにも使えます。"
+      "value": "情報を選択・ドラッグして調査ツールへ渡し、結果を参照資料と照合します。取得した情報は次の調査ツールにも使えます。"
     },
     {
       "id": "context",
       "label": "判断する時点",
-      "value": "Processは実行の継続／停止を判断します。他の対象は実行・アクセス・接続・受入れ・Session成立・Installの前に判断します。"
+      "value": "プロセスは実行の継続／停止を判断します。他の対象は実行・アクセス・接続・受入れ・セッションの確立・インストールの前に判断します。"
     },
     {
       "id": "evidence",
       "label": "情報の解釈",
-      "value": "Toolで得た情報を、Referenceの承認記録や仕様と照合して判断します。"
+      "value": "調査ツールで得た情報を、参照資料の承認記録や仕様と照合して判断します。"
     },
     {
       "id": "external",
       "label": "外部への送信",
-      "value": "RDAPを含む外部照会では、送信内容と組織の方針を確認します。Hash検索とFile Uploadを区別し、Token付きURLや社外秘Fileの外部送信を避けます。"
+      "value": "RDAPを含む外部照会では、送信内容と組織の方針を確認します。ハッシュ検索とファイルのアップロードを区別し、トークン付きURLや社外秘ファイルの外部送信を避けます。"
     },
     {
       "id": "web",
-      "label": "Web・Emailの調査",
-      "value": "不審なURLは通常Browserで直接開かず、保存資料や隔離解析を利用します。EmailはHeader・添付・URLをそれぞれ確認します。"
+      "label": "Web・メールの調査",
+      "value": "不審なURLは普段使うブラウザーで直接開かず、保存資料や隔離解析を利用します。メールはヘッダー・添付ファイル・URLをそれぞれ確認します。"
     }
   ],
   "feedback": {

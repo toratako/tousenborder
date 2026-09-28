@@ -5,8 +5,8 @@
   "platform": "common",
   "level": "intermediate",
   "ground_truth": "block",
-  "title": "認証Passでも正規企業のURLではない",
-  "request": "保留中のEmailを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
+  "title": "認証に成功していても正規企業のURLではない",
+  "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Email": "quarantine/message-1082.eml",
     "From": "Asterサポート <support@aster-support.example>",
@@ -14,7 +14,7 @@
     "Subject": "Passwordの有効期限",
     "本文": "リンクから組織アカウントを確認してください。",
     "受信時刻": "2026-08-18 09:10",
-    "状態": "受信Gatewayで保留。添付未実行・リンク未アクセス。"
+    "状態": "受信ゲートウェイで保留。添付未実行・リンク未アクセス。"
   },
   "initial_information_types": {
     "Email": "email"
@@ -22,8 +22,8 @@
   "tools": [
     {
       "id": "header",
-      "name": "Raw Header / View Source",
-      "description": "信頼する受信GatewayのHeaderと保存MIMEを表示し、URL・添付を選べるようにします。",
+      "name": "メールの原文を表示",
+      "description": "信頼する受信ゲートウェイのヘッダーと保存MIMEを表示し、URL・添付を選べるようにします。",
       "output": "Received: from outbound.aster-support.example ([198.51.100.110]) by mx.aster.example with ESMTPS; Tue, 18 Aug 2026 09:10:00 +0900\nAuthentication-Results: mx.aster.example; spf=pass smtp.mailfrom=aster-support.example; dkim=pass header.d=aster-support.example; dmarc=pass header.from=aster-support.example\nFrom: Asterサポート <support@aster-support.example>\nTo: mori@aster.example\nReply-To: Asterサポート <support@aster-support.example>\nReturn-Path: <bounce@aster-support.example>\nSubject: Passwordの有効期限\n\nMIME本文の抜粋:\n<a href=\"https://aster-support.example/verify\">確認</a>",
       "accepted_information_types": [
         "email"
@@ -34,7 +34,7 @@
           "id": "Email"
         }
       ],
-      "input_hint": "Email",
+      "input_hint": "メール",
       "platform_note": "OS共通 / 本教材ではLinuxのメール調査環境",
       "environments": [
         "linux"
@@ -48,7 +48,7 @@
         },
         {
           "id": "host",
-          "label": "本文内URLのHost",
+          "label": "本文内URLのホスト",
           "value": "aster-support.example",
           "data_type": "domain"
         }
@@ -58,32 +58,32 @@
   "references": [
     {
       "id": "gateway",
-      "name": "Mail Gateway構成",
-      "content": "信頼する受信Gatewayはmx.aster.example。自Gatewayが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
+      "name": "メールゲートウェイ構成",
+      "content": "信頼する受信ゲートウェイはmx.aster.example。自社ゲートウェイが付けた最上部ReceivedとAuthentication-Resultsだけを認証結果として採用する。外部から同名の認証結果が届いた場合は削除・別記録に保存。通常の転送経路はforward.aster.exampleのみ。"
     },
     {
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
-        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
-        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
-        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象のIndicatorは機密指定なし。File本体・完全URLは上記に従う。照会対象URLは一般公開されている。",
-        "RDAP": "組織が承認した登録情報サービスへIP・登録Domainのみ送信可。"
+        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
+        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。",
+        "RDAP": "組織が承認した登録情報サービスへIP・登録ドメインのみ送信可。"
       }
     },
     {
       "id": "official",
-      "name": "Official Service / Domain",
-      "content": "組織アカウントのPassword入力先はlogin.aster.exampleのみ。サポート通知はsupport@aster.exampleから送る。"
+      "name": "公式サービス・ドメイン",
+      "content": "組織アカウントのパスワード入力先はlogin.aster.exampleのみ。サポート通知はsupport@aster.exampleから送る。"
     }
   ],
   "external_references": [
     {
       "id": "rdap",
       "name": "RDAP",
-      "description": "IPまたは登録Domainを外部の登録情報サービスへ照会します。",
+      "description": "IPまたは登録ドメインを外部の登録情報サービスへ照会します。",
       "output": "照会対象Domain: aster-support.example\n登録日: 2018-04-03\nRegistrar: Example Registrar 1\nStatus: client transfer prohibited\nRegistrant Organization: 非公開（redacted）",
       "accepted_information_types": [
         "domain"
@@ -94,16 +94,16 @@
           "id": "host"
         }
       ],
-      "input_hint": "登録Domain",
+      "input_hint": "登録ドメイン",
       "submission_type": "domain",
       "submission_value": "aster-support.example",
-      "confidentiality_warning": "登録Domainを登録情報サービスへ送信します。URLのPath・Queryは送りません。",
+      "confidentiality_warning": "登録ドメインを登録情報サービスへ送信します。URLのパス・クエリは送りません。",
       "correct_usage": true,
       "reason": "外部照会方針でこの対象のRDAP照会が許可されています。"
     },
     {
       "id": "isolated",
-      "name": "Isolated URL Analysis",
+      "name": "隔離環境でのURL解析",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
       "output": "URL: https://aster-support.example/verify\nHTTP 200\nForm labels: Aster email / password\nForm action: https://aster-support.example/session",
       "accepted_information_types": [
@@ -115,12 +115,12 @@
           "id": "url"
         }
       ],
-      "input_hint": "url",
+      "input_hint": "URL",
       "submission_type": "full_url",
       "submission_value": "https://aster-support.example/verify",
       "confidentiality_warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
       "correct_usage": true,
-      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
     }
   ],
   "required_evidence": [
@@ -684,24 +684,24 @@
       ]
     }
   ],
-  "explanation": "SPF/DKIM/DMARCのPassは送信者自身のDomainについての結果です。隔離解析先は組織のPasswordを求める承認外Hostなのでメールの受入れを遮断します。",
-  "topic": "Emailの認証とリンク先の正当性を別々に調べる",
-  "summary": "Emailの認証とリンク先の正当性を別々に調べる",
+  "explanation": "SPF/DKIM/DMARCの認証成功は送信元ドメインについての結果です。隔離解析先は組織のパスワードを求める承認外ホストなのでメールの受入れを遮断します。",
+  "topic": "メールの認証とリンク先の正当性を別々に調べる",
+  "summary": "メールの認証とリンク先の正当性を別々に調べる",
   "learning_objectives": [
-    "Emailの認証とリンク先の正当性を別々に調べる"
+    "メールの認証とリンク先の正当性を別々に調べる"
   ],
   "decision_context": "before_delivery",
   "scenario_type": "standard",
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc8601"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "resources": {
     "url_tools": [
       {
         "id": "dig",
         "name": "dig",
-        "description": "選択したHostのDNSレコードとTTLを表示します。",
+        "description": "選択したホストのDNSレコードとTTLを表示します。",
         "output": ";; ANSWER SECTION:\naster-support.example. 300 IN A 203.0.113.122",
         "accepted_information_types": [
           "domain"
@@ -729,7 +729,7 @@
       {
         "id": "nslookup",
         "name": "nslookup",
-        "description": "選択したHostのDNS応答を表示します。",
+        "description": "選択したホストのDNS応答を表示します。",
         "output": "Server: 192.0.2.53\nName: aster-support.example\nAddress: 203.0.113.122\n",
         "accepted_information_types": [
           "domain"

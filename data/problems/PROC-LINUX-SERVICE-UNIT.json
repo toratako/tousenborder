@@ -5,8 +5,8 @@
   "platform": "linux",
   "level": "beginner",
   "ground_truth": "allow",
-  "title": "承認済みsystemd Service",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "承認済みのsystemdサービス",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "metrics-agent",
     "PID": 4200,
@@ -21,7 +21,7 @@
     {
       "id": "systemctl",
       "name": "systemctl",
-      "description": "選択PIDの所属Unit・状態・構成を表示します。",
+      "description": "選択PIDの所属ユニット・状態・構成を表示します。",
       "output": "metrics.service\nActive: active (running)\nMainPID: 4200\nUser: metrics\nExecStart=/opt/aster/metrics-agent --config /etc/aster/metrics.toml\nFragmentPath=/etc/systemd/system/metrics.service",
       "accepted_information_types": [
         "pid"
@@ -42,7 +42,7 @@
   "references": [
     {
       "id": "service",
-      "name": "Service構成台帳",
+      "name": "サービス構成台帳",
       "content": "metrics.service / User=metrics / ExecStart=/opt/aster/metrics-agent --config /etc/aster/metrics.toml / /etc/systemd/system/metrics.service / CHG-502。"
     }
   ],
@@ -187,16 +187,16 @@
       ]
     }
   ],
-  "explanation": "UnitのUser・ExecStart・配置が承認された監視Service定義と一致するため継続を許可します。",
-  "topic": "systemctlのUnit構成を台帳と比較する",
-  "summary": "systemctlのUnit構成を台帳と比較する",
+  "explanation": "Unitのユーザー・ExecStart・配置が承認された監視サービス定義と一致するため継続を許可します。",
+  "topic": "systemctlで確認したユニット構成を台帳と比較する",
+  "summary": "systemctlで確認したユニット構成を台帳と比較する",
   "learning_objectives": [
-    "systemctlのUnit構成を台帳と比較する"
+    "systemctlで確認したユニット構成を台帳と比較する"
   ],
   "decision_context": "running_process",
   "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

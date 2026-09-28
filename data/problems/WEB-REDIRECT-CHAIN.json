@@ -6,12 +6,12 @@
   "level": "intermediate",
   "ground_truth": "block",
   "title": "隔離解析後の遷移先を調べる",
-  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "URL": "https://conference-entry.example/join",
     "URLのHost": "conference-entry.example",
-    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。",
-    "URLの区分": "公開イベントの共有リンク、個人Tokenなし"
+    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
+    "URLの区分": "公開イベントの共有リンク、個人トークンなし"
   },
   "initial_information_types": {
     "URL": "url",
@@ -21,7 +21,7 @@
     {
       "id": "resolve",
       "name": "Resolve-DnsName",
-      "description": "選択したHostのDNSレコードを問い合わせます。",
+      "description": "選択したホストのDNSレコードを問い合わせます。",
       "output": "Name: conference-entry.example\nType: A; IPAddress: 198.51.100.61; TTL: 300",
       "accepted_information_types": [
         "domain"
@@ -32,7 +32,7 @@
           "id": "URLのHost"
         }
       ],
-      "input_hint": "URLのHost",
+      "input_hint": "URLのホスト",
       "platform_note": "Windows / PowerShell DnsClient",
       "environments": [
         "windows"
@@ -49,7 +49,7 @@
     {
       "id": "nslookup",
       "name": "nslookup",
-      "description": "選択したHostのDNS応答を表示します。",
+      "description": "選択したホストのDNS応答を表示します。",
       "output": "Server: 192.0.2.53\nName: conference-entry.example\nAddress: 198.51.100.61\n",
       "accepted_information_types": [
         "domain"
@@ -60,7 +60,7 @@
           "id": "URLのHost"
         }
       ],
-      "input_hint": "URLのHost",
+      "input_hint": "URLのホスト",
       "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
       "environments": [
         "windows"
@@ -80,23 +80,23 @@
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
-        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
-        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
-        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象のIndicatorは機密指定なし。File本体・完全URLは上記に従う。照会対象URLは一般公開されている。"
+        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
+        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。"
       }
     },
     {
       "id": "official",
-      "name": "Official Service / Domain",
-      "content": "Aster Loginはlogin.aster.exampleのみ。会議サービスへ組織Passwordを直接渡す認証手順はない。"
+      "name": "公式サービス・ドメイン",
+      "content": "Aster ログインはlogin.aster.exampleのみ。会議サービスへ組織パスワードを直接渡す認証手順はない。"
     }
   ],
   "external_references": [
     {
       "id": "isolated",
-      "name": "Isolated URL Analysis",
+      "name": "隔離環境でのURL解析",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
       "output": "https://conference-entry.example/join -> 302 https://identity-event.example/login\nHTTP 200\nForm: Aster email / Aster password\nForm action: https://identity-event.example/session",
       "accepted_information_types": [
@@ -113,11 +113,11 @@
       "submission_value": "https://conference-entry.example/join",
       "confidentiality_warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
       "correct_usage": true,
-      "reason": "外部照会方針でこのIndicatorの送信が許可されています。",
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。",
       "output_information": [
         {
           "id": "final_host",
-          "label": "最終URLのHost",
+          "label": "最終URLのホスト",
           "value": "identity-event.example",
           "data_type": "domain"
         }
@@ -125,7 +125,7 @@
     },
     {
       "id": "final_rep",
-      "name": "Domain Reputation",
+      "name": "ドメインの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
       "output": "Domain: identity-event.example\n2026-08-18: phishing 14/17 feeds",
       "accepted_information_types": [
@@ -137,12 +137,12 @@
           "id": "final_host"
         }
       ],
-      "input_hint": "final_host",
+      "input_hint": "最終接続先ホスト",
       "submission_type": "domain",
       "submission_value": "identity-event.example",
-      "confidentiality_warning": "Domain名のみを送信します。URLのPath・Queryは送りません。",
+      "confidentiality_warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
     }
   ],
   "required_evidence": [
@@ -588,16 +588,16 @@
       ]
     }
   ],
-  "explanation": "最終ページはAsterのPasswordを求める承認外Hostで、Domain評判にもPhishing報告があるため遮断します。入口のDomainやDNSだけでは遷移先の正当性を判断できません。",
-  "topic": "外部解析で得たHostを次の照会へ引き継ぐ",
-  "summary": "外部解析で得たHostを次の照会へ引き継ぐ",
+  "explanation": "最終ページはAsterのパスワードを求める承認外ホストで、ドメインの評判にもフィッシング報告があるため遮断します。入口のドメインやDNSだけでは遷移先の正当性を判断できません。",
+  "topic": "外部解析で得たホストを次の照会へ引き継ぐ",
+  "summary": "外部解析で得たホストを次の照会へ引き継ぐ",
   "learning_objectives": [
-    "外部解析で得たHostを次の照会へ引き継ぐ"
+    "外部解析で得たホストを次の照会へ引き継ぐ"
   ],
   "decision_context": "before_access",
   "scenario_type": "standard",
   "sources": [
     "https://urlscan.io/docs/api/"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

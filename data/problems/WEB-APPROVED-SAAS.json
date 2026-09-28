@@ -6,11 +6,11 @@
   "level": "intermediate",
   "ground_truth": "allow",
   "title": "一覧に追加中の正規SaaS",
-  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "URL": "https://support.aster-services.example/",
     "URLのHost": "support.aster-services.example",
-    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。"
+    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。"
   },
   "initial_information_types": {
     "URL": "url",
@@ -20,7 +20,7 @@
     {
       "id": "resolve",
       "name": "Resolve-DnsName",
-      "description": "選択したHostのDNSレコードを問い合わせます。",
+      "description": "選択したホストのDNSレコードを問い合わせます。",
       "output": "Name: support.aster-services.example\nType: CNAME; NameHost: tenant-412.helpdesk-cloud.example\nType: A; IPAddress: 198.51.100.63; TTL: 300",
       "accepted_information_types": [
         "domain"
@@ -31,7 +31,7 @@
           "id": "URLのHost"
         }
       ],
-      "input_hint": "URLのHost",
+      "input_hint": "URLのホスト",
       "platform_note": "Windows / PowerShell DnsClient",
       "environments": [
         "windows"
@@ -48,7 +48,7 @@
     {
       "id": "nslookup",
       "name": "nslookup",
-      "description": "選択したHostのDNS応答を表示します。",
+      "description": "選択したホストのDNS応答を表示します。",
       "output": "Server: 192.0.2.53\nName: tenant-412.helpdesk-cloud.example\nAddress: 198.51.100.63\nAliases: support.aster-services.example",
       "accepted_information_types": [
         "domain"
@@ -59,7 +59,7 @@
           "id": "URLのHost"
         }
       ],
-      "input_hint": "URLのHost",
+      "input_hint": "URLのホスト",
       "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
       "environments": [
         "windows"
@@ -77,13 +77,13 @@
   "references": [
     {
       "id": "official",
-      "name": "Official Service / Domain",
+      "name": "公式サービス・ドメイン",
       "content": "現行一覧: helpdesk.aster.example / 週次反映のため2026-08-17時点。"
     },
     {
       "id": "contract",
-      "name": "契約 / Change Reference",
-      "content": "CHG-607 / support.aster-services.exampleを承認 / CNAME=tenant-412.helpdesk-cloud.example / A=198.51.100.63 / 契約HD-412 / 管理担当がTenantのDomain紐付け完了を08:30に確認。"
+      "name": "契約・変更承認記録",
+      "content": "CHG-607 / support.aster-services.exampleを承認 / CNAME=tenant-412.helpdesk-cloud.example / A=198.51.100.63 / 契約HD-412 / 管理担当がテナントのドメイン紐付け完了を08:30に確認。"
     }
   ],
   "external_references": [],
@@ -294,18 +294,18 @@
       ]
     }
   ],
-  "explanation": "通常のDomain一覧への反映は未完了ですが、変更承認と契約TenantへのCNAMEが一致するためアクセスを許可します。",
-  "topic": "Domain一覧の不足を契約・変更承認で補う",
-  "summary": "Domain一覧の不足を契約・変更承認で補う",
+  "explanation": "通常のドメイン一覧への反映は未完了ですが、変更承認と契約テナントへのCNAMEが一致するためアクセスを許可します。",
+  "topic": "ドメイン一覧の不足を契約・変更承認で補う",
+  "summary": "ドメイン一覧の不足を契約・変更承認で補う",
   "learning_objectives": [
-    "Domain一覧の不足を契約・変更承認で補う"
+    "ドメイン一覧の不足を契約・変更承認で補う"
   ],
   "decision_context": "before_access",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "evidence_alternatives": {
     "dns": {
       "label": "DNSのCNAME・A",

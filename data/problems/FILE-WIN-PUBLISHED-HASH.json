@@ -5,11 +5,11 @@
   "platform": "windows",
   "level": "beginner",
   "ground_truth": "allow",
-  "title": "Vendor公開Hashとの一致",
-  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "ベンダー公開ハッシュとの一致",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "File": "C:\\Downloads\\AsterEditor-4.2.exe",
-    "申請内容": "承認済みEditor 4.2をInstallする。",
+    "申請内容": "承認済みEditor 4.2をインストールする。",
     "状態": "未実行。ダウンロードまたは受領直後。"
   },
   "initial_information_types": {
@@ -19,7 +19,7 @@
     {
       "id": "hash",
       "name": "Get-FileHash",
-      "description": "SHA-256を計算します。PID入力では対応するBacking Executableが対象です。",
+      "description": "SHA-256を計算します。PID入力では対応する実体ファイルが対象です。",
       "output": "Algorithm : SHA256\nHash : 14D7F35E80C6C352F955BCF2A8CD09B9179EDE81A9858BA41B22DCCBC7291F23\nPath : C:\\Downloads\\AsterEditor-4.2.exe",
       "accepted_information_types": [
         "file"
@@ -30,7 +30,7 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "platform_note": "Windows / PowerShell標準",
       "environments": [
         "windows"
@@ -38,7 +38,7 @@
       "output_information": [
         {
           "id": "sha256",
-          "label": "対象FileのSHA-256",
+          "label": "対象ファイルのSHA-256",
           "value": "14d7f35e80c6c352f955bcf2a8cd09b9179ede81a9858ba41b22dccbc7291f23",
           "data_type": "sha256"
         }
@@ -48,7 +48,7 @@
   "references": [
     {
       "id": "vendor",
-      "name": "Vendor Published Hash",
+      "name": "ベンダー公開ハッシュ",
       "content": {
         "製品": "AsterEditor 4.2",
         "SHA256": "14d7f35e80c6c352f955bcf2a8cd09b9179ede81a9858ba41b22dccbc7291f23",
@@ -57,7 +57,7 @@
     },
     {
       "id": "approved",
-      "name": "Approved Software",
+      "name": "承認済みソフトウェア",
       "content": "AsterEditor 4.2 / Windows x64 / 設計部端末への導入をCHG-401で承認。"
     }
   ],
@@ -283,7 +283,7 @@
       ]
     }
   ],
-  "explanation": "計算したSHA-256がVendor公開値と一致し、承認台帳のVersion・用途にも一致するため許可します。",
+  "explanation": "計算したSHA-256がベンダー公開値と一致し、承認台帳のバージョン・用途にも一致するため許可します。",
   "topic": "配布物の同一性と利用承認を分けて確認する",
   "summary": "配布物の同一性と利用承認を分けて確認する",
   "learning_objectives": [
@@ -294,5 +294,5 @@
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

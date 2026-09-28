@@ -6,11 +6,11 @@
   "level": "beginner",
   "ground_truth": "allow",
   "title": "Linuxで解決先を確認する",
-  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "URL": "https://docs.aster.example/",
     "URLのHost": "docs.aster.example",
-    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。"
+    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。"
   },
   "initial_information_types": {
     "URL": "url",
@@ -20,7 +20,7 @@
     {
       "id": "dig",
       "name": "dig",
-      "description": "選択したHostのDNSレコードとTTLを表示します。",
+      "description": "選択したホストのDNSレコードとTTLを表示します。",
       "output": ";; ANSWER SECTION:\ndocs.aster.example. 300 IN A 198.51.100.21",
       "accepted_information_types": [
         "domain"
@@ -31,7 +31,7 @@
           "id": "URLのHost"
         }
       ],
-      "input_hint": "URLのHost",
+      "input_hint": "URLのホスト",
       "platform_note": "Linux / BIND dnsutils等",
       "environments": [
         "linux"
@@ -49,7 +49,7 @@
   "references": [
     {
       "id": "official",
-      "name": "Official Service / Domain",
+      "name": "公式サービス・ドメイン",
       "content": "docs.aster.example / A=198.51.100.21 / 公開マニュアル / CHG-601。"
     }
   ],
@@ -188,16 +188,16 @@
       ]
     }
   ],
-  "explanation": "HostとAレコードが承認済みの公開マニュアルServerに一致するため許可します。",
-  "topic": "digの結果をService台帳と照合する",
-  "summary": "digの結果をService台帳と照合する",
+  "explanation": "ホストとAレコードが承認済みの公開マニュアルサーバーに一致するため許可します。",
+  "topic": "digの結果をサービス台帳と照合する",
+  "summary": "digの結果をサービス台帳と照合する",
   "learning_objectives": [
-    "digの結果をService台帳と照合する"
+    "digの結果をサービス台帳と照合する"
   ],
   "decision_context": "before_access",
   "scenario_type": "standard",
   "sources": [
     "https://bind9.readthedocs.io/en/stable/manpages.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

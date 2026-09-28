@@ -6,11 +6,11 @@
   "level": "advanced",
   "ground_truth": "allow",
   "title": "機密URLの外部送信を避ける",
-  "request": "保留中のURLを通常Browserで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "URL": "https://reset.aster.example/recover?token=DEMO-RESET-318&user=mori",
     "URLのHost": "reset.aster.example",
-    "受付状態": "通常Browserでは未アクセス。Host欄はURLの構文から取得。",
+    "受付状態": "通常ブラウザーでは未アクセス。ホスト欄はURLの構文から取得。",
     "申請記録": "本人が09:02にPassword再設定を申請。REQ-318。",
     "判断時刻": "2026-08-18 09:10:00",
     "登録Domain": "aster.example"
@@ -24,7 +24,7 @@
     {
       "id": "resolve",
       "name": "Resolve-DnsName",
-      "description": "選択したHostのDNSレコードを問い合わせます。",
+      "description": "選択したホストのDNSレコードを問い合わせます。",
       "output": "Name: reset.aster.example\nType: A; IPAddress: 192.0.2.81; TTL: 300",
       "accepted_information_types": [
         "domain"
@@ -35,7 +35,7 @@
           "id": "URLのHost"
         }
       ],
-      "input_hint": "URLのHost",
+      "input_hint": "URLのホスト",
       "platform_note": "Windows / PowerShell DnsClient",
       "environments": [
         "windows"
@@ -52,7 +52,7 @@
     {
       "id": "nslookup",
       "name": "nslookup",
-      "description": "選択したHostのDNS応答を表示します。",
+      "description": "選択したホストのDNS応答を表示します。",
       "output": "Server: 192.0.2.53\nName: reset.aster.example\nAddress: 192.0.2.81\n",
       "accepted_information_types": [
         "domain"
@@ -63,7 +63,7 @@
           "id": "URLのHost"
         }
       ],
-      "input_hint": "URLのHost",
+      "input_hint": "URLのホスト",
       "platform_note": "Windows標準 / LinuxではBIND dnsutils等",
       "environments": [
         "windows"
@@ -81,19 +81,19 @@
   "references": [
     {
       "id": "official",
-      "name": "Official Service / Domain",
+      "name": "公式サービス・ドメイン",
       "content": "reset.aster.example / A=192.0.2.81 / Path=/recover / REQ-318に対応する認証基盤の発行通知。URLの有効期限09:17。"
     },
     {
       "id": "disclosure",
       "name": "外部照会方針",
       "content": {
-        "Indicator": "機密指定のないDomain・IPと公開配布FileのSHA-256は、承認された外部サービスへ照会可。",
-        "File本体": "社外秘Fileは送信不可。公開配布物は送信可。",
-        "URL": "Token・User ID・内部Host・機密Pathを含む完全URLは送信不可。",
-        "Email・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "完全URLは社外秘。Domainは機密指定なし。",
-        "RDAP": "組織が承認した登録情報サービスへIP・登録Domainのみ送信可。"
+        "照会対象": "機密指定のないドメイン・IPと公開配布ファイルのSHA-256は、承認された外部サービスへ照会可。",
+        "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
+        "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。",
+        "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
+        "今回の資料区分": "完全URLは社外秘。ドメインは機密指定なし。",
+        "RDAP": "組織が承認した登録情報サービスへIP・登録ドメインのみ送信可。"
       }
     }
   ],
@@ -101,7 +101,7 @@
     {
       "id": "rdap",
       "name": "RDAP",
-      "description": "IPまたは登録Domainを外部の登録情報サービスへ照会します。",
+      "description": "IPまたは登録ドメインを外部の登録情報サービスへ照会します。",
       "output": "照会対象Domain: aster.example\n登録日: 2018-04-03\nRegistrar: Example Registrar 1\nStatus: client transfer prohibited\nRegistrant Organization: 非公開（redacted）",
       "accepted_information_types": [
         "domain"
@@ -112,16 +112,16 @@
           "id": "登録Domain"
         }
       ],
-      "input_hint": "登録Domain",
+      "input_hint": "登録ドメイン",
       "submission_type": "domain",
       "submission_value": "aster.example",
-      "confidentiality_warning": "登録Domainを登録情報サービスへ送信します。URLのPath・Queryは送りません。",
+      "confidentiality_warning": "登録ドメインを登録情報サービスへ送信します。URLのパス・クエリは送りません。",
       "correct_usage": true,
       "reason": "外部照会方針でこの対象のRDAP照会が許可されています。"
     },
     {
       "id": "domain_rep",
-      "name": "Domain Reputation",
+      "name": "ドメインの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
       "output": "Domain: reset.aster.example\n0/14 feeds flagged; last checked 2026-08-18",
       "accepted_information_types": [
@@ -133,16 +133,16 @@
           "id": "URLのHost"
         }
       ],
-      "input_hint": "URLのHost",
+      "input_hint": "URLのホスト",
       "submission_type": "domain",
       "submission_value": "reset.aster.example",
-      "confidentiality_warning": "Domain名のみを送信します。URLのPath・Queryは送りません。",
+      "confidentiality_warning": "ドメイン名のみを送信します。URLのパス・クエリは送りません。",
       "correct_usage": true,
-      "reason": "外部照会方針でこのIndicatorの送信が許可されています。"
+      "reason": "外部照会方針でこの照会対象の送信が許可されています。"
     },
     {
       "id": "isolated",
-      "name": "Isolated URL Analysis",
+      "name": "隔離環境でのURL解析",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
       "output": "URL received; analysis queued.",
       "accepted_information_types": [
@@ -159,11 +159,11 @@
       "submission_value": "https://reset.aster.example/recover?token=DEMO-RESET-318&user=mori",
       "confidentiality_warning": "完全URLを外部の隔離環境へ送り、その環境がアクセスします。非公開解析でもサービスにはURLが渡ります。",
       "correct_usage": false,
-      "reason": "非公開解析でもToken・User IDがサービスに渡るため送信禁止です。"
+      "reason": "非公開解析でもトークン・ユーザーIDがサービスに渡るため送信禁止です。"
     },
     {
       "id": "url_rep",
-      "name": "URL Reputation",
+      "name": "URLの評判",
       "description": "外部サービスへ対象を送信し、保存済みの照会結果を表示します。",
       "output": "URL received; no record.",
       "accepted_information_types": [
@@ -178,9 +178,9 @@
       "input_hint": "URL",
       "submission_type": "full_url",
       "submission_value": "https://reset.aster.example/recover?token=DEMO-RESET-318&user=mori",
-      "confidentiality_warning": "Path・Queryを含む完全URLをサービスへ送信します。",
+      "confidentiality_warning": "パス・クエリを含む完全URLをサービスへ送信します。",
       "correct_usage": false,
-      "reason": "完全URLの照会にはToken・User IDが含まれます。Domainだけなら照会可能です。"
+      "reason": "完全URLの照会にはトークン・ユーザーIDが含まれます。ドメインだけなら照会可能です。"
     }
   ],
   "required_evidence": [
@@ -655,18 +655,18 @@
       ]
     }
   ],
-  "explanation": "本人のREQ-318に対応する発行通知があり、Host・Path・DNSが正規再設定先に一致し、判断時刻09:10も有効期限09:17より前なのでアクセスを許可します。TokenとUser IDを含む完全URLは外部解析へ送りません。",
-  "topic": "機密URLを内部申請とDomain・DNSで確認する",
-  "summary": "機密URLを内部申請とDomain・DNSで確認する",
+  "explanation": "本人のREQ-318に対応する発行通知があり、ホスト・パス・DNSが正規再設定先に一致し、判断時刻09:10も有効期限09:17より前なのでアクセスを許可します。トークンとユーザーIDを含む完全URLは外部解析へ送りません。",
+  "topic": "機密URLを内部申請とドメイン・DNSで確認する",
+  "summary": "機密URLを内部申請とドメイン・DNSで確認する",
   "learning_objectives": [
-    "機密URLを内部申請とDomain・DNSで確認する"
+    "機密URLを内部申請とドメイン・DNSで確認する"
   ],
   "decision_context": "before_access",
   "scenario_type": "standard",
   "sources": [
     "https://www.icann.org/rdap"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "evidence_alternatives": {
     "dns": {
       "label": "DNSの解決先",

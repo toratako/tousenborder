@@ -6,7 +6,7 @@
   "level": "beginner",
   "ground_truth": "allow",
   "title": "承認された署名付き配布物",
-  "request": "保留中のFileを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "File": "C:\\Downloads\\AsterPrint-6.1.exe",
     "申請内容": "社内カタログから取得したプリンタDriver 6.1。",
@@ -19,7 +19,7 @@
     {
       "id": "sig",
       "name": "Sigcheck",
-      "description": "署名の検証状態・Publisherを確認します。PID入力ではBacking Executableが対象です。",
+      "description": "署名の検証状態・発行元を確認します。PID入力では実体ファイルが対象です。",
       "output": "C:\\Downloads\\AsterPrint-6.1.exe:\n  Verified: Signed\n  Publisher: Aster Devices Ltd.\nProduct: AsterPrint\nFile version: 6.1",
       "accepted_information_types": [
         "file"
@@ -30,7 +30,7 @@
           "id": "File"
         }
       ],
-      "input_hint": "File",
+      "input_hint": "ファイル",
       "platform_note": "Windows / Microsoft Sysinternals・要導入",
       "environments": [
         "windows"
@@ -40,8 +40,8 @@
   "references": [
     {
       "id": "publisher",
-      "name": "Trusted Publisher",
-      "content": "署名検証がSignedでPublisherがAster Devices Ltd.であるAsterPrint 6.1を承認。社内カタログ配布のみ。"
+      "name": "信頼できる発行元",
+      "content": "署名検証がSignedで発行元がAster Devices Ltd.であるAsterPrint 6.1を承認。社内カタログ配布のみ。"
     }
   ],
   "external_references": [],
@@ -207,16 +207,16 @@
       ]
     }
   ],
-  "explanation": "署名の検証結果とPublisher・Versionが承認された配布条件に一致するため、この導入を許可します。",
-  "topic": "署名を承認Publisher・Versionと照合する",
-  "summary": "署名を承認Publisher・Versionと照合する",
+  "explanation": "署名の検証結果と発行元・バージョンが承認された配布条件に一致するため、この導入を許可します。",
+  "topic": "署名の発行元・バージョンを承認内容と照合する",
+  "summary": "署名の発行元・バージョンを承認内容と照合する",
   "learning_objectives": [
-    "署名を承認Publisher・Versionと照合する"
+    "署名の発行元・バージョンを承認内容と照合する"
   ],
   "decision_context": "before_execution",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

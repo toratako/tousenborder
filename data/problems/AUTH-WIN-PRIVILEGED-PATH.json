@@ -5,18 +5,18 @@
   "platform": "windows",
   "level": "advanced",
   "ground_truth": "block",
-  "title": "管理Accountの承認外経路",
-  "request": "保留中の認証要求にSessionの成立を許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "管理アカウントの承認外経路",
+  "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "initial_information": {
     "要求ID": "AUTH-901",
     "User": "admin-mori",
     "Source IP": "203.0.113.142",
     "要求時刻": "2026-08-18 09:10:00",
-    "状態": "認証Gatewayで保留。今回のSessionはまだ作成されていない。",
+    "状態": "認証ゲートウェイで保留中。今回のセッションはまだ確立していない。",
     "要求Logon Type": "10 / RemoteInteractive",
-    "Gatewayの認証確認": "Password確認済み / MFA確認済み",
+    "Gatewayの認証確認": "パスワード確認済み / MFA確認済み",
     "Device ID": "PERSONAL-42",
-    "Gatewayの経路確認": "管理Gatewayを経由しない直接RDP要求"
+    "Gatewayの経路確認": "管理ゲートウェイを経由しない直接RDP要求"
   },
   "initial_information_types": {
     "User": "username",
@@ -26,7 +26,7 @@
     {
       "id": "events",
       "name": "Event Viewer / Windows Security Log",
-      "description": "今回の要求より前のSecurity Logを調べます。Source横断・User横断の集計は保存Logの抽出表示です。",
+      "description": "今回の要求より前のセキュリティログを調べます。接続元別・ユーザー別の集計は、保存ログから抽出して表示します。",
       "output": "2026-08-17 09:01 Event ID 4624 / TargetUserName: admin-mori / LogonType: 10 / IpAddress: 192.0.2.145 / WorkstationName: PAW-017",
       "accepted_information_types": [
         "username"
@@ -37,7 +37,7 @@
           "id": "User"
         }
       ],
-      "input_hint": "User",
+      "input_hint": "ユーザー",
       "platform_note": "Windows標準 / Event Viewer",
       "environments": [
         "windows"
@@ -47,13 +47,13 @@
   "references": [
     {
       "id": "admin",
-      "name": "Approved Administrative Path",
-      "content": "admin-mori / Device=PAW-017 / 管理Gateway192.0.2.145経由のみ。直接RDPは不可。"
+      "name": "管理アクセス経路の承認記録",
+      "content": "admin-mori / Device=PAW-017 / 管理ゲートウェイ192.0.2.145経由のみ。直接RDPは不可。"
     },
     {
       "id": "device",
-      "name": "Device Reference",
-      "content": "PAW-017は管理専用・Active。PERSONAL-42は管理外Deviceで特権Sessionの利用登録なし。"
+      "name": "端末登録情報",
+      "content": "PAW-017は管理専用・有効。PERSONAL-42は管理外端末で、特権セッションの利用登録なし。"
     }
   ],
   "external_references": [],
@@ -308,16 +308,16 @@
       ]
     }
   ],
-  "explanation": "管理Accountには専用Deviceと管理Gateway経由が必須ですが、今回のDevice・Source・接続経路はいずれも一致しないため遮断します。MFAだけで経路制約を代替できません。",
-  "topic": "特権Accountの経路とDeviceの条件を確認する",
-  "summary": "特権Accountの経路とDeviceの条件を確認する",
+  "explanation": "管理アカウントには専用端末と管理ゲートウェイ経由の接続が必須ですが、今回の端末・接続元・経路はいずれも条件を満たさないため遮断します。MFAだけでは経路の制約を満たせません。",
+  "topic": "特権アカウントの接続経路と端末要件を確認する",
+  "summary": "特権アカウントの接続経路と端末要件を確認する",
   "learning_objectives": [
-    "特権Accountの経路とDeviceの条件を確認する"
+    "特権アカウントの接続経路と端末要件を確認する"
   ],
   "decision_context": "before_session",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

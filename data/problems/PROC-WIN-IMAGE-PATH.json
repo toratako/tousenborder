@@ -5,8 +5,8 @@
   "platform": "windows",
   "level": "beginner",
   "ground_truth": "block",
-  "title": "想定外のProcess配置",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "想定外のプロセス配置",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "agent.exe",
     "PID": 4200,
@@ -21,7 +21,7 @@
     {
       "id": "pe",
       "name": "Process Explorer",
-      "description": "実行Path・Command Line・親Process・ロード済みDLLを確認します。",
+      "description": "実行パス・コマンドライン・親プロセス・ロード済みDLLを確認します。",
       "output": "Parent: explorer.exe (1800)\nPID: 4200\nImage: C:\\Users\\mori\\Downloads\\agent.exe\nCommand line: agent.exe --sync\nUser: ASTER\\mori\nLoaded DLLs (抜粋):\nC:\\Windows\\System32\\kernel32.dll",
       "accepted_information_types": [
         "pid"
@@ -40,7 +40,7 @@
       "output_information": [
         {
           "id": "image",
-          "label": "Backing Executable",
+          "label": "実体ファイル",
           "value": "C:\\Users\\mori\\Downloads\\agent.exe",
           "data_type": "file"
         }
@@ -50,7 +50,7 @@
   "references": [
     {
       "id": "approved",
-      "name": "Approved Software",
+      "name": "承認済みソフトウェア",
       "content": "業務agent.exe: C:\\Program Files\\AsterAgent\\agent.exe / ASTER\\svc_agent / services.exe配下のみ承認。"
     }
   ],
@@ -261,16 +261,16 @@
       ]
     }
   ],
-  "explanation": "実行ImageはDownloads配下で、Service Accountが管理Pathから起動する承認構成と一致しないため停止します。",
-  "topic": "実行Path・User・起動元をSoftware台帳と照合する",
-  "summary": "実行Path・User・起動元をSoftware台帳と照合する",
+  "explanation": "実行イメージはDownloads配下で、サービスアカウントが管理パスから起動する承認構成と一致しないため停止します。",
+  "topic": "実行パス・ユーザー・起動元をソフトウェア台帳と照合する",
+  "summary": "実行パス・ユーザー・起動元をソフトウェア台帳と照合する",
   "learning_objectives": [
-    "実行Path・User・起動元をSoftware台帳と照合する"
+    "実行パス・ユーザー・起動元をソフトウェア台帳と照合する"
   ],
   "decision_context": "running_process",
   "scenario_type": "standard",
   "sources": [
     "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }

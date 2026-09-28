@@ -5,13 +5,13 @@
   "platform": "common",
   "level": "very_beginner",
   "ground_truth": "block",
-  "title": "Obvious Typosquatting",
-  "request": "解決済みのPackageをInstallすることを許可しますか。 ALLOW / BLOCKで判断してください。",
+  "title": "明白なタイポスクワッティング",
+  "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Package": "aster-reqests",
     "Version": "1.0.0",
     "Ecosystem": "pypi",
-    "状態": "依存解決済み・Install前。Install Scriptはまだ実行していない。"
+    "状態": "依存解決済み・インストール前。インストールスクリプトはまだ実行していない。"
   },
   "initial_information_types": {
     "Package": "package"
@@ -20,9 +20,9 @@
   "references": [
     {
       "id": "policy",
-      "name": "Component導入方針",
+      "name": "コンポーネント導入方針",
       "content": {
-        "導入規則": "申請済みのPackage名・VersionのみInstall可。",
+        "導入規則": "申請済みのパッケージ名・Versionのみインストール可。",
         "申請したPackage": "aster-requests"
       }
     }
@@ -144,18 +144,18 @@
       ]
     }
   ],
-  "explanation": "申請したaster-requestsに対して導入対象はaster-reqestsであり、名前が一致しないため遮断します。この差だけで配布物のMalware性までは断定しません。",
-  "topic": "依存解決結果を申請Package名と比較する",
-  "summary": "依存解決結果を申請Package名と比較する",
+  "explanation": "申請したaster-requestsに対して導入対象はaster-reqestsであり、名前が一致しないため遮断します。この差だけで配布物のマルウェア性までは断定しません。",
+  "topic": "依存解決結果を申請パッケージ名と比較する",
+  "summary": "依存解決結果を申請パッケージ名と比較する",
   "learning_objectives": [
-    "依存解決結果を申請Package名と比較する"
+    "依存解決結果を申請パッケージ名と比較する"
   ],
   "decision_context": "before_install",
   "scenario_type": "real_world_inspired",
   "sources": [
     "https://github.com/ossf/malicious-packages"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "inspired_by": "Obvious Typosquatting",
   "ecosystem": "pypi"
 }

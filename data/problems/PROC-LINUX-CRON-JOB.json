@@ -5,8 +5,8 @@
   "platform": "linux",
   "level": "beginner",
   "ground_truth": "allow",
-  "title": "定例crontabの保守Job",
-  "request": "稼働中のProcessを継続させますか。 ALLOW / BLOCKで判断してください。",
+  "title": "定例crontabの保守ジョブ",
+  "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "initial_information": {
     "Process": "rotate-reports",
     "PID": 4200,
@@ -23,7 +23,7 @@
     {
       "id": "cron",
       "name": "crontab",
-      "description": "選択PIDの実効Userのcrontabを表示します。User選択は教材のラッパーで、起動原因の断定には別の観測も必要です。",
+      "description": "選択PIDの実効ユーザーのcrontabを表示します。ユーザー選択は教材のラッパーで、起動原因の断定には別の観測も必要です。",
       "output": "crontab -u reports -l\n10 9 * * * /opt/reports/rotate-reports --days 30",
       "accepted_information_types": [
         "pid"
@@ -44,7 +44,7 @@
   "references": [
     {
       "id": "job",
-      "name": "承認済みJob",
+      "name": "承認済みジョブ",
       "content": "reports / 毎日09:10 / /opt/reports/rotate-reports --days 30 / JOB-503。\n端末監視の起動記録: cron (PID 800) → /bin/sh (PID 3100) → rotate-reports (PID 4200)。User=reports。起動記録のCommand=/opt/reports/rotate-reports --days 30。"
     }
   ],
@@ -168,16 +168,16 @@
       ]
     }
   ],
-  "explanation": "現在のPID 4200はreports Userで09:10にcronの子Shellから起動され、完全なCommandもcrontab Entryと承認済みJOB-503に一致するため継続を許可します。",
-  "topic": "crontabのScheduleとJob承認を照合する",
-  "summary": "crontabのScheduleとJob承認を照合する",
+  "explanation": "現在のPID 4200はreportsユーザーで09:10にcronの子シェルから起動され、完全なコマンドもcrontabの登録内容と承認済みJOB-503に一致するため継続を許可します。",
+  "topic": "crontabの予定とジョブ承認を照合する",
+  "summary": "crontabの予定とジョブ承認を照合する",
   "learning_objectives": [
-    "crontabのScheduleとJob承認を照合する"
+    "crontabの予定とジョブ承認を照合する"
   ],
   "decision_context": "running_process",
   "scenario_type": "standard",
   "sources": [
     "https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
   ],
-  "fixture_note": "組織・Domain・IP・Package・Hash・記録は架空の保存済み教材。IPは文書用アドレスで、RDAP・外部評判も実照会ではない。時刻は2026-08-18を基準とし、出力は必要なフィールドの抜粋。攻撃コマンドのPayloadは<TRAINING-PLACEHOLDER>に置換。 各問題は独立した端末・案件のSnapshot。PID・時刻の再利用は問題間の関連を意味しない。時刻はZ表記以外すべてJST。"
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。"
 }
