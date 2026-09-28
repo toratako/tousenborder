@@ -1,16 +1,26 @@
 extends SceneTree
-## 起動時と同じ検証を、任意の教材JSONへUIなしで実行する。
+## Runtime and authoring use the same loaders. --report emits one machine-readable line.
 func _initialize() -> void:
-	var paths := OS.get_cmdline_user_args()
-	if paths.is_empty():
-		paths.append("res://data/packs/learning.json")
+	var args := OS.get_cmdline_user_args()
+	var report := "--report" in args
+	var sources: Array[String] = []
+	for arg in args:
+		if arg != "--report": sources.append(arg)
+	if sources.is_empty(): sources.append("res://data")
+	var library := ProblemLibrary.new()
 	var failed := false
-	for path in paths:
-		var catalog := ContentCatalog.new()
-		if catalog.load_pack(path):
-			print("OK: %s (%d cases)" % [path, catalog.cases.size()])
-		else:
+	for path in sources:
+		var absolute := ProjectSettings.globalize_path(path).simplify_path()
+		var source_id := "builtin" if absolute == ProjectSettings.globalize_path("res://data") else "directory:" + absolute.sha256_text()
+		var source := ContentSource.directory(path, source_id) if DirAccess.dir_exists_absolute(path) else ContentSource.open_file(path)
+		if not library.add_source(source):
 			failed = true
-			for error in catalog.errors:
-				printerr(path + ": " + error)
-	quit(1 if failed else 0)
+			for error in library.errors: printerr(path + ": " + error)
+	if failed:
+		quit(1)
+		return
+	if report:
+		print("CONTENT_REPORT:" + JSON.stringify({"problems": library.cases, "packs": library.packs}, "", true))
+	else:
+		print("Content: OK (%d problems, %d packs)" % [library.cases.size(), library.packs.size()])
+	quit()
