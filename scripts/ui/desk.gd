@@ -3,6 +3,9 @@ extends Control
 
 const Layout = preload("res://scripts/ui/desk_layout.gd")
 const Chrome = preload("res://scripts/ui/cyber_theme.gd")
+const Analysis = preload("res://scripts/core/result_analysis.gd")
+const AnalysisView = preload("res://scripts/ui/result_analysis_view.gd")
+const WrongAnswerRetry = preload("res://scripts/core/wrong_answer_retry.gd")
 
 @export_file("*.json") var content_pack := "res://data/packs/learning.json"
 
@@ -69,6 +72,10 @@ var summary_overlay: Panel
 var summary_title: Label
 var summary_stats: Label
 var summary_review: RichTextLabel
+var summary_analysis: ScrollContainer
+var summary_advice_link: Button
+var summary_tabs: Array[Button] = []
+var summary_category_links: Array[Button] = []
 var summary_restart: Button
 var summary_home: Button
 var start_screen: Panel
@@ -120,6 +127,9 @@ var summary_retry: Button
 var summary_snapshot: Dictionary = {}
 var completed_snapshot: Dictionary = {}
 var summary_from_history := false
+var summary_retry_wrong: Button
+var retry_cases: Array[Dictionary] = []
+var retry_source_id := ""
 
 func _selected_cases() -> Array[Dictionary]:
 	return catalog.select_cases(difficulty_select.get_item_metadata(difficulty_select.selected), category_select.get_item_metadata(category_select.selected), platform_select.get_item_metadata(platform_select.selected))
@@ -316,6 +326,9 @@ func _close_summary() -> void:
 		summary_overlay = null
 
 func _show_start_screen() -> void:
+	retry_cases.clear()
+	retry_source_id = ""
+	summary_from_history = false
 	_close_glossary(false)
 	glossary_viewed.clear()
 	glossary_expanded.clear()
@@ -338,14 +351,31 @@ func _show_start_screen() -> void:
 func _start_shift() -> void:
 	if not catalog.errors.is_empty() or history_overlay.visible:
 		return
-	completed_snapshot.clear()
 	if is_instance_valid(tool_guide) and tool_guide.visible:
 		return
 	if is_instance_valid(license_overlay) and license_overlay.visible:
 		return
-	var selected := _selected_cases()
+	var selected := _selected_cases() if retry_source_id.is_empty() else retry_cases
 	if selected.is_empty():
 		return
+	_begin_shift(selected)
+
+func _retry_wrong_answers() -> void:
+	var plan := WrongAnswerRetry.plan(summary_snapshot, catalog)
+	if plan.cases.is_empty(): return
+	retry_cases.assign(plan.cases)
+	retry_source_id = summary_snapshot.session_id
+	_begin_shift(retry_cases)
+
+func _retry_same_cases() -> void:
+	retry_cases.assign(shift.cases)
+	retry_source_id = summary_snapshot.session_id
+	_start_shift()
+
+func _begin_shift(selected: Array[Dictionary]) -> void:
+	completed_snapshot.clear()
+	summary_from_history = false
+	history_overlay.hide()
 	_close_how_to(false)
 	_close_rules(false)
 	_close_menu()
@@ -713,7 +743,9 @@ func _show_summary() -> void:
 		for pair in [["level", difficulty_select], ["category", category_select], ["platform", platform_select]]:
 			var option: OptionButton = pair[1]
 			selection[pair[0]] = {"id": option.get_item_metadata(option.selected), "label": option.get_item_text(option.selected)}
+		if not retry_source_id.is_empty(): selection = WrongAnswerRetry.selection(shift.cases, catalog)
 		completed_snapshot = HistoryStore.snapshot(shift, {"id": catalog.pack_id, "title": catalog.title, "path": content_pack}, selection, catalog.feedback, catalog.actions)
+		if not retry_source_id.is_empty() and not completed_snapshot.is_empty(): completed_snapshot.retry_of = retry_source_id
 	if completed_snapshot.is_empty(): return
 	_display_summary(completed_snapshot, false)
 	_save_summary()
@@ -721,7 +753,7 @@ func _show_summary() -> void:
 	for stamp in action_stamps:
 		stamp.hide()
 		stamp.disabled = true
-	tool_message.text = "勤務終了。案件を振り返るか、新しい勤務を開始してください。"
+	tool_message.text = "勤務終了。案件を振り返るか、同じ問題に再挑戦してください。"
 	summary_restart.grab_focus()
 
 func _display_summary(snapshot: Dictionary, from_history: bool) -> void:
@@ -729,18 +761,58 @@ func _display_summary(snapshot: Dictionary, from_history: bool) -> void:
 	summary_snapshot = snapshot.duplicate(true)
 	summary_from_history = from_history
 	Layout.build_summary(self)
+	var analysis := Analysis.analyze(summary_snapshot)
+	var controls := AnalysisView.build(summary_analysis, analysis, summary_snapshot.feedback,
+		func(category: String): _select_summary_tab(1, category),
+		func(indices: Array): _select_summary_tab(1, "", indices))
+	summary_category_links = controls.categories
+	summary_advice_link = controls.advice
 	_render_summary_records()
 	Layout.build_summary_actions(self)
+	_select_summary_tab(0)
+	if snapshot.has("retry_of"): summary_title.text = "再挑戦の結果"
 	if from_history:
-		summary_title.text = "勤務履歴 · " + HistoryStore.date_label(snapshot.completed_at)
+		summary_title.text = ("勤務履歴 · 再挑戦 · " if snapshot.has("retry_of") else "勤務履歴 · ") + HistoryStore.date_label(snapshot.completed_at)
 		summary_title.add_theme_font_size_override("font_size", 23)
 		summary_home.grab_focus()
 
-func _render_summary_records() -> void:
+func _select_summary_tab(index: int, category: String = "", indices: Array = []) -> void:
+	summary_analysis.visible = index == 0
+	summary_review.visible = index == 1
+	for i in summary_tabs.size(): summary_tabs[i].set_pressed_no_signal(i == index)
+	if index == 1:
+		_render_summary_records(category, indices)
+		summary_review.scroll_to_line(0)
+		summary_tabs[1].grab_focus()
+	_update_summary_focus()
+
+func _update_summary_focus() -> void:
+	var controls: Array[Control] = []
+	for tab in summary_tabs: controls.append(tab)
+	if summary_analysis.visible:
+		controls.append(summary_analysis)
+		for link in summary_category_links: controls.append(link)
+		if is_instance_valid(summary_advice_link): controls.append(summary_advice_link)
+	else:
+		controls.append(summary_review)
+	if summary_retry.visible: controls.append(summary_retry)
+	controls.append(summary_home)
+	if not summary_retry_wrong.disabled: controls.append(summary_retry_wrong)
+	if not summary_from_history: controls.append(summary_restart)
+	Layout.focus_cycle(controls)
+
+func _render_summary_records(category: String = "", indices: Array = []) -> void:
 	summary_review.clear()
+	if not indices.is_empty():
+		summary_review.add_text("アドバイスに関連する問題（全件表示は上の振り返りタブ）\n\n")
+	elif not category.is_empty():
+		summary_review.add_text(str(Analysis.CATEGORY_LABELS.get(category, category)) + "の結果（全件表示は上の振り返りタブ）\n\n")
 	var feedback: Dictionary = summary_snapshot.feedback
 	var labels: Dictionary = summary_snapshot.action_labels
-	for record in summary_snapshot.records:
+	for index in summary_snapshot.records.size():
+		var record: Dictionary = summary_snapshot.records[index]
+		if not indices.is_empty() and not index in indices: continue
+		if not category.is_empty() and record.category != category: continue
 		_summary_item(record.title, record.id, "正解" if record.correct else "誤判定",
 			"あなたの判定：" + labels[record.verdict]
 			+ (" / 正しい判定：" + labels[record.ground_truth] if feedback.show_expected else "")
@@ -753,6 +825,7 @@ func _save_summary() -> void:
 	summary_save_notice.text = "" if saved else "履歴を保存できませんでした。"
 	summary_save_notice.tooltip_text = history_store.error
 	summary_retry.visible = not saved
+	_update_summary_focus()
 
 func _summary_item(title: String, id: String, result: String, body: String, color: Color) -> void:
 	# 教材の文字列を装飾タグとして解釈せず、案件名だけを大きく表示する。
@@ -839,6 +912,7 @@ func _refresh_history() -> void:
 	if entries.is_empty(): Layout.list_label(history_list, "保存された勤務履歴はありません。")
 	for entry in entries:
 		var caption := "%s  ·  %d / %d 正解\n%s / %s / %s" % [HistoryStore.date_label(entry.completed_at), entry.stats.correct, entry.stats.answered, entry.selection.level.label, entry.selection.category.label, entry.selection.platform.label]
+		if entry.has("retry_of"): caption = "再挑戦 · " + caption
 		var button := Chrome.button(history_list, Rect2(0, 0, 860, 90), caption, PAPER)
 		button.custom_minimum_size.y = 90
 		button.clip_text = true

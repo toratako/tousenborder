@@ -73,7 +73,8 @@ func decide(verdict: String) -> bool:
 		"investigation_environment": ToolRunner.investigation_environment(current()),
 		"correct": verdict == current().ground_truth, "ground_truth": current().ground_truth,
 		"explanation": current().explanation, "observations": observations.duplicate(true),
-		"missing_evidence": missing})
+		"missing_evidence": missing,
+		"investigation_required": current().get("required_evidence", []).any(func(id): return not "initial_information" in InvestigationInputs.evidence_options(current(), id))})
 	changed.emit()
 	return true
 
