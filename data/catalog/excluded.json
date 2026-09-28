@@ -75,11 +75,7 @@
         },
         {
           "resource_id": "disclosure",
-          "action": "RDAPサービスへのIP・登録ドメインの送信が許可されることを確認する"
-        },
-        {
-          "resource_id": "rdap",
-          "action": "親ドメインの登録日と公開された運営組織を確認する"
+          "action": "外部評判サービスへ公開ドメインを送信できることを確認する"
         },
         {
           "resource_id": "official",
@@ -90,7 +86,7 @@
           "action": "No recordは安全・悪性の確定情報ではないと扱い、承認記録との一致を判断根拠にする"
         }
       ],
-      "decisive_evidence": "キャンペーンの承認記録、実際のDNS情報、RDAPの公開組織情報が一致する。外部評判の未登録ではなく独立した承認照合が許可根拠。"
+      "decisive_evidence": "キャンペーンの承認記録と実際のDNS情報が一致する。外部評判の未登録ではなく独立した承認照合が許可根拠。"
     },
     "WEB-REDIRECT-CHAIN": {
       "overview": "会議リンクを隔離解析した後、その結果から得た最終ホストを追加照会する。",
@@ -509,18 +505,14 @@
         },
         {
           "resource_id": "disclosure",
-          "action": "RDAPサービスへのIP・登録ドメインの送信が許可されることを確認する"
-        },
-        {
-          "resource_id": "rdap",
-          "action": "登録日の新しさと登録組織の非公開を確認し、所有者を推測しない"
+          "action": "外部評判サービスへ公開ドメインを送信できることを確認する"
         },
         {
           "resource_id": "change",
           "action": "旧ホストからの移行承認CHG-606、切替時刻、新ホスト・A・認証不要の用途を照合する"
         }
       ],
-      "decisive_evidence": "新ホストとDNSのAが承認済み移行通知に一致する。新しい登録日やRDAPの非公開情報だけで遮断していない。"
+      "decisive_evidence": "新ホストとDNSのAが承認済み移行通知に一致する。"
     },
     "WEB-APPROVED-SAAS": {
       "overview": "定期更新のドメイン一覧にまだ載っていないSaaSについて、最新の変更承認を確認する。",

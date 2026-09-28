@@ -38,7 +38,7 @@ Accountでは今回のSession成立後のLog・操作を使いません。4624�
 
 ## 外部照会の判断
 
-RDAPはIP・登録Domainを外部へ送るExternal Referenceです。IPだけの照会も組織の許可が必要です。公開到達性だけで送信可とせず、送信先・対象の機密区分をReferenceの方針で確認します。[RDAP照会形式](https://www.rfc-editor.org/rfc/rfc9082.html)
+外部照会では公開到達性だけで送信可とせず、送信先・対象の機密区分をReferenceの方針で確認します。
 
 Hash検索とFile本体のUploadは別操作です。VirusTotalの通常のFile送信では検体がパートナーや顧客と共有され得ます。Hash照会も問題内の組織方針に従います。[Searching](https://docs.virustotal.com/docs/searching)、[How it works](https://docs.virustotal.com/docs/how-it-works)
 
@@ -56,10 +56,10 @@ Hashは合成値、IPは文書用、組織・Domain・Package・脆弱性は架�
 
 ## 現行教材の方針
 
-問題数の目標は設けず、判断根拠・Tool選択・正常例との一貫性を優先します。現行Packは73問です。旧中級・上級の実攻撃ベース11問を応用に統合し、実攻撃ベースでない39問は出題対象から外しています。除外問題のJSONとレビュー（`data/catalog/excluded.json`）は保管し、標準Packには登録しません。
+問題数の目標は設けず、判断根拠・Tool選択・正常例との一貫性を優先します。現行Packは70問です。RDAPは判断への寄与が小さいため扱わず、専用の3問と付随する調査資料を削除しています。旧中級・上級の実攻撃ベース11問を応用に統合し、実攻撃ベースでない39問は出題対象から外しています。除外問題のJSONとレビュー（`data/catalog/excluded.json`）は保管し、標準Packには登録しません。
 
-Vulnerability DatabaseはReference、RDAP、Hash／File／Domain／IP／URL ReputationとIsolated URL AnalysisはExternal Referenceです。Referenceを含む調査結果は比較する事実を示し、攻撃名・ゲーム上の結論はTitle・Explanationへ置きます。外部サービス本来の検出数・分類の表示は可能です。
+Vulnerability DatabaseはReference、Hash／File／Domain／IP／URL ReputationとIsolated URL AnalysisはExternal Referenceです。Referenceを含む調査結果は比較する事実を示し、攻撃名・ゲーム上の結論はTitle・Explanationへ置きます。外部サービス本来の検出数・分類の表示は可能です。
 
-RDAPの非公開Organizationを捏造しません。Hash・Domain・IP・Full URL・File・PCAP・Emailの送信内容を区別し、機密FileやToken付きURLの外部送信を必要証拠にしません。
+Hash・Domain・IP・Full URL・File・PCAP・Emailの送信内容を区別し、機密FileやToken付きURLの外部送信を必要証拠にしません。
 
 Real-world inspiredはFake Update、ClickFix／Fake CAPTCHA（Windows Process）、DLL Side-loading、LOLBin、Cron Persistence、BEC、Windows／SSH Password Spraying、Typosquatting、Dependency Confusionの範囲とします。出典と観測Evidenceが支えない原因・攻撃名を断定せず、正常例も残します。

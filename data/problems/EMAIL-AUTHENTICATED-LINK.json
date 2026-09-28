@@ -69,8 +69,7 @@
         "ファイル本体": "社外秘ファイルは送信不可。公開配布物は送信可。",
         "URL": "トークン・ユーザーID・内部ホスト・機密パスを含む完全URLは送信不可。一般公開が確認でき、これらを含まないURLは照会可。",
         "メール・PCAP": "本文、添付、認証情報を含むため本教材の案件では外部送信不可。",
-        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。",
-        "RDAP": "組織が承認した登録情報サービスへIP・登録ドメインのみ送信可。"
+        "今回の資料区分": "照会対象に機密指定はありません。ファイル本体とURL全体の扱いは上記に従います。照会対象のURLは一般公開されています。"
       }
     },
     {
@@ -80,27 +79,6 @@
     }
   ],
   "external_references": [
-    {
-      "id": "rdap",
-      "name": "RDAP",
-      "description": "IPまたは登録ドメインを外部の登録情報サービスへ照会します。",
-      "output": "照会対象Domain: aster-support.example\n登録日: 2018-04-03\nRegistrar: Example Registrar 1\nStatus: client transfer prohibited\nRegistrant Organization: 非公開（redacted）",
-      "accepted_information_types": [
-        "domain"
-      ],
-      "input_bindings": [
-        {
-          "source": "header",
-          "id": "host"
-        }
-      ],
-      "input_hint": "登録ドメイン",
-      "submission_type": "domain",
-      "submission_value": "aster-support.example",
-      "confidentiality_warning": "登録ドメインを登録情報サービスへ送信します。URLのパス・クエリは送りません。",
-      "correct_usage": true,
-      "reason": "外部照会方針でこの対象のRDAP照会が許可されています。"
-    },
     {
       "id": "isolated",
       "name": "隔離環境でのURL解析",
@@ -360,10 +338,6 @@
           "section": "result"
         },
         {
-          "source_id": "rdap",
-          "section": "result"
-        },
-        {
           "source_id": "disclosure",
           "section": "result"
         },
@@ -527,33 +501,6 @@
       ]
     },
     {
-      "term_id": "rdap",
-      "occurrences": [
-        {
-          "source_id": "rdap",
-          "section": "overview"
-        }
-      ]
-    },
-    {
-      "term_id": "rdap_domain_fields",
-      "occurrences": [
-        {
-          "source_id": "rdap",
-          "section": "result"
-        }
-      ]
-    },
-    {
-      "term_id": "transfer_lock",
-      "occurrences": [
-        {
-          "source_id": "rdap",
-          "section": "result"
-        }
-      ]
-    },
-    {
       "term_id": "policy",
       "occurrences": [
         {
@@ -695,7 +642,7 @@
   "sources": [
     "https://www.rfc-editor.org/rfc/rfc8601"
   ],
-  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、RDAPや外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
+  "fixture_note": "登場する組織名、ドメイン、IPアドレス、パッケージ名、ハッシュ値、記録は架空のものです。IPアドレスには文書用アドレスを使い、外部評判の照会も実際には行っていません。時刻は2026-08-18を基準とし、必要な項目だけを抜粋しています。攻撃コマンドのペイロードは<TRAINING-PLACEHOLDER>に置き換えています。各問題は独立した端末・案件の状態を表すスナップショットです。PIDや時刻の再利用は問題間の関連を意味しません。Z付きの時刻を除き、時刻はすべて日本標準時（JST）です。",
   "resources": {
     "url_tools": [
       {

@@ -173,10 +173,6 @@
       "label": "TTL（DNSの有効時間）",
       "description": "DNSの回答を保存し、再利用してよい時間です。この教材では秒数を表し、サイトの運営年数ではありません。"
     },
-    "rdap": {
-      "label": "RDAP（登録情報の照会）",
-      "description": "ドメインやIPアドレスの登録・割当情報を調べる仕組みです。登録者の情報だけで、サイトの内容や安全性は保証されません。"
-    },
     "token": {
       "label": "Token（トークン）",
       "description": "認証や操作の許可に使う情報です。URLに含まれる再設定用トークンなどは、他人に渡すと操作を悪用されるおそれがあります。"
@@ -580,10 +576,6 @@
     "dns_query": {
       "label": "DNS Query / ANSWER SECTION",
       "description": "QueryはDNSへの問合せ、ANSWER SECTIONは回答の部分です。問合せた名前・種類・回答された値を分けて読みます。"
-    },
-    "rdap_domain_fields": {
-      "label": "Registrar / Registrant / redacted",
-      "description": "Registrarはドメイン登録の窓口、Registrantは登録者です。redactedは情報が非公開などの理由で伏せられている表示です。"
     },
     "transfer_lock": {
       "label": "client transfer prohibited",

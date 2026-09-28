@@ -500,24 +500,6 @@
       ],
       "decisive_evidence": "URLのホストとDNSのAレコードが、承認された公開マニュアルサーバーの指定に一致する。"
     },
-    "WEB-RDAP-ORGANIZATION": {
-      "overview": "委託研修サイトについて、公開登録情報と独立した契約・公式ホスト記録を照合する。",
-      "flow": [
-        {
-          "resource_id": "disclosure",
-          "action": "RDAPサービスへのIP・登録ドメインの送信が許可されることを確認する"
-        },
-        {
-          "resource_id": "rdap",
-          "action": "照会対象ドメインと公開Registrant Organizationを確認する"
-        },
-        {
-          "resource_id": "official",
-          "action": "契約TR-601にある委託先・公式ホスト・認証不要の公開用途と照合する"
-        }
-      ],
-      "decisive_evidence": "登録組織Aster Training Foundationとホスト名は、別途管理された研修委託契約の公式サービス記録に一致する。"
-    },
     "WEB-DOMAIN-REPUTATION": {
       "overview": "ログインURLのホスト名を公開ドメインとして照会し、アクセス可否を判断する。",
       "flow": [
@@ -610,28 +592,6 @@
       ],
       "decisive_evidence": "直前の同一宛先通信フローに平文の認証情報があり、送信先も許可された192.0.2.82:443ではない。今回の保留中接続の送信実績ではない。"
     },
-    "NET-WIN-RDAP-NETBLOCK": {
-      "overview": "Windowsの帳票クライアントから委託先サーバーへの接続について、個別承認とIP割当情報を照合する。",
-      "flow": [
-        {
-          "resource_id": "nettcp",
-          "action": "対象PIDの接続先IP 198.51.100.70と443番ポートを確認する"
-        },
-        {
-          "resource_id": "disclosure",
-          "action": "RDAPサービスへのIP・登録ドメインの送信が許可されることを確認する"
-        },
-        {
-          "resource_id": "rdap",
-          "action": "IPが委託先Aster Hostingの割当範囲内であることを確認する"
-        },
-        {
-          "resource_id": "server",
-          "action": "個別IP・ポート・PID・用途と専用サーバー契約を照合する"
-        }
-      ],
-      "decisive_evidence": "IP割当組織が委託先と一致し、個別IP:ポート・PID・用途もNET-703の専用サーバー承認に一致する。RDAP単独でテナントを特定していない。"
-    },
     "NET-LINUX-ACTIVE-APPROVED": {
       "overview": "Linuxの管理エージェントから棚卸しサーバーへの新規接続を、現在のPIDと既存ソケットから確認する。",
       "flow": [
@@ -677,28 +637,6 @@
         }
       ],
       "decisive_evidence": "同一宛先への過去の通信フローでusernameとpasswordが平文送信されており、宛先・暗号化とも通信方針に反する。"
-    },
-    "NET-LINUX-RDAP-NETBLOCK": {
-      "overview": "Linuxの帳票クライアントの接続先が、承認された専用サーバーと割当範囲に一致するか確認する。",
-      "flow": [
-        {
-          "resource_id": "ss",
-          "action": "対象PIDの198.51.100.70:443への接続を確認する"
-        },
-        {
-          "resource_id": "disclosure",
-          "action": "RDAPサービスへのIP・登録ドメインの送信が許可されることを確認する"
-        },
-        {
-          "resource_id": "rdap",
-          "action": "委託先に割り当てられたネットブロックに対象IPが含まれることを確認する"
-        },
-        {
-          "resource_id": "server",
-          "action": "個別IP・ポート・プロセス・専用帳票用途をNET-703と照合する"
-        }
-      ],
-      "decisive_evidence": "個別の接続先と用途が契約済み専用サーバーの承認記録に一致し、RDAPの割当情報も委託先と整合する。"
     },
     "EMAIL-SERVICE-NOTICE": {
       "overview": "本人の研修申込みに対応する、リンクも添付もない受付通知を確認する。",

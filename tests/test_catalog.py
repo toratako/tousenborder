@@ -16,6 +16,7 @@ from build_problem_catalog import (
     read_json,
     resource_path,
     validate_authoring,
+    validate_glossary,
     validate_pack,
     validate_review,
     validate_schema,
@@ -77,33 +78,19 @@ class CatalogTests(unittest.TestCase):
                 with self.subTest(problem=item["id"], field=field), self.assertRaises(ValueError):
                     validate_authoring(invalid_item, pack)
 
-    def test_rdap_queries_bind_the_actual_ip_or_registered_domain(self):
+    def test_rdap_is_not_available_in_problem_resources(self):
         pack = read_json(ROOT / "data/packs/learning.json")
         reviews = read_json(ROOT / "data/catalog/learning.json")["reviews"]
-        found = []
-        for path in pack["problems"]:
-            item = read_json(resource_path(path))
-            entries = [(kind, r) for kind in ("tools", "references", "external_references") for r in item[kind]]
-            for kind, r in entries:
-                if r["id"] != "rdap":
-                    continue
-                found.append(item["id"])
-                with self.subTest(problem=item["id"]):
-                    self.assertEqual(kind, "external_references")
-                    self.assertIn(r["submission_type"], ("ip", "domain"))
-                    self.assertEqual(r["accepted_information_types"], [r["submission_type"]])
-                    facts = {("initial_information", key): value for key, value in item["initial_information"].items()}
-                    facts.update({(entry["id"], info["id"]): info["value"]
-                                  for _, entry in entries for info in entry.get("output_information", [])})
-                    for binding in r["input_bindings"]:
-                        self.assertEqual(facts[(binding["source"], binding["id"])], r["submission_value"])
-                    self.assertIn(r["submission_value"], r["output"])
-                    flow = [s["resource_id"] for s in reviews[item["id"]]["flow"]]
-                    if "rdap" in flow:
-                        self.assertLess(flow.index("disclosure"), flow.index("rdap"))
-                    if "rdap" in item["required_evidence"]:
-                        self.assertIn("disclosure", item["required_evidence"])
-        self.assertTrue(found)
+        reviews.update(read_json(ROOT / "data/catalog/excluded.json")["reviews"])
+        for path in (ROOT / "data/problems").glob("*.json"):
+            item = read_json(path)
+            with self.subTest(problem=item["id"]):
+                entries = validate_authoring(item, pack)
+                validate_glossary(item, pack, entries)
+                validate_review(item, entries, reviews[item["id"]])
+                self.assertFalse(any(r["id"] == "rdap" for _, r in entries))
+                self.assertNotIn("rdap", item["required_evidence"])
+        self.assertFalse(any("RDAP" in path for path in pack["problems"]))
 
     def test_review_flow_requires_inputs_before_dependent_investigation(self):
         item = read_json(ROOT / "data/problems/PROC-WIN-DLL-SIDELOAD.json")
