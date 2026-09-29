@@ -28,7 +28,7 @@ static func plan(snapshot: Dictionary, library: ProblemLibrary) -> Dictionary:
 		else:
 			result.missing += 1
 	if seen.is_empty():
-		result.reason = "この勤務に誤った問題はありません。"
+		result.reason = "この審査に誤った問題はありません。"
 	elif cases.is_empty():
 		result.reason = "誤った問題の教材が読み込まれていません。"
 	elif result.missing > 0:
@@ -36,7 +36,7 @@ static func plan(snapshot: Dictionary, library: ProblemLibrary) -> Dictionary:
 	elif result.changed > 0:
 		result.reason = "更新された%d問を含む、現在の教材で再挑戦します。" % result.changed
 	else:
-		result.reason = "この勤務で誤った問題を、現在の教材で再挑戦します。"
+		result.reason = "この審査で誤った問題を、現在の教材で再挑戦します。"
 	return result
 
 

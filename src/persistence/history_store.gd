@@ -1,6 +1,6 @@
 class_name HistoryStore
 extends RefCounted
-## 一勤務一ファイル。教材の現行データや画面には依存しない。
+## 一審査一ファイル。教材の現行データや画面には依存しない。
 const MAX_ENTRIES := 100
 const INDEX_SUFFIX := ".index.json"
 var directory: String
@@ -79,7 +79,7 @@ static func validate(data: Variant) -> String:
 		data.stats.answered != data.records.size()
 		or data.stats.correct != correct or data.stats.unsafe != unsafe
 	):
-		return "勤務集計の整合性エラー"
+		return "審査集計の整合性エラー"
 	return ""
 
 
@@ -176,7 +176,7 @@ func save_completed(data: Dictionary) -> bool:
 		if existing.is_empty():
 			return false
 		if not ContentSchema._equal(existing, data):
-			error = "同じIDに異なる勤務結果があります。"
+			error = "同じIDに異なる審査結果があります。"
 			return false
 		_prune_entries()
 		return true

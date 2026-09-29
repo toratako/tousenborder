@@ -1,6 +1,6 @@
 extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
-## 実際のシーンとボタンのシグナルを使い、勤務全体を検証する。
+## 実際のシーンとボタンのシグナルを使い、審査全体を検証する。
 
 
 func _initialize() -> void:

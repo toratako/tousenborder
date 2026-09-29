@@ -282,7 +282,7 @@ static func _scope(data: Dictionary) -> String:
 
 static func _advice(data: Dictionary) -> Dictionary:
 	if data.answered == 0:
-		return { "next": "勤務を完了すると結果を確認できます。", "review_indices": [] }
+		return { "next": "審査を完了すると結果を確認できます。", "review_indices": [] }
 	var weakest: Dictionary = { }
 	for category in data.categories.values():
 		if not category.errors.is_empty():

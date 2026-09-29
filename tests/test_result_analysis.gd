@@ -426,7 +426,7 @@ func run() -> void:
 		desk.audit_overlay.next_button.pressed.emit()
 	check(
 		desk.summary_screen.analysis.visible and not desk.summary_screen.review.visible,
-		"勤務終了時は分析を表示",
+		"審査終了時は分析を表示",
 	)
 	for i in 5:
 		await process_frame
@@ -609,7 +609,7 @@ func run() -> void:
 		"分析・振り返りの2タブに戻す",
 	)
 	var analysis_text := texts(desk.summary_screen.analysis)
-	for removed in ["詳しい数値", "良かった点", "次に伸ばせる点", "次の勤務で試すこと", "外周100", "分野から復習", "今回の出題範囲での評価"]:
+	for removed in ["詳しい数値", "良かった点", "次に伸ばせる点", "次の審査で試すこと", "外周100", "分野から復習", "今回の出題範囲での評価"]:
 		check(not analysis_text.contains(removed), "削除した表示が残らない：" + removed)
 	check(analysis_text.contains("アドバイス"), "助言の見出しをアドバイスに統一")
 	for record in snapshot.records:
@@ -627,7 +627,7 @@ func run() -> void:
 		and not texts(desk.summary_screen.analysis).contains("判断と確認"),
 		"図の見出しを判断力・確認力へ変更",
 	)
-	check(desk.summary_screen.home.text == "勤務履歴へ戻る", "履歴の戻り先を維持")
+	check(desk.summary_screen.home.text == "審査履歴へ戻る", "履歴の戻り先を維持")
 	snapshot.feedback = { "show_expected": false, "show_reason": false }
 	desk._display_summary(snapshot, true)
 	var visible_text := texts(desk.summary_screen.analysis)

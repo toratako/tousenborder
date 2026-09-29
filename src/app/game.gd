@@ -471,7 +471,7 @@ func _show_summary() -> void:
 	for stamp in workspace.action_stamps:
 		stamp.hide()
 		stamp.disabled = true
-	workspace.tool_message.text = "勤務終了。案件を振り返るか、同じ問題に再挑戦してください。"
+	workspace.tool_message.text = "審査終了。案件を振り返るか、同じ問題に再挑戦してください。"
 	summary_screen.restart.grab_focus()
 
 
