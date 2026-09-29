@@ -1,6 +1,6 @@
 # 問題一覧
 
-公開教材 70問．問題JSONから生成した開発者用の索引．
+公開教材 75問．問題JSONから生成した開発者用の索引．
 `python3 scripts/build_problem_catalog.py` で再生成．`--check` で差分を検証．
 
 | ID | 分野 | OS | 難易度 | 調査形式 | Title | 正解 |
@@ -15,6 +15,7 @@
 | [AUTH-WIN-REVOKED-DEVICE](<../data/problems/AUTH-WIN-REVOKED-DEVICE.json>) | account | windows | unrated | tools | 登録解除済みの端末 | BLOCK |
 | [AUTH-WIN-SERVICE-INTERACTIVE](<../data/problems/AUTH-WIN-SERVICE-INTERACTIVE.json>) | account | windows | unrated | tools | サービスアカウントへの対話型ログイン | BLOCK |
 | [AUTH-WIN-USUAL-LOGIN](<../data/problems/AUTH-WIN-USUAL-LOGIN.json>) | account | windows | unrated | tools | 通常端末からのMFA確認済みログイン | ALLOW |
+| [AUTH-WIN-VPN-LOCATION-CHANGE](<../data/problems/AUTH-WIN-VPN-LOCATION-CHANGE.json>) | account | windows | advanced | tools | VPN出口の変更で発生した遠隔地ログイン警告 | ALLOW |
 | [EMAIL-ATTACHMENT-NAME](<../data/problems/EMAIL-ATTACHMENT-NAME.json>) | email | common | unrated | references | PDFと説明された.exe添付 | BLOCK |
 | [EMAIL-AUTH-FAILURE](<../data/problems/EMAIL-AUTH-FAILURE.json>) | email | common | unrated | tools | 自社ドメインを名乗る直接配送 | BLOCK |
 | [EMAIL-BEC-DESTINATION](<../data/problems/EMAIL-BEC-DESTINATION.json>) | email | common | unrated | tools | BEC — 振込先の変更依頼 | BLOCK |
@@ -22,6 +23,7 @@
 | [EMAIL-DISPLAY-NAME](<../data/problems/EMAIL-DISPLAY-NAME.json>) | email | common | unrated | references | 社内役員名の表示名偽装 | BLOCK |
 | [EMAIL-REPLY-ADDRESS](<../data/problems/EMAIL-REPLY-ADDRESS.json>) | email | common | unrated | tools | 返信先だけが別の組織 | BLOCK |
 | [EMAIL-SERVICE-NOTICE](<../data/problems/EMAIL-SERVICE-NOTICE.json>) | email | common | unrated | tools | 承認サービスからの通常通知 | ALLOW |
+| [EMAIL-VERIFIED-BANK-CHANGE](<../data/problems/EMAIL-VERIFIED-BANK-CHANGE.json>) | email | common | advanced | tools | 独立確認を完了した振込先変更 | ALLOW |
 | [FILE-LINUX-ARCHIVE-MEMBERS](<../data/problems/FILE-LINUX-ARCHIVE-MEMBERS.json>) | file | linux | unrated | tools | アーカイブ内の実行用スクリプト | BLOCK |
 | [FILE-LINUX-ELF-AS-DOCUMENT](<../data/problems/FILE-LINUX-ELF-AS-DOCUMENT.json>) | file | linux | unrated | tools | PDFとして届いたELF | BLOCK |
 | [FILE-LINUX-ELF-INTERPRETER](<../data/problems/FILE-LINUX-ELF-INTERPRETER.json>) | file | linux | unrated | tools | 承認されていないELFインタープリター | BLOCK |
@@ -41,8 +43,10 @@
 | [NET-LINUX-IP-REPUTATION](<../data/problems/NET-LINUX-IP-REPUTATION.json>) | network | linux | unrated | external | 接続先IPの既知検出 | BLOCK |
 | [NET-LINUX-PLAINTEXT-POST](<../data/problems/NET-LINUX-PLAINTEXT-POST.json>) | network | linux | unrated | tools | 平文HTTPで送る認証情報 | BLOCK |
 | [NET-WIN-ACTIVE-APPROVED](<../data/problems/NET-WIN-ACTIVE-APPROVED.json>) | network | windows | unrated | tools | 承認済みエージェントの接続 | ALLOW |
+| [NET-WIN-APPROVED-BULK-UPLOAD](<../data/problems/NET-WIN-APPROVED-BULK-UPLOAD.json>) | network | windows | advanced | tools | 承認済みテナントへの大量バックアップ通信 | ALLOW |
 | [NET-WIN-IP-REPUTATION](<../data/problems/NET-WIN-IP-REPUTATION.json>) | network | windows | unrated | external | 接続先IPの既知検出 | BLOCK |
 | [NET-WIN-PLAINTEXT-POST](<../data/problems/NET-WIN-PLAINTEXT-POST.json>) | network | windows | unrated | tools | 平文HTTPで送る認証情報 | BLOCK |
+| [PKG-NPM-APPROVED-INSTALL-SCRIPT](<../data/problems/PKG-NPM-APPROVED-INSTALL-SCRIPT.json>) | package | common | advanced | references | 承認範囲内で動くインストールスクリプト | ALLOW |
 | [PKG-NPM-LOCKED-DEPENDENCY](<../data/problems/PKG-NPM-LOCKED-DEPENDENCY.json>) | package | common | unrated | references | ロックファイルと一致する依存パッケージ | ALLOW |
 | [PKG-NPM-REGISTRY-METADATA](<../data/problems/PKG-NPM-REGISTRY-METADATA.json>) | package | common | unrated | references | npmの正規配布情報 | ALLOW |
 | [PKG-NPM-REPOSITORY-MISMATCH](<../data/problems/PKG-NPM-REPOSITORY-MISMATCH.json>) | package | common | unrated | references | リポジトリの相違 | BLOCK |
@@ -52,6 +56,7 @@
 | [PKG-PYPI-OBVIOUS-TYPO](<../data/problems/PKG-PYPI-OBVIOUS-TYPO.json>) | package | common | unrated | references | 明白なタイポスクワッティング | BLOCK |
 | [PKG-PYPI-REGISTRY-METADATA](<../data/problems/PKG-PYPI-REGISTRY-METADATA.json>) | package | common | unrated | references | PyPIの正規配布情報 | ALLOW |
 | [PROC-LINUX-APPROVED-ARGS](<../data/problems/PROC-LINUX-APPROVED-ARGS.json>) | process | linux | unrated | tools | 承認済みサービスの引数 | ALLOW |
+| [PROC-LINUX-APPROVED-RESTORE](<../data/problems/PROC-LINUX-APPROVED-RESTORE.json>) | process | linux | advanced | tools | 保守時間内の承認済み復元プロセス | ALLOW |
 | [PROC-LINUX-CRON-JOB](<../data/problems/PROC-LINUX-CRON-JOB.json>) | process | linux | unrated | tools | 定例crontabの保守ジョブ | ALLOW |
 | [PROC-LINUX-CRON-PERSISTENCE](<../data/problems/PROC-LINUX-CRON-PERSISTENCE.json>) | process | linux | unrated | tools | cronによる永続化 | BLOCK |
 | [PROC-LINUX-OPEN-PRIVATE-KEY](<../data/problems/PROC-LINUX-OPEN-PRIVATE-KEY.json>) | process | linux | unrated | tools | 業務外の秘密鍵を開くプロセス | BLOCK |
