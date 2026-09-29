@@ -92,8 +92,8 @@ func _run() -> void:
 		check(desk.shift.missing_evidence().is_empty(), "許可された調査で証拠が揃う: " + item.id)
 		check(desk.shift.decide(item.ground_truth), "判定: " + item.id)
 		check(
-			desk.audit_overlay.body.text.contains(item.title)
-			and desk.audit_overlay.body.text.contains(item.explanation),
+			desk.audit_overlay.problem_title.text == item.title
+			and desk.audit_overlay.body.get_parsed_text().contains(item.explanation),
 			"回答後にTitleと解説を表示",
 		)
 		desk.audit_overlay.next_button.pressed.emit()

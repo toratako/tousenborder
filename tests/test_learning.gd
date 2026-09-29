@@ -445,15 +445,15 @@ func _run() -> void:
 			"対象にスタンプを使用可能",
 		)
 		desk.shift.decide(item.ground_truth)
-		check(desk.audit_overlay.body.text.contains(item.explanation), "UIに全問の解説")
+		check(desk.audit_overlay.body.get_parsed_text().contains(item.explanation), "UIに全問の解説")
 		if item.id == "FIX-PRIVATE-FILE":
 			check(
 				desk.shift.records.back().correct
-				and desk.audit_overlay.body.text.contains("不適切な利用"),
+				and desk.audit_overlay.body.get_parsed_text().contains("不適切な利用"),
 				"正解でも不適切なFile Uploadを明示",
 			)
 		if item.id == "FIX-PRIVATE-URL":
-			check(desk.audit_overlay.body.text.contains("外部送信を見送り"), "Token付きURLを送らなかった記録")
+			check(desk.audit_overlay.body.get_parsed_text().contains("外部送信を見送り"), "Token付きURLを送らなかった記録")
 		desk.audit_overlay.next_button.pressed.emit()
 		await process_frame
 	check(
