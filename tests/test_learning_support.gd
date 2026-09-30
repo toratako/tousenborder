@@ -50,7 +50,68 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 
+func check_glossary_locations() -> void:
+	# 公開教材や共通辞書から独立した、紛らわしい文字列を含む教材。
+	var raw := {
+		"schema_version": 2, "id": "FIX-GLOSSARY-SCOPES", "category": "file",
+		"platform": "common", "title": "stripped / active_revoked",
+		"request": "GET BLOCK Port resolver scripts/ svchost.exe",
+		"initial": {
+			"information": [{ "id": "query", "label": "対象", "data_type": "text", "value": "Get-FileHash svchost.exe" }],
+			"terms": ["tool_hash_win", "system_account"],
+		},
+		"resources": [{
+			"id": "lookup", "kind": "external_references", "name": "パッケージの調査",
+			"accepted_information_types": ["text"],
+			"input_bindings": [{ "source": "initial_information", "id": "query" }],
+			"input_hint": "対象", "terms": ["package_resolver"],
+			"submission": { "type": "text", "warning": "独立確認", "terms": ["out_of_band"] },
+			"correct_usage": true, "reason": "テスト用の公開情報",
+			"result": {
+				"content": "Port: pts/0; device revoked; Event ID; ELF stripped",
+				"terms": ["terminal", "active_revoked", "event_id", "stripped", "tool_hash_win"],
+			},
+		}],
+		"required_evidence": ["lookup"], "ground_truth": "allow",
+		"explanation": "未閲覧の用語もここには書ける: stripped / active_revoked",
+		"glossary": { "terminal": { "label": "端末", "description": "問題内の端末の定義" } },
+	}
+	var item := Fixtures.loaded(raw)
+	var definitions := { }
+	for id in ["tool_hash_win", "system_account", "package_resolver", "out_of_band", "terminal", "active_revoked", "event_id", "stripped", "http_method", "lock_file", "port", "dns_resolver", "host", "reply_to"]:
+		definitions[id] = { "label": id, "description": "共通の定義" }
+	var viewed := { }
+	check(LearningGlossary.visible_terms(item, definitions, item.resources, viewed).is_empty(), "未閲覧の用語や解説から用語を先出ししない")
+	var expected: Array = []
+	for step in [
+		["initial_information", "initial", ["tool_hash_win", "system_account"]],
+		["lookup", "overview", ["package_resolver"]],
+		["lookup", "submission", ["out_of_band"]],
+		["lookup", "result", ["terminal", "active_revoked", "event_id", "stripped"]],
+	]:
+		viewed[LearningGlossary.key(step[0], step[1])] = true
+		expected.append_array(step[2])
+		var visible := LearningGlossary.visible_terms(item, definitions, item.resources, viewed)
+		var visible_ids: Array = visible.map(func(term): return term.id)
+		var expected_ids: Array = expected.duplicate()
+		visible_ids.sort()
+		expected_ids.sort()
+		check(visible_ids == expected_ids, "指定箇所だけを解禁し、紛らわしい別の用語を追加しない: " + step[1])
+	var visible := LearningGlossary.visible_terms(item, definitions, item.resources, viewed)
+	check(visible.filter(func(term): return term.id == "terminal")[0].description == "問題内の端末の定義", "問題内の用語定義を優先")
+	check(definitions.terminal.description == "共通の定義", "問題内の定義で共通辞書を変更しない")
+	check(LearningGlossary.visible_terms(item, definitions, [], viewed).map(func(term): return term.id) == ["tool_hash_win", "system_account"], "対象外の資料の用語を表示しない")
+	raw.initial.erase("terms")
+	for resource in raw.resources:
+		resource.erase("terms")
+		resource.result.erase("terms")
+		resource.submission.erase("terms")
+	item = Fixtures.loaded(raw)
+	check(LearningGlossary.visible_terms(item, definitions, item.resources, viewed).is_empty(), "用語指定なしの問題でも本文から用語を推測しない")
+
+
 func _run() -> void:
+	check_glossary_locations()
 	var desk = load("res://scenes/main.tscn").instantiate()
 	var store := Fixtures.history_store()
 	desk.library = SupportLibrary.new()

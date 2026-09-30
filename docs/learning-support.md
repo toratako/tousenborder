@@ -9,7 +9,7 @@
 
 用語の対応は，その表示箇所にID配列を置く．初期情報・資料案内は問題表示時，結果は実行時，送信注意文は確認画面で解禁する．
 
-Port（通信／端末）やResolver（DNS／パッケージ）は文脈別IDを使う．文字列検索で関連付けず，定義やtitle・explanationから正解・未閲覧の事実を先出ししない．閲覧制御は [glossary.gd](../src/content/glossary.gd)，紛らわしい用語の検証は [test_learning_support.py](../tests/test_learning_support.py)．
+Port（通信／端末）やResolver（DNS／パッケージ）は文脈別IDを使う．文字列検索で関連付けず，定義やtitle・explanationから正解・未閲覧の事実を先出ししない．閲覧制御は [glossary.gd](../src/content/glossary.gd)．[test_learning_support.py](../tests/test_learning_support.py) は公開問題の参照先が共通辞書または問題内の `glossary` に存在することだけを検証し，用語指定の省略も許容する．表示タイミング・紛らわしい語・重複の検証は [test_learning_support.gd](../tests/test_learning_support.gd) の専用教材で行うため，公開問題のIDや用語配置を変更しても個別テストの更新は不要．
 
 履歴は審査終了時に `user://history/` へ保存し，教材がなくても当時の結果を表示する．新規はversion 3，既存version 2も読める．保存上の `level` は互換性のため維持し，新規の値は問題の `difficulty`．結果の再集計は [審査結果の分析](result-analysis.md)．
 
