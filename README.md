@@ -4,7 +4,7 @@
 
 ![とーせんぼ～だ～のタイトル画面](docs/assets_doc/title.png)
 
-## 今すぐ遊ぶ (Windows)
+## 今すぐ遊ぶ
 
 ### 1. [Release](https://github.com/toratako/tousenborder/releases/)からファイルをダウンロードします．
 
