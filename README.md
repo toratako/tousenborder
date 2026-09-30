@@ -32,8 +32,9 @@ godot --path .
 ## 教材の追加・変更
 
 1. `data/problems/` に問題JSONを置く．Packへの登録は自由演習には不要です．
-2. `python3 scripts/build_problem_catalog.py` で一覧を再生成し，`just validate` と `just test` します．
-3. 再ビルドするとその問題が組み込まれたゲームが生成されます．
+2. `python3 -m pip install -r requirements-dev.txt` で依存パッケージをインストールします．
+3. `python3 scripts/build_problem_catalog.py` で一覧を再生成し，`just validate` と `just test` します．
+4. 再ビルドするとその問題が組み込まれたゲームが生成されます．
 
 最小限の資料付き問題:
 
