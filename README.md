@@ -8,7 +8,7 @@
 
 ### 1. [Release](https://github.com/toratako/tousenborder/releases/)から `tousenborder-windows-x86_64.zip` をダウンロードします．
 
-![Releaseページ．tousenborder-windows-x86_64.zipが強調されている．](docs/asset/release.png)
+![Releaseページ．tousenborder-windows-x86_64.zipが強調されている．](docs/assets_doc/release.png)
 
 ### 2. ダウンロードしたZIPを展開し，`tousenborder.exe` をダブルクリックして実行します．
 
