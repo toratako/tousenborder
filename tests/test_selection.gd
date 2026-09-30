@@ -108,11 +108,24 @@ func _run() -> void:
 	var pack: Dictionary = desk.library.packs[0]
 	select_value(desk.start_screen.pack_select, pack.key)
 	assert(
-		desk.start_screen.selected_cases().map(func(item): return item.id) == pack.problems
+		desk.start_screen.selected_cases().size() == 20
 		and desk.start_screen.category_select.disabled and desk.start_screen.method_select.disabled
 	)
 	desk.start_screen.start_button.pressed.emit()
-	assert(desk.shift.current().id == pack.problems[0])
+	var drawn_ids: Array = desk.shift.cases.map(func(item): return item.id)
+	assert(drawn_ids.size() == 20)
+	assert(drawn_ids.all(func(id): return id in pack.problems))
+	assert(desk.shift.decide(desk.shift.current().ground_truth))
+	desk.pause_menu.restart_requested.emit()
+	assert(desk.shift.records.is_empty() and desk.shift.index == 0)
+	assert(desk.shift.cases.map(func(item): return item.id) == drawn_ids)
+	for i in 20:
+		assert(desk.shift.decide(desk.shift.current().ground_truth))
+		desk.audit_overlay.next_button.pressed.emit()
+	assert(desk.completed_snapshot.records.size() == 20)
+	assert(HistoryStore.validate(desk.completed_snapshot).is_empty())
+	desk.summary_screen.restart_requested.emit()
+	assert(desk.shift.cases.map(func(item): return item.id) == drawn_ids)
 	desk._show_start_screen()
 	var unrated := Fixtures.raw("FIX-VISIBLE-FILE")
 	unrated.erase("difficulty")

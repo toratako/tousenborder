@@ -1,6 +1,6 @@
 class_name PackLoader
 extends RefCounted
-## Packs order standalone problems without modifying their definitions.
+## Packs order or sample standalone problems without modifying their definitions.
 
 
 static func load_pack(source: ContentSource, path: String, problems: Dictionary) -> Dictionary:
@@ -21,6 +21,18 @@ static func load_pack(source: ContentSource, path: String, problems: Dictionary)
 	for id in pack.problems:
 		if not problems.has(id):
 			errors.append(path + ": 問題が存在しません: " + id)
+	if not errors.is_empty():
+		return { "pack": { }, "errors": errors }
+	if pack.has("sampling"):
+		var seen := { }
+		for id in pack.problems:
+			seen[id] = true
+		var requested := int(pack.sampling.count)
+		if requested > seen.size():
+			errors.append(
+				"%s: sampling.count: 指定は%d問ですが、候補は%d問です。"
+				% [path, requested, seen.size()]
+			)
 	if not errors.is_empty():
 		return { "pack": { }, "errors": errors }
 	pack.key = source.id + "/pack/" + pack.id

@@ -47,7 +47,7 @@ OS別出力・代替証拠の例は [対象OSと調査OS](runtime-flow.md#対象
 
 ## Pack・ZIP
 
-Packは問題IDによる出題順だけを管理する．ZIPでは次の構成を直下に置く．
+Packは問題IDによる出題順と，任意の抽選設定を管理する．問題の定義は持たない．ZIPでは次の構成を直下に置く．
 
 ```text
 problems/first.json
@@ -55,6 +55,10 @@ packs/story/pack.json
 ```
 
 `pack.json` は `{ "schema_version": 3, "id": "story", "title": "物語", "problems": ["EXAMPLE-FILE"] }`．問題IDは同じ読込元を参照し，同じIDを複数回指定できる．旧章付きPackは v3 への変換が必要．
+
+ランダム出題は任意の `sampling.count` で総出題数を指定する．[learning/pack.json](../data/packs/learning/pack.json) は20問．`problems` 全件から難易度を区別せず等確率で重複なく抽選し，出題順も混ぜる．難易度ごとの数・上限・最低数は設けない．指定数は1以上で，候補不足は読込エラー（同じIDの重複は候補数に含めない）．`sampling` がないPackは従来どおり指定順・全件出題．
+
+タイトルからの開始で再抽選し，途中のやり直し・結果画面の「同じ問題に再挑戦」は問題と順番を維持する．抽選は [ProblemLibrary.draw_pack_cases](../src/content/problem_library.gd)，検証は [PackLoader](../src/content/pack_loader.gd)，回帰テストは [test_pack_sampling.gd](../tests/test_pack_sampling.gd)．
 
 タイトルの「問題ZIP / JSONを追加」でZIPまたは単独のProblem JSONを読み込む．全体の検証・保存成功後に登録し，無効な読込元があっても他の教材は維持する．保存先は `user://content/`，内容のSHA-256が識別子．同じ内容の再追加は重複せず，内容変更は別の読込元になる．削除UIは未実装で，不要な教材はアプリ終了後に保存先から削除する．
 

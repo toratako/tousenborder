@@ -301,7 +301,13 @@ func _start_shift() -> void:
 		return
 	if is_instance_valid(license_overlay) and license_overlay.visible:
 		return
-	var selected := start_screen.selected_cases() if retry_source_id.is_empty() else retry_cases
+	var selected: Array[Dictionary]
+	if workspace.playing and not shift.finished():
+		selected = shift.cases.duplicate()
+	elif not retry_source_id.is_empty():
+		selected = retry_cases
+	else:
+		selected = start_screen.selected_cases()
 	if selected.is_empty():
 		return
 	_begin_shift(selected)

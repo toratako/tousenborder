@@ -117,10 +117,10 @@ func _build_import() -> void:
 	)
 
 
-func selected_cases() -> Array[Dictionary]:
+func selected_cases(randomize_order := true) -> Array[Dictionary]:
 	var pack: String = pack_select.get_item_metadata(pack_select.selected)
 	if not pack.is_empty():
-		return library.pack_cases(pack)
+		return library.draw_pack_cases(pack, randomize_order)
 	return library.select_cases(
 		difficulty_select.get_item_metadata(difficulty_select.selected),
 		category_select.get_item_metadata(category_select.selected),
@@ -130,7 +130,7 @@ func selected_cases() -> Array[Dictionary]:
 
 
 func refresh_selection(_index: int = 0) -> void:
-	var count := selected_cases().size()
+	var count := selected_cases(false).size()
 	start_button.tooltip_text = "" if count > 0 else "該当する問題がありません。条件を変更してください。"
 	start_button.disabled = count == 0
 	for option in [difficulty_select, category_select, platform_select, method_select]:

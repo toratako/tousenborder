@@ -169,6 +169,24 @@ func pack_cases(key: String) -> Array[Dictionary]:
 	return result
 
 
+func draw_pack_cases(key: String, randomize_order := true) -> Array[Dictionary]:
+	var candidates := pack_cases(key)
+	for pack in packs:
+		if pack.key != key or not pack.has("sampling"):
+			continue
+		var pool: Array[Dictionary] = []
+		var seen := { }
+		for item in candidates:
+			if seen.has(item.id):
+				continue
+			seen[item.id] = true
+			pool.append(item)
+		if randomize_order:
+			pool.shuffle()
+		return pool.slice(0, int(pack.sampling.count))
+	return candidates
+
+
 func guide_tools() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var known := { }
