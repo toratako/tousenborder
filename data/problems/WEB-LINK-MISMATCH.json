@@ -3,6 +3,7 @@
   "id": "WEB-LINK-MISMATCH",
   "category": "web",
   "platform": "common",
+  "difficulty": "very_beginner",
   "title": "表示とパスが異なる正規公開ページ",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

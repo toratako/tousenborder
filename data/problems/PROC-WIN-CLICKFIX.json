@@ -3,6 +3,7 @@
   "id": "PROC-WIN-CLICKFIX",
   "category": "process",
   "platform": "windows",
+  "difficulty": "applied",
   "title": "偽CAPTCHAによるコマンド実行誘導",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

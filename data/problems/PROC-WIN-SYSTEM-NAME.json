@@ -3,6 +3,7 @@
   "id": "PROC-WIN-SYSTEM-NAME",
   "category": "process",
   "platform": "windows",
+  "difficulty": "very_beginner",
   "title": "システムプロセスの管理パス照合",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

@@ -3,6 +3,7 @@
   "id": "NET-LINUX-IP-REPUTATION",
   "category": "network",
   "platform": "linux",
+  "difficulty": "beginner",
   "title": "接続先IPの既知検出",
   "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

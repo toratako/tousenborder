@@ -3,6 +3,7 @@
   "id": "WEB-MISLEADING-HOST",
   "category": "web",
   "platform": "common",
+  "difficulty": "very_beginner",
   "title": "正規ドメインに見せた別ホスト",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

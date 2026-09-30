@@ -3,6 +3,7 @@
   "id": "NET-LINUX-PLAINTEXT-POST",
   "category": "network",
   "platform": "linux",
+  "difficulty": "beginner",
   "title": "平文HTTPで送る認証情報",
   "request": "保留中の新しい接続要求を許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

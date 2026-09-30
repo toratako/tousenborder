@@ -3,6 +3,7 @@
   "id": "FILE-WIN-DOUBLE-EXTENSION",
   "category": "file",
   "platform": "windows",
+  "difficulty": "very_beginner",
   "title": "二重拡張子の請求書",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

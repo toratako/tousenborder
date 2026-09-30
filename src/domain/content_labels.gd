@@ -11,7 +11,12 @@ const CATEGORIES := {
 	"account": "アカウント・認証",
 	"package": "パッケージ",
 }
-const DIFFICULTIES := { "unrated": "未評価", "beginner": "初級", "intermediate": "中級", "advanced": "上級" }
+const DIFFICULTIES := {
+	"very_beginner": "超初級",
+	"beginner": "初級",
+	"applied": "応用",
+	"unrated": "未評価",
+}
 const METHODS := {
 	"initial": "初期情報のみ",
 	"references": "資料の照合",

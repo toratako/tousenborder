@@ -3,6 +3,7 @@
   "id": "FILE-WIN-MODIFIED-INSTALLER",
   "category": "file",
   "platform": "windows",
+  "difficulty": "beginner",
   "title": "承認配布物とのハッシュ不一致",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

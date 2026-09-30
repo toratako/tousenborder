@@ -3,6 +3,7 @@
   "id": "FILE-LINUX-ARCHIVE-MEMBERS",
   "category": "file",
   "platform": "linux",
+  "difficulty": "beginner",
   "title": "アーカイブ内の実行用スクリプト",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

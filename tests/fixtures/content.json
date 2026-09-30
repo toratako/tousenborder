@@ -662,7 +662,7 @@
       "learning_objectives": [
         "入力契約の回帰確認"
       ],
-      "difficulty": "advanced"
+      "difficulty": "applied"
     },
     {
       "schema_version": 2,
@@ -852,7 +852,7 @@
         "https://example.test/fixture-source"
       ],
       "inspired_by": "Metadata検証用",
-      "difficulty": "advanced"
+      "difficulty": "applied"
     },
     {
       "schema_version": 2,
@@ -1191,7 +1191,7 @@
       "learning_objectives": [
         "入力契約の回帰確認"
       ],
-      "difficulty": "advanced"
+      "difficulty": "applied"
     },
     {
       "schema_version": 2,
@@ -1304,7 +1304,7 @@
       "learning_objectives": [
         "入力契約の回帰確認"
       ],
-      "difficulty": "advanced"
+      "difficulty": "applied"
     },
     {
       "schema_version": 2,
@@ -1499,7 +1499,7 @@
       "learning_objectives": [
         "入力契約の回帰確認"
       ],
-      "difficulty": "intermediate"
+      "difficulty": "applied"
     }
   ]
 }

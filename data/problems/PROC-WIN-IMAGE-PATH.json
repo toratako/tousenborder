@@ -3,6 +3,7 @@
   "id": "PROC-WIN-IMAGE-PATH",
   "category": "process",
   "platform": "windows",
+  "difficulty": "beginner",
   "title": "想定外のプロセス配置",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

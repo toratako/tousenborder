@@ -3,6 +3,7 @@
   "id": "WEB-URL-REPUTATION",
   "category": "web",
   "platform": "common",
+  "difficulty": "beginner",
   "title": "完全URLに対する検出履歴",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

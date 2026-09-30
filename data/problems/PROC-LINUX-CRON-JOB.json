@@ -3,6 +3,7 @@
   "id": "PROC-LINUX-CRON-JOB",
   "category": "process",
   "platform": "linux",
+  "difficulty": "beginner",
   "title": "定例crontabの保守ジョブ",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

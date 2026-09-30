@@ -3,6 +3,13 @@ extends RefCounted
 ## 保存済みの事実だけを集計する。教材の現在の正解や資料には依存しない。
 const CATEGORY_LABELS = ContentLabels.CATEGORIES
 const LEVEL_LABELS = ContentLabels.DIFFICULTIES
+# 保存済み履歴の区分は現在の教材へ当て直さず、当時の意味で読む。
+const LEGACY_LEVEL_LABELS := {
+	"beginner_reference": "初級",
+	"beginner_external": "初級",
+	"intermediate": "中級",
+	"advanced": "上級",
+}
 # 教材内の暫定基準。心理尺度・資格認定ではない。
 const RULES := {
 	"style_min_cases": 3,
@@ -75,9 +82,9 @@ static func analyze(snapshot: Dictionary) -> Dictionary:
 			result.review.incomplete.append(index)
 		var level: String = record.get("level", "unknown")
 		result.levels[level] = result.levels.get(level, 0) + 1
-		if not LEVEL_LABELS.has(level) or level == "unrated":
+		if (not LEVEL_LABELS.has(level) and not LEGACY_LEVEL_LABELS.has(level)) or level == "unrated":
 			result.unknown_level += 1
-		if level in ["intermediate", "advanced"] and correct:
+		if level in ["applied", "intermediate", "advanced"] and correct:
 			result.harder_correct += 1
 		if record.ground_truth == "allow":
 			result.expected_allow += 1
@@ -226,6 +233,9 @@ static func _level(data: Dictionary) -> Dictionary:
 	var id := "beginner" if data.accuracy < RULES.practice_rate else "practice"
 	var label := "初心者級" if id == "beginner" else "実践級"
 	var reasons: Array[String] = []
+	var harder_label := "応用"
+	if data.levels.has("intermediate") or data.levels.has("advanced"):
+		harder_label = "応用・旧区分の中級以上"
 	if reference:
 		reasons.append("%d問未満のため参考判定" % RULES.level_min_cases)
 	if data.accuracy >= RULES.pro_rate:
@@ -234,7 +244,7 @@ static func _level(data: Dictionary) -> Dictionary:
 		if data.unknown_level > 0:
 			reasons.append("難易度が未評価の問題を含む")
 		if data.harder_correct < RULES.pro_harder_correct:
-			reasons.append("中級以上での正解が%d問未満" % RULES.pro_harder_correct)
+			reasons.append("%sでの正解が%d問未満" % [harder_label, RULES.pro_harder_correct])
 		if (
 			data.expected_allow < RULES.pro_each_verdict
 			or data.expected_block < RULES.pro_each_verdict
@@ -251,7 +261,7 @@ static func _level(data: Dictionary) -> Dictionary:
 			label = "プロ級"
 	var reason := "正答率%d％（%d / %d問）。" % [roundi(data.accuracy * 100), data.correct, data.answered]
 	if id == "pro":
-		reason += "中級以上で%d問正解。危険な許可・不適切な調査の記録は0件。" % data.harder_correct
+		reason += "%sで%d問正解。危険な許可・不適切な調査の記録は0件。" % [harder_label, data.harder_correct]
 	elif data.accuracy >= RULES.pro_rate:
 		reason += "プロ級は保留：" + "、".join(reasons) + "。"
 	elif reference:
@@ -262,10 +272,11 @@ static func _level(data: Dictionary) -> Dictionary:
 static func _scope(data: Dictionary) -> String:
 	var levels: Array[String] = []
 	var grouped := { }
-	for id in LEVEL_LABELS:
+	var labels := LEVEL_LABELS.merged(LEGACY_LEVEL_LABELS)
+	for id in labels:
 		if id == "unrated":
 			continue
-		var label: String = LEVEL_LABELS[id]
+		var label: String = labels[id]
 		grouped[label] = grouped.get(label, 0) + data.levels.get(id, 0)
 	for label in grouped:
 		if grouped[label] > 0:

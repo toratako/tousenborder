@@ -3,7 +3,7 @@
   "id": "EMAIL-VERIFIED-BANK-CHANGE",
   "category": "email",
   "platform": "common",
-  "difficulty": "advanced",
+  "difficulty": "applied",
   "title": "独立確認を完了した振込先変更",
   "request": "この口座変更依頼メールを、変更処理に使える業務メールとして受け入れますか。ALLOW / BLOCKで判断してください。",
   "initial": {

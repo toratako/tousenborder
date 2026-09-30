@@ -3,6 +3,7 @@
   "id": "FILE-LINUX-SCRIPT-NAME",
   "category": "file",
   "platform": "linux",
+  "difficulty": "very_beginner",
   "title": "PDF名を含むシェルスクリプト",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

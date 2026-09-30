@@ -23,9 +23,9 @@
     },
     "difficulty": {
       "enum": [
+        "very_beginner",
         "beginner",
-        "intermediate",
-        "advanced"
+        "applied"
       ]
     },
     "title": {

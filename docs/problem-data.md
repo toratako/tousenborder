@@ -31,7 +31,7 @@
 }
 ```
 
-`category` は自由なIDで，必要なら `category_label` を置く．`difficulty` の省略は未評価．調査形式や実例の有無から推測しない．`learning_objectives / sources / inspired_by` は作問・出典追跡用で，判定条件には使わない．
+`category` は自由なIDで，必要なら `category_label` を置く．`difficulty` は `very_beginner`（超初級）・`beginner`（初級）・`applied`（応用），省略は未評価．調査形式や実例の有無から推測しない．`learning_objectives / sources / inspired_by` は作問・出典追跡用で，判定条件には使わない．
 
 ## 資料と情報の接続
 

@@ -75,12 +75,16 @@ func _initialize() -> void:
 		changed = problem.duplicate(true)
 		changed.sources = [invalid_source]
 		check(not ContentSchema.validate(changed, ContentSchema.PROBLEM).is_empty(), "出典URL形式")
-	for old_difficulty in ["very_beginner", "beginner_reference", "beginner_external", "applied"]:
+	for difficulty in ["very_beginner", "beginner", "applied"]:
+		changed = problem.duplicate(true)
+		changed.difficulty = difficulty
+		check(ContentSchema.validate(changed, ContentSchema.PROBLEM).is_empty(), "難易度: " + difficulty)
+	for old_difficulty in ["beginner_reference", "beginner_external", "intermediate", "advanced", "unrated"]:
 		changed = problem.duplicate(true)
 		changed.difficulty = old_difficulty
 		check(
 			not ContentSchema.validate(changed, ContentSchema.PROBLEM).is_empty(),
-			"調査形式を難易度に入れない",
+			"旧区分は新規教材に使わず、未評価は省略で表す",
 		)
 	changed = problem.duplicate(true)
 	changed.initial.information = []
