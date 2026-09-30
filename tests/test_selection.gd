@@ -64,9 +64,18 @@ func _run() -> void:
 	await process_frame
 	assert(desk.library.errors.is_empty(), str(desk.library.errors))
 	assert(
-		desk.start_screen.difficulty_select.item_count == 2
+		desk.start_screen.difficulty_select.item_count == desk.library.difficulties.size() + 1
 		and desk.library.difficulties.has("unrated")
 	)
+	select_value(desk.start_screen.difficulty_select, "advanced")
+	var advanced_cases: Array = desk.start_screen.selected_cases()
+	assert(advanced_cases.size() == 5)
+	assert(
+		advanced_cases.all(
+			func(item): return item.difficulty == "advanced" and item.ground_truth == "allow",
+		)
+	)
+	select_value(desk.start_screen.difficulty_select, "")
 	var all_ids := { }
 	for method in desk.library.methods:
 		select_value(desk.start_screen.method_select, method)

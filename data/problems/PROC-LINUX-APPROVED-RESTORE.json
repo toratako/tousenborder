@@ -1,0 +1,113 @@
+{
+  "schema_version": 2,
+  "id": "PROC-LINUX-APPROVED-RESTORE",
+  "category": "process",
+  "platform": "linux",
+  "difficulty": "advanced",
+  "title": "保守時間内の承認済み復元プロセス",
+  "request": "rootで稼働している復元プロセスを継続させますか。ALLOW / BLOCKで判断してください。",
+  "initial": {
+    "information": [
+      {
+        "id": "pid",
+        "label": "PID",
+        "value": 6210,
+        "data_type": "pid"
+      },
+      {
+        "id": "alert",
+        "label": "検知内容",
+        "value": "db-stage-02 / 2026-09-29 02:15。rootのプロセスが大量のファイルを書き換えている。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "pid",
+      "process"
+    ]
+  },
+  "resources": [
+    {
+      "id": "process",
+      "kind": "tools",
+      "name": "プロセスと実体ファイルの調査",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "pid"
+        }
+      ],
+      "input_hint": "PID",
+      "result": {
+        "content": "PID 6210 / user=root / parent=restore-runner.service。実体は{{fact:binary}}。引数: --job CHG-620 --source /mnt/backup/snapshot-0928 --target /srv/staging/db。書込み先は/srv/staging/db配下のみで、外部ソケットはない。",
+        "information": [
+          {
+            "id": "binary",
+            "label": "実体ファイル",
+            "value": "/opt/aster/bin/restore-agent",
+            "data_type": "file"
+          }
+        ],
+        "terms": [
+          "path",
+          "service_account"
+        ]
+      }
+    },
+    {
+      "id": "integrity",
+      "kind": "tools",
+      "name": "管理配布物との整合性照合",
+      "accepted_information_types": [
+        "file"
+      ],
+      "input_bindings": [
+        {
+          "source": "process",
+          "id": "binary"
+        }
+      ],
+      "input_hint": "実体ファイル",
+      "result": {
+        "content": "実体ファイルと実行中イメージは管理配布版restore-agent 3.2に一致。組織の署名済み配布マニフェストとのSHA-256照合に成功。root所有、一般ユーザーによる変更不可。restore-runner.serviceの定義も承認版と一致し、引数の追加・差替えはない。",
+        "terms": [
+          "sha256",
+          "signature"
+        ]
+      }
+    },
+    {
+      "id": "change",
+      "kind": "references",
+      "name": "保守チケット",
+      "result": {
+        "content": "CHG-620は承認済み。対象db-stage-02、2026-09-29 02:00〜03:00、restore-agent 3.2をrestore-runner.serviceからrootで実行。読出し元/mnt/backup/snapshot-0928、復元先/srv/staging/db。所有者と権限を復元するためrootを使用。ソースのマウントと対象パスの解決結果に別ディレクトリへの転送はない。",
+        "terms": [
+          "ticket"
+        ]
+      }
+    },
+    {
+      "id": "policy",
+      "kind": "references",
+      "name": "復元作業の継続条件",
+      "result": {
+        "content": "承認された対象ホスト・時間・版・起動元・権限・入出力パスが実測と一致し、配布物の整合性を確認できる場合は継続できる。大量書込みやroot権限だけでは遮断しない。対象外への書込みや外部通信があれば遮断する。"
+      }
+    }
+  ],
+  "required_evidence": [
+    "process",
+    "integrity",
+    "change",
+    "policy"
+  ],
+  "ground_truth": "allow",
+  "explanation": "大量書込みとroot権限は承認済みの復元作業に必要な動作です。PIDから取得した実体の整合性、起動元、引数、対象ホスト、時間帯がチケットと一致し、書込み範囲と通信にも規則違反がないためAllowです。",
+  "learning_objectives": [
+    "PIDから実体を追跡し、動作範囲・配布物・変更承認を組み合わせて判断する"
+  ]
+}

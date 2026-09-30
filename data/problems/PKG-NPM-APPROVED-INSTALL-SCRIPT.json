@@ -1,0 +1,83 @@
+{
+  "schema_version": 2,
+  "id": "PKG-NPM-APPROVED-INSTALL-SCRIPT",
+  "category": "package",
+  "platform": "common",
+  "difficulty": "advanced",
+  "title": "承認範囲内で動くインストールスクリプト",
+  "request": "この依存パッケージを、申請された隔離ビルド環境へ導入してよいですか。ALLOW / BLOCKで判断してください。",
+  "initial": {
+    "information": [
+      {
+        "id": "package",
+        "label": "導入対象",
+        "value": "@aster/image-codec@2.4.1",
+        "data_type": "text"
+      },
+      {
+        "id": "alert",
+        "label": "警告",
+        "value": "インストール時にpostinstallスクリプトが実行される。申請先は一時ビルド環境BUILD-81。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "package"
+    ]
+  },
+  "resources": [
+    {
+      "id": "lock",
+      "kind": "references",
+      "name": "ロックファイルと取得元の照合",
+      "result": {
+        "content": "レビュー済みのロックファイルは@aster/image-codec 2.4.1をregistry.aster.exampleに固定。実際に取得したアーカイブのintegrityはロックファイルと一致。今回の導入対象はこの検証済みアーカイブで、追加依存はない。",
+        "terms": [
+          "lock_file"
+        ]
+      }
+    },
+    {
+      "id": "script",
+      "kind": "references",
+      "name": "検証済みアーカイブのスクリプトレビュー",
+      "result": {
+        "content": "postinstallはnode scripts/build.js。検証対象アーカイブ内のbuild.js全体をレビュー済みで、同梱ソースをローカルコンパイラへ渡し、パッケージ内build/へ出力する。外部コードの取得、ネットワーク呼出し、環境変数や認証情報の読出し、永続化処理はない。",
+        "terms": [
+          "process"
+        ]
+      }
+    },
+    {
+      "id": "sandbox",
+      "kind": "references",
+      "name": "同一アーカイブの隔離実行記録",
+      "result": {
+        "content": "BUILD-81と同一イメージで実行。子プロセスは台帳登録済みのローカルコンパイラのみ。書込みはパッケージ内build/のみ。ネットワーク試行なし、処理は成功。BUILD-81は非特権の一時環境で、秘密情報の注入・ホストディレクトリのマウントなし、外部通信は禁止。実行対象のアーカイブはintegrity検証後に固定されている。",
+        "terms": [
+          "authentication",
+          "path"
+        ]
+      }
+    },
+    {
+      "id": "approval",
+      "kind": "references",
+      "name": "依存パッケージの承認記録",
+      "result": {
+        "content": "DEP-241: @aster/image-codec 2.4.1を承認。管理レジストリ、ロックファイルのintegrity一致、同梱コードのみのビルド、非特権・秘密情報なし・通信禁止の一時環境が条件。承認済み版に導入禁止指定はない。postinstallの存在だけでは禁止しない。開発者端末での直接実行は今回の承認範囲外。"
+      }
+    }
+  ],
+  "required_evidence": [
+    "lock",
+    "script",
+    "sandbox",
+    "approval"
+  ],
+  "ground_truth": "allow",
+  "explanation": "postinstallはコード実行を伴いますが、取得元・固定されたアーカイブ・全体レビュー・隔離実行の動作が承認条件と一致しています。申請先BUILD-81も権限・秘密情報・通信の条件を満たすためAllowです。この判断を開発者端末への直接導入には適用できません。",
+  "learning_objectives": [
+    "インストールスクリプトの有無だけでなく、取得物の同一性・実動作・実行環境を照合する"
+  ]
+}

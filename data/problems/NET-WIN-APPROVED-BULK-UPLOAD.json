@@ -1,0 +1,111 @@
+{
+  "schema_version": 2,
+  "id": "NET-WIN-APPROVED-BULK-UPLOAD",
+  "category": "network",
+  "platform": "windows",
+  "difficulty": "advanced",
+  "title": "承認済みテナントへの大量バックアップ通信",
+  "request": "大量送信を検知したバックアップ通信を継続させますか。ALLOW / BLOCKで判断してください。",
+  "initial": {
+    "information": [
+      {
+        "id": "pid",
+        "label": "送信プロセスのPID",
+        "value": 7320,
+        "data_type": "pid"
+      },
+      {
+        "id": "alert",
+        "label": "通信警告",
+        "value": "WIN-FS-02 / 2026-09-29 01:20。外部203.0.113.60:443へ約18GBを送信。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "pid",
+      "ip",
+      "port"
+    ]
+  },
+  "resources": [
+    {
+      "id": "connection",
+      "kind": "tools",
+      "name": "通信とプロセスの対応調査",
+      "accepted_information_types": [
+        "pid"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "pid"
+        }
+      ],
+      "input_hint": "PID",
+      "result": {
+        "content": "PID 7320はC:\\Program Files\\AsterBackup\\backup-agent.exe。配布台帳の署名・SHA-256・サービスアカウントと一致。接続先203.0.113.60:443はbackup.exampleの現在の解決先と一致し、ホスト名を含むTLS証明書検証に成功。実行ジョブは{{fact:job}}。",
+        "information": [
+          {
+            "id": "job",
+            "label": "ジョブID",
+            "value": "BACKUP-902",
+            "data_type": "text"
+          }
+        ],
+        "terms": [
+          "signature",
+          "sha256"
+        ]
+      }
+    },
+    {
+      "id": "joblog",
+      "kind": "tools",
+      "name": "バックアップジョブの監査記録",
+      "accepted_information_types": [
+        "text"
+      ],
+      "input_bindings": [
+        {
+          "source": "connection",
+          "id": "job"
+        }
+      ],
+      "input_hint": "ジョブID",
+      "result": {
+        "content": "BACKUP-902 / WIN-FS-02 / 01:00開始。送信先テナントaster-prod、保管領域daily-02。送信対象はD:\\TeamDocsの社内文書18GBのみ。顧客機密・認証情報の保管パスは対象外。組織管理のジョブ設定は承認版と一致し、受信側の監査記録でも同一ジョブ・テナント・領域への格納を確認。",
+        "terms": [
+          "path",
+          "confidential"
+        ]
+      }
+    },
+    {
+      "id": "approval",
+      "kind": "references",
+      "name": "バックアップ承認台帳",
+      "result": {
+        "content": "WIN-FS-02のAsterBackupは毎日01:00〜03:00にD:\\TeamDocsをbackup.example / テナントaster-prod / daily-02へ送信できる。社内文書は対象サービスへの保管を承認済み。想定量10〜25GB。顧客機密と認証情報は対象外。"
+      }
+    },
+    {
+      "id": "policy",
+      "kind": "references",
+      "name": "大量送信の判定規則",
+      "result": {
+        "content": "送信量だけでは遮断しない。プロセスの整合性、TLS接続先、実際の保存先テナント・領域、送信データ区分、時間帯と量が承認に一致すれば許可する。共有サービスのドメインと443番ポートが一致するだけでは許可しない。"
+      }
+    }
+  ],
+  "required_evidence": [
+    "connection",
+    "joblog",
+    "approval",
+    "policy"
+  ],
+  "ground_truth": "allow",
+  "explanation": "18GBの送信は承認されたバックアップの範囲内です。正規プロセスとTLS接続先に加え、受信側記録で組織のテナント・保管領域への格納を確認でき、データ区分・時間・量も一致するためAllowです。",
+  "learning_objectives": [
+    "共有クラウドのドメインだけでなくテナント・送信内容・業務承認まで照合する"
+  ]
+}
