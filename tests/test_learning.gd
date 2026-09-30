@@ -461,6 +461,9 @@ func _run() -> void:
 		"全件正解・不適切調査1件",
 	)
 	check(desk.summary_screen.stats.text.contains("不適切な調査 1件"), "調査手段の集計")
+	for index in desk.summary_screen.snapshot.records.size():
+		if desk.summary_screen.snapshot.records[index].id in ["FIX-PRIVATE-FILE", "FIX-PRIVATE-URL"]:
+			desk.summary_screen.review.meta_clicked.emit(index)
 	check(
 		desk.summary_screen.review.get_parsed_text().contains("不適切な利用")
 		and desk.summary_screen.review.get_parsed_text().contains("外部送信を見送り"),
