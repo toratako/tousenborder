@@ -2,7 +2,7 @@
 
 形式は [Problem v2](../data/schemas/problem.schema.json)，[Pack v3](../data/schemas/pack.schema.json)を参照．公開教材は `data/problems/` に収録されている．
 
-問題の追加方法は[教材の追加・変更](README.md#教材の追加・変更)を参照．
+問題の追加方法は[教材の追加・変更](/README.md#教材の追加・変更)を参照．
 
 ## 検証・索引
 
