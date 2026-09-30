@@ -3,6 +3,7 @@
   "id": "FILE-LINUX-ELF-AS-DOCUMENT",
   "category": "file",
   "platform": "linux",
+  "difficulty": "beginner",
   "title": "PDFとして届いたELF",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

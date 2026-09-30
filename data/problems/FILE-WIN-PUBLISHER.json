@@ -3,6 +3,7 @@
   "id": "FILE-WIN-PUBLISHER",
   "category": "file",
   "platform": "windows",
+  "difficulty": "beginner",
   "title": "承認された署名付き配布物",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

@@ -3,6 +3,7 @@
   "id": "EMAIL-AUTH-FAILURE",
   "category": "email",
   "platform": "common",
+  "difficulty": "beginner",
   "title": "自社ドメインを名乗る直接配送",
   "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

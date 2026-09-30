@@ -3,6 +3,7 @@
   "id": "FILE-WIN-KNOWN-HASH",
   "category": "file",
   "platform": "windows",
+  "difficulty": "beginner",
   "title": "ハッシュ照会で見つかる検出履歴",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

@@ -3,7 +3,7 @@
   "id": "PROC-LINUX-APPROVED-RESTORE",
   "category": "process",
   "platform": "linux",
-  "difficulty": "advanced",
+  "difficulty": "applied",
   "title": "保守時間内の承認済み復元プロセス",
   "request": "rootで稼働している復元プロセスを継続させますか。ALLOW / BLOCKで判断してください。",
   "initial": {

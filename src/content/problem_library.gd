@@ -107,6 +107,11 @@ func _reindex() -> void:
 			"id": item.traits.method,
 			"label": ContentLabels.METHODS[item.traits.method],
 		}
+	var available_difficulties := difficulties.duplicate()
+	difficulties.clear()
+	for id in ContentLabels.DIFFICULTIES:
+		if available_difficulties.has(id):
+			difficulties[id] = available_difficulties[id]
 
 
 static func tools_for(item: Dictionary) -> Array[Dictionary]:

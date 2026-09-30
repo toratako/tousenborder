@@ -3,6 +3,7 @@
   "id": "PROC-WIN-OFFICE-DOWNLOAD",
   "category": "process",
   "platform": "windows",
+  "difficulty": "beginner",
   "title": "Officeからの外部取得コマンド",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

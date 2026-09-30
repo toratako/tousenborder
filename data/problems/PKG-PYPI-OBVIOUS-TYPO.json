@@ -3,6 +3,7 @@
   "id": "PKG-PYPI-OBVIOUS-TYPO",
   "category": "package",
   "platform": "common",
+  "difficulty": "very_beginner",
   "title": "明白なタイポスクワッティング",
   "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

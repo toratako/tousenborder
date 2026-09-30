@@ -22,7 +22,7 @@ func sample(complete: bool, bias: String) -> Dictionary:
 			{
 				"category": "file" if i < 6 else "email",
 				"ground_truth": expected,
-				"level": "intermediate" if i < 6 else "beginner",
+				"level": "applied" if i < 6 else "beginner",
 				"verdict": expected if correct else ("block" if expected == "allow" else "allow"),
 				"correct": correct,
 				"missing_evidence": [] if complete or i < 6 else ["policy"],
@@ -96,7 +96,7 @@ func profile_sample(count: int, confirmed: int, correct: int) -> Dictionary:
 				"category": "email",
 				"ground_truth": "allow" if i % 2 == 0 else "block",
 				"correct": i < correct,
-				"level": "intermediate",
+				"level": "applied",
 				"investigation_required": true,
 				"missing_evidence": [] if i < confirmed else ["policy"],
 				"observations": [],
@@ -194,7 +194,7 @@ func check_profiles() -> void:
 	data = Analysis.analyze(source)
 	check(
 		data.unknown_level == 0 and data.scope.contains("初級") and not data.scope.contains("不明"),
-		"超初級・初級の3区分も既存の難易度として認識",
+		"保存済みの初級・中級・上級を認識",
 	)
 	source = profile_sample(10, 10, 10)
 	for record in source.records:
@@ -259,7 +259,52 @@ func check_profiles() -> void:
 	check(Analysis.analyze(profile_sample(10, 10, 10)).advice.review_indices.is_empty(), "課題がなければ復習問題を捏造しない")
 
 
+func check_current_difficulties() -> void:
+	var source := profile_sample(10, 10, 10)
+	for i in source.records.size():
+		source.records[i].level = "very_beginner" if i < 2 else "beginner"
+	var data := Analysis.analyze(source)
+	check(data.harder_correct == 0 and data.level.id == "practice", "超初級・初級は高難度実績に数えない")
+	for i in 3:
+		source.records[i + 7].level = "applied"
+	data = Analysis.analyze(source)
+	check(data.unknown_level == 0 and data.harder_correct == 3 and data.level.id == "pro", "応用の正解3問を高難度実績に数える")
+	check(data.scope.begins_with("超初級 2問・初級 5問・応用 3問"), "新区分の件数と表示順")
+	check(data.level.reason.contains("応用で3問正解") and not data.level.reason.contains("中級"), "現行問題の成績は応用と表示")
+	source.records[9].correct = false
+	source.records[9].ground_truth = "allow"
+	data = Analysis.analyze(source)
+	check(data.harder_correct == 2 and data.level.id == "practice", "応用の誤答を高難度実績に数えない")
+	check(data.level.reason.contains("応用での正解が3問未満"), "応用の正解不足を説明")
+
+
+func check_saved_difficulties(snapshot: Dictionary) -> void:
+	var labels := {
+		"very_beginner": "超初級", "beginner_reference": "初級", "beginner": "初級",
+		"beginner_external": "初級", "applied": "応用", "intermediate": "中級", "advanced": "上級",
+	}
+	for version in [2, 3]:
+		for level in labels:
+			var legacy := snapshot.duplicate(true)
+			legacy.schema_version = version
+			for record in legacy.records:
+				record.level = level
+			var store := Fixtures.history_store()
+			check(store.save_completed(legacy), "旧区分を含む履歴の保存: " + store.error)
+			var loaded := store.load_entry(legacy.session_id)
+			# JSON読込では整数がfloat、型付き配列が通常配列になる。
+			var expected: Dictionary = JSON.parse_string(JSON.stringify(legacy))
+			check(ContentSchema._equal(loaded, expected), "履歴の区分を変えずに読込: " + level)
+			var data := Analysis.analyze(loaded)
+			check(data.unknown_level == 0 and data.scope.contains(labels[level]), "旧区分の集計・表示: " + level)
+			check(
+				data.harder_correct == (data.correct if level in ["applied", "intermediate", "advanced"] else 0),
+				"旧区分の高難度判定を維持: " + level,
+			)
+
+
 func run() -> void:
+	check_current_difficulties()
 	check_profiles()
 	await check_category_layout()
 	for complete in [true, false]:
@@ -519,6 +564,7 @@ func run() -> void:
 	check(desk.summary_screen.category_links.size() > 0, "出題分野だけ復習リンクを表示")
 	check(HistoryStore.validate(desk.completed_snapshot).is_empty(), "追加記録を含む履歴がスキーマに適合")
 	var snapshot: Dictionary = desk.completed_snapshot.duplicate(true)
+	check_saved_difficulties(snapshot)
 	check(Analysis.analyze(snapshot).unknown_level == 0, "既存教材の難易度と整合")
 	var invalid := snapshot.duplicate(true)
 	invalid.records[0].investigation_required = "true"

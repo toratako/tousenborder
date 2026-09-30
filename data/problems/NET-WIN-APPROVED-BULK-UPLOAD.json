@@ -3,7 +3,7 @@
   "id": "NET-WIN-APPROVED-BULK-UPLOAD",
   "category": "network",
   "platform": "windows",
-  "difficulty": "advanced",
+  "difficulty": "applied",
   "title": "承認済みテナントへの大量バックアップ通信",
   "request": "大量送信を検知したバックアップ通信を継続させますか。ALLOW / BLOCKで判断してください。",
   "initial": {

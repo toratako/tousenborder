@@ -3,6 +3,7 @@
   "id": "PKG-PYPI-REGISTRY-METADATA",
   "category": "package",
   "platform": "common",
+  "difficulty": "beginner",
   "title": "PyPIの正規配布情報",
   "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

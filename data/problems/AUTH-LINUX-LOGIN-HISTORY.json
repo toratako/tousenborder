@@ -3,6 +3,7 @@
   "id": "AUTH-LINUX-LOGIN-HISTORY",
   "category": "account",
   "platform": "linux",
+  "difficulty": "beginner",
   "title": "踏み台からの通常のSSHログイン",
   "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "required_evidence": [

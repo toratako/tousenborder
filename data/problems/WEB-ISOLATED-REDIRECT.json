@@ -3,6 +3,7 @@
   "id": "WEB-ISOLATED-REDIRECT",
   "category": "web",
   "platform": "common",
+  "difficulty": "beginner",
   "title": "隔離解析で判明するログイン先",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

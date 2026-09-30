@@ -3,7 +3,7 @@
   "id": "AUTH-WIN-VPN-LOCATION-CHANGE",
   "category": "account",
   "platform": "windows",
-  "difficulty": "advanced",
+  "difficulty": "applied",
   "title": "VPN出口の変更で発生した遠隔地ログイン警告",
   "request": "遠隔地からのログイン警告が出たセッションを継続させますか。ALLOW / BLOCKで判断してください。",
   "initial": {

@@ -3,6 +3,7 @@
   "id": "FILE-LINUX-ORDINARY-ELF",
   "category": "file",
   "platform": "linux",
+  "difficulty": "beginner",
   "title": "普通のELFに含まれる外部URL",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

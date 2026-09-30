@@ -3,6 +3,7 @@
   "id": "PKG-NPM-LOCKED-DEPENDENCY",
   "category": "package",
   "platform": "common",
+  "difficulty": "beginner",
   "title": "ロックファイルと一致する依存パッケージ",
   "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

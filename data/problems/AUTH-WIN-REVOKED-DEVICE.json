@@ -3,6 +3,7 @@
   "id": "AUTH-WIN-REVOKED-DEVICE",
   "category": "account",
   "platform": "windows",
+  "difficulty": "beginner",
   "title": "登録解除済みの端末",
   "request": "保留中の認証要求について、セッションを確立してよいか判断してください。ALLOW / BLOCKで回答してください。",
   "required_evidence": [

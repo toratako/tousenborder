@@ -3,6 +3,7 @@
   "id": "WEB-DOMAIN-REPUTATION",
   "category": "web",
   "platform": "common",
+  "difficulty": "beginner",
   "title": "ドメインの既知フィッシング報告",
   "request": "保留中のURLを普段使うブラウザーで開くことを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

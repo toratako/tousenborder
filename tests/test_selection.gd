@@ -63,18 +63,21 @@ func _run() -> void:
 	root.add_child(desk)
 	await process_frame
 	assert(desk.library.errors.is_empty(), str(desk.library.errors))
-	assert(
-		desk.start_screen.difficulty_select.item_count == desk.library.difficulties.size() + 1
-		and desk.library.difficulties.has("unrated")
-	)
-	select_value(desk.start_screen.difficulty_select, "advanced")
-	var advanced_cases: Array = desk.start_screen.selected_cases()
-	assert(advanced_cases.size() == 5)
-	assert(
-		advanced_cases.all(
-			func(item): return item.difficulty == "advanced" and item.ground_truth == "allow",
-		)
-	)
+	assert(desk.library.difficulties.keys() == ["very_beginner", "beginner", "applied"])
+	var difficulty_option: OptionButton = desk.start_screen.difficulty_select
+	assert(difficulty_option.item_count == 4)
+	for i in 4:
+		assert(difficulty_option.get_item_text(i) == ["すべて", "超初級", "初級", "応用"][i])
+	for pair in [["very_beginner", 8], ["beginner", 51], ["applied", 16]]:
+		select_value(difficulty_option, pair[0])
+		var selected: Array = desk.start_screen.selected_cases()
+		assert(selected.size() == pair[1])
+		assert(selected.all(func(item): return item.difficulty == pair[0]))
+		desk.start_screen.start_button.pressed.emit()
+		assert(desk.shift.cases.size() == pair[1])
+		assert(desk.shift.decide(desk.shift.current().ground_truth))
+		assert(desk.shift.records[0].level == pair[0])
+		desk._show_start_screen()
 	select_value(desk.start_screen.difficulty_select, "")
 	var all_ids := { }
 	for method in desk.library.methods:
@@ -110,6 +113,18 @@ func _run() -> void:
 	)
 	desk.start_screen.start_button.pressed.emit()
 	assert(desk.shift.current().id == pack.problems[0])
+	desk._show_start_screen()
+	var unrated := Fixtures.raw("FIX-VISIBLE-FILE")
+	unrated.erase("difficulty")
+	assert(desk.library.add_source(Fixtures.source([unrated], "unrated-selection")))
+	desk.start_screen.refresh_options()
+	assert(desk.library.difficulties.keys() == ["very_beginner", "beginner", "applied", "unrated"])
+	assert(difficulty_option.get_item_text(4) == "未評価")
+	for option in [desk.start_screen.pack_select, desk.start_screen.category_select, desk.start_screen.platform_select]:
+		select_value(option, "")
+	select_value(difficulty_option, "unrated")
+	assert(desk.start_screen.selected_cases().size() == 1)
+	assert(desk.start_screen.selected_cases()[0].id == unrated.id)
 	desk.queue_free()
 	await process_frame
 	print("Selection tests passed")

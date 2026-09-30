@@ -3,6 +3,7 @@
   "id": "EMAIL-REPLY-ADDRESS",
   "category": "email",
   "platform": "common",
+  "difficulty": "beginner",
   "title": "返信先だけが別の組織",
   "request": "保留中のメールを業務メールとして受け入れますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

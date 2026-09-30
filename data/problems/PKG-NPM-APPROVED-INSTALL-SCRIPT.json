@@ -3,7 +3,7 @@
   "id": "PKG-NPM-APPROVED-INSTALL-SCRIPT",
   "category": "package",
   "platform": "common",
-  "difficulty": "advanced",
+  "difficulty": "applied",
   "title": "承認範囲内で動くインストールスクリプト",
   "request": "この依存パッケージを、申請された隔離ビルド環境へ導入してよいですか。ALLOW / BLOCKで判断してください。",
   "initial": {

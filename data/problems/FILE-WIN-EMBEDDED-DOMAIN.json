@@ -3,6 +3,7 @@
   "id": "FILE-WIN-EMBEDDED-DOMAIN",
   "category": "file",
   "platform": "windows",
+  "difficulty": "beginner",
   "title": "埋め込み文字列とドメインの検出履歴",
   "request": "保留中のファイルを開く・実行することを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

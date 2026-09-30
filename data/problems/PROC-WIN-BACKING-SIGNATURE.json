@@ -3,6 +3,7 @@
   "id": "PROC-WIN-BACKING-SIGNATURE",
   "category": "process",
   "platform": "windows",
+  "difficulty": "beginner",
   "title": "実行中イメージの署名照合",
   "request": "稼働中のプロセスを継続させますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [

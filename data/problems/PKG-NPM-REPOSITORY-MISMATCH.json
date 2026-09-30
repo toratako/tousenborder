@@ -3,6 +3,7 @@
   "id": "PKG-NPM-REPOSITORY-MISMATCH",
   "category": "package",
   "platform": "common",
+  "difficulty": "beginner",
   "title": "リポジトリの相違",
   "request": "解決済みのパッケージをインストールすることを許可しますか。 ALLOW / BLOCKで判断してください。",
   "required_evidence": [
