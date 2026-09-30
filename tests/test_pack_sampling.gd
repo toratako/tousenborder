@@ -20,9 +20,22 @@ func source_with_pack(pack: Dictionary) -> ContentSource:
 func _initialize() -> void:
 	var library := ProblemLibrary.new()
 	check(library.load_builtin(), str(library.errors))
-	var key := "builtin/pack/learning"
+	for published_pack in library.packs:
+		var candidates := library.pack_cases(published_pack.key)
+		check(candidates.map(func(item): return item.id) == published_pack.problems, "Packの登録内容と一致")
+		var drawn := library.draw_pack_cases(published_pack.key)
+		var expected_count: int = published_pack.get("sampling", { "count": candidates.size() }).count
+		check(drawn.size() == expected_count, "Packで指定された出題数")
+		check(drawn.all(func(item): return item.id in published_pack.problems), "候補外の問題を出題しない")
+		if published_pack.has("sampling"):
+			var unique := { }
+			for item in drawn:
+				unique[item.id] = true
+			check(unique.size() == drawn.size(), "抽選した問題のIDは重複しない")
+	library = ProblemLibrary.new()
+	check(library.add_source(Fixtures.sampling_source()), str(library.errors))
+	var key := "sampling/pack/random"
 	var before := library.pack_cases(key)
-	check(before.size() == 75 and library.select_cases().size() == 75, "候補と自由演習は75問を維持")
 	var orders := { }
 	var combinations := { }
 	var difficulty_distributions := { }
@@ -31,7 +44,7 @@ func _initialize() -> void:
 		seed(attempt)
 		var selected := library.draw_pack_cases(key)
 		check(selected.size() == 20, "必ず20問")
-		var counts := { "very_beginner": 0, "beginner": 0, "applied": 0 }
+		var counts := { }
 		var ids := { }
 		var order: Array[String] = []
 		var previous := ""
@@ -40,7 +53,7 @@ func _initialize() -> void:
 			check(not ids.has(item.id), "同じ問題は重複しない")
 			ids[item.id] = true
 			order.append(item.id)
-			counts[item.difficulty] += 1
+			counts[item.difficulty] = counts.get(item.difficulty, 0) + 1
 			if not previous.is_empty() and previous != item.difficulty:
 				transitions += 1
 			previous = item.difficulty

@@ -26,7 +26,10 @@ def load_report(source: Path, godot: str | None = None) -> dict:
         "--report",
         str(source.resolve()),
     ]
-    result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+    timeout = int(os.environ.get("TEST_TIMEOUT_SECONDS", "300"))
+    if timeout <= 0:
+        raise ValueError("TEST_TIMEOUT_SECONDS must be a positive integer")
+    result = subprocess.run(command, capture_output=True, text=True, timeout=timeout)
     if result.returncode or "ERROR:" in result.stderr:
         raise ValueError(
             result.stderr.strip()
