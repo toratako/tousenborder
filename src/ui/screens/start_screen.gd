@@ -66,7 +66,7 @@ func _build() -> void:
 	method_select = selection_option(Vector2(362, 556), [{ "id": "", "label": "すべて" }], 250)
 	platform_select.tooltip_text = "OSを選ぶと、そのOSと環境共通の問題を出題します。"
 	var briefing := Chrome.panel(self, Rect2(711, 189, 439, 280), Color("101e32"), Color("34556f"))
-	Chrome.label(briefing, Rect2(26, 20, 387, 23), "勤務前の手引き", Color("b0c8da"), 13)
+	Chrome.label(briefing, Rect2(26, 20, 387, 23), "審査前の手引き", Color("b0c8da"), 13)
 	Chrome.label(briefing, Rect2(26, 64, 387, 40), "調査 → 判定 → 監査", INK, 24)
 	Chrome.label(
 		briefing,
@@ -75,14 +75,14 @@ func _build() -> void:
 		INK,
 		16,
 	)
-	start_button = Chrome.button(self, Rect2(98, 622, 514, 52), "勤務を開始  >", PAPER)
+	start_button = Chrome.button(self, Rect2(98, 622, 514, 52), "審査を開始  >", PAPER)
 	start_button.add_theme_font_size_override("font_size", 22)
 	start_button.pressed.connect(start_requested.emit)
 	tool_guide_button = Chrome.button(self, Rect2(711, 578, 439, 40), "ツール一覧  >", PAPER)
 	tool_guide_button.pressed.connect(guide_requested.emit)
 	license_button = Chrome.button(self, Rect2(711, 630, 439, 40), "ライセンス・著作権表記", MUTED)
 	license_button.pressed.connect(licenses_requested.emit)
-	history_button = Chrome.button(self, Rect2(711, 526, 439, 40), "勤務履歴  >", PAPER)
+	history_button = Chrome.button(self, Rect2(711, 526, 439, 40), "審査履歴  >", PAPER)
 	history_button.pressed.connect(history_requested.emit)
 
 

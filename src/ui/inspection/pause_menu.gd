@@ -23,7 +23,7 @@ func setup() -> void:
 	menu_title.add_theme_font_override("font", TITLE_FONT)
 	resume_button = Chrome.button(sheet, Rect2(36, 151, 548, 52), "ゲームに戻る  [ESC]", PAPER)
 	resume_button.pressed.connect(resume_requested.emit)
-	restart_button = Chrome.button(sheet, Rect2(36, 225, 548, 52), "勤務を最初からやり直す", PAPER)
+	restart_button = Chrome.button(sheet, Rect2(36, 225, 548, 52), "審査を最初からやり直す", PAPER)
 	restart_button.pressed.connect(restart_requested.emit)
 	home_button = Chrome.button(sheet, Rect2(36, 299, 548, 52), "タイトル画面に戻る", MUTED)
 	home_button.pressed.connect(home_requested.emit)

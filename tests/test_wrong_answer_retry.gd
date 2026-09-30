@@ -39,7 +39,7 @@ func run() -> void:
 		)
 		desk.audit_overlay.next_button.pressed.emit()
 	var saved: Dictionary = desk.completed_snapshot.duplicate(true)
-	check(HistoryStore.validate(saved).is_empty(), "通常勤務の保存形式")
+	check(HistoryStore.validate(saved).is_empty(), "通常審査の保存形式")
 	check(desk.summary_screen.restart.text == "同じ問題に再挑戦", "右下の再挑戦ボタンは出題内容に沿った表示")
 	check(
 		desk.summary_screen.retry_wrong.text.contains("2問")
@@ -84,7 +84,7 @@ func run() -> void:
 	check(
 		desk.workspace.playing and not desk.summary_from_history
 		and not desk.history_overlay.visible and not is_instance_valid(desk.summary_screen),
-		"履歴から勤務画面へ遷移",
+		"履歴から審査画面へ遷移",
 	)
 	check(desk.shift.cases.size() == 2 and desk.shift.current().title == "更新された問題", "現在の教材で誤答だけ出題")
 	check(
@@ -94,7 +94,7 @@ func run() -> void:
 	)
 	check(
 		desk.retry_source_id == saved.session_id and desk.shift.session_id != saved.session_id,
-		"別勤務IDと元履歴ID",
+		"別審査IDと元履歴ID",
 	)
 	check(
 		desk.workspace.displayed_case == items[0].id
@@ -147,12 +147,12 @@ func run() -> void:
 	check(
 		desk.shift.cases.size() == 2 and desk.completed_snapshot.is_empty()
 		and desk.retry_source_id == retried.session_id,
-		"結果から同じ対象を直前の勤務の再挑戦として開始",
+		"結果から同じ対象を直前の審査の再挑戦として開始",
 	)
 	desk._show_start_screen()
 	check(desk.retry_cases.is_empty() and desk.retry_source_id.is_empty(), "タイトルで再挑戦状態を解除")
 	desk._start_shift()
-	check(desk.shift.cases.size() == desk.start_screen.selected_cases().size(), "通常の勤務はタイトルの条件で出題")
+	check(desk.shift.cases.size() == desk.start_screen.selected_cases().size(), "通常の審査はタイトルの条件で出題")
 	desk._show_start_screen()
 	desk.start_screen.history_button.pressed.emit()
 	check(

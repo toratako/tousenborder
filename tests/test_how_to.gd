@@ -2,7 +2,7 @@ extends SceneTree
 const Fixtures = preload("res://tests/fixtures.gd")
 
 
-## ギャラリーの入力隔離・ページ境界・勤務状態の保持を検証する。
+## ギャラリーの入力隔離・ページ境界・審査状態の保持を検証する。
 func _initialize() -> void:
 	_run.call_deferred()
 

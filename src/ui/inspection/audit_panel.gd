@@ -52,7 +52,7 @@ func present(
 		body.text += "\n\n監査所見\n" + InspectionShift.review_text(record)
 	next_button.show()
 	body.scroll_to_line(0)
-	next_button.text = "勤務を終了  >" if last_case else "次の案件へ  >"
+	next_button.text = "審査を終了  >" if last_case else "次の案件へ  >"
 	self.show()
 	next_button.grab_focus()
 

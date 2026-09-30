@@ -25,7 +25,7 @@ class Slide:
             "1440x750",
             "xc:#070e1b",
             "-font",
-            str(FONT),
+            FONT.as_posix(),
             "-gravity",
             "NorthWest",
         ]
@@ -191,7 +191,7 @@ def main():
     slide.text(792, 239, "判定の理由を読む", 30, CYAN)
     slide.text(792, 298, "自分が見た情報と、\n監査所見を比べてみましょう。", 28)
     slide.text(792, 451, "確認したら次へ", 30, GREEN)
-    slide.text(792, 510, "最後の案件では、勤務結果へ進みます。", 25)
+    slide.text(792, 510, "最後の案件では、審査結果へ進みます。", 25)
     slide.text(792, 641, "操作を忘れたら、右上の「遊び方」へ。", 24, MUTED)
     slide.save("06-audit.png")
     print(f"Generated 6 slides in {OUTPUT.relative_to(ROOT)}")

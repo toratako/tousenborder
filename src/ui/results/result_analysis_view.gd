@@ -93,7 +93,7 @@ static func category_row(parent: Node, category: Dictionary) -> Button:
 			roundi(Analysis.ratio(category.correct, category.answered) * 100),
 		]
 	else:
-		button.tooltip_text = "%s：この勤務では出題されていません。" % category.label
+		button.tooltip_text = "%s：この審査では出題されていません。" % category.label
 	return button
 
 

@@ -181,16 +181,16 @@ func _run() -> void:
 		"不適切な送信でも表示された結果の用語は解禁",
 	)
 	check(desk.shift.unsafe_investigations() == 1, "用語の閲覧と不適切な調査の集計は独立")
-	check(store.list_entries().is_empty(), "途中の勤務は保存しない")
+	check(store.list_entries().is_empty(), "途中の審査は保存しない")
 	check(desk.shift.decide(desk.shift.current().ground_truth), "調査後に判定")
 	desk.audit_overlay.next_button.pressed.emit()
 	await process_frame
 	check(
 		not desk.summary_screen.retry.visible and desk.summary_screen.save_notice.text.is_empty(),
-		"勤務終了時の保存に成功: " + store.error,
+		"審査終了時の保存に成功: " + store.error,
 	)
 	var entries := store.list_entries()
-	check(entries.size() == 1, "一勤務一件の履歴")
+	check(entries.size() == 1, "一審査一件の履歴")
 	if entries.is_empty():
 		desk.queue_free()
 		quit(1)
@@ -218,7 +218,7 @@ func _run() -> void:
 	desk.library.cases.clear()
 	desk.glossary_overlay.terms.clear()
 	desk.start_screen.history_button.pressed.emit()
-	check(desk.history_overlay.visible, "タイトルから勤務履歴へ")
+	check(desk.history_overlay.visible, "タイトルから審査履歴へ")
 	desk._open_history_entry(saved.session_id)
 	check(
 		desk.summary_from_history
@@ -234,7 +234,7 @@ func _run() -> void:
 		not desk.summary_screen.review.get_parsed_text().contains("初期情報・調査記録を"),
 		"履歴に追加の展開リンクを表示しない",
 	)
-	check(desk.shift.records == old_records, "履歴閲覧で現在の勤務記録を変更しない")
+	check(desk.shift.records == old_records, "履歴閲覧で現在の審査記録を変更しない")
 	desk.summary_screen.home.pressed.emit()
 	check(desk.history_overlay.visible, "詳細から履歴一覧へ戻る")
 	desk._close_history()
@@ -251,14 +251,14 @@ func _run() -> void:
 		reopened.list_entries().size() == 1 and reopened.warnings.size() == 2,
 		"壊れた履歴・未知の版を除外し一時ファイルを無視",
 	)
-	check(not reopened.save_completed({ }), "不完全な勤務データを保存しない")
+	check(not reopened.save_completed({ }), "不完全な審査データを保存しない")
 	check(reopened.load_entry("../escape").is_empty(), "履歴IDのパス指定を拒否")
 	var newer := saved.duplicate(true)
 	newer.session_id = "c".repeat(32)
 	newer.completed_at += 10
 	check(
 		reopened.save_completed(newer) and reopened.list_entries()[0].session_id == newer.session_id,
-		"新しい勤務が先に並ぶ",
+		"新しい審査が先に並ぶ",
 	)
 	# 上限を超えた既存履歴は、次の保存成功時に古い順で整理する。
 	var limited := Fixtures.history_store()
@@ -315,7 +315,7 @@ func _run() -> void:
 	desk.history_store = reopened
 	root.add_child(desk)
 	await process_frame
-	check(desk.start_screen.visible and desk.start_screen.start_button.disabled, "教材エラー時は新規勤務だけ無効")
+	check(desk.start_screen.visible and desk.start_screen.start_button.disabled, "教材エラー時は新規審査だけ無効")
 	check(desk.start_screen.tool_guide_button.disabled, "教材エラー時はツール一覧を無効化")
 	desk.start_screen.license_button.pressed.emit()
 	desk.license_overlay.close_button.pressed.emit()
@@ -346,10 +346,10 @@ func _run() -> void:
 	check(
 		not desk.summary_screen.retry.visible
 		and desk.history_store.load_entry(retry_id).session_id == retry_id,
-		"同じ勤務IDで保存を再試行",
+		"同じ審査IDで保存を再試行",
 	)
 	desk.summary_screen.restart.pressed.emit()
-	check(desk.glossary_overlay.search.text.is_empty(), "勤務の再開始で検索語をリセット")
+	check(desk.glossary_overlay.search.text.is_empty(), "審査の再開始で検索語をリセット")
 	check(
 		desk.glossary_overlay.viewed.size() > 0 and desk.glossary_overlay.expanded.is_empty()
 		and desk.completed_snapshot.is_empty(),

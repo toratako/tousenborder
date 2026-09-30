@@ -52,7 +52,7 @@ func setup(data: Dictionary, history: bool, retry_count: int, retry_reason: Stri
 	if snapshot.has("retry_of"):
 		title.text = "再挑戦の結果"
 	if from_history:
-		title.text = ("勤務履歴 · 再挑戦 · " if snapshot.has("retry_of") else "勤務履歴 · ") + HistoryStore.date_label(
+		title.text = ("審査履歴 · 再挑戦 · " if snapshot.has("retry_of") else "審査履歴 · ") + HistoryStore.date_label(
 			snapshot.completed_at
 		)
 		title.add_theme_font_size_override("font_size", 23)
@@ -62,7 +62,7 @@ func setup(data: Dictionary, history: bool, retry_count: int, retry_reason: Stri
 func _build() -> void:
 	ScreenLayout.prepare(self, Color(0.02, 0.04, 0.09, 0.82))
 	sheet = Chrome.panel(self, Rect2(140, 40, 1000, 720), Color("101e32"), Color("34556f"))
-	title = Chrome.label(sheet, Rect2(30, 18, 940, 45), "勤務結果", INK, 30)
+	title = Chrome.label(sheet, Rect2(30, 18, 940, 45), "審査結果", INK, 30)
 	var totals: Dictionary = snapshot.stats
 	stats = Chrome.label(
 		sheet,
@@ -113,7 +113,7 @@ func _build_actions(retry_count: int, retry_reason: String) -> void:
 	retry_wrong.tooltip_text = retry_reason
 	retry_wrong.pressed.connect(retry_wrong_requested.emit)
 	if from_history:
-		home.text = "勤務履歴へ戻る"
+		home.text = "審査履歴へ戻る"
 		home.pressed.connect(back_requested.emit)
 		return
 	home.pressed.connect(back_requested.emit)

@@ -12,7 +12,7 @@ var notice: Label
 
 
 func setup() -> void:
-	var parts := ScreenLayout.list_content(self, "勤務履歴")
+	var parts := ScreenLayout.list_content(self, "審査履歴")
 	entries_list = parts.list
 	close_button = parts.close
 	notice = parts.notice
@@ -28,7 +28,7 @@ func show_entries(entries: Array[Dictionary], warnings: PackedStringArray) -> vo
 	notice.text = "一部の履歴を読み込めませんでした。" if not warnings.is_empty() else ""
 	notice.tooltip_text = "\n".join(warnings)
 	if entries.is_empty():
-		ScreenLayout.list_label(entries_list, "保存された勤務履歴はありません。")
+		ScreenLayout.list_label(entries_list, "保存された審査履歴はありません。")
 	for entry in entries:
 		var caption := "%s  ·  %d / %d 正解\n%s / %s / %s" % [
 			HistoryStore.date_label(entry.completed_at),
