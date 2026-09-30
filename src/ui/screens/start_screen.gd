@@ -42,8 +42,8 @@ func _build() -> void:
 		Chrome.panel(self, Rect2(origin, Vector2(72, 2)), GREEN)
 	Chrome.label(self, Rect2(94, 92, 1092, 25), "セキュリティ審査ゲーム", MUTED, 16)
 	Chrome.panel(self, Rect2(94, 135, 1092, 2), Color("29495f"))
-	var title_top := Chrome.label(self, Rect2(98, 162, 470, 92), "とーせん", PAPER, 66)
-	var title_bottom := Chrome.label(self, Rect2(188, 235, 456, 92), "ぼ～だ～", GREEN, 66)
+	var title_top := Chrome.label(self, Rect2(178, 162, 470, 92), "とーせん", PAPER, 66)
+	var title_bottom := Chrome.label(self, Rect2(268, 235, 456, 92), "ぼ～だ～", GREEN, 66)
 	for title_label in [title_top, title_bottom]:
 		title_label.add_theme_font_override("font", TITLE_FONT)
 		title_label.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -53,7 +53,8 @@ func _build() -> void:
 		title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	title_top.rotation = deg_to_rad(-3.0)
 	title_bottom.rotation = deg_to_rad(2.0)
-	Chrome.label(self, Rect2(98, 338, 530, 38), "そのアクセスを、許可しますか。", MUTED, 22)
+	var tagline := Chrome.label(self, Rect2(98, 338, 514, 38), "そのアクセスを、許可しますか。", MUTED, 22)
+	tagline.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	Chrome.label(self, Rect2(98, 373, 514, 24), "出題", PAPER, 15)
 	pack_select = selection_option(Vector2(98, 400), [{ "id": "", "label": "自由演習" }], 514)
 	Chrome.label(self, Rect2(98, 447, 250, 24), "問題カテゴリ", PAPER, 15)
@@ -66,12 +67,11 @@ func _build() -> void:
 	method_select = selection_option(Vector2(362, 556), [{ "id": "", "label": "すべて" }], 250)
 	platform_select.tooltip_text = "OSを選ぶと、そのOSと環境共通の問題を出題します。"
 	var briefing := Chrome.panel(self, Rect2(711, 189, 439, 280), Color("101e32"), Color("34556f"))
-	Chrome.label(briefing, Rect2(26, 20, 387, 23), "審査前の手引き", Color("b0c8da"), 13)
-	Chrome.label(briefing, Rect2(26, 64, 387, 40), "調査 → 判定 → 監査", INK, 24)
+	Chrome.label(briefing, Rect2(26, 32, 387, 40), "調査 → 判定 → 監査", INK, 24)
 	Chrome.label(
 		briefing,
-		Rect2(26, 115, 387, 155),
-		"01  情報を選択・ドラッグしてToolへ渡す\n\n02  調査結果をReferenceと照合\n       必要なら結果を次のToolへ渡す\n\n03  ALLOW / BLOCKを対象へ押印",
+		Rect2(26, 90, 387, 155),
+		"01  情報を選択・ドラッグしてツールへ渡す\n\n02  調査結果をReferenceと照合\n       必要なら結果を次のツールへ渡す\n\n03  ALLOW / BLOCKを対象へ押印",
 		INK,
 		16,
 	)
@@ -103,6 +103,7 @@ func selection_option(origin: Vector2, entries: Array, width: float = 245) -> Op
 
 func _build_import() -> void:
 	import_button = Chrome.button(self, Rect2(711, 474, 439, 40), "問題ZIP / JSONを追加", PAPER)
+	import_button.hide()
 	content_notice = Chrome.label(self, Rect2(98, 687, 1052, 28), "", MUTED, 14)
 	content_dialog = FileDialog.new()
 	content_dialog.title = "教材を追加"
@@ -117,10 +118,10 @@ func _build_import() -> void:
 	)
 
 
-func selected_cases() -> Array[Dictionary]:
+func selected_cases(randomize_order := true) -> Array[Dictionary]:
 	var pack: String = pack_select.get_item_metadata(pack_select.selected)
 	if not pack.is_empty():
-		return library.pack_cases(pack)
+		return library.draw_pack_cases(pack, randomize_order)
 	return library.select_cases(
 		difficulty_select.get_item_metadata(difficulty_select.selected),
 		category_select.get_item_metadata(category_select.selected),
@@ -130,7 +131,7 @@ func selected_cases() -> Array[Dictionary]:
 
 
 func refresh_selection(_index: int = 0) -> void:
-	var count := selected_cases().size()
+	var count := selected_cases(false).size()
 	start_button.tooltip_text = "" if count > 0 else "該当する問題がありません。条件を変更してください。"
 	start_button.disabled = count == 0
 	for option in [difficulty_select, category_select, platform_select, method_select]:

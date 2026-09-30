@@ -54,6 +54,10 @@
     "selection": {
       "type": "object",
       "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["random"]
+        },
         "level": {
           "type": "object",
           "properties": {

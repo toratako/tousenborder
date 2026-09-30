@@ -2,6 +2,7 @@ extends Panel
 
 const Chrome = preload("res://src/ui/shared/game_theme.gd")
 const ScreenLayout = preload("res://src/ui/shared/screen_layout.gd")
+const Verdict = preload("res://src/ui/shared/verdict_presentation.gd")
 const PAPER = Chrome.TEXT
 const INK = Chrome.TEXT
 
@@ -52,21 +53,16 @@ func present(
 	actions: Array[Dictionary],
 	last_case: bool,
 ) -> void:
-	var unsafe: bool = record.observations.any(
-		func(observation): return observation.get("ok", false) and not observation.get("skipped", false) and not observation.get("correct_usage", true)
-	)
+	var unsafe := Verdict.unsafe_investigation(record)
 	heading.text = "✓ 正解" if record.correct else "✕ 誤判定"
 	result_banner.add_theme_stylebox_override("panel", Chrome.box(
 		Color("10372f") if record.correct else Color("3c202b"),
 		Chrome.GREEN if record.correct else Chrome.RED
 	))
-	var chosen := _verdict_label(record.verdict, actions)
-	if not feedback.get("show_expected", true):
-		verdict_summary.text = "あなたは %s を選びました。" % chosen
-	elif record.correct:
-		verdict_summary.text = "%sで正しく判断できました。" % chosen
-	else:
-		verdict_summary.text = ("この対象は許可できました。" if record.ground_truth == "allow" else "この対象は遮断する必要がありました。") + "\nあなたは %s を選びました。" % chosen
+	var labels := { }
+	for action in actions:
+		labels[action.id] = action.label
+	verdict_summary.text = Verdict.summary(record, feedback, labels)
 	investigation_notice.visible = unsafe and feedback.get("show_reason", true)
 	body.position.y = 354 if investigation_notice.visible else 326
 	body.size.y = 574 - body.position.y
@@ -97,13 +93,6 @@ func present(
 	next_button.text = "審査を終了  >" if last_case else "次の案件へ  >"
 	self.show()
 	next_button.grab_focus()
-
-
-func _verdict_label(id: String, actions: Array[Dictionary]) -> String:
-	for action in actions:
-		if action.id == id:
-			return action.label + (" ／ 許可" if id == "allow" else " ／ 遮断" if id == "block" else "")
-	return id
 
 
 func _section(text: String, color: Color) -> void:

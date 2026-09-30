@@ -42,6 +42,7 @@ var tool_scroll: ScrollContainer
 var tool_rack: VBoxContainer
 var active_tools: Array[Dictionary] = []
 var reference_cards: Dictionary = { }
+var tool_result_cards: Dictionary = { }
 var tools_fit_pending := false
 var stamp_rack: HBoxContainer
 var active_card: DraggableCard
@@ -144,6 +145,7 @@ func clear_case() -> void:
 		card.queue_free()
 	cards.clear()
 	reference_cards.clear()
+	tool_result_cards.clear()
 	tool_message.text = ""
 	target_card = null
 	displayed_case = ""
@@ -216,12 +218,26 @@ func _inspect(tool: Dictionary, input: Dictionary = { }) -> void:
 	):
 		tool_message.text = "「" + tool.label + "」の入力：" + Information.input_hint(tool) + "。情報を選択するか、ボタンへドラッグ。"
 		return
+	var result_key := _tool_result_key(tool.id, actual_input)
+	if (
+		tool.kind == "tools" and tool.get("case_id") == displayed_case
+		and tool_result_cards.has(result_key)
+	):
+		var card: DraggableCard = tool_result_cards[result_key]
+		card.show()
+		card.bring_to_front()
+		refresh_controls(shift.current())
+		return
 	if tool.kind == "external_references":
 		external_requested.emit(tool, actual_input, desk_generation)
 		return
 	var result := shift.inspect(tool, actual_input)
 	if not result.ok:
 		tool_message.text = result.output
+
+
+func _tool_result_key(tool_id: String, input: Dictionary) -> String:
+	return JSON.stringify([tool_id, input], "", true)
 
 
 func _refresh() -> void:
@@ -349,6 +365,14 @@ func _display_observations(item: Dictionary) -> void:
 			)
 		):
 			reference_cards[entry.tool_id] = card
+		if (
+			entry.ok and not entry.get("skipped", false)
+			and active_tools.any(
+				func(tool):
+					return tool.id == entry.tool_id and tool.kind == "tools",
+			)
+		):
+			tool_result_cards[_tool_result_key(entry.tool_id, entry.get("input", { }))] = card
 		displayed_observations += 1
 
 

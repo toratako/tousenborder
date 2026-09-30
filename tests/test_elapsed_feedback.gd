@@ -71,6 +71,8 @@ func _run() -> void:
 			desk.audit_overlay.next_button.pressed.emit()
 		check(desk.shift.finished(), "全案件の判定後に終了")
 		check(desk.summary_screen.stats.text.contains("不適切な調査 1件"), "不適切な調査を集計")
+		if not hide_reason:
+			desk.summary_screen.review.meta_clicked.emit(0)
 		var review: String = desk.summary_screen.review.get_parsed_text()
 		check(review.count("不適切な利用") == (0 if hide_reason else 1), "調査所見は表示設定に従い一度だけ表示")
 		check(not review.contains("正しい判定"), "正解表示設定を保持")
@@ -98,6 +100,7 @@ func _run() -> void:
 		"次の案件でも二重計上しない",
 	)
 	check(desk.shift.decide(future.ground_truth) and desk.shift.advance(), "全案件を完了")
+	desk.summary_screen.review.meta_clicked.emit(0)
 	check(desk.summary_screen.review.get_parsed_text().count("不適切な利用") == 1, "判定済み所見は一度だけ表示")
 	desk.summary_screen.restart.pressed.emit()
 	check(

@@ -1,6 +1,6 @@
 # 教材データ
 
-`problems/*.json` は1ファイルで1問を表し，単独で遊べる．`packs/*/pack.json` は問題IDを出題順に並べる任意の索引で，問題の中身は持たない．
+`problems/*.json` は1ファイルで1問を表し，単独で遊べる．`packs/*/pack.json` は問題IDと任意の抽選設定を持つ索引で，問題の中身は持たない．
 図の各箱は**1種類のJSONファイル**を表す．`R` は必須，`O` は任意のフィールド．
 括弧内は主なUI表示場所で，記載のないフィールドは画面に直接表示されない．
 
@@ -12,7 +12,8 @@ classDiagram
     R schema_version : 3
     R id : Packの識別子
     R title : Packの表示名（タイトル画面 > 出題）
-    R problems : 出題順の問題ID
+    R problems : 出題順または抽選候補の問題ID
+    O sampling : countでランダム出題の総数を指定
   }
   class ProblemFile["problems/*.json"]
   class ProblemFile {
@@ -38,7 +39,7 @@ classDiagram
     R terms : 用語IDごとの表示名と説明（用語集 > 各用語）
   }
   class HelpRulesFile["help/rules.json"]
-  PackFile --> ProblemFile : problemsのIDで出題順に参照
+  PackFile --> ProblemFile : problemsのIDで参照
   ProblemFile ..> GlossaryFile : termsの用語IDで参照
 ```
 

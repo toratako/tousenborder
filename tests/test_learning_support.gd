@@ -220,6 +220,7 @@ func _run() -> void:
 	desk.start_screen.history_button.pressed.emit()
 	check(desk.history_overlay.visible, "タイトルから審査履歴へ")
 	desk._open_history_entry(saved.session_id)
+	desk.summary_screen.review.meta_clicked.emit(0)
 	check(
 		desk.summary_from_history
 		and desk.summary_screen.review.get_parsed_text().contains(saved.records[0].explanation),
@@ -322,6 +323,7 @@ func _run() -> void:
 	check(desk.start_screen.tool_guide_button.disabled, "ライセンス画面から戻ってもツール一覧を無効のままにする")
 	desk.start_screen.history_button.pressed.emit()
 	desk._open_history_entry(saved.session_id)
+	desk.summary_screen.review.meta_clicked.emit(0)
 	check(
 		desk.summary_screen.review.get_parsed_text().contains(saved.records[0].explanation),
 		"教材エラー時も履歴を閲覧",

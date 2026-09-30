@@ -11,6 +11,16 @@
     "title": {
       "$ref": "#/$defs/text"
     },
+    "sampling": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "$ref": "#/$defs/count"
+        }
+      },
+      "required": ["count"],
+      "additionalProperties": false
+    },
     "problems": {
       "type": "array",
       "minItems": 1,
@@ -28,6 +38,10 @@
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "count": {
+      "type": "integer",
+      "minimum": 1
+    },
     "text": {
       "type": "string",
       "minLength": 1,

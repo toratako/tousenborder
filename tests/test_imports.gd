@@ -229,6 +229,7 @@ func _run() -> void:
 	)
 	desk.library.cases.clear()
 	desk._display_summary(saved, true)
+	desk.summary_screen.review.meta_clicked.emit(0)
 	check(desk.summary_screen.review.get_parsed_text().contains(raw.explanation), "教材がなくても履歴を表示")
 	desk.queue_free()
 	await process_frame

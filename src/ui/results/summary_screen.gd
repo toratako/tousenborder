@@ -2,6 +2,7 @@ extends Panel
 
 const Chrome = preload("res://src/ui/shared/game_theme.gd")
 const ScreenLayout = preload("res://src/ui/shared/screen_layout.gd")
+const Verdict = preload("res://src/ui/shared/verdict_presentation.gd")
 const PAPER = Chrome.TEXT
 const INK = Chrome.TEXT
 const MUTED = Chrome.MUTED
@@ -28,6 +29,9 @@ var retry: Button
 var snapshot: Dictionary = { }
 var from_history := false
 var retry_wrong: Button
+var expanded_reviews: Dictionary = { }
+var review_category := ""
+var review_indices: Array = []
 
 
 func setup(data: Dictionary, history: bool, retry_count: int, retry_reason: String) -> void:
@@ -94,6 +98,10 @@ func _build() -> void:
 	sheet.add_child(analysis)
 	review = Chrome.rich(sheet, Rect2(30, 128, 940, 477), INK, 18)
 	review.focus_mode = Control.FOCUS_ALL
+	review.add_theme_constant_override("line_separation", 4)
+	review.add_theme_constant_override("table_h_separation", 0)
+	review.add_theme_constant_override("table_v_separation", 0)
+	review.meta_clicked.connect(_toggle_review)
 	save_notice = Chrome.label(sheet, Rect2(30, 620, 670, 27), "", RED, 15)
 	retry = Chrome.button(sheet, Rect2(730, 616, 240, 32), "保存を再試行", PAPER)
 	retry.pressed.connect(save_requested.emit)
@@ -156,6 +164,8 @@ func update_focus() -> void:
 
 
 func _render_records(category: String = "", indices: Array = []) -> void:
+	review_category = category
+	review_indices = indices.duplicate()
 	review.clear()
 	if not indices.is_empty():
 		review.add_text("アドバイスに関連する問題（全件表示は上の振り返りタブ）\n\n")
@@ -171,28 +181,61 @@ func _render_records(category: String = "", indices: Array = []) -> void:
 			continue
 		if not category.is_empty() and record.category != category:
 			continue
-		_review_item(
-			record.title,
-			record.id,
-			"正解" if record.correct else "誤判定",
-			"あなたの判定：" + labels[record.verdict]
-			+ (" / 正しい判定：" + labels[record.ground_truth] if feedback.show_expected else "")
-			+ (
-				"\n" + record.explanation + "\n" + InspectionShift.investigation_feedback(record) if feedback.show_reason else ""
-			),
-			Color("57edc2") if record.correct else Color("ff718b"),
-		)
+		_review_item(record, feedback, labels, index)
 
 
-func _review_item(title: String, id: String, result: String, body: String, color: Color) -> void:
-	# 教材の文字列を装飾タグとして解釈せず、案件名だけを大きく表示する。
-	review.push_font_size(22)
-	review.add_text(title + "\n")
-	review.pop()
+func _review_item(record: Dictionary, feedback: Dictionary, labels: Dictionary, index: int) -> void:
+	var color := Chrome.GREEN if record.correct else Chrome.RED
+	review.push_table(1)
+	review.set_table_column_expand(0, true, 1, false)
+	_review_cell(Color("10372f") if record.correct else Color("3c202b"), color.darkened(0.4))
+	_review_text(record.title + "\n", 20, INK)
+	_review_text("✓ 正解" if record.correct else "✕ 誤判定", 22, color)
+	_review_text("   " + Verdict.summary(record, feedback, labels).replace("\n", " "), 17, INK)
+	review.pop() # Header cell.
+	if feedback.get("show_reason", true):
+		_review_cell(Chrome.BACKGROUND, Chrome.BORDER)
+		if Verdict.unsafe_investigation(record):
+			_review_text("! 調査方法に注意\n", 17, Color("ffbd70"))
+		var expanded: bool = expanded_reviews.get(index, false)
+		review.push_meta(index)
+		_review_text("▼ 理由を閉じる" if expanded else "▶ 理由を表示", 16, Chrome.CYAN)
+		review.pop()
+		if expanded:
+			_review_text("\n\n判定の理由\n", 15, Chrome.CYAN)
+			_review_text(record.explanation, 18, INK)
+			var investigation := InspectionShift.investigation_feedback(record)
+			if not investigation.is_empty():
+				_review_text("\n\n調査の振り返り\n", 15, Chrome.CYAN)
+				_review_text(investigation, 17, INK)
+		review.pop() # Reason cell; height follows the full text.
+	review.pop() # Table.
+	review.add_text("\n\n")
+
+
+func _review_cell(fill: Color, border: Color) -> void:
+	review.push_cell()
+	review.set_cell_row_background_color(fill, fill)
+	review.set_cell_border_color(border)
+	review.set_cell_padding(Rect2(16, 10, 16, 10))
+
+
+func _toggle_review(index: Variant) -> void:
+	if not index is int or index < 0 or index >= snapshot.records.size():
+		return
+	var scroll := review.get_v_scroll_bar().value
+	expanded_reviews[index] = not expanded_reviews.get(index, false)
+	_render_records(review_category, review_indices)
+	review.get_v_scroll_bar().set_deferred("value", scroll)
+
+
+func _review_text(text: String, font_size: int, color: Color) -> void:
+	# 教材の文字列は装飾タグとして解釈せず、長文も省略しない。
+	review.push_font_size(font_size)
 	review.push_color(color)
-	review.add_text("%s  /  %s\n" % [id, result])
+	review.add_text(text)
 	review.pop()
-	review.add_text(body + "\n\n")
+	review.pop()
 
 
 func show_save_result(saved: bool, error: String) -> void:
