@@ -2,7 +2,19 @@
 
 情報を集めてALLOW / BLOCKを判断するセキュリティ審査ゲームです．
 
-## 起動
+![とーせんぼ～だ～のタイトル画面](docs/assets_doc/title.png)
+
+## 今すぐ遊ぶ (Windows)
+
+### 1. [Release](https://github.com/toratako/tousenborder/releases/)から `tousenborder-windows-x86_64.zip` をダウンロードします．
+
+![Releaseページ．tousenborder-windows-x86_64.zipが強調されている．](docs/asset/release.png)
+
+### 2. ダウンロードしたZIPを展開し，`tousenborder.exe` をダブルクリックして実行します．
+
+---
+
+## 起動方法 (開発)
 
 Godot 4.7.2とjustを用意し，`just run`．素材・スクリプトのインポートと教材検証後に起動します．  
 justを使わない場合:
