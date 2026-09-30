@@ -91,23 +91,32 @@ func _initialize() -> void:
 	item.evidence_alternatives[" "] = { "label": "空のID", "any_of": ["nslookup"] }
 	rejected(item, "空の代替証拠ID")
 	var guide_library := ProblemLibrary.new()
-	check(guide_library.load_builtin(), "公開教材のガイド")
+	var variants_source: Array = []
+	for input_type in ["file", "pid"]:
+		var variant := Fixtures.raw("FIX-VISIBLE-FILE")
+		variant.id = "GUIDE-" + input_type
+		variant.initial.information = [
+			{ "id": "target", "label": "対象", "value": "sample", "data_type": input_type },
+		]
+		variant.resources = [{
+			"id": "rdap", "kind": "tools", "name": "入力別の調査",
+			"accepted_information_types": [input_type],
+			"input_bindings": [{ "source": "initial_information", "id": "target" }],
+			"input_hint": "対象", "result": { "content": "確認済み" },
+		}]
+		variant.initial.erase("terms")
+		variant.required_evidence = ["rdap"]
+		variants_source.append(variant)
+	var duplicate_tool: Dictionary = variants_source[0].duplicate(true)
+	duplicate_tool.id = "GUIDE-DUPLICATE"
+	variants_source.append(duplicate_tool)
+	check(guide_library.add_source(Fixtures.source(variants_source)), "任意の資料IDと入力別Toolを受理")
 	var guide := guide_library.guide_tools()
-	for label in ["Get-FileHash", "Sigcheck"]:
-		var variants := guide.filter(
-			func(tool):
-				return tool.label == label,
-		)
+	check(guide.size() == 2, "同じToolはまとめ、同名でも入力の異なるToolを両方保持")
+	for input_type in ["file", "pid"]:
 		check(
-			variants.size() >= 2
-			and variants.any(
-				func(tool):
-					return (
-						"process" in tool.accepted_information_types
-						or "pid" in tool.accepted_information_types
-					),
-			),
-			"入力の異なるToolを保持: " + label,
+			guide.any(func(tool): return tool.accepted_information_types == [input_type]),
+			"入力の異なるToolを保持: " + input_type,
 		)
 	guide_library.cases.reverse()
 	var reversed := guide_library.guide_tools()

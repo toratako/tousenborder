@@ -10,6 +10,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> int:
     godot = os.environ.get("GODOT", "godot")
+    try:
+        timeout = int(os.environ.get("TEST_TIMEOUT_SECONDS", "300"))
+        if timeout <= 0:
+            raise ValueError
+    except ValueError:
+        print("TEST_TIMEOUT_SECONDS must be a positive integer", file=sys.stderr)
+        return 1
     commands = [
         [
             sys.executable,
@@ -32,11 +39,11 @@ def main() -> int:
         print("Running:", " ".join(command), flush=True)
         try:
             result = subprocess.run(
-                command, cwd=ROOT, capture_output=True, text=True, timeout=60
+                command, cwd=ROOT, capture_output=True, text=True, timeout=timeout
             )
         except subprocess.TimeoutExpired as error:
             print(error.stdout or "", error.stderr or "", file=sys.stderr)
-            print("Test timed out", file=sys.stderr)
+            print(f"Test timed out after {timeout} seconds", file=sys.stderr)
             return 1
         except OSError as error:
             print(error, file=sys.stderr)

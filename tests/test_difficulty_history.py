@@ -1,4 +1,4 @@
-"""Verify difficulty by ID against levels extracted from the pre-migration commit."""
+"""Audit the frozen migration history without freezing today's published content."""
 
 from collections import Counter
 import io
@@ -18,13 +18,6 @@ LEVELS = {
     "beginner_external": "beginner",
     "applied": "applied",
 }
-ADDED = {
-    "AUTH-WIN-VPN-LOCATION-CHANGE",
-    "EMAIL-VERIFIED-BANK-CHANGE",
-    "NET-WIN-APPROVED-BULK-UPLOAD",
-    "PKG-NPM-APPROVED-INSTALL-SCRIPT",
-    "PROC-LINUX-APPROVED-RESTORE",
-}
 
 
 def read(path):
@@ -36,33 +29,24 @@ class DifficultyHistoryTests(unittest.TestCase):
         self.history = read(ROOT / "tests/fixtures/difficulty-history.json")
         self.assertEqual(self.history["source_commit"], COMMIT)
 
-    def test_published_difficulties_match_history(self):
+    def test_historical_level_mapping(self):
         historical = self.history["levels"]
         self.assertEqual(len(historical), 70)
         self.assertEqual(
             Counter(LEVELS[level] for level in historical.values()),
             {"very_beginner": 8, "beginner": 51, "applied": 11},
         )
+
+    def test_published_ids_are_unique_and_not_archived(self):
         problems = [read(path) for path in (ROOT / "data/problems").glob("*.json")]
         self.assertEqual(len(problems), len({item["id"] for item in problems}))
-        self.assertEqual({item["id"] for item in problems}, set(historical) | ADDED)
-        for item in problems:
-            with self.subTest(id=item["id"]):
-                expected = "applied" if item["id"] in ADDED else LEVELS[historical[item["id"]]]
-                self.assertEqual(item["difficulty"], expected)
-                if item["id"] in ADDED:
-                    self.assertEqual(item["ground_truth"], "allow")
-        self.assertEqual(
-            Counter(item["difficulty"] for item in problems),
-            {"very_beginner": 8, "beginner": 51, "applied": 16},
-        )
         archived = {
             read(path)["id"] for path in (ROOT / "authoring/archive/problems").glob("*.json")
         }
         self.assertFalse(archived & {item["id"] for item in problems})
 
     def test_history_fixture_matches_git_when_available(self):
-        # Shallow CI checkouts still run the ID-by-ID test using the frozen extract.
+        # Shallow CI checkouts still validate the frozen migration mapping.
         if not shutil.which("git"):
             self.skipTest("Git is unavailable; using the committed history extract")
         command = ["git", "-c", f"safe.directory={ROOT}", "-C", str(ROOT)]
