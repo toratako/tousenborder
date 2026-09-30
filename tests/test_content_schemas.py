@@ -28,7 +28,6 @@ class ContentSchemaTests(unittest.TestCase):
             with self.subTest(path=path.name):
                 item = read(path)
                 schemas["problem"].validate(item)
-                self.assertNotIn("rdap", [r["id"] for r in item["resources"]])
         for item in read(ROOT / "tests/fixtures/content.json")["problems"]:
             schemas["problem"].validate(item)
         schemas["problem"].validate(

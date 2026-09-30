@@ -15,6 +15,28 @@ func select_value(option: OptionButton, value: String) -> void:
 	assert(false, "Missing selection: " + value)
 
 
+func check_difficulty_selection(desk) -> void:
+	var option: OptionButton = desk.start_screen.difficulty_select
+	var index := 1
+	assert(option.get_item_metadata(0) == "" and option.get_item_text(0) == "すべて")
+	for pair in [["very_beginner", "超初級"], ["beginner", "初級"], ["applied", "応用"], ["unrated", "未評価"]]:
+		var expected: Array = desk.library.cases.filter(func(item): return item.difficulty == pair[0])
+		if expected.is_empty():
+			continue
+		assert(option.get_item_metadata(index) == pair[0] and option.get_item_text(index) == pair[1])
+		index += 1
+		select_value(option, pair[0])
+		var expected_keys: Array = expected.map(func(item): return item.key)
+		assert(desk.start_screen.selected_cases().map(func(item): return item.key) == expected_keys)
+		desk.start_screen.start_button.pressed.emit()
+		assert(desk.shift.cases.map(func(item): return item.key) == expected_keys)
+		assert(desk.shift.decide(desk.shift.current().ground_truth))
+		assert(desk.shift.records[0].level == pair[0])
+		desk._show_start_screen()
+	assert(option.item_count == index)
+	select_value(option, "")
+
+
 func _run() -> void:
 	var library := Fixtures.library()
 	assert(library.load_builtin(), str(library.errors))
@@ -63,22 +85,8 @@ func _run() -> void:
 	root.add_child(desk)
 	await process_frame
 	assert(desk.library.errors.is_empty(), str(desk.library.errors))
-	assert(desk.library.difficulties.keys() == ["very_beginner", "beginner", "applied"])
 	var difficulty_option: OptionButton = desk.start_screen.difficulty_select
-	assert(difficulty_option.item_count == 4)
-	for i in 4:
-		assert(difficulty_option.get_item_text(i) == ["すべて", "超初級", "初級", "応用"][i])
-	for pair in [["very_beginner", 8], ["beginner", 51], ["applied", 16]]:
-		select_value(difficulty_option, pair[0])
-		var selected: Array = desk.start_screen.selected_cases()
-		assert(selected.size() == pair[1])
-		assert(selected.all(func(item): return item.difficulty == pair[0]))
-		desk.start_screen.start_button.pressed.emit()
-		assert(desk.shift.cases.size() == pair[1])
-		assert(desk.shift.decide(desk.shift.current().ground_truth))
-		assert(desk.shift.records[0].level == pair[0])
-		desk._show_start_screen()
-	select_value(desk.start_screen.difficulty_select, "")
+	check_difficulty_selection(desk)
 	var all_ids := { }
 	for method in desk.library.methods:
 		select_value(desk.start_screen.method_select, method)
@@ -94,19 +102,23 @@ func _run() -> void:
 		desk._show_start_screen()
 	assert(desk.library.cases.all(func(item): return all_ids.has(item.id)))
 	select_value(desk.start_screen.method_select, "")
+	assert(desk.library.add_source(Fixtures.sampling_source()))
+	desk.start_screen.refresh_options()
+	check_difficulty_selection(desk)
 	select_value(desk.start_screen.category_select, "file")
-	select_value(desk.start_screen.platform_select, "linux")
+	select_value(desk.start_screen.platform_select, "common")
 	assert(
 		desk
 		.start_screen
 		.selected_cases()
 		.all(
 			func(c):
-				return c.category == "file" and c.platform in ["common", "linux"],
+				return c.category == "file" and c.platform == "common",
 		)
 	)
-	var pack: Dictionary = desk.library.packs[0]
-	assert(pack.title == "ランダム演習")
+	var pack: Dictionary = desk.library.packs.filter(func(item): return item.key == "sampling/pack/random")[0]
+	# 1問だけの難易度を上で完了していても、抽選履歴の検証に混ぜない。
+	desk.history_store = Fixtures.history_store()
 	select_value(desk.start_screen.pack_select, pack.key)
 	assert(
 		desk.start_screen.selected_cases().size() == 20
@@ -128,7 +140,7 @@ func _run() -> void:
 	assert(desk.completed_snapshot.records.size() == 20)
 	assert(HistoryStore.validate(desk.completed_snapshot).is_empty())
 	var saved: Dictionary = desk.history_store.load_entry(desk.completed_snapshot.session_id)
-	assert(saved.selection.mode == "random" and saved.pack.title == "ランダム演習")
+	assert(saved.selection.mode == "random" and saved.pack.title == pack.title)
 	assert(saved.selection.level == desk.completed_snapshot.selection.level)
 	var entries: Array[Dictionary] = desk.history_store.list_summaries()
 	assert(entries.size() == 1 and entries[0].selection.mode == "random")
@@ -154,6 +166,7 @@ func _run() -> void:
 	assert(not desk.completed_snapshot.selection.has("mode"))
 	desk._show_start_screen()
 	assert(not desk.random_exercise)
+	var before_unrated: Array = desk.library.cases.filter(func(item): return item.difficulty == "unrated").map(func(item): return item.key)
 	var unrated := Fixtures.raw("FIX-VISIBLE-FILE")
 	unrated.erase("difficulty")
 	assert(desk.library.add_source(Fixtures.source([unrated], "unrated-selection")))
@@ -163,8 +176,10 @@ func _run() -> void:
 	for option in [desk.start_screen.pack_select, desk.start_screen.category_select, desk.start_screen.platform_select]:
 		select_value(option, "")
 	select_value(difficulty_option, "unrated")
-	assert(desk.start_screen.selected_cases().size() == 1)
-	assert(desk.start_screen.selected_cases()[0].id == unrated.id)
+	var selected_unrated: Array = desk.start_screen.selected_cases().map(func(item): return item.key)
+	assert(selected_unrated.size() == before_unrated.size() + 1)
+	assert(before_unrated.all(func(key): return key in selected_unrated))
+	assert("unrated-selection/" + unrated.id in selected_unrated)
 	desk.queue_free()
 	await process_frame
 	print("Selection tests passed")

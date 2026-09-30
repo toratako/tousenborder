@@ -44,6 +44,24 @@ static func loaded(item: Dictionary, source_id := "builtin") -> Dictionary:
 	return result.problem
 
 
+static func sampling_source() -> ContentSource:
+	var items: Array = []
+	for i in 40:
+		var item := raw("FIX-VISIBLE-FILE")
+		item.id = "SAMPLE-%02d" % i
+		item.platform = "common"
+		item.erase("difficulty")
+		if i % 4 < 3:
+			item.difficulty = ["very_beginner", "beginner", "applied"][i % 4]
+		items.append(item)
+	var result := source(items, "sampling")
+	result.files["packs/random/pack.json"] = JSON.stringify({
+		"schema_version": 3, "id": "random", "title": "抽選テスト",
+		"sampling": { "count": 20 }, "problems": items.map(func(item): return item.id),
+	}).to_utf8_buffer()
+	return result
+
+
 class FixtureLibrary extends ProblemLibrary:
 	func load_builtin(_root := DEFAULT_ROOT) -> bool:
 		var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DATA))

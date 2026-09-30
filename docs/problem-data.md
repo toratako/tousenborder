@@ -8,6 +8,8 @@
 2. `just validate` でインポート・教材検証．一覧だけが古い場合は次へ．
 3. `python3 scripts/build_problem_catalog.py` で一覧を再生成し，`just validate` と `just test`．
 
+公開問題の件数・難易度の内訳・Tool名はテストに固定しない．問題や資料を追加・編集したら一覧を再生成する．抽選や入力別Toolの振る舞いは専用fixtureで検証し，過去の分類復元記録は `tests/fixtures/difficulty-history.json` と指定Git履歴で照合する（現在の教材の分類は固定しない）．大量の教材でテストが時間切れになる場合は，`TEST_TIMEOUT_SECONDS` で各チェックの上限秒数を変更できる（既定300秒）．
+
 最小限の資料付き問題:
 
 ```json
