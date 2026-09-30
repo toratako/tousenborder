@@ -4,6 +4,8 @@
 
 書式・検証は [教材データ](problem-data.md)，判断の設計は [学習設計](learning-design.md)，保存・分析は [用語と履歴](learning-support.md)．
 
+最終結果・履歴の振り返りは `summary_screen.gd` の1問1枠表示．理由は初期状態で折りたたみ，展開時は全文に合わせて枠を伸ばす（内側スクロールなし）．展開状態は記録のindexで管理し，分野・アドバイスで絞り込んでも保持する．RichTextLabelの表とmetaリンクを使用し，教材文字列は `add_text` で表示する．判定文と不適切調査の条件は `shared/verdict_presentation.gd` を監査票と共有する．履歴の表示設定を尊重し，注意表示は理由を閉じても残す．検証は `tests/test_review_cards.gd`．
+
 ## 調査から判定まで
 
 初期情報 → Tool → Referenceと比較 → 必要なら結果を次のToolへ → ALLOW/BLOCK（[入力の接続](problem-data.md#資料と情報の接続)）．未調査でも判定でき，スコアは正解との一致件数．自由記述は採点せず，判定時の調査不足表示・減点は未実装です．
@@ -38,7 +40,7 @@
 
 実行コードは `src/`，開発用エントリーポイントは `scripts/`．`domain/` は教材読込・保存・UIに依存せず，`app/` がサービスと画面を接続します．画面は自分の部品・表示状態を所有し，親への要求はシグナルで通知します．部品生成ヘルパーへ親画面全体を渡さないこと．依存方向と循環は [test_module_boundaries.py](../tests/test_module_boundaries.py) で検証します．
 
-審査状態の正本は `InspectionShift`．カードに正解・採点データを渡さず，UIで表示項目の意味を推測しません．前面化は同じ親の最後の子へ移し，描画順と入力順を揃えます．Referenceの再表示は再利用，Tool結果の再表示は再調査です．押印待機と外部照会の確定では，案件変更前の操作を世代番号で拒否します．
+審査状態の正本は `InspectionShift`．カードに正解・採点データを渡さず，UIで表示項目の意味を推測しません．前面化は同じ親の最後の子へ移し，描画順と入力順を揃えます．Referenceと同じ入力のTool成功結果はカードを再利用し，再表示では調査回数を増やしません．別入力は別結果とし，案件変更時に再利用情報を破棄します（[再利用テスト](../tests/test_tool_result_reuse.gd)）．外部照会は従来どおり送信確認を行います．押印待機と外部照会の確定では，案件変更前の操作を世代番号で拒否します．
 
 対象は左に固定し，押印はD&Dのみ．位置復帰・三本線メニュー・入力トレー・資料一覧・比較配置・記録ボタン・ログ専用画面・下部説明欄・対象イラストは設けません．メニューはESC．寸法・伸縮は `inspection_workspace.gd` と [test_content_sizing.gd](../tests/test_content_sizing.gd)，停止・復帰・古い操作の拒否は [test_ui.gd](../tests/test_ui.gd) / [test_interaction.gd](../tests/test_interaction.gd) を参照．
 

@@ -49,6 +49,7 @@ var completed_snapshot: Dictionary = { }
 var summary_from_history := false
 var retry_cases: Array[Dictionary] = []
 var retry_source_id := ""
+var random_exercise := false
 
 
 func _ready() -> void:
@@ -276,6 +277,7 @@ func _close_summary() -> void:
 func _show_start_screen() -> void:
 	retry_cases.clear()
 	retry_source_id = ""
+	random_exercise = false
 	summary_from_history = false
 	_close_glossary(false)
 	glossary_overlay.reset()
@@ -308,6 +310,10 @@ func _start_shift() -> void:
 		selected = retry_cases
 	else:
 		selected = start_screen.selected_cases()
+		var pack_key: String = start_screen.pack_select.get_item_metadata(start_screen.pack_select.selected)
+		random_exercise = library.packs.any(
+			func(pack): return pack.key == pack_key and pack.has("sampling")
+		)
 	if selected.is_empty():
 		return
 	_begin_shift(selected)
@@ -319,12 +325,14 @@ func _retry_wrong_answers() -> void:
 		return
 	retry_cases.assign(plan.cases)
 	retry_source_id = summary_screen.snapshot.session_id
+	random_exercise = false
 	_begin_shift(retry_cases)
 
 
 func _retry_same_cases() -> void:
 	retry_cases.assign(shift.cases)
 	retry_source_id = summary_screen.snapshot.session_id
+	random_exercise = summary_screen.snapshot.selection.get("mode", "") == "random"
 	_start_shift()
 
 
@@ -460,6 +468,8 @@ func _show_summary() -> void:
 			).is_empty()
 		):
 			selection = WrongAnswerRetry.selection(shift.cases, library)
+		if random_exercise:
+			selection.mode = "random"
 		completed_snapshot = HistoryStore.snapshot(
 			shift,
 			_session_pack(),

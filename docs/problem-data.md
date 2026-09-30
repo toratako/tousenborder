@@ -60,7 +60,7 @@ packs/story/pack.json
 
 タイトルからの開始で再抽選し，途中のやり直し・結果画面の「同じ問題に再挑戦」は問題と順番を維持する．抽選は [ProblemLibrary.draw_pack_cases](../src/content/problem_library.gd)，検証は [PackLoader](../src/content/pack_loader.gd)，回帰テストは [test_pack_sampling.gd](../tests/test_pack_sampling.gd)．
 
-タイトルの「問題ZIP / JSONを追加」でZIPまたは単独のProblem JSONを読み込む．全体の検証・保存成功後に登録し，無効な読込元があっても他の教材は維持する．保存先は `user://content/`，内容のSHA-256が識別子．同じ内容の再追加は重複せず，内容変更は別の読込元になる．削除UIは未実装で，不要な教材はアプリ終了後に保存先から削除する．
+教材追加ボタンはタイトル画面では非表示．ZIP・単独Problem JSONの読込処理（`game.gd` の `_import_content`）と保存済み教材の読込は維持する．全体の検証・保存成功後に登録し，無効な読込元があっても他の教材は維持する．保存先は `user://content/`，内容のSHA-256が識別子．同じ内容の再追加は重複せず，内容変更は別の読込元になる．削除UIは未実装で，不要な教材はアプリ終了後に保存先から削除する．
 
 ZIPはJSONとディレクトリのみ，store/deflateに対応する．暗号化・分割・ZIP64・特殊ファイルは対象外．容量上限は [ContentSource](../src/content/content_source.gd) の `MAX_*`．教材領域へ展開せずに読む．検証は [test_imports.gd](../tests/test_imports.gd)．
 

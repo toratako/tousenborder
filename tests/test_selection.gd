@@ -106,6 +106,7 @@ func _run() -> void:
 		)
 	)
 	var pack: Dictionary = desk.library.packs[0]
+	assert(pack.title == "ランダム演習")
 	select_value(desk.start_screen.pack_select, pack.key)
 	assert(
 		desk.start_screen.selected_cases().size() == 20
@@ -120,13 +121,39 @@ func _run() -> void:
 	assert(desk.shift.records.is_empty() and desk.shift.index == 0)
 	assert(desk.shift.cases.map(func(item): return item.id) == drawn_ids)
 	for i in 20:
-		assert(desk.shift.decide(desk.shift.current().ground_truth))
+		var expected: String = desk.shift.current().ground_truth
+		var verdict := ("block" if expected == "allow" else "allow") if i == 0 else expected
+		assert(desk.shift.decide(verdict))
 		desk.audit_overlay.next_button.pressed.emit()
 	assert(desk.completed_snapshot.records.size() == 20)
 	assert(HistoryStore.validate(desk.completed_snapshot).is_empty())
+	var saved: Dictionary = desk.history_store.load_entry(desk.completed_snapshot.session_id)
+	assert(saved.selection.mode == "random" and saved.pack.title == "ランダム演習")
+	assert(saved.selection.level == desk.completed_snapshot.selection.level)
+	var entries: Array[Dictionary] = desk.history_store.list_summaries()
+	assert(entries.size() == 1 and entries[0].selection.mode == "random")
+	desk.history_overlay.show_entries(entries, [])
+	var caption: String = desk.history_overlay.entries_list.get_child(0).text
+	assert(caption.split("\n")[1].begins_with("ランダム演習 / "))
+	var legacy: Dictionary = saved.duplicate(true)
+	legacy.selection.erase("mode")
+	assert(HistoryStore.validate(legacy).is_empty())
+	var legacy_entries: Array[Dictionary] = [legacy]
+	desk.history_overlay.show_entries(legacy_entries, [])
+	caption = desk.history_overlay.entries_list.get_child(0).text
+	assert(caption.split("\n")[1].begins_with(str(legacy.selection.level.label) + " / "))
+	desk.history_overlay.hide()
 	desk.summary_screen.restart_requested.emit()
 	assert(desk.shift.cases.map(func(item): return item.id) == drawn_ids)
+	assert(desk.random_exercise)
+	desk._display_summary(saved, false)
+	desk._retry_wrong_answers()
+	assert(not desk.random_exercise and desk.shift.cases.size() == 1)
+	assert(desk.shift.decide(desk.shift.current().ground_truth))
+	desk.audit_overlay.next_button.pressed.emit()
+	assert(not desk.completed_snapshot.selection.has("mode"))
 	desk._show_start_screen()
+	assert(not desk.random_exercise)
 	var unrated := Fixtures.raw("FIX-VISIBLE-FILE")
 	unrated.erase("difficulty")
 	assert(desk.library.add_source(Fixtures.source([unrated], "unrated-selection")))

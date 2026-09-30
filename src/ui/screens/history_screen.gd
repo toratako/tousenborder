@@ -34,7 +34,7 @@ func show_entries(entries: Array[Dictionary], warnings: PackedStringArray) -> vo
 			HistoryStore.date_label(entry.completed_at),
 			entry.stats.correct,
 			entry.stats.answered,
-			entry.selection.level.label,
+			"ランダム演習" if entry.selection.get("mode", "") == "random" else entry.selection.level.label,
 			entry.selection.category.label,
 			entry.selection.platform.label,
 		]

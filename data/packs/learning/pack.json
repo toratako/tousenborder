@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "id": "learning",
-  "title": "セキュリティ判断の基礎",
+  "title": "ランダム演習",
   "sampling": {
     "count": 20
   },
