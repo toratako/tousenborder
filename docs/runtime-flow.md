@@ -1,5 +1,7 @@
 # 実行時の教材処理
 
+判定直後の監査票は`src/ui/inspection/audit_panel.gd`。上部に記号・色付きの正誤と判定を説明する短文（案件番号・比較カードは非表示）、中央のスクロール本文に理由と調査の振り返り、下部に固定の次へボタンを置く。正解・理由の表示設定を尊重し、正解でも不適切調査があれば正誤と別のオレンジ表示で注意を示す。長文と表示設定の切り替えは`tests/test_audit_panel.gd`で検証。配置変更時は`tests/capture_how_to.gd`と`scripts/build_how_to_slides.py`で遊び方の最終画像も更新する。
+
 書式・検証は [教材データ](problem-data.md)，判断の設計は [学習設計](learning-design.md)，保存・分析は [用語と履歴](learning-support.md)．
 
 ## 調査から判定まで
