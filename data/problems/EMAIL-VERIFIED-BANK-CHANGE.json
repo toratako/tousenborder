@@ -1,0 +1,93 @@
+{
+  "schema_version": 2,
+  "id": "EMAIL-VERIFIED-BANK-CHANGE",
+  "category": "email",
+  "platform": "common",
+  "difficulty": "advanced",
+  "title": "独立確認を完了した振込先変更",
+  "request": "この口座変更依頼メールを、変更処理に使える業務メールとして受け入れますか。ALLOW / BLOCKで判断してください。",
+  "initial": {
+    "information": [
+      {
+        "id": "message",
+        "label": "保留メール",
+        "value": "quarantine/message-1201.eml",
+        "data_type": "email"
+      },
+      {
+        "id": "body",
+        "label": "本文",
+        "value": "billing@cedar.exampleより、PO-930の振込先を口座末尾7724へ変更してください。適用日は2026-09-29です。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "email"
+    ]
+  },
+  "resources": [
+    {
+      "id": "header",
+      "kind": "tools",
+      "name": "受信ゲートウェイの記録",
+      "accepted_information_types": [
+        "email"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "message"
+        }
+      ],
+      "input_hint": "保留メール",
+      "result": {
+        "content": "組織管理のmx.aster.exampleが保存した受信記録。From / Reply-To: billing@cedar.example。SPF=pass、DKIM=pass (d=cedar.example)、DMARC=pass (header.from=cedar.example)。本文はPO-930・新口座末尾7724・適用日2026-09-29。添付とリンクはない。",
+        "terms": [
+          "spf",
+          "dkim",
+          "dmarc",
+          "reply_to"
+        ]
+      }
+    },
+    {
+      "id": "vendor",
+      "kind": "references",
+      "name": "取引先台帳",
+      "result": {
+        "content": "Cedar社の登録請求窓口はbilling@cedar.example。旧口座末尾2048。登録電話の台帳IDはTEL-18。今回のメール受信前から登録されている連絡先である。"
+      }
+    },
+    {
+      "id": "verification",
+      "kind": "references",
+      "name": "変更チケットと折り返し記録",
+      "result": {
+        "content": "CHG-512 / PO-930。経理担当がメール本文の連絡先ではなく台帳TEL-18へ発信し、登録担当者から旧口座2048、新口座7724、適用日2026-09-29を確認。完全な口座番号と名義もチケットの変更内容と一致した。経理の森・佐藤が別々に承認し、状態は承認完了。メール記載の変更内容とチケットの全項目が一致。",
+        "terms": [
+          "independent",
+          "ticket"
+        ]
+      }
+    },
+    {
+      "id": "policy",
+      "kind": "references",
+      "name": "口座変更メールの受入れ規則",
+      "result": {
+        "content": "登録請求窓口・受信認証・変更チケットの内容を照合し、事前登録番号への折り返し確認と経理2名の承認が完了していれば変更依頼メールを受け入れる。認証成功だけでは許可しない。送金実行は別の承認手続で扱う。"
+      }
+    }
+  ],
+  "required_evidence": [
+    "header",
+    "vendor",
+    "verification",
+    "policy"
+  ],
+  "ground_truth": "allow",
+  "explanation": "口座変更という要注意の依頼ですが、登録窓口と受信認証に加え、事前登録番号への独立確認、変更内容の一致、経理2名の承認が揃っています。規則上の受入れ条件を満たすためAllowです。これはメールの受入れ判断であり、送金実行の承認ではありません。",
+  "learning_objectives": [
+    "送信者認証と業務手続の証拠を区別し、独立確認を含む許可条件を照合する"
+  ]
+}

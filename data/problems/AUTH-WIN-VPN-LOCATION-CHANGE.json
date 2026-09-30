@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "id": "AUTH-WIN-VPN-LOCATION-CHANGE",
+  "category": "account",
+  "platform": "windows",
+  "difficulty": "advanced",
+  "title": "VPN出口の変更で発生した遠隔地ログイン警告",
+  "request": "遠隔地からのログイン警告が出たセッションを継続させますか。ALLOW / BLOCKで判断してください。",
+  "initial": {
+    "information": [
+      {
+        "id": "user",
+        "label": "アカウント",
+        "value": "ASTER\\mori",
+        "data_type": "username"
+      },
+      {
+        "id": "alert",
+        "label": "警告",
+        "value": "2026-09-29 09:05。5分前の東京からシンガポールへ移動したと判定。対象セッションS-884。",
+        "data_type": "text"
+      }
+    ],
+    "terms": [
+      "user"
+    ]
+  },
+  "resources": [
+    {
+      "id": "signin",
+      "kind": "tools",
+      "name": "サインイン記録",
+      "accepted_information_types": [
+        "username"
+      ],
+      "input_bindings": [
+        {
+          "source": "initial_information",
+          "id": "user"
+        }
+      ],
+      "input_hint": "アカウント",
+      "result": {
+        "content": "09:00 S-880: 送信元198.51.100.20。09:05 S-884: 送信元203.0.113.40。両方とも端末証明書DEV-144、管理端末WIN-144。S-884は本人の登録済みFIDO2キーによる新規認証に成功し、条件付きアクセスは成功。端末は準拠状態、認証失敗の連続はない。",
+        "terms": [
+          "authentication",
+          "device"
+        ]
+      }
+    },
+    {
+      "id": "vpn",
+      "kind": "references",
+      "name": "VPN出口台帳と接続ログ",
+      "result": {
+        "content": "198.51.100.20は東京、203.0.113.40はシンガポールの組織VPN出口。09:03の障害切替で出口が変更された。トンネルT-501はASTER\\mori・端末証明書DEV-144に対応し、08:50から継続。S-880とS-884の通信はいずれもT-501の出口変換記録と一致する。",
+        "terms": [
+          "ip"
+        ]
+      }
+    },
+    {
+      "id": "device",
+      "kind": "references",
+      "name": "端末・利用者台帳",
+      "result": {
+        "content": "ASTER\\moriは在籍中。WIN-144 / DEV-144は森に割り当てられた管理端末で、登録と証明書は有効。S-884の端末保護ログに隔離・不審プロセス・認証情報窃取の警告はない。"
+      }
+    },
+    {
+      "id": "policy",
+      "kind": "references",
+      "name": "遠隔地ログイン警告の判定規則",
+      "result": {
+        "content": "地理情報だけで遮断せず、両接続が同一の認証済みVPNトンネルと管理端末に対応することを確認する。出口切替記録、在籍・端末登録、新規の強固な認証、端末準拠が揃い、端末保護警告がなければ継続を許可する。"
+      }
+    }
+  ],
+  "required_evidence": [
+    "signin",
+    "vpn",
+    "device",
+    "policy"
+  ],
+  "ground_truth": "allow",
+  "explanation": "遠隔地の送信元はVPNの出口切替で説明でき、両接続は同じトンネルと端末証明書に対応します。在籍・端末登録・新規FIDO2認証・準拠状態も確認でき、規則の継続条件を満たすためAllowです。VPNのIPアドレスであることだけを許可の根拠にはしていません。",
+  "learning_objectives": [
+    "地理的な警告をVPN・端末・認証の記録と突き合わせて評価する"
+  ]
+}
