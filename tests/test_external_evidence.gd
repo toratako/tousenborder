@@ -132,7 +132,7 @@ func test_ui(cases: Array[Dictionary]) -> void:
 		)
 	check(desk.shift.missing_evidence().is_empty(), "UIから後続の外部証拠を取得")
 	desk.shift.decide(item.ground_truth)
-	check(desk.audit_overlay.body.text.contains(item.explanation), "回答後の解説")
+	check(desk.audit_overlay.body.get_parsed_text().contains(item.explanation), "回答後の解説")
 	desk.queue_free()
 	await process_frame
 	print("External evidence tests: %d failures" % failures)

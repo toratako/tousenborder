@@ -192,13 +192,13 @@ func _run() -> void:
 		assert(desk.audit_overlay.mouse_filter == Control.MOUSE_FILTER_STOP)
 		assert(desk.audit_overlay.next_button.has_focus())
 		if i == 0:
-			var audit_text: String = desk.audit_overlay.body.text
+			var audit_text: String = desk.audit_overlay.body.get_parsed_text()
 			await _escape()
 			assert(desk.pause_menu.visible and desk.audit_overlay.visible)
 			await _escape()
 			assert(desk.audit_overlay.visible and desk.audit_overlay.next_button.has_focus())
-			assert(desk.audit_overlay.body.text == audit_text and desk.shift.records.size() == 1)
-		assert(desk.audit_overlay.body.text.contains(explanation))
+			assert(desk.audit_overlay.body.get_parsed_text() == audit_text and desk.shift.records.size() == 1)
+		assert(desk.audit_overlay.body.get_parsed_text().contains(explanation))
 		assert(desk.shift.observations == evidence)
 		desk.audit_overlay.next_button.pressed.emit()
 		await process_frame
