@@ -6,11 +6,14 @@
 
 ## 今すぐ遊ぶ (Windows)
 
-### 1. [Release](https://github.com/toratako/tousenborder/releases/)から `tousenborder-windows-x86_64.zip` をダウンロードします．
+### 1. [Release](https://github.com/toratako/tousenborder/releases/)からファイルをダウンロードします．
+
+- Windowsの場合: `tousenborder-windows-x86_64.zip`
+- Linuxの場合: `tousenborder-linux-x86_64.tar.gz`
 
 ![Releaseページ．tousenborder-windows-x86_64.zipが強調されている．](docs/assets_doc/release.png)
 
-### 2. ダウンロードしたZIPを展開し，`tousenborder.exe` をダブルクリックして実行します．
+### 2. ダウンロードしたファイルを展開し，`tousenborder.exe`/`tousenborder.x86_64` をダブルクリックして実行します．
 
 ---
 
@@ -53,4 +56,4 @@ just build            # 教材検証後，Linux / Windowsを出力
 just clean            # build/ 以下を削除
 ```
 
-出力は `build/linux/tousenborder.x86_64` と `build/windows/tousenborder.exe`．PCKを内包します．
+`build/linux/tousenborder.x86_64` と `build/windows/tousenborder.exe` が生成されます．PCKを内包します．
