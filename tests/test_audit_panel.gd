@@ -42,6 +42,7 @@ func run() -> void:
 	panel.present(record, {}, actions, false)
 	await process_frame
 	check(panel.heading.text.contains("誤判定") and panel.verdict_summary.text.contains("遮断する必要"), "次の問題の判定を反映")
+	check(panel.heading.get_visible_line_count() == 1, "誤判定の見出しを表示")
 	check(panel.body.get_parsed_text().contains("[b]本文[/b]"), "教材を装飾として解釈しない")
 	check(panel.body.get_v_scroll_bar().value == 0 and not panel.body.get_parsed_text().contains("機密情報"), "前問のスクロールと調査内容をリセット")
 	panel.queue_free()

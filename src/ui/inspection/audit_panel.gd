@@ -54,7 +54,7 @@ func present(
 	last_case: bool,
 ) -> void:
 	var unsafe := Verdict.unsafe_investigation(record)
-	heading.text = "✓ 正解" if record.correct else "✕ 誤判定"
+	heading.text = "✓ 正解" if record.correct else "× 誤判定"
 	result_banner.add_theme_stylebox_override("panel", Chrome.box(
 		Color("10372f") if record.correct else Color("3c202b"),
 		Chrome.GREEN if record.correct else Chrome.RED
