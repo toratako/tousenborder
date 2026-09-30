@@ -29,7 +29,60 @@ godot --path .
 
 初回・スクリプト追加後のクラス未登録エラーはインポートで更新します．
 
-## 開発・教材編集
+## 教材の追加・変更
+
+1. `data/problems/` に問題JSONを置く．Packへの登録は自由演習には不要です．
+2. `python3 -m pip install -r requirements-dev.txt` で依存パッケージをインストールします．
+3. `python3 scripts/build_problem_catalog.py` で一覧を再生成し，`just validate` と `just test` します．
+4. 再ビルドするとその問題が組み込まれたゲームが生成されます．
+
+最小限の資料付き問題:
+
+<details>
+<summary>例: EXAMPLE-FILE.json</summary>
+
+```json
+{
+    "schema_version": 2,
+    "id": "EXAMPLE-FILE",
+    "category": "file",
+    "platform": "common",
+    "title": "受入れ可能な文書",
+    "request": "この文書を受け入れてよいか判断してください．",
+    "initial": {
+        "information": [
+            {
+                "id": "filename",
+                "label": "ファイル名",
+                "value": "report.pdf",
+                "data_type": "file"
+            }
+        ]
+    },
+    "resources": [
+        {
+            "id": "format",
+            "kind": "references",
+            "name": "受入れ規則",
+            "result": { "content": "この受付ではPDFを受け入れます．" }
+        }
+    ],
+    "required_evidence": ["format"],
+    "ground_truth": "allow",
+    "explanation": "PDFという受入れ条件と一致します．"
+}
+```
+
+</details>
+
+`category` は自由なIDで，必要なら `category_label` を置きます．  
+`difficulty` は `very_beginner`（超初級）・`beginner`（初級）・`applied`（応用），省略は未評価となります．  
+`learning_objectives / sources / inspired_by` は作問・出典追跡用で判定条件には使われません．  
+資料は `resources` に置き，`kind` は `tools (ツール) / references (資料) / external_references (外部照会)` が選択可能です．
+
+その他，詳しくは [教材データ](data/README.md) を参照してください．
+
+## 関連ドキュメント
 
 - [作問・検証](docs/problem-data.md) スキーマ，入力の接続例，一覧の再生成
 - [問題一覧](docs/problem-catalog.md)：問題JSONから生成する分野・調査形式・正解の索引
